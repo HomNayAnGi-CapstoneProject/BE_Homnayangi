@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Chuyen_nganh_8\\PRN231\\Assignments\\BE_Homnayangi\\BE_Homnayangi\\BE_Homnayangi.csproj": {}
+    "C:\\Users\\Nam\\Desktop\\Homnayangi_BE\\BE_Homnayangi\\BE_Homnayangi.csproj": {}
   },
   "projects": {
-    "E:\\Chuyen_nganh_8\\PRN231\\Assignments\\BE_Homnayangi\\BE_Homnayangi\\BE_Homnayangi.csproj": {
+    "C:\\Users\\Nam\\Desktop\\Homnayangi_BE\\BE_Homnayangi\\BE_Homnayangi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Chuyen_nganh_8\\PRN231\\Assignments\\BE_Homnayangi\\BE_Homnayangi\\BE_Homnayangi.csproj",
+        "projectUniqueName": "C:\\Users\\Nam\\Desktop\\Homnayangi_BE\\BE_Homnayangi\\BE_Homnayangi.csproj",
         "projectName": "BE_Homnayangi",
-        "projectPath": "E:\\Chuyen_nganh_8\\PRN231\\Assignments\\BE_Homnayangi\\BE_Homnayangi\\BE_Homnayangi.csproj",
-        "packagesPath": "C:\\Users\\vanph\\.nuget\\packages\\",
-        "outputPath": "E:\\Chuyen_nganh_8\\PRN231\\Assignments\\BE_Homnayangi\\BE_Homnayangi\\obj\\",
+        "projectPath": "C:\\Users\\Nam\\Desktop\\Homnayangi_BE\\BE_Homnayangi\\BE_Homnayangi.csproj",
+        "packagesPath": "C:\\Users\\Nam\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Nam\\Desktop\\Homnayangi_BE\\BE_Homnayangi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\vanph\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Nam\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -28,8 +28,8 @@
           "net5.0": {
             "targetAlias": "net5.0",
             "projectReferences": {
-              "E:\\Chuyen_nganh_8\\PRN231\\Assignments\\BE_Homnayangi\\Library\\Library.csproj": {
-                "projectPath": "E:\\Chuyen_nganh_8\\PRN231\\Assignments\\BE_Homnayangi\\Library\\Library.csproj"
+              "C:\\Users\\Nam\\Desktop\\Homnayangi_BE\\Library\\Library.csproj": {
+                "projectPath": "C:\\Users\\Nam\\Desktop\\Homnayangi_BE\\Library\\Library.csproj"
               }
             }
           }
@@ -67,8 +67,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -80,21 +79,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.401\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "E:\\Chuyen_nganh_8\\PRN231\\Assignments\\BE_Homnayangi\\Library\\Library.csproj": {
+    "C:\\Users\\Nam\\Desktop\\Homnayangi_BE\\Library\\Library.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Chuyen_nganh_8\\PRN231\\Assignments\\BE_Homnayangi\\Library\\Library.csproj",
+        "projectUniqueName": "C:\\Users\\Nam\\Desktop\\Homnayangi_BE\\Library\\Library.csproj",
         "projectName": "Library",
-        "projectPath": "E:\\Chuyen_nganh_8\\PRN231\\Assignments\\BE_Homnayangi\\Library\\Library.csproj",
-        "packagesPath": "C:\\Users\\vanph\\.nuget\\packages\\",
-        "outputPath": "E:\\Chuyen_nganh_8\\PRN231\\Assignments\\BE_Homnayangi\\Library\\obj\\",
+        "projectPath": "C:\\Users\\Nam\\Desktop\\Homnayangi_BE\\Library\\Library.csproj",
+        "packagesPath": "C:\\Users\\Nam\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Nam\\Desktop\\Homnayangi_BE\\Library\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\vanph\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Nam\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -145,8 +144,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -155,7 +153,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.401\\RuntimeIdentifierGraph.json"
         }
       }
     }
