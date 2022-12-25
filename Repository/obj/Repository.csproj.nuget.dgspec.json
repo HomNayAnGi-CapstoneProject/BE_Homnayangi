@@ -1,88 +1,9 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Nam\\Desktop\\Homnayangi_BE\\BE_Homnayangi\\BE_Homnayangi.csproj": {}
+    "C:\\Users\\Nam\\Desktop\\Homnayangi_BE\\Repository\\Repository.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Nam\\Desktop\\Homnayangi_BE\\BE_Homnayangi\\BE_Homnayangi.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "C:\\Users\\Nam\\Desktop\\Homnayangi_BE\\BE_Homnayangi\\BE_Homnayangi.csproj",
-        "projectName": "BE_Homnayangi",
-        "projectPath": "C:\\Users\\Nam\\Desktop\\Homnayangi_BE\\BE_Homnayangi\\BE_Homnayangi.csproj",
-        "packagesPath": "C:\\Users\\Nam\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Nam\\Desktop\\Homnayangi_BE\\BE_Homnayangi\\obj\\",
-        "projectStyle": "PackageReference",
-        "configFilePaths": [
-          "C:\\Users\\Nam\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
-        ],
-        "originalTargetFrameworks": [
-          "net5.0"
-        ],
-        "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {}
-        },
-        "frameworks": {
-          "net5.0": {
-            "targetAlias": "net5.0",
-            "projectReferences": {
-              "C:\\Users\\Nam\\Desktop\\Homnayangi_BE\\Library\\Library.csproj": {
-                "projectPath": "C:\\Users\\Nam\\Desktop\\Homnayangi_BE\\Library\\Library.csproj"
-              }
-            }
-          }
-        },
-        "warningProperties": {
-          "warnAsError": [
-            "NU1605"
-          ]
-        }
-      },
-      "frameworks": {
-        "net5.0": {
-          "targetAlias": "net5.0",
-          "dependencies": {
-            "Microsoft.Extensions.DependencyInjection": {
-              "target": "Package",
-              "version": "[5.0.2, )"
-            },
-            "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": {
-              "target": "Package",
-              "version": "[1.17.0, )"
-            },
-            "Newtonsoft.Json": {
-              "target": "Package",
-              "version": "[10.0.1, )"
-            },
-            "Swashbuckle.AspNetCore": {
-              "target": "Package",
-              "version": "[5.6.3, )"
-            }
-          },
-          "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "frameworkReferences": {
-            "Microsoft.AspNetCore.App": {
-              "privateAssets": "none"
-            },
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.401\\RuntimeIdentifierGraph.json"
-        }
-      }
-    },
     "C:\\Users\\Nam\\Desktop\\Homnayangi_BE\\Library\\Library.csproj": {
       "version": "1.0.0",
       "restore": {
@@ -138,6 +59,64 @@
               "version": "[5.0.0, )"
             }
           },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.401\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\Nam\\Desktop\\Homnayangi_BE\\Repository\\Repository.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Nam\\Desktop\\Homnayangi_BE\\Repository\\Repository.csproj",
+        "projectName": "Repository",
+        "projectPath": "C:\\Users\\Nam\\Desktop\\Homnayangi_BE\\Repository\\Repository.csproj",
+        "packagesPath": "C:\\Users\\Nam\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Nam\\Desktop\\Homnayangi_BE\\Repository\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Nam\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net5.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net5.0": {
+            "targetAlias": "net5.0",
+            "projectReferences": {
+              "C:\\Users\\Nam\\Desktop\\Homnayangi_BE\\Library\\Library.csproj": {
+                "projectPath": "C:\\Users\\Nam\\Desktop\\Homnayangi_BE\\Library\\Library.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net5.0": {
+          "targetAlias": "net5.0",
           "imports": [
             "net461",
             "net462",
