@@ -1656,6 +1656,19 @@
         "runtime": {
           "bin/placeholder/Library.dll": {}
         }
+      },
+      "Repository/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v5.0",
+        "dependencies": {
+          "Library": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Repository.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Repository.dll": {}
+        }
       }
     }
   },
@@ -6182,6 +6195,11 @@
       "type": "project",
       "path": "../Library/Library.csproj",
       "msbuildProject": "../Library/Library.csproj"
+    },
+    "Repository/1.0.0": {
+      "type": "project",
+      "path": "../Repository/Repository.csproj",
+      "msbuildProject": "../Repository/Repository.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -6190,6 +6208,7 @@
       "Microsoft.Extensions.DependencyInjection >= 5.0.2",
       "Microsoft.VisualStudio.Azure.Containers.Tools.Targets >= 1.17.0",
       "Newtonsoft.Json >= 10.0.1",
+      "Repository >= 1.0.0",
       "Swashbuckle.AspNetCore >= 5.6.3"
     ]
   },
@@ -6222,6 +6241,9 @@
           "projectReferences": {
             "C:\\Users\\Nam\\Desktop\\Homnayangi_BE\\Library\\Library.csproj": {
               "projectPath": "C:\\Users\\Nam\\Desktop\\Homnayangi_BE\\Library\\Library.csproj"
+            },
+            "C:\\Users\\Nam\\Desktop\\Homnayangi_BE\\Repository\\Repository.csproj": {
+              "projectPath": "C:\\Users\\Nam\\Desktop\\Homnayangi_BE\\Repository\\Repository.csproj"
             }
           }
         }
