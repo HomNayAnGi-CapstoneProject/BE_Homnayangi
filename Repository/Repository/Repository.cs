@@ -44,11 +44,16 @@ namespace Repository.Repository
             return await DbSet.FindAsync(key);
         }
 
-        public ICollection<T> GetAll(Func<IQueryable<T>, ICollection<T>> options = null, string includeProperties = null)
+        public async Task<ICollection<T>> GetAll(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, ICollection<T>> options = null, string includeProperties = null)
         {
             try
             {
                 IQueryable<T> query = DbSet;
+
+                if (filter != null)
+                {
+                    query = query.Where(filter);
+                }
 
                 if (includeProperties != null)
                 {
@@ -62,8 +67,7 @@ namespace Repository.Repository
                 {
                     return options(query).ToList();
                 }
-
-                return query.ToList();
+                return await query.ToListAsync();
             }
             catch
             {
@@ -71,6 +75,7 @@ namespace Repository.Repository
             }
             return null;
         }
+
 
         public Task<T> GetFirstOrDefaultAsync(Expression<Func<T, bool>> filter = null, string includeProperties = null)
         {

@@ -139,6 +139,7 @@ C:\Users\Nam\Desktop\Homnayangi_BE\BE_Homnayangi\obj\Debug\net5.0\staticwebasset
 C:\Users\Nam\Desktop\Homnayangi_BE\BE_Homnayangi\obj\Debug\net5.0\staticwebassets\BE_Homnayangi.StaticWebAssets.xml
 C:\Users\Nam\Desktop\Homnayangi_BE\BE_Homnayangi\obj\Debug\net5.0\scopedcss\bundle\BE_Homnayangi.styles.css
 C:\Users\Nam\Desktop\Homnayangi_BE\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.RazorTargetAssemblyInfo.cache
+C:\Users\Nam\Desktop\Homnayangi_BE\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.csproj.CopyComplete
 C:\Users\Nam\Desktop\Homnayangi_BE\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.dll
 C:\Users\Nam\Desktop\Homnayangi_BE\BE_Homnayangi\obj\Debug\net5.0\ref\BE_Homnayangi.dll
 C:\Users\Nam\Desktop\Homnayangi_BE\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.pdb

@@ -16,7 +16,8 @@ namespace Repository.Repository.Interface
 
         Task AddRangeAsync(IEnumerable<T> entities);
 
-        ICollection<T> GetAll(
+        Task<ICollection<T>> GetAll(
+            Expression<Func<T, bool>> filter = null,
             Func<IQueryable<T>, ICollection<T>> options = null,
             string includeProperties = null
         );
