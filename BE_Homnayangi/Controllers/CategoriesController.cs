@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Library.DataAccess;
 using Library.Models;
 using Library.Models.DTO.CategoryDTO;
+using BE_Homnayangi.Modules.CategoryModule.Interface;
 
 namespace BE_Homnayangi.Controllers
 {
@@ -18,11 +19,13 @@ namespace BE_Homnayangi.Controllers
     {
         private readonly IMapper _mapper;
         private readonly HomnayangiContext _context;
+        private ICategoryService categoryService;
 
-        public CategoriesController(HomnayangiContext context, IMapper mapper)
+        public CategoriesController(HomnayangiContext context, IMapper mapper, ICategoryService _categoryService)
         {
             _context = context;
             _mapper = mapper;
+            categoryService = _categoryService;
         }
 
 
@@ -30,21 +33,22 @@ namespace BE_Homnayangi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
         {
-            return await _context.Categories.ToListAsync();
+            var category = await categoryService.GetAll();
+            return Ok(category);
         }
 
         // GET: api/Categories/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Category>> GetCategory(Guid id)
+        public async Task<ActionResult<IEnumerable<Category>>> GetCategory(Guid id)
         {
-            var category = await _context.Categories.FindAsync(id);
+            var category = await categoryService.GetCategoriesBy(x => x.CategoryId == id);
 
             if (category == null)
             {
                 return NotFound();
             }
 
-            return category;
+            return Ok(category);
         }
 
         // PUT: api/Categories/5

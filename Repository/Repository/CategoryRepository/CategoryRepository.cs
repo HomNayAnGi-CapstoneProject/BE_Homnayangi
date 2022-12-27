@@ -19,7 +19,7 @@ namespace Repository.Repository.CategoryRepository
         {
             _db = db;
         }
-        public ICollection<Category> GetCategoriesBy(
+        public async Task<ICollection<Category>> GetCategoriesBy(
             Expression<Func<Category, bool>> filter = null,
             Func<IQueryable<Category>, ICollection<Category>> options = null,
             string includeProperties = null
@@ -39,8 +39,14 @@ namespace Repository.Repository.CategoryRepository
                     query = query.Include(includeProp);
                 }
             }
-
-            return options != null ? options(query).ToList() : query.ToList();
+            var test = new Random();
+            var result = new List<Category>();
+            for (int i = 0; i < 4; i++)
+            {
+                var test2 = test.Next(0, query.ToList().Count());
+                result.Add(query.ToList().ElementAt(test2));
+            }
+            return options != null ? options(query).ToList() : result;
         }
     }
 }
