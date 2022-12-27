@@ -19,7 +19,7 @@ namespace Repository.Repository.CategoryRepository
         {
             _db = db;
         }
-        public ICollection<Category> GetCategoriesBy(
+        public async Task<ICollection<Category>> GetCategoriesBy(
             Expression<Func<Category, bool>> filter = null,
             Func<IQueryable<Category>, ICollection<Category>> options = null,
             string includeProperties = null
@@ -40,7 +40,7 @@ namespace Repository.Repository.CategoryRepository
                 }
             }
 
-            return options != null ? options(query).ToList() : query.ToList();
+            return options != null ? options(query).ToList() : await query.ToListAsync();
         }
     }
 }

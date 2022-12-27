@@ -44,7 +44,7 @@ namespace Repository.Repository
             return await DbSet.FindAsync(key);
         }
 
-        public ICollection<T> GetAll(Func<IQueryable<T>, ICollection<T>> options = null, string includeProperties = null)
+        public async Task<ICollection<T>> GetAll(Func<IQueryable<T>, ICollection<T>> options = null, string includeProperties = null)
         {
             try
             {
@@ -63,7 +63,7 @@ namespace Repository.Repository
                     return options(query).ToList();
                 }
 
-                return query.ToList();
+                return await query.ToListAsync();
             }
             catch
             {

@@ -143,3 +143,4 @@ C:\Users\Nam\Desktop\Homnayangi_BE\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.
 C:\Users\Nam\Desktop\Homnayangi_BE\BE_Homnayangi\obj\Debug\net5.0\ref\BE_Homnayangi.dll
 C:\Users\Nam\Desktop\Homnayangi_BE\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.pdb
 C:\Users\Nam\Desktop\Homnayangi_BE\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.genruntimeconfig.cache
+C:\Users\Nam\Desktop\Homnayangi_BE\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.csproj.CopyComplete
