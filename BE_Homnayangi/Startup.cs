@@ -28,7 +28,7 @@ namespace BE_Homnayangi
 
             services.AddControllers();
             services.AddDbContext<HomnayangiContext>(
-                 options => options.UseSqlServer("Server=.;Database=Homnayangi;Uid=sa;Pwd=1234567890;"));
+                 options => options.UseSqlServer("Server=.;Database=Homnayangi;Uid=sa;Pwd=Monki123;"));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BE_Homnayangi", Version = "v1" });
