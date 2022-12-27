@@ -84,6 +84,10 @@ namespace BE_Homnayangi.Controllers
         public async Task<ActionResult<Category>> PostCategory(CreateCategoryRequest reqCategory)
         {
             var box = _mapper.Map<Category>(reqCategory);
+
+            var checkValid = new CreateCategoryRequestValidator().Validate(reqCategory);
+            if (!checkValid.IsValid) return NotFound();
+
             _context.Categories.Add(box);
             try
             {
