@@ -14,12 +14,14 @@ namespace Library.DataAccess
 
         public HomnayangiContext()
         {
-            //Configuration = configuration;
         }
 
-        public HomnayangiContext(DbContextOptions<HomnayangiContext> options)
+        public IConfiguration Configuration { get; }
+
+        public HomnayangiContext(DbContextOptions<HomnayangiContext> options, IConfiguration configuration)
             : base(options)
         {
+            Configuration = configuration;
         }
 
         public virtual DbSet<Accomplishment> Accomplishments { get; set; }
@@ -52,8 +54,7 @@ namespace Library.DataAccess
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=.;Database=Homnayangi;Uid=sa;Pwd=1234567890;");
+                optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             }
         }
 
