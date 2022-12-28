@@ -32,7 +32,7 @@ namespace BE_Homnayangi
 
             services.AddControllers();
             services.AddDbContext<HomnayangiContext>(
-                 options => options.UseSqlServer("Server=.;Database=Homnayangi;Uid=sa;Pwd=Monki123;"));
+                 options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BE_Homnayangi", Version = "v1" });
