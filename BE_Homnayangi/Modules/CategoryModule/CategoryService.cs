@@ -27,6 +27,13 @@ namespace BE_Homnayangi.Modules.CategoryModule
         {
             return _categoryRepository.GetCategoriesBy(filter);
         }
+        public Task<ICollection<Category>> GetRandomCategoriesBy(Expression<Func<Category, bool>> filter = null,
+            Func<IQueryable<Category>, ICollection<Category>> options = null,
+            string includeProperties = null,
+            int numberItem = 0)
+        {
+            return _categoryRepository.GetNItemRandom(filter, numberItem: numberItem);
+        }
         public async Task AddNewCategory(Category newCategory)
         {
             newCategory.CategoryId = Guid.NewGuid();
