@@ -1,3 +1,5 @@
+using BE_Homnayangi.Modules.CategoryModule;
+using BE_Homnayangi.Modules.CategoryModule.Interface;
 using Library.AutoMapper;
 using Library.DataAccess;
 using Microsoft.AspNetCore.Builder;
@@ -10,6 +12,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Repository.Repository.CategoryRepository;
+using Repository.Repository.CategoryRepository.Interface;
 
 namespace BE_Homnayangi
 {
@@ -49,6 +53,9 @@ namespace BE_Homnayangi
                                     .AllowAnyHeader()
                                     .AllowCredentials());
             });
+            // Category Module
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<ICategoryService, CategoryService>();
             services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
         }
 

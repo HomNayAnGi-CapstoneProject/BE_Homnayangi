@@ -17,11 +17,11 @@ namespace BE_Homnayangi.Modules.CategoryModule
         {
             _categoryRepository = categoryRepository;
         }
-        public ICollection<Category> GetAll()
+        public async Task<ICollection<Category>> GetAll()
         {
-            return _categoryRepository.GetAll().ToList();
+            return await _categoryRepository.GetAll();
         }
-        public ICollection<Category> GetCategoriesBy(Expression<Func<Category, bool>> filter = null,
+        public Task<ICollection<Category>> GetCategoriesBy(Expression<Func<Category, bool>> filter = null,
             Func<IQueryable<Category>, ICollection<Category>> options = null,
             string includeProperties = null)
         {

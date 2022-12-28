@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Library.DataAccess;
 using Library.Models;
 using Library.Models.DTO.CategoryDTO;
+using BE_Homnayangi.Modules.CategoryModule.Interface;
 
 namespace BE_Homnayangi.Controllers
 {
@@ -18,11 +19,13 @@ namespace BE_Homnayangi.Controllers
     {
         private readonly IMapper _mapper;
         private readonly HomnayangiContext _context;
+        private ICategoryService _categoryService;
 
-        public CategoriesController(HomnayangiContext context, IMapper mapper)
+        public CategoriesController(HomnayangiContext context, IMapper mapper, ICategoryService categoryService)
         {
             _context = context;
             _mapper = mapper;
+            _categoryService = categoryService;
         }
 
 
@@ -30,7 +33,7 @@ namespace BE_Homnayangi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
         {
-            return await _context.Categories.ToListAsync();
+            return Ok(await _categoryService.GetAll());
         }
 
         // GET: api/Categories/5
