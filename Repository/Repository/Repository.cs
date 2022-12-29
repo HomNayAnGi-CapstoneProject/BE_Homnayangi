@@ -72,6 +72,53 @@ namespace Repository.Repository
             return null;
         }
 
+        public async Task<ICollection<T>> GetNItemRandom(
+            Expression<Func<T, bool>> filter = null,
+            Func<IQueryable<T>, ICollection<T>> options = null,
+            string includeProperties = null,
+            int numberItem = 0
+        )
+        {
+            var draftResult = new List<T>();
+
+            IQueryable<T> query = DbSet;
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            if (includeProperties != null)
+            {
+                foreach (var includeProp in includeProperties.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProp);
+                }
+            }
+
+            if (options != null)
+            {
+                draftResult = options(query).ToList();
+            } else
+            {
+                draftResult = await query.ToListAsync();
+            }
+
+            var endResult = new List<T>();
+            if (numberItem != 0)
+            {
+                var randNumber = new Random();
+                for(int i=0; i<numberItem; i++)
+                {
+                    var indexNumber = randNumber.Next(0, draftResult.Count());
+                    endResult.Add(draftResult.ElementAt(indexNumber));
+                    draftResult.RemoveAt(indexNumber);
+                }
+            }
+
+            return endResult;
+        }
+
         public Task<T> GetFirstOrDefaultAsync(Expression<Func<T, bool>> filter = null, string includeProperties = null)
         {
             IQueryable<T> query = DbSet;

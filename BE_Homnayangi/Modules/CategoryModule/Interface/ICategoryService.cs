@@ -16,6 +16,10 @@ namespace BE_Homnayangi.Modules.CategoryModule.Interface
         public Task<ICollection<Category>> GetCategoriesBy(Expression<Func<Category, bool>> filter = null,
             Func<IQueryable<Category>, ICollection<Category>> options = null,
             string includeProperties = null);
+        public Task<ICollection<Category>> GetRandomCategoriesBy(Expression<Func<Category, bool>> filter = null,
+            Func<IQueryable<Category>, ICollection<Category>> options = null,
+            string includeProperties = null,
+            int numberItem = 0);
         public Category GetCategoryByID(Guid? cateID);
     }
 }
