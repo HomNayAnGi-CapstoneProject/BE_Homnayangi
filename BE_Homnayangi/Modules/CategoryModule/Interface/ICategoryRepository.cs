@@ -1,4 +1,4 @@
-﻿using Repository.Repository.Interface;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,8 +6,9 @@ using Library.Models;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
+using Repository.Repository.Interface;
 
-namespace Repository.Repository.CategoryRepository.Interface
+namespace BE_Homnayangi.Modules.CategoryModule.Interface
 {
     public interface ICategoryRepository : IRepository<Category>
     {

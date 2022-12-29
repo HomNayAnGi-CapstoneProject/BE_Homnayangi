@@ -12,8 +12,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using Repository.Repository.CategoryRepository;
-using Repository.Repository.CategoryRepository.Interface;
 
 namespace BE_Homnayangi
 {

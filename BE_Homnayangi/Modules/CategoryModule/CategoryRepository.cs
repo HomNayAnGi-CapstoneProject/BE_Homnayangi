@@ -1,7 +1,8 @@
-﻿using Library.DataAccess;
+﻿using BE_Homnayangi.Modules.CategoryModule.Interface;
+using Library.DataAccess;
 using Library.Models;
 using Microsoft.EntityFrameworkCore;
-using Repository.Repository.CategoryRepository.Interface;
+using Repository.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository.Repository.CategoryRepository
+namespace BE_Homnayangi.Modules.CategoryModule
 {
     public class CategoryRepository : Repository<Category>, ICategoryRepository
     {

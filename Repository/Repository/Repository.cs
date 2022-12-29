@@ -13,7 +13,7 @@ namespace Repository.Repository
     {
 
         private readonly HomnayangiContext _db;
-        internal readonly DbSet<T> DbSet;
+        public readonly DbSet<T> DbSet;
 
         public Repository(HomnayangiContext db)
         {
