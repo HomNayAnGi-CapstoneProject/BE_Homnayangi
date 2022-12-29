@@ -445,3 +445,5 @@ FodyWeavers.xsd
 
 /.vs/BE_Homnayangi/FileContentIndex
 
+BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.csproj.FileListAbsolute.txt
+Library/obj/Debug/net5.0/Library.csproj.AssemblyReference.cache
