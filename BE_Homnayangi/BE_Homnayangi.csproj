@@ -18,6 +18,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.17" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,4 +26,21 @@
     <ProjectReference Include="..\Repository\Repository.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Microsoft.EntityFrameworkCore.Sqlite" />
+    <None Remove="Modules\RecipeModule\" />
+    <None Remove="Modules\RecipeModule\Interface\" />
+    <None Remove="Modules\RecipeDetailModule\" />
+    <None Remove="Modules\RecipeDetailModule\Interface\" />
+    <None Remove="Modules\IngredientModule\" />
+    <None Remove="Modules\IngredientModule\Interface\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Modules\RecipeModule\" />
+    <Folder Include="Modules\RecipeModule\Interface\" />
+    <Folder Include="Modules\RecipeDetailModule\" />
+    <Folder Include="Modules\RecipeDetailModule\Interface\" />
+    <Folder Include="Modules\IngredientModule\" />
+    <Folder Include="Modules\IngredientModule\Interface\" />
+  </ItemGroup>
 </Project>

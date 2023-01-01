@@ -16,4 +16,14 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Models\DTO\RecipeDTO\" />
+    <None Remove="Models\DTO\RecipeDetailsDTO\" />
+    <None Remove="Models\DTO\IngredientDTO\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\DTO\RecipeDTO\" />
+    <Folder Include="Models\DTO\RecipeDetailsDTO\" />
+    <Folder Include="Models\DTO\IngredientDTO\" />
+  </ItemGroup>
 </Project>
