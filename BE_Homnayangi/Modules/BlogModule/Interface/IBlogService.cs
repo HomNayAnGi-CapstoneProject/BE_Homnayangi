@@ -31,5 +31,7 @@ namespace BE_Homnayangi.Modules.BlogModule.Interface
         public Blog GetBlogByID(Guid? id);
 
         public Task<ICollection<BlogResponse>> GetBlogsSortByCookedPriceAsc();
+
+        public Task<ICollection<BlogResponse>> GetBlogsByCategory(Guid categoryId, int numberItems);
     }
 }
