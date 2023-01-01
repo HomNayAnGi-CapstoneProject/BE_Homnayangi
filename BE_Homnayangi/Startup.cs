@@ -1,5 +1,9 @@
+using BE_Homnayangi.Modules.BlogModule;
+using BE_Homnayangi.Modules.BlogModule.Interface;
 using BE_Homnayangi.Modules.CategoryModule;
 using BE_Homnayangi.Modules.CategoryModule.Interface;
+using BE_Homnayangi.Modules.RecipeModule;
+using BE_Homnayangi.Modules.RecipeModule.Interface;
 using Library.AutoMapper;
 using Library.DataAccess;
 using Microsoft.AspNetCore.Builder;
@@ -54,6 +58,15 @@ namespace BE_Homnayangi
             // Category Module
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ICategoryService, CategoryService>();
+
+            // Blog Module
+            services.AddScoped<IBlogRepository, BlogRepository>();
+            services.AddScoped<IBlogService, BlogService>();
+
+            // Recipe Module
+            services.AddScoped<IRecipeRepository, RecipeRepository>();
+            services.AddScoped<IRecipeService, RecipeService>();
+
             services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
         }
 
