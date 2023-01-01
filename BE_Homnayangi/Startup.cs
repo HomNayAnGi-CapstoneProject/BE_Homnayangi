@@ -5,6 +5,8 @@ using BE_Homnayangi.Modules.IngredientModule;
 using BE_Homnayangi.Modules.IngredientModule.Interface;
 using BE_Homnayangi.Modules.RecipeDetailModule;
 using BE_Homnayangi.Modules.RecipeDetailModule.Interface;
+using BE_Homnayangi.Modules.BlogModule;
+using BE_Homnayangi.Modules.BlogModule.Interface;
 using BE_Homnayangi.Modules.RecipeModule;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
 using Library.AutoMapper;
@@ -61,6 +63,15 @@ namespace BE_Homnayangi
             // Category Module
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ICategoryService, CategoryService>();
+
+            // Blog Module
+            services.AddScoped<IBlogRepository, BlogRepository>();
+            services.AddScoped<IBlogService, BlogService>();
+
+            // Recipe Module
+            services.AddScoped<IRecipeRepository, RecipeRepository>();
+            services.AddScoped<IRecipeService, RecipeService>();
+
             services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
             //Recipe Module
             services.AddScoped<IRecipeRepository, RecipeRepository>();

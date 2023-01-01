@@ -17,10 +17,12 @@ namespace Repository.Repository.Interface
         Task AddRangeAsync(IEnumerable<T> entities);
 
         Task<ICollection<T>> GetAll(
-            Func<IQueryable<T>, ICollection<T>> options = null,
-            string includeProperties = null
+                Func<IQueryable<T>,
+                ICollection<T>> options = null,
+                string includeProperties = null
         );
 
+        // options: o => o.OrderBy(p => p.Like - p.Dislike + p.View / 10).Take(quantity).ToList()
         Task<ICollection<T>> GetNItemRandom(
             Expression<Func<T, bool>> filter = null,
             Func<IQueryable<T>, ICollection<T>> options = null,

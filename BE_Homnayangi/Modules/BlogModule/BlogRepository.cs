@@ -1,29 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-using BE_Homnayangi.Modules.RecipeModule.Interface;
+﻿using BE_Homnayangi.Modules.BlogModule.Interface;
 using Library.DataAccess;
 using Library.Models;
 using Microsoft.EntityFrameworkCore;
 using Repository.Repository;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace BE_Homnayangi.Modules.RecipeModule
+namespace BE_Homnayangi.Modules.BlogModule
 {
-	public class RecipeRepository : Repository<Recipe>, IRecipeRepository
-	{
+    public class BlogRepository : Repository<Blog>, IBlogRepository
+    {
         private readonly HomnayangiContext _db;
 
-        public RecipeRepository(HomnayangiContext db) : base(db)
-		{
-            _db = db;
-		}
-
-        public async Task<ICollection<Recipe>> GetRecipesBy(Expression<Func<Recipe, bool>> filter = null, Func<IQueryable<Recipe>, ICollection<Recipe>> options = null, string includeProperties = null)
-
+        public BlogRepository(HomnayangiContext db) : base(db)
         {
-            IQueryable<Recipe> query = DbSet;
+            _db = db;
+        }
+        public async Task<ICollection<Blog>> GetBlogsBy(
+            Expression<Func<Blog, bool>> filter = null,
+            Func<IQueryable<Blog>, ICollection<Blog>> options = null,
+            string includeProperties = null
+        )
+        {
+            IQueryable<Blog> query = DbSet;
 
             if (filter != null)
             {
