@@ -1,29 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-using BE_Homnayangi.Modules.RecipeModule.Interface;
+using BE_Homnayangi.Modules.RecipeDetailModule.Interface;
 using Library.DataAccess;
 using Library.Models;
 using Microsoft.EntityFrameworkCore;
 using Repository.Repository;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 
-namespace BE_Homnayangi.Modules.RecipeModule
+namespace BE_Homnayangi.Modules.RecipeDetailModule
 {
-	public class RecipeRepository : Repository<Recipe>, IRecipeRepository
-	{
+    public class RecipeDetailRepository : Repository<RecipeDetail>, IRecipeDetailRepository
+    {
         private readonly HomnayangiContext _db;
 
-        public RecipeRepository(HomnayangiContext db) : base(db)
-		{
-            _db = db;
-		}
-
-        public async Task<ICollection<Recipe>> GetRecipesBy(Expression<Func<Recipe, bool>> filter = null, Func<IQueryable<Recipe>, ICollection<Recipe>> options = null, string includeProperties = null)
-
+        public RecipeDetailRepository(HomnayangiContext db) : base(db)
         {
-            IQueryable<Recipe> query = DbSet;
+            _db = db;
+        }
+
+        public async Task<ICollection<RecipeDetail>> GetRecipeDetailsBy(Expression<Func<RecipeDetail, bool>> filter = null, Func<IQueryable<RecipeDetail>, ICollection<RecipeDetail>> options = null, string includeProperties = null)
+        {
+            IQueryable<RecipeDetail> query = DbSet;
 
             if (filter != null)
             {
@@ -42,3 +41,4 @@ namespace BE_Homnayangi.Modules.RecipeModule
         }
     }
 }
+

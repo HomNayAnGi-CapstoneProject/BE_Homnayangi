@@ -1,7 +1,12 @@
-using BE_Homnayangi.Modules.BlogModule;
-using BE_Homnayangi.Modules.BlogModule.Interface;
+using System.Text.Json.Serialization;
 using BE_Homnayangi.Modules.CategoryModule;
 using BE_Homnayangi.Modules.CategoryModule.Interface;
+using BE_Homnayangi.Modules.IngredientModule;
+using BE_Homnayangi.Modules.IngredientModule.Interface;
+using BE_Homnayangi.Modules.RecipeDetailModule;
+using BE_Homnayangi.Modules.RecipeDetailModule.Interface;
+using BE_Homnayangi.Modules.BlogModule;
+using BE_Homnayangi.Modules.BlogModule.Interface;
 using BE_Homnayangi.Modules.RecipeModule;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
 using Library.AutoMapper;
@@ -68,6 +73,15 @@ namespace BE_Homnayangi
             services.AddScoped<IRecipeService, RecipeService>();
 
             services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
+            //Recipe Module
+            services.AddScoped<IRecipeRepository, RecipeRepository>();
+            services.AddScoped<IRecipeServices, RecipeServices>();
+            //Recipe Detail Module
+            services.AddScoped<IRecipeDetailRepository, RecipeDetailRepository>();
+            services.AddScoped<IRecipeDetailService, RecipeDetailService>();
+            //Ingredient Module
+            services.AddScoped<IIngredientRepository, IngredientRepository>();
+            services.AddScoped<IIngredientService, IngredientService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
