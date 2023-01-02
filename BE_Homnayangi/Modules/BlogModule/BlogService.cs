@@ -96,5 +96,28 @@ namespace BE_Homnayangi.Modules.BlogModule
                 }).ToList();
             return listResponse;
         }
+
+        public async Task<ICollection<BlogResponse>> GetBlogsByCategory(Guid categoryId, int numberItems)
+        {
+            var listBlogs = await _blogRepository.GetNItemRandom(b=>b.CategoryId.Equals(categoryId),includeProperties: "Author,Category", numberItem: numberItems);
+
+            var listResponse = listBlogs.Join(
+                await _recipeRepository.GetAll(),
+                b => b.BlogId,
+                r => r.RecipeId,
+                (b, r) => new BlogResponse
+                {
+                    BlogId = b.BlogId,
+                    Title = b.Title,
+                    Description = b.Description,
+                    ImageUrl = b.ImageUrl,
+                    Reaction = b.Reaction.Value,
+                    View = b.View.Value,
+                    AuthorName = b.Author.Name,
+                    CategoryName = b.Category.Name,
+                    PackagePrice = b.Recipe.PackagePrice
+                }).ToList();
+            return listResponse;
+        }
     }
 }

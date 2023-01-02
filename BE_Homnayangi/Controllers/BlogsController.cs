@@ -61,6 +61,19 @@ namespace BE_Homnayangi.Controllers
             return blog;
         }
 
+
+        [HttpGet("{categoryId}/category")]
+        public async Task<ActionResult<IEnumerable<BlogResponse>>> GetBlogsByCategory(Guid categoryId, [FromQuery(Name = "numberItems")] int numberItems = 4)
+        {
+            var blogs = await _blogService.GetBlogsByCategory(categoryId, numberItems);
+
+            return new JsonResult(new
+            {
+                total_results = blogs.Count(),
+                result = blogs,
+            }); ;
+        }
+
         // PUT: api/Blogs/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
