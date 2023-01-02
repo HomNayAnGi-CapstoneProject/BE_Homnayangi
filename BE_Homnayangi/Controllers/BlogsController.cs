@@ -62,7 +62,7 @@ namespace BE_Homnayangi.Controllers
         }
 
 
-        [HttpGet("category/{categoryId}")]
+        [HttpGet("{categoryId}/category")]
         public async Task<ActionResult<IEnumerable<BlogResponse>>> GetBlogsByCategory(Guid categoryId, [FromQuery(Name = "numberItems")] int numberItems = 4)
         {
             var blogs = await _blogService.GetBlogsByCategory(categoryId, numberItems);
