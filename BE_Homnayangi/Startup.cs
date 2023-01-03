@@ -21,6 +21,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using BE_Homnayangi.Modules.BlogTagModule.Interface;
+using BE_Homnayangi.Modules.BlogTagModule;
 
 namespace BE_Homnayangi
 {
@@ -82,6 +84,8 @@ namespace BE_Homnayangi
             //Ingredient Module
             services.AddScoped<IIngredientRepository, IngredientRepository>();
             services.AddScoped<IIngredientService, IngredientService>();
+            //BlogTag Module
+            services.AddScoped<IBlogTagRepository, BlogTagRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

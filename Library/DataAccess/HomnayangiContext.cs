@@ -91,6 +91,11 @@ namespace Library.DataAccess
                     .WithMany(p => p.Accomplishments)
                     .HasForeignKey(d => d.BlogId)
                     .HasConstraintName("FK_Accomplishment_Blog");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Accomplishments)
+                    .HasForeignKey(d => d.ConfirmBy)
+                    .HasConstraintName("FK_Accomplishment_User");
             });
 
             modelBuilder.Entity<Blog>(entity =>
@@ -171,7 +176,7 @@ namespace Library.DataAccess
 
             modelBuilder.Entity<BlogTag>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => new { e.BlogId, e.TagId });
 
                 entity.ToTable("BlogTag");
 

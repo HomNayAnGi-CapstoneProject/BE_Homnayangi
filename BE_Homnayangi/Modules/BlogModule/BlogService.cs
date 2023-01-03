@@ -1,13 +1,12 @@
 ﻿using BE_Homnayangi.Modules.BlogModule.Interface;
-using BE_Homnayangi.Modules.DTO.BlogDTO;
+using BE_Homnayangi.Modules.BlogModule.Response;
+using BE_Homnayangi.Modules.BlogTagModule.Interface;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
 using Library.Models;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection.Metadata;
 using System.Threading.Tasks;
 
 namespace BE_Homnayangi.Modules.BlogModule
@@ -16,11 +15,13 @@ namespace BE_Homnayangi.Modules.BlogModule
     {
         private readonly IBlogRepository _blogRepository;
         private readonly IRecipeRepository _recipeRepository;
+        private readonly IBlogTagRepository _blogTagRepository;
 
-        public BlogService(IBlogRepository BlogRepository, IRecipeRepository recipeRepository)
+        public BlogService(IBlogRepository BlogRepository, IRecipeRepository recipeRepository, IBlogTagRepository blogTagRepository)
         {
             _blogRepository = BlogRepository;
             _recipeRepository = recipeRepository;
+            _blogTagRepository = blogTagRepository;
         }
 
         public async Task<ICollection<Blog>> GetAll()
@@ -70,36 +71,37 @@ namespace BE_Homnayangi.Modules.BlogModule
         }
 
         // [6] giá nguyên liệu: 50k-100k
-        public async Task<ICollection<BlogResponse>> GetBlogsSortByCookedPriceAsc()
+        public async Task<ICollection<GetBlogsForHomePageResponse>> GetBlogsSortByPackagePriceAsc()
         {
-            List<BlogResponse> result = new List<BlogResponse>();
+            List<GetBlogsForHomePageResponse> result = new List<GetBlogsForHomePageResponse>();
 
-            var listRecipe = await _recipeRepository.GetNItemRandom(
-                x => x.PackagePrice >= 50000 && x.PackagePrice <= 100000,
-                numberItem: 6);
+            var listBlog = await _blogRepository.GetAll(includeProperties: "Category");
+            var listBlogTag = await _blogTagRepository.GetAll(includeProperties: "Tag");
 
-            var listResponse = listRecipe.Join(
-                await _blogRepository.GetAll(includeProperties: "Author,Category"),
-                x => x.RecipeId,
-                y => y.BlogId,
-                (x, y) => new BlogResponse
+            var listTagName = GetListTagName(listBlog, listBlogTag);
+
+            var listResponse = listBlog.Join(listTagName, b => b.BlogId, y => y.Key, (b, y) => new
+            {
+                b,
+                CategoryName = b.Category.Name,
+                ListTagName = y.Value
+            }).Join(await _recipeRepository.GetNItemRandom(x => x.PackagePrice >= 50000 && x.PackagePrice <= 100000, numberItem: 6),
+                x => x.b.BlogId, y => y.RecipeId, (x, y) => new GetBlogsForHomePageResponse
                 {
-                    BlogId = y.BlogId,
-                    Title = y.Title,
-                    Description = y.Description,
-                    ImageUrl = y.ImageUrl,
-                    Reaction = y.Reaction.Value,
-                    View = y.View.Value,
-                    AuthorName = y.Author.Name,
-                    CategoryName = y.Category.Name,
-                    PackagePrice = y.Recipe.PackagePrice
+                    BlogId = x.b.BlogId,
+                    Title = x.b.Title,
+                    Description = x.b.Description,
+                    ImageUrl = x.b.ImageUrl,
+                    CategoryName = x.CategoryName,
+                    ListTagName = x.ListTagName,
+                    PackagePrice = y.PackagePrice                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
                 }).ToList();
             return listResponse;
         }
 
         public async Task<ICollection<BlogResponse>> GetBlogsByCategory(Guid categoryId, int numberItems)
         {
-            var listBlogs = await _blogRepository.GetNItemRandom(b=>b.CategoryId.Equals(categoryId),includeProperties: "Author,Category", numberItem: numberItems);
+            var listBlogs = await _blogRepository.GetNItemRandom(b => b.CategoryId.Equals(categoryId), includeProperties: "Author,Category", numberItem: numberItems);
 
             var listResponse = listBlogs.Join(
                 await _recipeRepository.GetAll(),
@@ -118,6 +120,38 @@ namespace BE_Homnayangi.Modules.BlogModule
                     PackagePrice = b.Recipe.PackagePrice
                 }).ToList();
             return listResponse;
+        }
+
+        public async Task<ICollection<GetBlogsForHomePageResponse>> GetBlogsByCategoryForHomePage(Guid? categoryId)
+        {
+            var listBlogs = await _blogRepository.GetNItemRandom(b => b.CategoryId.Equals(categoryId), includeProperties: "Category", numberItem: 4);
+            var listBlogTag = await _blogTagRepository.GetAll(includeProperties: "Tag");
+
+            var listTagName = GetListTagName(listBlogs, listBlogTag);
+
+            var listResponse = listBlogs.Join(listTagName, b => b.BlogId, y => y.Key, (b, y) => new GetBlogsForHomePageResponse
+            {
+                BlogId = b.BlogId,
+                Title = b.Title,
+                Description = b.Description,
+                ImageUrl = b.ImageUrl,
+                CategoryName = b.Category.Name,
+                ListTagName = y.Value
+            }).ToList();
+
+            return listResponse;
+        }
+
+        internal IDictionary<Guid, List<string>> GetListTagName(ICollection<Blog> blogs, ICollection<BlogTag> blogTags)
+        {
+
+            var listTagName = new Dictionary<Guid, List<string>>();
+
+            foreach (var blog in blogs)
+            {
+                listTagName.Add(blog.BlogId, blogTags.Where(x => x.BlogId.Equals(blog.BlogId)).Select(x => x.Tag.Name).ToList());
+            }
+            return listTagName;
         }
     }
 }
