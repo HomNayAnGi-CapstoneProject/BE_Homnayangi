@@ -1,4 +1,4 @@
-﻿using BE_Homnayangi.Modules.DTO.BlogDTO;
+﻿using BE_Homnayangi.Modules.BlogModule.Response;
 using Library.Models;
 using System;
 using System.Collections.Generic;
@@ -30,8 +30,10 @@ namespace BE_Homnayangi.Modules.BlogModule.Interface
 
         public Blog GetBlogByID(Guid? id);
 
-        public Task<ICollection<BlogResponse>> GetBlogsSortByCookedPriceAsc();
+        public Task<ICollection<GetBlogsForHomePageResponse>> GetBlogsSortByPackagePriceAsc();
 
         public Task<ICollection<BlogResponse>> GetBlogsByCategory(Guid categoryId, int numberItems);
+
+        public Task<ICollection<GetBlogsForHomePageResponse>> GetBlogsByCategoryForHomePage(Guid? categoryId);
     }
 }

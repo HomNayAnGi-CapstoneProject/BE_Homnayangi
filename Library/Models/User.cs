@@ -12,6 +12,7 @@ namespace Library.Models
             Blogs = new HashSet<Blog>();
             Orders = new HashSet<Order>();
             Vouchers = new HashSet<Voucher>();
+            Accomplishments = new HashSet<Accomplishment>();
         }
 
         public Guid UserId { get; set; }
@@ -32,5 +33,6 @@ namespace Library.Models
         public virtual ICollection<Blog> Blogs { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<Voucher> Vouchers { get; set; }
+        public virtual ICollection<Accomplishment> Accomplishments { get; set; }
     }
 }

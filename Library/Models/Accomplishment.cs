@@ -13,8 +13,10 @@ namespace Library.Models
         public DateTime? CreatedDate { get; set; }
         public int? Status { get; set; }
         public Guid? BlogId { get; set; }
+        public Guid? ConfirmBy { get; set; }
 
         public virtual Customer Author { get; set; }
         public virtual Blog Blog { get; set; }
+        public virtual User User { get; set; }
     }
 }

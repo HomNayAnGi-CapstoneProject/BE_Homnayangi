@@ -1,6 +1,5 @@
-﻿
-using BE_Homnayangi.Modules.BlogModule.Interface;
-using BE_Homnayangi.Modules.DTO.BlogDTO;
+﻿using BE_Homnayangi.Modules.BlogModule.Interface;
+using BE_Homnayangi.Modules.BlogModule.Response;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
 using Library.DataAccess;
 using Library.Models;
@@ -35,15 +34,16 @@ namespace BE_Homnayangi.Controllers
             return await _context.Blogs.ToListAsync();
         }
 
-        [HttpGet("/api/v1/blogs/cheapest")] // sort ascending by cookedprice
-        public async Task<ActionResult<IEnumerable<BlogResponse>>> GetBlogsOrderByPriceAscending()
+        [HttpGet("/api/v1/blogs/test")] // sort ascending by cookedprice
+        public async Task<ActionResult<IEnumerable<GetBlogsForHomePageResponse>>> GetTest(Guid categoryId, [FromQuery(Name = "numberItems")] int numberItems = 4)
         {
-            var result = await _blogService.GetBlogsSortByCookedPriceAsc();
+            var blogs = await _blogService.GetBlogsByCategory(categoryId, numberItems);
+
             return new JsonResult(new
             {
-                total_results = result.Count(),
-                result = result,
-            });
+                total_results = blogs.Count(),
+                result = blogs,
+            }); ;
         }
 
 
