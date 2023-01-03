@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/19380532-5615-4439-8df2-16f3fbf4bb4b/AppServices/subscriptions/19380532-5615-4439-8df2-16f3fbf4bb4b/resourceGroups/Homnayangi/providers/Microsoft.Web/sites/Homnayangi-webapp",
+    "appService.deploySubpath": "publish"
+}
