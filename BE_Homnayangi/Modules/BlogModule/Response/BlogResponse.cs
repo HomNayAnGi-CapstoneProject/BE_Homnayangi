@@ -1,5 +1,4 @@
 ﻿using System;
-
 namespace BE_Homnayangi.Modules.BlogModule.Response
 {
     public class BlogResponse
