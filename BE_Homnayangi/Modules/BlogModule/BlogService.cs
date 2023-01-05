@@ -97,7 +97,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     ImageUrl = x.b.ImageUrl,
                     CategoryName = x.CategoryName,
                     ListTagName = x.ListTagName,
-                    PackagePrice = y.PackagePrice                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+                    PackagePrice = y.PackagePrice
                 }).ToList();
             return listResponse;
         }
@@ -158,17 +158,17 @@ namespace BE_Homnayangi.Modules.BlogModule
 
         public async Task<ICollection<SearchBlogsResponse>> GetBlogAndRecipeByName(String name)
         {
-         
-                var Blogs = await _blogRepository.GetBlogsBy(x => x.Title.Contains(name));
-                var blogResponse = Blogs.Join(
-                    await _recipeRepository.GetAll(),
-                    b => b.BlogId,
-                    r => r.RecipeId,
-                    (b, r) => new SearchBlogsResponse
-                    {
-                        BlogId = b.BlogId,
-                        Title = b.Title,
-                    }).ToList();
+
+            var Blogs = await _blogRepository.GetBlogsBy(x => x.Title.Contains(name));
+            var blogResponse = Blogs.Join(
+                await _recipeRepository.GetAll(),
+                b => b.BlogId,
+                r => r.RecipeId,
+                (b, r) => new SearchBlogsResponse
+                {
+                    BlogId = b.BlogId,
+                    Title = b.Title,
+                }).ToList();
 
             return blogResponse;
         }
@@ -184,6 +184,39 @@ namespace BE_Homnayangi.Modules.BlogModule
                 listTagName.Add(blog.BlogId, blogTags.Where(x => x.BlogId.Equals(blog.BlogId)).Select(x => x.Tag.Name).ToList());
             }
             return listTagName;
+        }
+
+        public async Task<ICollection<GetBlogsForHomePageResponse>> GetSoupAndNormalBlogs()
+        {
+            var soupBlog = await _blogRepository.GetNItemRandom(blog => (blog.Category.Name == "Món canh"
+                                                                    && blog.BlogStatus.Value == 1),
+                                                                    includeProperties: "Category", numberItem: 1);
+            var normalBlog = await _blogRepository.GetNItemRandom(blog => (!(blog.Category.Name == "Món canh")
+                                                                      && blog.BlogStatus.Value == 1),
+                                                                        includeProperties: "Category", numberItem: 3);
+
+            if (soupBlog.Count != 1 && normalBlog.Count != 3)
+            {
+                return null;
+            }
+
+            List<Blog> blogs = new List<Blog>();
+            blogs.Add(soupBlog.ElementAt(0));
+            blogs.AddRange(normalBlog);
+
+            var blogTags = await _blogTagRepository.GetAll(includeProperties: "Tag");
+            var tagNames = GetListTagName(blogs, blogTags);
+            var listResponse = blogs.Join(tagNames, b => b.BlogId, y => y.Key, (b, y) => new GetBlogsForHomePageResponse
+            {
+                BlogId = b.BlogId,
+                Title = b.Title,
+                Description = b.Description,
+                ImageUrl = b.ImageUrl,
+                CategoryName = b.Category.Name,
+                ListTagName = y.Value
+            }).ToList();
+
+            return listResponse;
         }
     }
 }

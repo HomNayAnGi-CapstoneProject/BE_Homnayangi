@@ -35,6 +35,9 @@ namespace BE_Homnayangi.Modules.BlogModule.Interface
         public Task<ICollection<BlogResponse>> GetBlogsByCategory(Guid categoryId, int numberItems);
 
         public Task<ICollection<GetBlogsForHomePageResponse>> GetBlogsByCategoryForHomePage(Guid? categoryId, int numberOfItems = 0);
+        
         public Task<ICollection<SearchBlogsResponse>> GetBlogAndRecipeByName(String name);
+
+        public Task<ICollection<GetBlogsForHomePageResponse>> GetSoupAndNormalBlogs();
     }
 }
