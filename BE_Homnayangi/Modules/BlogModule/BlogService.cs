@@ -141,6 +141,23 @@ namespace BE_Homnayangi.Modules.BlogModule
 
             return listResponse;
         }
+        public async Task<ICollection<SearchBlogsResponse>> GetBlogAndRecipeByName(String name)
+        {
+         
+                var Blogs = await _blogRepository.GetBlogsBy(x => x.Title.Contains(name));
+                var blogResponse = Blogs.Join(
+                    await _recipeRepository.GetAll(),
+                    b => b.BlogId,
+                    r => r.RecipeId,
+                    (b, r) => new SearchBlogsResponse
+                    {
+                        BlogId = b.BlogId,
+                        Title = b.Title,
+                    }).ToList();
+
+            return blogResponse;
+        }
+
 
         internal IDictionary<Guid, List<string>> GetListTagName(ICollection<Blog> blogs, ICollection<BlogTag> blogTags)
         {

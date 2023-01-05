@@ -39,7 +39,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                 {
                     query = query.Include(includeProp);
                 }
-            }
+            } 
 
             return options != null ? options(query).ToList() : await query.ToListAsync();
         }

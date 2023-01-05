@@ -28,7 +28,7 @@ namespace BE_Homnayangi.Controllers
         [HttpGet("category/{categoryId}/blogs")]
         public async Task<ActionResult<IEnumerable<GetBlogsForHomePageResponse>>> GetBlogsByCategory(string categoryId)
         {
-            if(!Guid.TryParse(categoryId, out var _categoryId))
+            if (!Guid.TryParse(categoryId, out var _categoryId))
             {
                 return NotFound();
             }
@@ -51,5 +51,30 @@ namespace BE_Homnayangi.Controllers
                 result = result,
             });
         }
+        [HttpGet("blogs/live_searching")]
+        public async Task<ActionResult<IEnumerable<SearchBlogsResponse>>> GetBlogAndRecipeByName([FromQuery(Name = "title")] string title)
+        {
+            if (title != "" && title != null && title is string )
+            {
+                title = title.TrimStart(' ');
+                var result = await _blogService.GetBlogAndRecipeByName(title);
+                if (result.Any()) 
+                {
+                    return new JsonResult(new
+                    {
+                        result = result,
+                    });
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            else
+            { 
+                return BadRequest();
+            }
+        }
     }
 }
+
