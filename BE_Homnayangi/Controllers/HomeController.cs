@@ -51,5 +51,20 @@ namespace BE_Homnayangi.Controllers
                 result = result,
             });
         }
+        [HttpGet("blogs/search")]
+        public async Task<ActionResult<IEnumerable<BlogResponse>>> GetBlogAndRecipeByName(string title)
+        {
+            var result = await _blogService.GetBlogAndRecipeByName(title);
+            if (result.Any()) {
+            return new JsonResult(new
+            {
+                result = result,
+            });
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
     }
 }
