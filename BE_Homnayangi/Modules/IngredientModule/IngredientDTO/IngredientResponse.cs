@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Library.Models.DTO.IngredientDTO
+namespace BE_Homnayangi.Modules.DTO.IngredientDTO
 {
 	public class IngredientResponse
 	{

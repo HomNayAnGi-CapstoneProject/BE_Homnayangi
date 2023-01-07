@@ -9,7 +9,7 @@ using BE_Homnayangi.Modules.BlogModule;
 using BE_Homnayangi.Modules.BlogModule.Interface;
 using BE_Homnayangi.Modules.RecipeModule;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
-using Library.AutoMapper;
+using BE_Homnayangi.Modules.AutoMapper;
 using Library.DataAccess;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -62,6 +62,8 @@ namespace BE_Homnayangi
                                     .AllowAnyHeader()
                                     .AllowCredentials());
             });
+
+            services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
             // Category Module
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ICategoryService, CategoryService>();
@@ -73,11 +75,6 @@ namespace BE_Homnayangi
             // Recipe Module
             services.AddScoped<IRecipeRepository, RecipeRepository>();
             services.AddScoped<IRecipeService, RecipeService>();
-
-            services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
-            //Recipe Module
-            services.AddScoped<IRecipeRepository, RecipeRepository>();
-            services.AddScoped<IRecipeServices, RecipeServices>();
             //Recipe Detail Module
             services.AddScoped<IRecipeDetailRepository, RecipeDetailRepository>();
             services.AddScoped<IRecipeDetailService, RecipeDetailService>();
