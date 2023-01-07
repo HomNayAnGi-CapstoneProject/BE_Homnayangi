@@ -1,4 +1,5 @@
-﻿using BE_Homnayangi.Modules.BlogModule.Response;
+﻿using BE_Homnayangi.Modules.BlogModule.Request;
+using BE_Homnayangi.Modules.BlogModule.Response;
 using Library.Models;
 using System;
 using System.Collections.Generic;
@@ -34,7 +35,9 @@ namespace BE_Homnayangi.Modules.BlogModule.Interface
 
         public Task<ICollection<BlogResponse>> GetBlogsByCategory(Guid categoryId, int numberItems);
 
-        public Task<ICollection<GetBlogsForHomePageResponse>> GetBlogsByCategoryForHomePage(Guid? categoryId);
+        public Task<ICollection<GetBlogsForHomePageResponse>> GetBlogsByCategoryForHomePage(Guid? categoryId, int numberOfItems);
         public Task<ICollection<SearchBlogsResponse>> GetBlogAndRecipeByName(String name);
+
+        public Task<ICollection<GetBlogsForHomePageResponse>> GetBlogsByCategoryAndTag(BlogFilterByCateAndTagRequest blogFilter);
     }
 }
