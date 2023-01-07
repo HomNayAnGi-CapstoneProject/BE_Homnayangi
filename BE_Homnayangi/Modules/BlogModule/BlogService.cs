@@ -124,12 +124,15 @@ namespace BE_Homnayangi.Modules.BlogModule
 
         public async Task<ICollection<GetBlogsForHomePageResponse>> GetBlogsByCategoryForHomePage(Guid? categoryId)
         {
-            var listBlogs = await _blogRepository.GetNItemRandom(b => b.CategoryId.Equals(categoryId), includeProperties: "Category", numberItem: 4);
+            var listBlogs = await _blogRepository.GetBlogsBy(b => b.CategoryId.Equals(categoryId), includeProperties: "Category");
             var listBlogTag = await _blogTagRepository.GetAll(includeProperties: "Tag");
 
             var listTagName = GetListTagName(listBlogs, listBlogTag);
 
-            var listResponse = listBlogs.Join(listTagName, b => b.BlogId, y => y.Key, (b, y) => new GetBlogsForHomePageResponse
+            var listResponse = listBlogs
+                .OrderBy(b=>b.CreatedDate)
+                .Take(4)
+                .Join(listTagName, b => b.BlogId, y => y.Key, (b, y) => new GetBlogsForHomePageResponse
             {
                 BlogId = b.BlogId,
                 Title = b.Title,
@@ -141,6 +144,7 @@ namespace BE_Homnayangi.Modules.BlogModule
 
             return listResponse;
         }
+
         public async Task<ICollection<SearchBlogsResponse>> GetBlogAndRecipeByName(String name)
         {
          

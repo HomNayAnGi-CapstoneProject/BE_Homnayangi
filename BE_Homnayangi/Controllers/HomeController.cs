@@ -30,10 +30,11 @@ namespace BE_Homnayangi.Controllers
         {
             if (!Guid.TryParse(categoryId, out var _categoryId))
             {
-                return NotFound();
+                return BadRequest();
             }
 
             var blogs = await _blogService.GetBlogsByCategoryForHomePage(_categoryId);
+
             return new JsonResult(new
             {
                 total_results = blogs.Count(),
