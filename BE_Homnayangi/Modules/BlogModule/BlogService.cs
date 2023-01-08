@@ -2,6 +2,7 @@
 using BE_Homnayangi.Modules.BlogModule.Response;
 using BE_Homnayangi.Modules.BlogTagModule.Interface;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
+using BE_Homnayangi.Modules.TagModule.Interface;
 using Library.Models;
 using System;
 using System.Collections.Generic;
@@ -16,12 +17,14 @@ namespace BE_Homnayangi.Modules.BlogModule
         private readonly IBlogRepository _blogRepository;
         private readonly IRecipeRepository _recipeRepository;
         private readonly IBlogTagRepository _blogTagRepository;
+        private readonly ITagRepository _tagRepository;
 
-        public BlogService(IBlogRepository BlogRepository, IRecipeRepository recipeRepository, IBlogTagRepository blogTagRepository)
+        public BlogService(IBlogRepository BlogRepository, IRecipeRepository recipeRepository, IBlogTagRepository blogTagRepository, ITagRepository tagRepository)
         {
             _blogRepository = BlogRepository;
             _recipeRepository = recipeRepository;
             _blogTagRepository = blogTagRepository;
+            _tagRepository = tagRepository;
         }
 
         public async Task<ICollection<Blog>> GetAll()
@@ -125,11 +128,12 @@ namespace BE_Homnayangi.Modules.BlogModule
         public async Task<ICollection<GetBlogsForHomePageResponse>> GetBlogsByCategoryForHomePage(Guid? categoryId, int numberOfItems = 0)
         {
 
-            var listBlogs = await _blogRepository.GetBlogsBy(b => b.CategoryId.Equals(categoryId), includeProperties: "Category");
-
-            listBlogs = numberOfItems > 0
-                ? listBlogs.OrderBy(b => b.CreatedDate).Take(numberOfItems).ToList()
-                : listBlogs.OrderBy(b => b.CreatedDate).ToList();
+            var listBlogs = await _blogRepository
+                .GetBlogsBy(b => b.CategoryId.Equals(categoryId),
+                    options: numberOfItems > 0
+                        ? (list) => { return list.OrderByDescending(b => b.CreatedDate).Take(numberOfItems).ToList(); }
+                        : (list) => { return list.OrderByDescending(b => b.CreatedDate).ToList(); },
+                    includeProperties: "Category");
 
             var listBlogTag = await _blogTagRepository.GetAll(includeProperties: "Tag");
 
@@ -137,7 +141,7 @@ namespace BE_Homnayangi.Modules.BlogModule
 
             var listResponse = listBlogs
                 .Join(listTagName, b => b.BlogId, y => y.Key, (b, y) => new GetBlogsForHomePageResponse
-            {
+                {
                     BlogId = b.BlogId,
                     Title = b.Title,
                     Description = b.Description,
