@@ -115,7 +115,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     ImageUrl = b.ImageUrl,
                     Reaction = b.Reaction.Value,
                     View = b.View.Value,
-                    AuthorName = b.Author.Name,
+                    AuthorName = b.Author.FirstName,
                     CategoryName = b.Category.Name,
                     PackagePrice = b.Recipe.PackagePrice
                 }).ToList();

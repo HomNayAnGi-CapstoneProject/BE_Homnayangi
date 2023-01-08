@@ -4,6 +4,7 @@ using Library.Models.DTO.CategoryDTO;
 using Library.Models.DTO.IngredientDTO;
 using Library.Models.DTO.RecipeDetailsDTO;
 using Library.Models.DTO.RecipeDTO;
+using Library.Models.DTO.UserDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace Library.AutoMapper
         public AutoMapperProfile()
         {
             CreateCategoryMap();
+            CreateUserMap();
         }
 
         private void CreateCategoryMap()
@@ -25,6 +27,11 @@ namespace Library.AutoMapper
             CreateMap<Recipe, RecipeResponse>().ReverseMap();
             CreateMap<RecipeDetail, RecipeDetailsResponse>().ReverseMap();
             CreateMap<Ingredient, IngredientResponse>().ReverseMap();
+       
+        }
+        private void CreateUserMap()
+        {
+            CreateMap<GoogleUserCreateRequest, Customer>().ReverseMap();
         }
     }
 }

@@ -330,7 +330,8 @@ namespace Library.DataAccess
 
                 entity.Property(e => e.IsGoogle).HasColumnName("isGoogle");
 
-                entity.Property(e => e.Name).HasColumnName("name");
+                entity.Property(e => e.FirstName).HasColumnName("firstname");
+                entity.Property(e => e.LastName).HasColumnName("lastname");
 
                 entity.Property(e => e.Password).HasColumnName("password");
 
@@ -742,7 +743,8 @@ namespace Library.DataAccess
 
                 entity.Property(e => e.IsGoogle).HasColumnName("isGoogle");
 
-                entity.Property(e => e.Name).HasColumnName("name");
+                entity.Property(e => e.FirstName).HasColumnName("firstname");
+                entity.Property(e => e.LastName).HasColumnName("lastname");
 
                 entity.Property(e => e.Password).HasColumnName("password");
 
