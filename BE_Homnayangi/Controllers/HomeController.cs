@@ -78,10 +78,14 @@ namespace BE_Homnayangi.Controllers
             }
         }
 
-        [HttpGet("blogs/get-soup-and-normal-blogs")]
+        [HttpGet("blogs/soup-normal")]
         public async Task<ActionResult<IEnumerable<GetBlogsForHomePageResponse>>> GetSoupAndNormalBlogs()
         {
             var result = await _blogService.GetSoupAndNormalBlogs();
+            if (result == null)
+            {
+                return BadRequest();
+            }
             return new JsonResult(new
             {
                 total_results = result.Count(),

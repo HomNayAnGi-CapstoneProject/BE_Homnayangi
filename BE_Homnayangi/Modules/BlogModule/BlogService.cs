@@ -4,6 +4,7 @@ using BE_Homnayangi.Modules.BlogTagModule.Interface;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
 using BE_Homnayangi.Modules.TagModule.Interface;
 using Library.Models;
+using Library.Models.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,9 +20,9 @@ namespace BE_Homnayangi.Modules.BlogModule
         private readonly IBlogTagRepository _blogTagRepository;
         private readonly ITagRepository _tagRepository;
 
-        public BlogService(IBlogRepository BlogRepository, IRecipeRepository recipeRepository, IBlogTagRepository blogTagRepository, ITagRepository tagRepository)
+        public BlogService(IBlogRepository blogRepository, IRecipeRepository recipeRepository, IBlogTagRepository blogTagRepository, ITagRepository tagRepository)
         {
-            _blogRepository = BlogRepository;
+            _blogRepository = blogRepository;
             _recipeRepository = recipeRepository;
             _blogTagRepository = blogTagRepository;
             _tagRepository = tagRepository;
@@ -88,7 +89,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                 b,
                 CategoryName = b.Category.Name,
                 ListTagName = y.Value
-            }).Join(await _recipeRepository.GetNItemRandom(x => x.PackagePrice >= 50000 && x.PackagePrice <= 100000, numberItem: 6),
+            }).Join(await _recipeRepository.GetNItemRandom(x => x.PackagePrice.Value >= ((decimal)Price.PriceEnum.MIN) && x.PackagePrice <= ((decimal)Price.PriceEnum.MAX),
+                                                            numberItem: 6),
                 x => x.b.BlogId, y => y.RecipeId, (x, y) => new GetBlogsForHomePageResponse
                 {
                     BlogId = x.b.BlogId,
@@ -188,35 +190,88 @@ namespace BE_Homnayangi.Modules.BlogModule
 
         public async Task<ICollection<GetBlogsForHomePageResponse>> GetSoupAndNormalBlogs()
         {
-            var soupBlog = await _blogRepository.GetNItemRandom(blog => (blog.Category.Name == "Món canh"
-                                                                    && blog.BlogStatus.Value == 1),
-                                                                    includeProperties: "Category", numberItem: 1);
-            var normalBlog = await _blogRepository.GetNItemRandom(blog => (!(blog.Category.Name == "Món canh")
-                                                                      && blog.BlogStatus.Value == 1),
-                                                                        includeProperties: "Category", numberItem: 3);
-
-            if (soupBlog.Count != 1 && normalBlog.Count != 3)
+            string tagName = GetTagNameByCurrentTime();
+            if (tagName.Equals(""))
             {
                 return null;
             }
 
-            List<Blog> blogs = new List<Blog>();
-            blogs.Add(soupBlog.ElementAt(0));
-            blogs.AddRange(normalBlog);
-
-            var blogTags = await _blogTagRepository.GetAll(includeProperties: "Tag");
-            var tagNames = GetListTagName(blogs, blogTags);
-            var listResponse = blogs.Join(tagNames, b => b.BlogId, y => y.Key, (b, y) => new GetBlogsForHomePageResponse
+            var listResponse = new List<GetBlogsForHomePageResponse>();
+            try
             {
-                BlogId = b.BlogId,
-                Title = b.Title,
-                Description = b.Description,
-                ImageUrl = b.ImageUrl,
-                CategoryName = b.Category.Name,
-                ListTagName = y.Value
-            }).ToList();
+                var result = await _tagRepository.GetFirstOrDefaultAsync(x => x.Name == tagName);
+                var tagId = result.TagId;
+                var soupBlog = await _blogRepository.GetNItemRandom(blog => (blog.Category.Name == "Món canh"
+                                                                    && blog.BlogStatus.Value == 1),
+                                                                    includeProperties: "Category", numberItem: 1);
+                var listBlog = await _blogRepository.GetAll(includeProperties: "Category");
+                var listBlogTag = await _blogTagRepository.GetAll(includeProperties: "Tag");
 
+                var listTagName = GetListTagName(listBlog, listBlogTag);
+
+                var soupBlogTags = listTagName.FirstOrDefault(b => b.Key == soupBlog.ElementAt(0).BlogId);
+
+                var soupBlogResponse = new GetBlogsForHomePageResponse()
+                {
+                    BlogId = soupBlog.ElementAt(0).BlogId,
+                    Title = soupBlog.ElementAt(0).Title,
+                    Description = soupBlog.ElementAt(0).Description,
+                    ImageUrl = soupBlog.ElementAt(0).ImageUrl,
+                    CategoryName = soupBlog.ElementAt(0).Category.Name,
+                    ListTagName = soupBlogTags.Value
+                }; // Xong món canh
+
+                listResponse = listTagName.Join(
+                    await _blogRepository.GetNItemRandom(blog => blog.Category.Name != "Món canh", includeProperties: "Category", numberItem: 3),
+                    tb => tb.Key,
+                    b => b.BlogId,
+                    (tb, b) => new GetBlogsForHomePageResponse
+                    {
+                        BlogId = b.BlogId,
+                        Title = b.Title,
+                        Description = b.Description,
+                        ImageUrl = b.ImageUrl,
+                        CategoryName = b.Category.Name,
+                        ListTagName = tb.Value,
+                    }).ToList();
+
+                listResponse.Add(soupBlogResponse);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at GetSoupAndNormalBlogs: " + ex.Message);
+            }
             return listResponse;
+        }
+
+        private string GetTagNameByCurrentTime()
+        {
+            int hour = Int32.Parse(DateTime.Now.ToString("HH"));
+            string tagString = "";
+            Console.WriteLine("Now: " + hour);
+
+            if (hour >= 6 && hour < 10)
+            {
+                Console.WriteLine("Bữa sáng");
+                tagString = "Bữa sáng";
+            }
+            else if (hour >= 10 && hour < 15)
+            {
+                Console.WriteLine("Bữa trưa");
+                tagString = "Bữa trưa";
+            }
+            else if (hour >= 15 && hour < 20)
+            {
+                Console.WriteLine("Bữa tối");
+                tagString = "Bữa tối";
+            }
+            else
+            {
+                Console.WriteLine("Error at GetSoupAndNormalBlogs: Service is not provided at this time!");
+            }
+
+            return tagString;
         }
     }
 }
