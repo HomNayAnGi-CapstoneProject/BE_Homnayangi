@@ -69,7 +69,10 @@ namespace BE_Homnayangi.Controllers
                 }
                 else
                 {
-                    return NotFound();
+                    return new JsonResult(new
+                    {
+                        result = "",
+                    });
                 }
             }
             else
