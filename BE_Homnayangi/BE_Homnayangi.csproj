@@ -34,14 +34,21 @@
     <None Remove="Modules\RecipeDetailModule\Interface\" />
     <None Remove="Modules\IngredientModule\" />
     <None Remove="Modules\IngredientModule\Interface\" />
+    <None Remove="Modules\IngredientModule\IngredientDTO\" />
+    <None Remove="Modules\RecipeDetailModule\RecipeDetailsDTO\" />
+    <None Remove="Modules\RecipeModule\RecipeDTO\" />
+    <None Remove="Modules\AutoMapper\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Modules\BlogModule\Request\" />
     <Folder Include="Modules\RecipeModule\" />
     <Folder Include="Modules\RecipeModule\Interface\" />
     <Folder Include="Modules\RecipeDetailModule\" />
     <Folder Include="Modules\RecipeDetailModule\Interface\" />
     <Folder Include="Modules\IngredientModule\" />
     <Folder Include="Modules\IngredientModule\Interface\" />
+    <Folder Include="Modules\IngredientModule\IngredientDTO\" />
+    <Folder Include="Modules\RecipeDetailModule\RecipeDetailsDTO\" />
+    <Folder Include="Modules\RecipeModule\RecipeDTO\" />
+    <Folder Include="Modules\AutoMapper\" />
   </ItemGroup>
 </Project>

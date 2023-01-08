@@ -9,11 +9,10 @@ using Library.DataAccess;
 using Library.Models;
 using AutoMapper;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
-using Library.Models.DTO.RecipeDTO;
-using Library.Models.DTO.RecipeDetailsDTO;
 using BE_Homnayangi.Modules.RecipeDetailModule.Interface;
 using BE_Homnayangi.Modules.IngredientModule.Interface;
-using Library.Models.DTO.IngredientDTO;
+using BE_Homnayangi.Modules.DTO.RecipeDetailsDTO;
+using BE_Homnayangi.Modules.DTO.RecipeDTO;
 
 namespace BE_Homnayangi.Controllers
 {
@@ -22,11 +21,11 @@ namespace BE_Homnayangi.Controllers
     public class RecipesController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly IRecipeServices _recipeServices;
+        private readonly IRecipeService _recipeServices;
         private readonly IRecipeDetailService _recipeDetailService;
         private readonly IIngredientService _ingredientService;
 
-        public RecipesController(IRecipeServices recipeServices, IRecipeDetailService recipeDetailService, IIngredientService ingredientService, IMapper mapper)
+        public RecipesController(IRecipeService recipeServices, IRecipeDetailService recipeDetailService, IIngredientService ingredientService, IMapper mapper)
         {
             _mapper = mapper;
             _recipeServices = recipeServices;

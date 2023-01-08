@@ -1,16 +1,15 @@
 ﻿using AutoMapper;
+using BE_Homnayangi.Modules.DTO.IngredientDTO;
+using BE_Homnayangi.Modules.DTO.RecipeDetailsDTO;
+using BE_Homnayangi.Modules.DTO.RecipeDTO;
 using Library.Models;
-using Library.Models.DTO.CategoryDTO;
-using Library.Models.DTO.IngredientDTO;
-using Library.Models.DTO.RecipeDetailsDTO;
-using Library.Models.DTO.RecipeDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Library.AutoMapper
+namespace BE_Homnayangi.Modules.AutoMapper
 {
     public class AutoMapperProfile : Profile
     {
@@ -21,7 +20,7 @@ namespace Library.AutoMapper
 
         private void CreateCategoryMap()
         {
-            CreateMap<CreateCategoryRequest, Category>().ReverseMap();
+            //CreateMap<CreateCategoryRequest, Category>().ReverseMap();
             CreateMap<Recipe, RecipeResponse>().ReverseMap();
             CreateMap<RecipeDetail, RecipeDetailsResponse>().ReverseMap();
             CreateMap<Ingredient, IngredientResponse>().ReverseMap();
