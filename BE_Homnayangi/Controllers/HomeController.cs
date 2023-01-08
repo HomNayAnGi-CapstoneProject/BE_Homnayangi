@@ -33,7 +33,7 @@ namespace BE_Homnayangi.Controllers
                 return BadRequest();
             }
 
-            var blogs = await _blogService.GetBlogsByCategoryForHomePage(_categoryId);
+            var blogs = await _blogService.GetBlogsByCategoryForHomePage(_categoryId, numberOfItems: 4);
 
             return new JsonResult(new
             {

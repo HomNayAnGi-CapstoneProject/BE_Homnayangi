@@ -122,25 +122,32 @@ namespace BE_Homnayangi.Modules.BlogModule
             return listResponse;
         }
 
-        public async Task<ICollection<GetBlogsForHomePageResponse>> GetBlogsByCategoryForHomePage(Guid? categoryId)
+        public async Task<ICollection<GetBlogsForHomePageResponse>> GetBlogsByCategoryForHomePage(Guid? categoryId, int numberOfItems = 0)
         {
+
             var listBlogs = await _blogRepository.GetBlogsBy(b => b.CategoryId.Equals(categoryId), includeProperties: "Category");
+
+            listBlogs = numberOfItems > 0
+                ? listBlogs.OrderBy(b => b.CreatedDate).Take(numberOfItems).ToList()
+                : listBlogs.OrderBy(b => b.CreatedDate).ToList();
+
             var listBlogTag = await _blogTagRepository.GetAll(includeProperties: "Tag");
 
             var listTagName = GetListTagName(listBlogs, listBlogTag);
 
             var listResponse = listBlogs
-                .OrderBy(b=>b.CreatedDate)
-                .Take(4)
                 .Join(listTagName, b => b.BlogId, y => y.Key, (b, y) => new GetBlogsForHomePageResponse
             {
-                BlogId = b.BlogId,
-                Title = b.Title,
-                Description = b.Description,
-                ImageUrl = b.ImageUrl,
-                CategoryName = b.Category.Name,
-                ListTagName = y.Value
-            }).ToList();
+                    BlogId = b.BlogId,
+                    Title = b.Title,
+                    Description = b.Description,
+                    ImageUrl = b.ImageUrl,
+                    CategoryName = b.Category.Name,
+                    ListTagName = y.Value,
+                    CreatedDate = b.CreatedDate.HasValue ? b.CreatedDate.Value : new DateTime(),
+                    Reaction = b.Reaction.HasValue ? b.Reaction.Value : 0,
+                    View = b.View.HasValue ? b.View.Value : 0,
+                }).ToList();
 
             return listResponse;
         }
