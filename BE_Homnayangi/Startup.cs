@@ -23,6 +23,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using BE_Homnayangi.Modules.BlogTagModule.Interface;
 using BE_Homnayangi.Modules.BlogTagModule;
+using BE_Homnayangi.Modules.TagModule;
+using BE_Homnayangi.Modules.TagModule.Interface;
 
 namespace BE_Homnayangi
 {
@@ -75,14 +77,22 @@ namespace BE_Homnayangi
             // Recipe Module
             services.AddScoped<IRecipeRepository, RecipeRepository>();
             services.AddScoped<IRecipeService, RecipeService>();
+
+            services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
+
             //Recipe Detail Module
             services.AddScoped<IRecipeDetailRepository, RecipeDetailRepository>();
             services.AddScoped<IRecipeDetailService, RecipeDetailService>();
+
             //Ingredient Module
             services.AddScoped<IIngredientRepository, IngredientRepository>();
             services.AddScoped<IIngredientService, IngredientService>();
+
             //BlogTag Module
             services.AddScoped<IBlogTagRepository, BlogTagRepository>();
+
+            //Tag Module
+            services.AddScoped<ITagRepository, TagRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

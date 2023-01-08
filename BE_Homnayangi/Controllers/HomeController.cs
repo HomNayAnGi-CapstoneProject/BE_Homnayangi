@@ -52,14 +52,15 @@ namespace BE_Homnayangi.Controllers
                 result = result,
             });
         }
-        [HttpGet("blogs/live_searching")]
+
+        [HttpGet("blogs/live-searching")]
         public async Task<ActionResult<IEnumerable<SearchBlogsResponse>>> GetBlogAndRecipeByName([FromQuery(Name = "title")] string title)
         {
-            if (title != "" && title != null && title is string )
+            if (title != "" && title != null && title is string)
             {
                 title = title.TrimStart(' ');
                 var result = await _blogService.GetBlogAndRecipeByName(title);
-                if (result.Any()) 
+                if (result.Any())
                 {
                     return new JsonResult(new
                     {
@@ -72,9 +73,24 @@ namespace BE_Homnayangi.Controllers
                 }
             }
             else
-            { 
+            {
                 return BadRequest();
             }
+        }
+
+        [HttpGet("blogs/soup-normal")]
+        public async Task<ActionResult<IEnumerable<GetBlogsForHomePageResponse>>> GetSoupAndNormalBlogs()
+        {
+            var result = await _blogService.GetSoupAndNormalBlogs();
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            return new JsonResult(new
+            {
+                total_results = result.Count(),
+                result = result,
+            });
         }
     }
 }
