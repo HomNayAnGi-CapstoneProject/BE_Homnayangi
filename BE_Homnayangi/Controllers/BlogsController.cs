@@ -162,7 +162,7 @@ namespace BE_Homnayangi.Controllers
                 return NotFound();
             }
 
-            return Ok(blogFilter);
+            return Ok(response);
         }
     }
 }
