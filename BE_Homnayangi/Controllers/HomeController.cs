@@ -7,6 +7,8 @@ using BE_Homnayangi.Modules.RecipeModule.Interface;
 using Library.DataAccess;
 using System.Linq;
 using BE_Homnayangi.Modules.BlogModule.Response;
+using Library.Models.Enum;
+using Library.Models;
 
 namespace BE_Homnayangi.Controllers
 {
@@ -25,15 +27,15 @@ namespace BE_Homnayangi.Controllers
             _recipeService = recipeService;
         }
 
-        [HttpGet("category/{categoryId}/blogs")]
-        public async Task<ActionResult<IEnumerable<GetBlogsForHomePageResponse>>> GetBlogsByCategory(string categoryId)
+        [HttpGet("tag/{tagId}/blogs")]
+        public async Task<ActionResult<IEnumerable<GetBlogsForHomePageResponse>>> GetBlogsByTag(string tagId)
         {
-            if (!Guid.TryParse(categoryId, out var _categoryId))
+            if (!Guid.TryParse(tagId, out var _tagId))
             {
                 return BadRequest();
             }
 
-            var blogs = await _blogService.GetBlogsByCategoryForHomePage(_categoryId, numberOfItems: 4);
+            var blogs = await _blogService.GetBlogsByTagForHomePage(_tagId, numberOfItems: (int)NumberItem.NumberItemShowEnum.EATING_STYLE);
 
             return new JsonResult(new
             {
@@ -81,10 +83,15 @@ namespace BE_Homnayangi.Controllers
             }
         }
 
-        [HttpGet("blogs/soup-normal")]
-        public async Task<ActionResult<IEnumerable<GetBlogsForHomePageResponse>>> GetSoupAndNormalBlogs()
+        [HttpGet("category/{categoryId}/blog-menu")]
+        public async Task<ActionResult<IEnumerable<GetBlogsForHomePageResponse>>> GetSoupAndNormalBlogs(string categoryId)
         {
-            var result = await _blogService.GetSoupAndNormalBlogs();
+            if (!Guid.TryParse(categoryId, out var _categoryId))
+            {
+                return BadRequest();
+            }
+
+            var result = await _blogService.GetSoupAndNormalBlogs(_categoryId);
             if (result == null)
             {
                 return BadRequest();

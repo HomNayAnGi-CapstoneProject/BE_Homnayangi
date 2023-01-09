@@ -20,7 +20,6 @@ namespace Library.Models
         public string ImageUrl { get; set; }
         public decimal? PackagePrice { get; set; }
         public decimal? CookedPrice { get; set; }
-        public int? Region { get; set; }
         public int? Size { get; set; }
 
         public virtual Blog RecipeNavigation { get; set; }
