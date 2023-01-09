@@ -41,27 +41,44 @@ namespace BE_Homnayangi.Controllers
 
         // POST api/<LoginController>
         [HttpPost("login")]
-        public IActionResult Post([FromBody] LoginDTO login)
+        public async Task<IActionResult> Login([FromBody] LoginDTO login)
         {
-            var token = _userService.GenerateToken(login);
+            var token = await _userService.GenerateToken(login);
             return new JsonResult(new
             {
                 token = token
             });
         }
         [HttpPost("login-google")]
-        public async Task<IActionResult> GoogleLogin([FromBody] GoogleUserCreateRequest request)
+        public async Task<IActionResult> GoogleLogin([FromBody] string token)
         {
-            
-            var customer = _mapper.Map<Customer>(request);
-            if (customer.Email != request.Email)
+            var stream = token;
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(stream);
+            var tokenS = jsonToken as JwtSecurityToken;
+            var displayName = tokenS.Claims.First(claim => claim.Type == "name").Value;
+            var email = tokenS.Claims.First(claim => claim.Type == "name").Value;
+            var loginGoogle = new LoginGoogleDTO
             {
-                customer.CustomerId = Guid.NewGuid();
-                customer.IsGoogle = true;
-                await _userService.AddNewCustomer(customer);
-            }
-           string accessToken = _userService.GenerateGoolgleToken(customer);
+                Email = email,
+                Displayname = displayName
+        };
+            string accessToken = await _userService.GenerateGoolgleToken(loginGoogle);
             return Ok(accessToken);
+        }
+        [HttpPost("Register")]
+        public async Task<IActionResult> Register([FromBody] RegisterDTO register)
+        {
+
+         
+            var cus = _userService.GetCustomerByUsername(register.Username);
+            if (cus == null)
+            {
+                await _userService.Register(register);
+                return Ok("Register successful");
+            }
+            return Unauthorized();
+
         }
     }
 }

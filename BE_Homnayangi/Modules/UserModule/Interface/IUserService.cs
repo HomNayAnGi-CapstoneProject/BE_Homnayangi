@@ -7,13 +7,15 @@ using System.Threading.Tasks;
 
 namespace BE_Homnayangi.Modules.UserModule.Interface
 {
+#nullable enable
     public interface IUserService
     {
         public Task<Customer> GetUserByEmail(string email);
-        public string GenerateToken(LoginDTO login);
+        public Task<string> GenerateToken(LoginDTO login);
         public Task AddNewCustomer(Customer newCustomer);
-        public string GenerateGoolgleToken(Customer customer);
-        //public Task<Customer> CreateUserByGoogleLogin(GoogleUserCreateRequest request);
-        //public string GenerateTokenByGoolgle(Customer customer);
+        public Task<string> GenerateGoolgleToken(LoginGoogleDTO loginGoogle);
+        public Customer GetCustomerByEmail(string? email);
+        public Customer GetCustomerByUsername(string? username);
+        public Task Register(RegisterDTO register);
     }
 }
