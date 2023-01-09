@@ -4,18 +4,19 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using BE_Homnayangi.Modules.TagModule.Interface;
+using BE_Homnayangi.Modules.TagModule.Response;
 using Library.Models;
 
 namespace BE_Homnayangi.Modules.TagModule
 {
-	public class TagService : ITagService
-	{
+    public class TagService : ITagService
+    {
         private readonly ITagRepository _tagRepository;
 
-		public TagService(ITagRepository tagRepository)
-		{
+        public TagService(ITagRepository tagRepository)
+        {
             _tagRepository = tagRepository;
-		}
+        }
 
         public async Task<ICollection<Tag>> GetAll()
         {
@@ -54,7 +55,30 @@ namespace BE_Homnayangi.Modules.TagModule
 
         public Tag GetTagByID(Guid? id)
         {
-            return _tagRepository.GetFirstOrDefaultAsync(x => x.TagId.Equals(id)).Result;
+            return _tagRepository.GetFirstOrDefaultAsync(x => x.TagId.Equals(id) && x.Status.Value).Result;
+        }
+
+        public async Task<ICollection<TagResponse>> GetTagsByCategoryId(Guid id)
+        {
+            try
+            {
+                List<TagResponse> result = new List<TagResponse>();
+                ICollection<Tag> list = await _tagRepository.GetTagsBy(x => x.CategoryId.Equals(id) && x.Status.Value);
+                foreach (var tag in list)
+                {
+                    result.Add(new TagResponse()
+                    {
+                        TagId = tag.TagId,
+                        Name = tag.Name
+                    });
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at GetTagsByCategoryId: " + ex.Message);
+                throw;
+            }
         }
     }
 }
