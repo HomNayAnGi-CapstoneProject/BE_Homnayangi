@@ -1,4 +1,5 @@
 ﻿using BE_Homnayangi.Modules.BlogModule.Interface;
+using BE_Homnayangi.Modules.BlogModule.Request;
 using BE_Homnayangi.Modules.BlogModule.Response;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
 using BE_Homnayangi.Modules.TagModule.Interface;
@@ -155,6 +156,17 @@ namespace BE_Homnayangi.Controllers
             return _context.Blogs.Any(e => e.BlogId == id);
         }
 
+        [HttpGet("category/tag")]
+        public async Task<ActionResult<Blog>> GetBlogsByCateAndTag([FromQuery] BlogFilterByCateAndTagRequest blogFilter)
+        {
+            var response = await _blogService.GetBlogsByCategoryAndTag(blogFilter);
+
+            if (response == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(response);
         // Get tags by categoryId 
         [HttpGet("tags/{categoryId}")]
         public async Task<ActionResult<IEnumerable<TagResponse>>> GetTagsByCategoryId(Guid categoryId)

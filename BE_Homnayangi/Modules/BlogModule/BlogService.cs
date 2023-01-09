@@ -1,15 +1,18 @@
 ﻿using BE_Homnayangi.Modules.BlogModule.Interface;
+using BE_Homnayangi.Modules.BlogModule.Request;
 using BE_Homnayangi.Modules.BlogModule.Response;
 using BE_Homnayangi.Modules.BlogTagModule.Interface;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
 using BE_Homnayangi.Modules.TagModule.Interface;
 using Library.Models;
+using Library.PagedList;
 using Library.Models.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using System.Collections;
 
 namespace BE_Homnayangi.Modules.BlogModule
 {
@@ -19,7 +22,7 @@ namespace BE_Homnayangi.Modules.BlogModule
         private readonly IRecipeRepository _recipeRepository;
         private readonly IBlogTagRepository _blogTagRepository;
         private readonly ITagRepository _tagRepository;
-
+        
         public BlogService(IBlogRepository blogRepository, IRecipeRepository recipeRepository, IBlogTagRepository blogTagRepository, ITagRepository tagRepository)
         {
             _blogRepository = blogRepository;
@@ -199,6 +202,74 @@ namespace BE_Homnayangi.Modules.BlogModule
             return listTagName;
         }
 
+        public async Task<ICollection<BlogsByCateAndTagResponse>> GetBlogsByCategoryAndTag(BlogFilterByCateAndTagRequest blogFilter)
+        {
+            var categoryId = blogFilter.CategoryId;
+            var tagId = blogFilter.TagId;
+            var pageSize = blogFilter.PageSize;
+            var pageNumber = blogFilter.PageNumber;
+            var sort = blogFilter.sort;
+            ICollection<BlogsByCateAndTagResponse> response;
+            ICollection<Blog> blogs;
+
+
+            blogs = categoryId != null
+                ? await _blogRepository.GetBlogsBy(b => b.CategoryId.Equals(categoryId), includeProperties: "Category,Recipe")
+                : await _blogRepository.GetBlogsBy(b => b.CategoryId.Equals(categoryId));
+
+            response = blogs.Select(b => new BlogsByCateAndTagResponse
+            {
+                BlogId = b.BlogId,
+                RecipeName = b.Recipe?.Title,
+                Title = b.Title,
+                Description = b.Description,
+                ImageUrl = b.ImageUrl,
+                CategoryName = b.Category?.Name,
+                PackagePrice = b.Recipe?.PackagePrice,
+                CreatedDate = b.CreatedDate,
+                Reaction = b.Reaction,
+                View = b.View
+            }).ToList();
+
+            if (tagId != null)
+            {
+                var blogTags = await _blogTagRepository.GetBlogTagsBy(bt => bt.TagId.Equals(tagId));
+
+                response = blogTags.Join(blogs, bt => bt.BlogId, b => b.BlogId, (bt, b) => new BlogsByCateAndTagResponse
+                {
+                    BlogId = b.BlogId,
+                    RecipeName = b.Recipe?.Title,
+                    Title = b.Title,
+                    Description = b.Description,
+                    ImageUrl = b.ImageUrl,
+                    CategoryName = b.Category?.Name,
+                    PackagePrice = b.Recipe?.PackagePrice,
+                    CreatedDate = b.CreatedDate,
+                    Reaction = b.Reaction,
+                    View = b.View
+                }).ToList();
+            }
+
+            switch (sort)
+            {
+                case 1:
+                    response = response.OrderByDescending(r => r.CreatedDate).ToList();
+                    break;
+                case 2:
+                    response = response.OrderByDescending(r => r.Reaction).ToList();
+                    break;
+                case 3:
+                    response = response.OrderByDescending(r => r.View).ToList();
+                    break;
+                default:
+                    response = response.OrderByDescending(r => r.CreatedDate).ToList();
+                    break;
+            }
+
+            response = PagedList<BlogsByCateAndTagResponse>.ToPagedList(source: response, pageNumber: pageNumber, pageSize: pageSize);
+            return response;
+        }
+
         public async Task<ICollection<GetBlogsForHomePageResponse>> GetSoupAndNormalBlogs(Guid categoryId)
         {
             string tagName = GetTagNameByCurrentTime();
@@ -279,6 +350,7 @@ namespace BE_Homnayangi.Modules.BlogModule
             }
 
             return tagString;
+
         }
     }
 }
