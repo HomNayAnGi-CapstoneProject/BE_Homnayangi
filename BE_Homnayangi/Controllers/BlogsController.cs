@@ -2,6 +2,8 @@
 using BE_Homnayangi.Modules.BlogModule.Request;
 using BE_Homnayangi.Modules.BlogModule.Response;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
+using BE_Homnayangi.Modules.TagModule.Interface;
+using BE_Homnayangi.Modules.TagModule.Response;
 using Library.DataAccess;
 using Library.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -20,12 +22,14 @@ namespace BE_Homnayangi.Controllers
         private readonly HomnayangiContext _context;
         private readonly IBlogService _blogService;
         private readonly IRecipeService _recipeService;
+        private readonly ITagService _tagService;
 
-        public BlogsController(HomnayangiContext context, IBlogService blogService, IRecipeService recipeService)
+        public BlogsController(HomnayangiContext context, IBlogService blogService, IRecipeService recipeService, ITagService tagService)
         {
             _context = context;
             _blogService = blogService;
             _recipeService = recipeService;
+            _tagService = tagService;
         }
 
         // GET: api/Blogs
@@ -163,6 +167,17 @@ namespace BE_Homnayangi.Controllers
             }
 
             return Ok(response);
+        // Get tags by categoryId 
+        [HttpGet("tags/{categoryId}")]
+        public async Task<ActionResult<IEnumerable<TagResponse>>> GetTagsByCategoryId(Guid categoryId)
+        {
+            var tags = await _tagService.GetTagsByCategoryId(categoryId);
+
+            return new JsonResult(new
+            {
+                total_results = tags.Count(),
+                result = tags,
+            }); ;
         }
     }
 }
