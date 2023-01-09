@@ -137,7 +137,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     ImageUrl = b.ImageUrl,
                     Reaction = b.Reaction.Value,
                     View = b.View.Value,
-                    AuthorName = b.Author.Name,
+                    AuthorName = b.Author.Displayname,
                     CategoryName = b.Category.Name,
                     PackagePrice = b.Recipe.PackagePrice
                 }).ToList();
@@ -329,7 +329,7 @@ namespace BE_Homnayangi.Modules.BlogModule
             string tagString = "";
             Console.WriteLine("Now: " + hour);
 
-            if (hour >= 6 && hour < 10)
+            if (hour >= 0 && hour < 10)
             {
                 Console.WriteLine("Bữa sáng");
                 tagString = "Bữa sáng";
@@ -339,7 +339,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                 Console.WriteLine("Bữa trưa");
                 tagString = "Bữa trưa";
             }
-            else if (hour >= 15 && hour < 20)
+            else if (hour >= 15 && hour < 24)
             {
                 Console.WriteLine("Bữa tối");
                 tagString = "Bữa tối";
