@@ -13,8 +13,7 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
         public string CategoryName { get; set; }
         public List<string> ListTagName { get; set; }
         public decimal? PackagePrice { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public int Reaction { get; set; }
-        public int View { get; set; }
+        public int? Reaction { get; set; }
+        public int? View { get; set; }
     }
 }

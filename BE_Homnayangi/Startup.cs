@@ -26,6 +26,7 @@ using BE_Homnayangi.Modules.BlogTagModule;
 using BE_Homnayangi.Modules.TagModule.Interface;
 using BE_Homnayangi.Modules.TagModule;
 
+
 namespace BE_Homnayangi
 {
     public class Startup
@@ -75,14 +76,20 @@ namespace BE_Homnayangi
             // Recipe Module
             services.AddScoped<IRecipeRepository, RecipeRepository>();
             services.AddScoped<IRecipeService, RecipeService>();
+
+            services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
+
             //Recipe Detail Module
             services.AddScoped<IRecipeDetailRepository, RecipeDetailRepository>();
             services.AddScoped<IRecipeDetailService, RecipeDetailService>();
+
             //Ingredient Module
             services.AddScoped<IIngredientRepository, IngredientRepository>();
             services.AddScoped<IIngredientService, IngredientService>();
+
             //BlogTag Module
             services.AddScoped<IBlogTagRepository, BlogTagRepository>();
+
             //Tag Module
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<ITagService, TagService>();

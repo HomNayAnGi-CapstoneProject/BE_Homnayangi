@@ -6,6 +6,7 @@ using BE_Homnayangi.Modules.RecipeModule.Interface;
 using BE_Homnayangi.Modules.TagModule.Interface;
 using Library.Models;
 using Library.PagedList;
+using Library.Models.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,10 +21,10 @@ namespace BE_Homnayangi.Modules.BlogModule
         private readonly IRecipeRepository _recipeRepository;
         private readonly IBlogTagRepository _blogTagRepository;
         private readonly ITagRepository _tagRepository;
-
-        public BlogService(IBlogRepository BlogRepository, IRecipeRepository recipeRepository, IBlogTagRepository blogTagRepository, ITagRepository tagRepository)
+        
+        public BlogService(IBlogRepository blogRepository, IRecipeRepository recipeRepository, IBlogTagRepository blogTagRepository, ITagRepository tagRepository)
         {
-            _blogRepository = BlogRepository;
+            _blogRepository = blogRepository;
             _recipeRepository = recipeRepository;
             _blogTagRepository = blogTagRepository;
             _tagRepository = tagRepository;
@@ -90,17 +91,32 @@ namespace BE_Homnayangi.Modules.BlogModule
                 b,
                 CategoryName = b.Category.Name,
                 ListTagName = y.Value
-            }).Join(await _recipeRepository.GetNItemRandom(x => x.PackagePrice >= 50000 && x.PackagePrice <= 100000, numberItem: 6),
-                x => x.b.BlogId, y => y.RecipeId, (x, y) => new GetBlogsForHomePageResponse
+            }).Join(await _recipeRepository.GetNItemRandom(x => x.PackagePrice.Value >= ((decimal)Price.PriceEnum.MIN) 
+            && x.PackagePrice <= ((decimal)Price.PriceEnum.MAX), numberItem: (int)NumberItem.NumberItemRandomEnum.CHEAP_PRICE),
+                x => x.b.BlogId, y => y.RecipeId, (x, y) => new
                 {
                     BlogId = x.b.BlogId,
                     Title = x.b.Title,
                     Description = x.b.Description,
                     ImageUrl = x.b.ImageUrl,
+                    View = x.b.View,
+                    Reaction = x.b.Reaction,
                     CategoryName = x.CategoryName,
                     ListTagName = x.ListTagName,
-                    PackagePrice = y.PackagePrice                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+                    PackagePrice = y.PackagePrice
+                }).OrderByDescending(x => x.View).Take((int) NumberItem.NumberItemShowEnum.CHEAP_PRICE).Select(x => new GetBlogsForHomePageResponse
+                {
+                    BlogId = x.BlogId,
+                    Title = x.Title,
+                    Description = x.Description,
+                    ImageUrl = x.ImageUrl,
+                    CategoryName = x.CategoryName,
+                    ListTagName = x.ListTagName,
+                    PackagePrice = x.PackagePrice,
+                    View = x.View,
+                    Reaction = x.Reaction
                 }).ToList();
+
             return listResponse;
         }
 
@@ -127,30 +143,57 @@ namespace BE_Homnayangi.Modules.BlogModule
             return listResponse;
         }
 
-        public async Task<ICollection<GetBlogsForHomePageResponse>> GetBlogsByCategoryForHomePage(Guid? categoryId, int numberOfItems = 0)
+        public async Task<ICollection<GetBlogsForHomePageResponse>> GetBlogsByTagForHomePage(Guid? tagId, int numberOfItems = 0)
         {
+            var listBlogTag = await _blogTagRepository.GetBlogTagsBy(x => x.TagId.Equals(tagId), includeProperties: "Tag");
 
-            var listBlogs = await _blogRepository.GetBlogsBy(b => b.CategoryId.Equals(categoryId), includeProperties: "Category,Recipe");
+            var listBlogs = await _blogRepository.GetAll(includeProperties: "Category");
 
             listBlogs = numberOfItems > 0
-                ? listBlogs.OrderBy(b => b.CreatedDate).Take(numberOfItems).ToList()
-                : listBlogs.OrderBy(b => b.CreatedDate).ToList();
-
-            var listBlogTag = await _blogTagRepository.GetAll(includeProperties: "Tag");
+                ? listBlogs.Join(listBlogTag, x => x.BlogId, y => y.BlogId, (x, y) => x).OrderByDescending(x => x.CreatedDate).Take(numberOfItems).ToList()
+                : listBlogs.Join(listBlogTag, x => x.BlogId, y => y.BlogId, (x, y) => x).OrderByDescending(x => x.CreatedDate).ToList();
 
             var listTagName = GetListTagName(listBlogs, listBlogTag);
-            
+
             var listResponse = listBlogs
                 .Join(listTagName, b => b.BlogId, y => y.Key, (b, y) => new GetBlogsForHomePageResponse
                 {
                     BlogId = b.BlogId,
-                    RecipeName = b.Recipe != null ? b.Recipe.Title : null,
                     Title = b.Title,
                     Description = b.Description,
                     ImageUrl = b.ImageUrl,
                     CategoryName = b.Category.Name,
                     ListTagName = y.Value,
-                    PackagePrice = b.Recipe != null ? b.Recipe.PackagePrice : null,
+                    Reaction = b.Reaction.HasValue ? b.Reaction.Value : 0,
+                    View = b.View.HasValue ? b.View.Value : 0
+                }).ToList();
+
+            return listResponse;
+        }
+
+        public async Task<ICollection<GetBlogsForHomePageResponse>> GetBlogsByCategoryForHomePage(Guid? categoryId, int numberOfItems = 0)
+        {
+
+            var listBlogs = await _blogRepository
+                .GetBlogsBy(b => b.CategoryId.Equals(categoryId),
+                    options: numberOfItems > 0
+                        ? (list) => { return list.OrderByDescending(b => b.CreatedDate).Take(numberOfItems).ToList(); }
+            : (list) => { return list.OrderByDescending(b => b.CreatedDate).ToList(); },
+                    includeProperties: "Category");
+
+            var listBlogTag = await _blogTagRepository.GetAll(includeProperties: "Tag");
+
+            var listTagName = GetListTagName(listBlogs, listBlogTag);
+
+            var listResponse = listBlogs
+                .Join(listTagName, b => b.BlogId, y => y.Key, (b, y) => new GetBlogsForHomePageResponse
+                {
+                    BlogId = b.BlogId,
+                    Title = b.Title,
+                    Description = b.Description,
+                    ImageUrl = b.ImageUrl,
+                    CategoryName = b.Category.Name,
+                    ListTagName = y.Value,
                     CreatedDate = b.CreatedDate.HasValue ? b.CreatedDate.Value : new DateTime(),
                     Reaction = b.Reaction.HasValue ? b.Reaction.Value : 0,
                     View = b.View.HasValue ? b.View.Value : 0,
@@ -159,19 +202,19 @@ namespace BE_Homnayangi.Modules.BlogModule
             return listResponse;
         }
 
-        public async Task<ICollection<SearchBlogsResponse>> GetBlogAndRecipeByName(String name)
+            public async Task<ICollection<SearchBlogsResponse>> GetBlogAndRecipeByName(String name)
         {
-         
-                var Blogs = await _blogRepository.GetBlogsBy(x => x.Title.Contains(name));
-                var blogResponse = Blogs.Join(
-                    await _recipeRepository.GetAll(),
-                    b => b.BlogId,
-                    r => r.RecipeId,
-                    (b, r) => new SearchBlogsResponse
-                    {
-                        BlogId = b.BlogId,
-                        Title = b.Title,
-                    }).ToList();
+
+            var Blogs = await _blogRepository.GetBlogsBy(x => x.Title.Contains(name));
+            var blogResponse = Blogs.Join(
+                await _recipeRepository.GetAll(),
+                b => b.BlogId,
+                r => r.RecipeId,
+                (b, r) => new SearchBlogsResponse
+                {
+                    BlogId = b.BlogId,
+                    Title = b.Title,
+                }).ToList();
 
             return blogResponse;
         }
@@ -197,13 +240,13 @@ namespace BE_Homnayangi.Modules.BlogModule
             var pageNumber = blogFilter.PageNumber;
             var sort = blogFilter.sort;
             ICollection<GetBlogsForHomePageResponse> response;
-            
+
 
             if (categoryId != null)
             {
                 response = await GetBlogsByCategoryForHomePage(categoryId);
 
-                if(tagId != null)
+                if (tagId != null)
                 {
                     var blogTags = await _blogTagRepository.GetBlogTagsBy(bt => bt.TagId.Equals(tagId));
 
@@ -246,6 +289,89 @@ namespace BE_Homnayangi.Modules.BlogModule
 
             response = PagedList<GetBlogsForHomePageResponse>.ToPagedList(source: response, pageNumber: pageNumber, pageSize: pageSize);
             return response;
+        }
+
+        public async Task<ICollection<GetBlogsForHomePageResponse>> GetSoupAndNormalBlogs(Guid categoryId)
+        {
+            string tagName = GetTagNameByCurrentTime();
+            if (tagName.Equals(""))
+            {
+                return null;
+            }
+
+            var listResponse = new List<GetBlogsForHomePageResponse>();
+            try
+            {
+                var result = await _tagRepository.GetFirstOrDefaultAsync(x => x.Name == tagName);
+                var listTagMenu = await _tagRepository.GetTagsBy(x => x.CategoryId == categoryId);
+                var listBlogTag = await _blogTagRepository.GetAll(includeProperties: "Tag");
+
+                var listBlogTagMenu = listBlogTag.Join(listTagMenu, x => x.TagId, y => y.TagId, (x, y) => x).ToList();
+
+                var listBlogTagWithSession = listBlogTag.Where(x => x.TagId == result.TagId).ToList();
+
+                var listMenuBlogTag = listBlogTagMenu.Join(listBlogTagWithSession, x => x.BlogId, y => y.BlogId, (x,y) => x).ToList();
+
+                if(listMenuBlogTag.Count() == 0)
+                {
+                    return null;
+                }
+
+                var listMenuBlog = listBlogTag.Where(x => x.TagId == listMenuBlogTag.First().TagId).ToList();
+
+                var listBlogs = _blogRepository.GetAll(includeProperties: "Category").Result.Join(listMenuBlog, x => x.BlogId, y => y.BlogId, (x, y) => x).ToList();
+
+                var listTagName = GetListTagName(listBlogs, listBlogTag);
+
+                listResponse = listBlogs
+               .Join(listTagName, b => b.BlogId, y => y.Key, (b, y) => new GetBlogsForHomePageResponse
+               {
+                   BlogId = b.BlogId,
+                   Title = b.Title,
+                   Description = b.Description,
+                   ImageUrl = b.ImageUrl,
+                   CategoryName = b.Category.Name,
+                   ListTagName = y.Value,
+                   Reaction = b.Reaction.HasValue ? b.Reaction.Value : 0,
+                   View = b.View.HasValue ? b.View.Value : 0
+               }).ToList();
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at GetSoupAndNormalBlogs: " + ex.Message);
+            }
+            return listResponse;
+        }
+
+        private string GetTagNameByCurrentTime()
+        {
+            int hour = Int32.Parse(DateTime.Now.ToString("HH"));
+            string tagString = "";
+            Console.WriteLine("Now: " + hour);
+
+            if (hour >= 6 && hour < 10)
+            {
+                Console.WriteLine("Bữa sáng");
+                tagString = "Bữa sáng";
+            }
+            else if (hour >= 10 && hour < 15)
+            {
+                Console.WriteLine("Bữa trưa");
+                tagString = "Bữa trưa";
+            }
+            else if (hour >= 15 && hour < 20)
+            {
+                Console.WriteLine("Bữa tối");
+                tagString = "Bữa tối";
+            }
+            else
+            {
+                Console.WriteLine("Error at GetSoupAndNormalBlogs: Service does not provided at this time!");
+            }
+
+            return tagString;
+
         }
     }
 }

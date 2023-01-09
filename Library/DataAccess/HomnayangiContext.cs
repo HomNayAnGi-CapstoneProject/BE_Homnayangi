@@ -590,8 +590,6 @@ namespace Library.DataAccess
                     .HasColumnType("money")
                     .HasColumnName("packagePrice");
 
-                entity.Property(e => e.Region).HasColumnName("region");
-
                 entity.Property(e => e.Size).HasColumnName("size");
 
                 entity.Property(e => e.Title).HasColumnName("title");

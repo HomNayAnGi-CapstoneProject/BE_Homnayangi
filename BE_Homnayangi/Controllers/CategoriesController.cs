@@ -13,7 +13,7 @@ using BE_Homnayangi.Modules.CategoryModule.Interface;
 
 namespace BE_Homnayangi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class CategoriesController : ControllerBase
     {
