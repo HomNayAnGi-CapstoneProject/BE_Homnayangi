@@ -167,6 +167,7 @@ namespace BE_Homnayangi.Controllers
             }
 
             return Ok(response);
+        }
         // Get tags by categoryId 
         [HttpGet("tags/{categoryId}")]
         public async Task<ActionResult<IEnumerable<TagResponse>>> GetTagsByCategoryId(Guid categoryId)
