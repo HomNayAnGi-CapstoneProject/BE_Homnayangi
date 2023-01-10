@@ -31,7 +31,7 @@ namespace BE_Homnayangi.Controllers
         private readonly IUserService _userService;
 
 
-        public AuthenticationController(HomnayangiContext context, IUserService userService, IMapper  mapper )
+        public AuthenticationController(HomnayangiContext context, IUserService userService, IMapper mapper)
         {
             _context = context;
             _userService = userService;
@@ -43,47 +43,92 @@ namespace BE_Homnayangi.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDTO login)
         {
-            var token = await _userService.GenerateToken(login);
-            return new JsonResult(new
+            try
             {
-                token = token
-            });
+                var token = await _userService.GenerateToken(login);
+                if (token != null && token != "" && token is string)
+                {
+                    return new JsonResult(new
+                    {
+                        result = token
+                    });
+                }
+                return NotFound();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+
         }
         [HttpPost("login-google")]
-        public async Task<IActionResult> GoogleLogin([FromBody] string token)
+        public async Task<IActionResult> GoogleLogin([FromQuery] string token)
         {
-            var stream = token;
-            var handler = new JwtSecurityTokenHandler();
-            var jsonToken = handler.ReadToken(stream);
-            var tokenS = jsonToken as JwtSecurityToken;
-            var displayName = tokenS.Claims.First(claim => claim.Type == "name").Value;
-            var email = tokenS.Claims.First(claim => claim.Type == "name").Value;
-            var loginGoogle = new LoginGoogleDTO
+            try
             {
-                Email = email,
-                Displayname = displayName
-        };
-            string accessToken = await _userService.GenerateGoolgleToken(loginGoogle);
-            return Ok(accessToken);
+
+                if (token != null && token != "" && token is string)
+                {
+
+                    var stream = token;
+                    var handler = new JwtSecurityTokenHandler();
+                    var jsonToken = handler.ReadToken(stream);
+
+                    var tokenS = jsonToken as JwtSecurityToken;
+
+                    var displayName = tokenS.Claims.First(claim => claim.Type == "name").Value;
+                    var email = tokenS.Claims.First(claim => claim.Type == "email").Value;
+
+                    var loginGoogle = new LoginGoogleDTO
+                    {
+
+                        Email = email,
+                        Displayname = displayName,
+
+                    };
+
+
+                    var accessToken = await _userService.GenerateGoolgleToken(loginGoogle);
+                    return new JsonResult(new
+                    {
+
+                        result = accessToken,
+                    });
+                }
+                return NotFound();
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] RegisterDTO register)
         {
 
-         
-            var cus = _userService.GetCustomerByUsername(register.Username);
-            if (cus == null)
+            try
             {
-                await _userService.Register(register);
-                return Ok("Register successful");
+                var cus = _userService.GetCustomerByUsername(register.Username);
+                if (cus == null)
+                {
+                    await _userService.Register(register);
+                    return Ok("Register successful");
+                }
+                else if (cus.Username == register.Username)
+                {
+                    return Ok("Account is already existed");
+                }
+                return Unauthorized();
             }
-            return Unauthorized();
-
+            catch
+            {
+                return BadRequest();
+            }
         }
     }
 }
-    
 
 
-    
+
+
 

@@ -31,7 +31,8 @@ namespace Library.AutoMapper
         }
         private void CreateUserMap()
         {
-            CreateMap<GoogleUserCreateRequest, Customer>().ReverseMap();
+            CreateMap<LoginGoogleDTO, Customer>().ReverseMap();
+            CreateMap<RegisterDTO, Customer>().ReverseMap();
         }
     }
 }

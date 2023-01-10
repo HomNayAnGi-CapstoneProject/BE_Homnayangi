@@ -9,6 +9,6 @@ namespace Library.Models.DTO.UserDTO
     public class LoginGoogleDTO
     {
         public string Email { get; set; }
-  public string Displayname { get; set; }
+        public string Displayname { get; set; }
     }
 }
