@@ -86,11 +86,10 @@ namespace BE_Homnayangi.Modules.UserModule
 
                 var secretKeyBytes = Encoding.UTF8.GetBytes(_appSettings.SecretKey);
 
-                if (user.Role == 1)
+
+                var tokenDescription = new SecurityTokenDescriptor
                 {
-                    var tokenDescription = new SecurityTokenDescriptor
-                    {
-                        Subject = new ClaimsIdentity(new[] {
+                    Subject = new ClaimsIdentity(new[] {
                     new Claim(ClaimTypes.Name, user.Username),
                     new Claim(ClaimTypes.Email, user.Email == null ? "" : user.Email),
                     new Claim("Phone Number", user.Phonenumber),
@@ -99,45 +98,18 @@ namespace BE_Homnayangi.Modules.UserModule
                     new Claim("Latname",user.Lastname),
                     new Claim(ClaimTypes.Gender,user.Gender.ToString()),
                     new Claim("Avatar", user.Avatar  == null ? "" : user.Avatar),
-                    new Claim(ClaimTypes.Role, CommonEnum.RoleEnum.MANAGER)
+                    new Claim(ClaimTypes.Role, user.Role == 1 ? CommonEnum.RoleEnum.MANAGER :  CommonEnum.RoleEnum.STAFF)
                 }),
-                        Expires = DateTime.UtcNow.AddMinutes(60),
-                        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha512Signature)
+                    Expires = DateTime.UtcNow.AddMinutes(60),
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha512Signature)
 
-                    };
+                };
 
-                    var token = jwtTokenHandler.CreateToken(tokenDescription);
+                var token = jwtTokenHandler.CreateToken(tokenDescription);
 
-                    return jwtTokenHandler.WriteToken(token);
-                }
-                else if (user.Role == 2)
-                {
-                    var tokenDescription = new SecurityTokenDescriptor
-                    {
-                        Subject = new ClaimsIdentity(new[] {
-
-                    new Claim(ClaimTypes.Name, user.Username),
-                    new Claim(ClaimTypes.Email, user.Email == null ? "" : user.Email),
-                    new Claim("Phone Number", user.Phonenumber),
-                    new Claim("Displayname", user.Displayname == null ? "" : user.Displayname),
-                    new Claim("Firstname", user.Firstname),
-                    new Claim("Latname",user.Lastname),
-                    new Claim(ClaimTypes.Gender,user.Gender.ToString()),
-                    new Claim("Avatar", user.Avatar  == null ? "" : user.Avatar),
-                    new Claim(ClaimTypes.Role, CommonEnum.RoleEnum.STAFF)
+                return jwtTokenHandler.WriteToken(token);
 
 
-                }),
-                        Expires = DateTime.UtcNow.AddMinutes(60),
-                        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha512Signature)
-
-                    };
-
-                    var token = jwtTokenHandler.CreateToken(tokenDescription);
-
-                    return jwtTokenHandler.WriteToken(token);
-                }
-                return null;
             }
             return null;
 
@@ -246,11 +218,9 @@ namespace BE_Homnayangi.Modules.UserModule
 
                 var secretKeyBytes = Encoding.UTF8.GetBytes(_appSettings.SecretKey);
 
-                if (user.Role == 1)
+                var tokenDescription = new SecurityTokenDescriptor
                 {
-                    var tokenDescription = new SecurityTokenDescriptor
-                    {
-                        Subject = new ClaimsIdentity(new[] {
+                    Subject = new ClaimsIdentity(new[] {
 
 
                     new Claim(ClaimTypes.Name, user.Username == null ? "": user.Username),
@@ -261,46 +231,19 @@ namespace BE_Homnayangi.Modules.UserModule
                     new Claim("Latname",user.Lastname == null ? "": user.Lastname),
                     new Claim(ClaimTypes.Gender,user.Gender.ToString() == null ? "": user.Gender.ToString()),
                     new Claim("Avatar", user.Avatar  == null ? "" : user.Avatar),
-                    new Claim(ClaimTypes.Role, CommonEnum.RoleEnum.MANAGER)
+                    new Claim(ClaimTypes.Role,user.Role == 1 ? CommonEnum.RoleEnum.MANAGER : CommonEnum.RoleEnum.STAFF)
                 }),
-                        Expires = DateTime.UtcNow.AddMinutes(60),
-                        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha512Signature)
+                    Expires = DateTime.UtcNow.AddMinutes(60),
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha512Signature)
 
-                    };
+                };
 
-                    var token = jwtTokenHandler.CreateToken(tokenDescription);
+                var token = jwtTokenHandler.CreateToken(tokenDescription);
 
-                    return jwtTokenHandler.WriteToken(token);
-                }
-                else if (user.Role == 2)
-                {
-                    var tokenDescription = new SecurityTokenDescriptor
-                    {
-                        Subject = new ClaimsIdentity(new[] {
+                return jwtTokenHandler.WriteToken(token);
 
-                    new Claim(ClaimTypes.Name, user.Username),
-                    new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.MobilePhone, user.Phonenumber),
-                    new Claim("Displayname", user.Displayname),
-                    new Claim("Firstname", user.Firstname),
-                    new Claim("Latname",user.Lastname),
-                    new Claim(ClaimTypes.Gender,user.Gender.ToString()),
-                    new Claim("Avatar", user.Avatar  == null ? "" : user.Avatar),
-                    new Claim(ClaimTypes.Role, CommonEnum.RoleEnum.STAFF)
 
-                }),
-                        Expires = DateTime.UtcNow.AddMinutes(60),
-                        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha512Signature)
-
-                    };
-
-                    var token = jwtTokenHandler.CreateToken(tokenDescription);
-
-                    return jwtTokenHandler.WriteToken(token);
-                }
-                return null;
             }
-
             return null;
         }
         public async Task Register(RegisterDTO register)
