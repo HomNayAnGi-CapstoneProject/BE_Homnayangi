@@ -26,6 +26,19 @@ namespace Library.PagedList
             var items = source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
             return new PagedList<T>(items, count, pageNumber, pageSize);
         }
+        public PagedResponse<PagedList<T>> ToPagedResposne()
+        {
+            return new PagedResponse<PagedList<T>>
+            {
+                TotalPages = TotalPages,
+                TotalCount = TotalCount,
+                CurrentPage = CurrentPage,
+                PageSize = PageSize,
+                HasPrevious = HasPrevious,
+                HasNext = HasNext,
+                Resource = this
+            };
+        }
     }
 }
 

@@ -202,22 +202,25 @@ namespace BE_Homnayangi.Modules.BlogModule
             return listTagName;
         }
 
-        public async Task<ICollection<BlogsByCateAndTagResponse>> GetBlogsByCategoryAndTag(BlogFilterByCateAndTagRequest blogFilter)
+        public async Task<PagedResponse<PagedList<BlogsByCateAndTagResponse>>> GetBlogsByCategoryAndTag(BlogFilterByCateAndTagRequest blogFilter)
         {
             var categoryId = blogFilter.CategoryId;
             var tagId = blogFilter.TagId;
             var pageSize = blogFilter.PageSize;
             var pageNumber = blogFilter.PageNumber;
             var sort = blogFilter.sort;
-            ICollection<BlogsByCateAndTagResponse> response;
+            ICollection<BlogsByCateAndTagResponse> filteredBlogs;
             ICollection<Blog> blogs;
 
-
             blogs = categoryId != null
-                ? await _blogRepository.GetBlogsBy(b => b.CategoryId.Equals(categoryId), includeProperties: "Category,Recipe")
-                : await _blogRepository.GetBlogsBy(b => b.CategoryId.Equals(categoryId));
+                ? await _blogRepository
+                    .GetBlogsBy(b => b.CategoryId.Equals(categoryId) && b.BlogStatus != (int) Status.BlogStatus.DELETED,
+                        includeProperties: "Category,Recipe")
+                : await _blogRepository
+                    .GetBlogsBy(b => b.BlogStatus != (int) Status.BlogStatus.DELETED,
+                        includeProperties: "Category,Recipe");
 
-            response = blogs.Select(b => new BlogsByCateAndTagResponse
+            filteredBlogs = blogs.Select(b => new BlogsByCateAndTagResponse
             {
                 BlogId = b.BlogId,
                 RecipeName = b.Recipe?.Title,
@@ -235,7 +238,7 @@ namespace BE_Homnayangi.Modules.BlogModule
             {
                 var blogTags = await _blogTagRepository.GetBlogTagsBy(bt => bt.TagId.Equals(tagId));
 
-                response = blogTags.Join(blogs, bt => bt.BlogId, b => b.BlogId, (bt, b) => new BlogsByCateAndTagResponse
+                filteredBlogs = blogTags.Join(blogs, bt => bt.BlogId, b => b.BlogId, (bt, b) => new BlogsByCateAndTagResponse
                 {
                     BlogId = b.BlogId,
                     RecipeName = b.Recipe?.Title,
@@ -252,22 +255,23 @@ namespace BE_Homnayangi.Modules.BlogModule
 
             switch (sort)
             {
-                case 1:
-                    response = response.OrderByDescending(r => r.CreatedDate).ToList();
+                case (int) Sort.SortBy.CREATEDDATE:
+                    filteredBlogs = filteredBlogs.OrderByDescending(r => r.CreatedDate).ToList();
                     break;
-                case 2:
-                    response = response.OrderByDescending(r => r.Reaction).ToList();
+                case (int) Sort.SortBy.REACTION:
+                    filteredBlogs = filteredBlogs.OrderByDescending(r => r.Reaction).ToList();
                     break;
-                case 3:
-                    response = response.OrderByDescending(r => r.View).ToList();
+                case (int) Sort.SortBy.VIEW:
+                    filteredBlogs = filteredBlogs.OrderByDescending(r => r.View).ToList();
                     break;
                 default:
-                    response = response.OrderByDescending(r => r.CreatedDate).ToList();
+                    filteredBlogs = filteredBlogs.OrderByDescending(r => r.CreatedDate).ToList();
                     break;
             }
 
-            response = PagedList<BlogsByCateAndTagResponse>.ToPagedList(source: response, pageNumber: pageNumber, pageSize: pageSize);
-            return response;
+            var response = PagedList<BlogsByCateAndTagResponse>.ToPagedList(source: filteredBlogs, pageNumber: pageNumber, pageSize: pageSize);
+
+            return response.ToPagedResposne();
         }
 
         public async Task<ICollection<GetBlogsForHomePageResponse>> GetSoupAndNormalBlogs(Guid categoryId)
