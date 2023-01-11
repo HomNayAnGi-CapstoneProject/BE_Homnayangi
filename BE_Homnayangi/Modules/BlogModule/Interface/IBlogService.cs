@@ -1,6 +1,7 @@
 ﻿using BE_Homnayangi.Modules.BlogModule.Request;
 using BE_Homnayangi.Modules.BlogModule.Response;
 using Library.Models;
+using Library.PagedList;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +38,7 @@ namespace BE_Homnayangi.Modules.BlogModule.Interface
 
         public Task<ICollection<SearchBlogsResponse>> GetBlogAndRecipeByName(String name);
 
-        public Task<ICollection<BlogsByCateAndTagResponse>> GetBlogsByCategoryAndTag(BlogFilterByCateAndTagRequest blogFilter);
+        public Task<PagedResponse<PagedList<BlogsByCateAndTagResponse>>> GetBlogsByCategoryAndTag(BlogFilterByCateAndTagRequest blogFilter);
 
         public Task<ICollection<GetBlogsForHomePageResponse>> GetBlogsByTagForHomePage(Guid? tagId, int numberOfItems = 0);
 

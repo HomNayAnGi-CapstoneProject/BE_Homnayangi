@@ -6,6 +6,7 @@ using BE_Homnayangi.Modules.TagModule.Interface;
 using BE_Homnayangi.Modules.TagModule.Response;
 using Library.DataAccess;
 using Library.Models;
+using Library.PagedList;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -157,7 +158,7 @@ namespace BE_Homnayangi.Controllers
         }
 
         [HttpGet("category/tag")]
-        public async Task<ActionResult<Blog>> GetBlogsByCateAndTag([FromQuery] BlogFilterByCateAndTagRequest blogFilter)
+        public async Task<ActionResult<PagedResponse<PagedList<BlogsByCateAndTagResponse>>>> GetBlogsByCateAndTag([FromQuery] BlogFilterByCateAndTagRequest blogFilter)
         {
             var response = await _blogService.GetBlogsByCategoryAndTag(blogFilter);
 
