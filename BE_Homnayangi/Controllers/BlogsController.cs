@@ -53,18 +53,21 @@ namespace BE_Homnayangi.Controllers
         }
 
 
-        // GET: api/Blogs/5
+        // GET: api/blogs/FA1CDF34-652D-4E8E-8BAF-19917D31772A
         [HttpGet("{id}")]
-        public async Task<ActionResult<Blog>> GetBlog(Guid id)
+        public async Task<ActionResult<BlogDetailResponse>> GetBlog(Guid id) // tạm thời chưa lấy author_name
         {
-            var blog = await _context.Blogs.FindAsync(id);
+            var blog = await _blogService.GetBlogDetails(id);
 
             if (blog == null)
             {
                 return NotFound();
             }
 
-            return blog;
+            return new JsonResult(new
+            {
+                result = blog
+            });
         }
 
 

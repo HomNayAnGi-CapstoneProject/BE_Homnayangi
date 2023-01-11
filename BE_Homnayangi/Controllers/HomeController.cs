@@ -9,6 +9,7 @@ using System.Linq;
 using BE_Homnayangi.Modules.BlogModule.Response;
 using Library.Models.Enum;
 using Library.Models;
+using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 
 namespace BE_Homnayangi.Controllers
 {
@@ -94,7 +95,12 @@ namespace BE_Homnayangi.Controllers
             var result = await _blogService.GetSoupAndNormalBlogs(_categoryId);
             if (result == null)
             {
-                return BadRequest();
+                return new JsonResult(new
+                {
+                    title = "Bad Request",
+                    status = 400,
+                    message = "Sorry, our service can not provided at this time!"
+                });
             }
             return new JsonResult(new
             {
