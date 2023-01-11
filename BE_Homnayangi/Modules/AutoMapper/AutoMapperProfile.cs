@@ -2,12 +2,8 @@
 using BE_Homnayangi.Modules.DTO.IngredientDTO;
 using BE_Homnayangi.Modules.DTO.RecipeDetailsDTO;
 using BE_Homnayangi.Modules.DTO.RecipeDTO;
+using BE_Homnayangi.Modules.IngredientModule.Request;
 using Library.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BE_Homnayangi.Modules.AutoMapper
 {
@@ -24,6 +20,8 @@ namespace BE_Homnayangi.Modules.AutoMapper
             CreateMap<Recipe, RecipeResponse>().ReverseMap();
             CreateMap<RecipeDetail, RecipeDetailsResponse>().ReverseMap();
             CreateMap<Ingredient, IngredientResponse>().ReverseMap();
+            CreateMap<Ingredient, CreatedIngredientRequest>().ReverseMap(); 
+            CreateMap<Ingredient, UpdatedIngredientRequest>().ReverseMap();
         }
     }
 }
