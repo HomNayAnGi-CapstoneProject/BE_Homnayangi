@@ -362,13 +362,9 @@ namespace BE_Homnayangi.Modules.BlogModule
             BlogDetailResponse result = null;
             try
             {
-                var tmp = await _blogRepository.GetBlogsBy(x => x.BlogId == blogId && x.BlogStatus == 1, includeProperties: "Category,Recipe");
-                if (tmp.Count == 0)
-                {
-                    return null;
-                }
+                var tmp = await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId == blogId && x.BlogStatus == 1, includeProperties: "Category,Recipe");
 
-                Blog blog = tmp.ElementAt(0);
+                Blog blog = tmp;
                 if (blog != null)
                 {
                     result = new BlogDetailResponse()
