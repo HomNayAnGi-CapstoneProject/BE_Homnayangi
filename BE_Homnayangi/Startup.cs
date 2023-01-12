@@ -23,6 +23,14 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using BE_Homnayangi.Modules.BlogTagModule.Interface;
 using BE_Homnayangi.Modules.BlogTagModule;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using BE_Homnayangi.Modules.UserModule.Interface;
+using BE_Homnayangi.Modules.UserModule;
+using Library.Models;
+
 using BE_Homnayangi.Modules.TagModule.Interface;
 using BE_Homnayangi.Modules.TagModule;
 
@@ -45,6 +53,26 @@ namespace BE_Homnayangi
             services.AddControllers();
             services.AddDbContext<HomnayangiContext>(
                  options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.Configure<AppSetting>(Configuration.GetSection("AppSetting"));
+            var secretKey = Configuration["AppSetting:SecretKey"];
+            var secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
+            services.AddAuthentication(options =>
+                 {
+                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                 })
+                  .AddJwtBearer(opt =>
+                  {
+                      opt.TokenValidationParameters = new TokenValidationParameters
+                      {
+                          ValidateIssuer = false,
+                          ValidateAudience = false,
+                          ValidateIssuerSigningKey = true,
+                          IssuerSigningKey = new SymmetricSecurityKey(secretKeyBytes),
+
+                          ClockSkew = TimeSpan.Zero
+                      };
+                  });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BE_Homnayangi", Version = "v1" });
@@ -90,9 +118,16 @@ namespace BE_Homnayangi
             //BlogTag Module
             services.AddScoped<IBlogTagRepository, BlogTagRepository>();
 
+            //User Module
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<IUserService, UserService>();
+
+
             //Tag Module
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<ITagService, TagService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -110,6 +145,8 @@ namespace BE_Homnayangi
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
