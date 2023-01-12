@@ -1,7 +1,6 @@
 ﻿using BE_Homnayangi.Modules.BlogModule.Interface;
 using BE_Homnayangi.Modules.BlogModule.Request;
 using BE_Homnayangi.Modules.BlogModule.Response;
-using BE_Homnayangi.Modules.RecipeModule.Interface;
 using BE_Homnayangi.Modules.TagModule.Interface;
 using BE_Homnayangi.Modules.TagModule.Response;
 using Library.DataAccess;
@@ -22,14 +21,12 @@ namespace BE_Homnayangi.Controllers
     {
         private readonly HomnayangiContext _context;
         private readonly IBlogService _blogService;
-        private readonly IRecipeService _recipeService;
         private readonly ITagService _tagService;
 
-        public BlogsController(HomnayangiContext context, IBlogService blogService, IRecipeService recipeService, ITagService tagService)
+        public BlogsController(HomnayangiContext context, IBlogService blogService, ITagService tagService)
         {
             _context = context;
             _blogService = blogService;
-            _recipeService = recipeService;
             _tagService = tagService;
         }
 
