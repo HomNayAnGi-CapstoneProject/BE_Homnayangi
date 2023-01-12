@@ -1,7 +1,7 @@
 ﻿using System;
-using Library.Models.DTO.IngredientDTO;
+using BE_Homnayangi.Modules.DTO.IngredientDTO;
 
-namespace Library.Models.DTO.RecipeDetailsDTO
+namespace BE_Homnayangi.Modules.DTO.RecipeDetailsDTO
 {
 	public class RecipeDetailsResponse
 	{
@@ -9,7 +9,7 @@ namespace Library.Models.DTO.RecipeDetailsDTO
         public Guid IngredientId { get; set; }
         public string Description { get; set; }
 
-        public virtual IngredientResponse Ingredient { get; set; }
+        //public virtual IngredientResponse Ingredient { get; set; }
     }
 }
 

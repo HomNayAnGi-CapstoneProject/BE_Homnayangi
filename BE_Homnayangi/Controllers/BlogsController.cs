@@ -1,8 +1,11 @@
 ﻿using BE_Homnayangi.Modules.BlogModule.Interface;
+using BE_Homnayangi.Modules.BlogModule.Request;
 using BE_Homnayangi.Modules.BlogModule.Response;
-using BE_Homnayangi.Modules.RecipeModule.Interface;
+using BE_Homnayangi.Modules.TagModule.Interface;
+using BE_Homnayangi.Modules.TagModule.Response;
 using Library.DataAccess;
 using Library.Models;
+using Library.PagedList;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -18,13 +21,13 @@ namespace BE_Homnayangi.Controllers
     {
         private readonly HomnayangiContext _context;
         private readonly IBlogService _blogService;
-        private readonly IRecipeService _recipeService;
+        private readonly ITagService _tagService;
 
-        public BlogsController(HomnayangiContext context, IBlogService blogService, IRecipeService recipeService)
+        public BlogsController(HomnayangiContext context, IBlogService blogService, ITagService tagService)
         {
             _context = context;
             _blogService = blogService;
-            _recipeService = recipeService;
+            _tagService = tagService;
         }
 
         // GET: api/Blogs
@@ -47,18 +50,21 @@ namespace BE_Homnayangi.Controllers
         }
 
 
-        // GET: api/Blogs/5
+        // GET: api/blogs/FA1CDF34-652D-4E8E-8BAF-19917D31772A
         [HttpGet("{id}")]
-        public async Task<ActionResult<Blog>> GetBlog(Guid id)
+        public async Task<ActionResult<BlogDetailResponse>> GetBlog(Guid id) // tạm thời chưa lấy author_name
         {
-            var blog = await _context.Blogs.FindAsync(id);
+            var blog = await _blogService.GetBlogDetails(id);
 
             if (blog == null)
             {
                 return NotFound();
             }
 
-            return blog;
+            return new JsonResult(new
+            {
+                result = blog
+            });
         }
 
 
@@ -149,6 +155,31 @@ namespace BE_Homnayangi.Controllers
         private bool BlogExists(Guid id)
         {
             return _context.Blogs.Any(e => e.BlogId == id);
+        }
+
+        [HttpGet("category/tag")]
+        public async Task<ActionResult<PagedResponse<PagedList<BlogsByCateAndTagResponse>>>> GetBlogsByCateAndTag([FromQuery] BlogFilterByCateAndTagRequest blogFilter)
+        {
+            var response = await _blogService.GetBlogsByCategoryAndTag(blogFilter);
+
+            if (response == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(response);
+        }
+        // Get tags by categoryId 
+        [HttpGet("tags/{categoryId}")]
+        public async Task<ActionResult<IEnumerable<TagResponse>>> GetTagsByCategoryId(Guid categoryId)
+        {
+            var tags = await _tagService.GetTagsByCategoryId(categoryId);
+
+            return new JsonResult(new
+            {
+                total_results = tags.Count(),
+                result = tags,
+            }); ;
         }
     }
 }

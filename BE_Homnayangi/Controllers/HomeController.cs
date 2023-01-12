@@ -7,6 +7,9 @@ using BE_Homnayangi.Modules.RecipeModule.Interface;
 using Library.DataAccess;
 using System.Linq;
 using BE_Homnayangi.Modules.BlogModule.Response;
+using Library.Models.Enum;
+using Library.Models;
+using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 
 namespace BE_Homnayangi.Controllers
 {
@@ -25,15 +28,16 @@ namespace BE_Homnayangi.Controllers
             _recipeService = recipeService;
         }
 
-        [HttpGet("category/{categoryId}/blogs")]
-        public async Task<ActionResult<IEnumerable<GetBlogsForHomePageResponse>>> GetBlogsByCategory(string categoryId)
+        [HttpGet("tag/{tagId}/blogs")]
+        public async Task<ActionResult<IEnumerable<GetBlogsForHomePageResponse>>> GetBlogsByTag(string tagId)
         {
-            if (!Guid.TryParse(categoryId, out var _categoryId))
+            if (!Guid.TryParse(tagId, out var _tagId))
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            var blogs = await _blogService.GetBlogsByCategoryForHomePage(_categoryId);
+            var blogs = await _blogService.GetBlogsByTagForHomePage(_tagId, numberOfItems: (int)NumberItem.NumberItemShowEnum.EATING_STYLE);
+
             return new JsonResult(new
             {
                 total_results = blogs.Count(),
@@ -51,14 +55,15 @@ namespace BE_Homnayangi.Controllers
                 result = result,
             });
         }
-        [HttpGet("blogs/live_searching")]
+
+        [HttpGet("blogs/live-searching")]
         public async Task<ActionResult<IEnumerable<SearchBlogsResponse>>> GetBlogAndRecipeByName([FromQuery(Name = "title")] string title)
         {
-            if (title != "" && title != null && title is string )
+            if (title != "" && title != null && title is string)
             {
                 title = title.TrimStart(' ');
                 var result = await _blogService.GetBlogAndRecipeByName(title);
-                if (result.Any()) 
+                if (result.Any())
                 {
                     return new JsonResult(new
                     {
@@ -67,13 +72,41 @@ namespace BE_Homnayangi.Controllers
                 }
                 else
                 {
-                    return NotFound();
+                    return new JsonResult(new
+                    {
+                        result = "",
+                    });
                 }
             }
             else
-            { 
+            {
                 return BadRequest();
             }
+        }
+
+        [HttpGet("category/{categoryId}/blog-menu")]
+        public async Task<ActionResult<IEnumerable<GetBlogsForHomePageResponse>>> GetSoupAndNormalBlogs(string categoryId)
+        {
+            if (!Guid.TryParse(categoryId, out var _categoryId))
+            {
+                return BadRequest();
+            }
+
+            var result = await _blogService.GetSoupAndNormalBlogs(_categoryId);
+            if (result == null)
+            {
+                return new JsonResult(new
+                {
+                    title = "Bad Request",
+                    status = 400,
+                    message = "Sorry, our service can not provided at this time!"
+                });
+            }
+            return new JsonResult(new
+            {
+                total_results = result.Count(),
+                result = result,
+            });
         }
     }
 }

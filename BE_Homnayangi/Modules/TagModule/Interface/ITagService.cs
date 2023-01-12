@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using BE_Homnayangi.Modules.TagModule.Response;
 
 namespace BE_Homnayangi.Modules.TagModule.Interface
 {
@@ -26,6 +27,9 @@ namespace BE_Homnayangi.Modules.TagModule.Interface
             int numberItem = 0);
 
         public Tag GetTagByID(Guid? id);
+
+        public Task<ICollection<TagResponse>> GetTagsByCategoryId(Guid id);
+
     }
 }
 

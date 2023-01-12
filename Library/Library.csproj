@@ -18,13 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Models\DTO\RecipeDTO\" />
-    <None Remove="Models\DTO\RecipeDetailsDTO\" />
-    <None Remove="Models\DTO\IngredientDTO\" />
+    <None Remove="PagedList\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\DTO\RecipeDTO\" />
-    <Folder Include="Models\DTO\RecipeDetailsDTO\" />
-    <Folder Include="Models\DTO\IngredientDTO\" />
+    <Folder Include="PagedList\" />
   </ItemGroup>
 </Project>

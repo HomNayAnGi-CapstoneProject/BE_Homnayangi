@@ -9,7 +9,7 @@ using BE_Homnayangi.Modules.BlogModule;
 using BE_Homnayangi.Modules.BlogModule.Interface;
 using BE_Homnayangi.Modules.RecipeModule;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
-using Library.AutoMapper;
+using BE_Homnayangi.Modules.AutoMapper;
 using Library.DataAccess;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,6 +30,10 @@ using System;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.UserModule;
 using Library.Models;
+
+using BE_Homnayangi.Modules.TagModule.Interface;
+using BE_Homnayangi.Modules.TagModule;
+
 
 namespace BE_Homnayangi
 {
@@ -89,35 +93,42 @@ namespace BE_Homnayangi
                                     .AllowAnyHeader()
                                     .AllowCredentials());
             });
+
+            services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
             // Category Module
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ICategoryService, CategoryService>();
-
             // Blog Module
             services.AddScoped<IBlogRepository, BlogRepository>();
             services.AddScoped<IBlogService, BlogService>();
-
             // Recipe Module
             services.AddScoped<IRecipeRepository, RecipeRepository>();
             services.AddScoped<IRecipeService, RecipeService>();
 
             services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
-            //Recipe Module
-            services.AddScoped<IRecipeRepository, RecipeRepository>();
-            services.AddScoped<IRecipeServices, RecipeServices>();
+
             //Recipe Detail Module
             services.AddScoped<IRecipeDetailRepository, RecipeDetailRepository>();
             services.AddScoped<IRecipeDetailService, RecipeDetailService>();
+
             //Ingredient Module
             services.AddScoped<IIngredientRepository, IngredientRepository>();
             services.AddScoped<IIngredientService, IngredientService>();
+
             //BlogTag Module
             services.AddScoped<IBlogTagRepository, BlogTagRepository>();
+<<<<<<< HEAD
             //User Module
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IUserService, UserService>();
 
+=======
+
+            //Tag Module
+            services.AddScoped<ITagRepository, TagRepository>();
+            services.AddScoped<ITagService, TagService>();
+>>>>>>> develop
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

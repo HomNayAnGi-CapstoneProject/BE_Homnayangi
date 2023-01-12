@@ -447,3 +447,4 @@ FodyWeavers.xsd
 
 BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.csproj.FileListAbsolute.txt
 Library/obj/Debug/net5.0/Library.csproj.AssemblyReference.cache
+BE_Homnayangi/Properties/launchSettings.json

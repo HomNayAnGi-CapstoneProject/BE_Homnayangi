@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Library.Models.DTO.RecipeDetailsDTO;
+using BE_Homnayangi.Modules.DTO.RecipeDetailsDTO;
+using Library.Models;
 
-namespace Library.Models.DTO.RecipeDTO
+namespace BE_Homnayangi.Modules.DTO.RecipeDTO
 {
 	public class RecipeResponse
 	{
