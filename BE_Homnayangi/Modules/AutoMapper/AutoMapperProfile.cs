@@ -4,6 +4,7 @@ using BE_Homnayangi.Modules.DTO.RecipeDetailsDTO;
 using BE_Homnayangi.Modules.DTO.RecipeDTO;
 using BE_Homnayangi.Modules.IngredientModule.Request;
 using Library.Models;
+using Library.Models.DTO.UserDTO;
 
 namespace BE_Homnayangi.Modules.AutoMapper
 {
@@ -12,6 +13,7 @@ namespace BE_Homnayangi.Modules.AutoMapper
         public AutoMapperProfile()
         {
             CreateCategoryMap();
+            CreateUserMap();
         }
 
         private void CreateCategoryMap()
@@ -20,8 +22,16 @@ namespace BE_Homnayangi.Modules.AutoMapper
             CreateMap<Recipe, RecipeResponse>().ReverseMap();
             CreateMap<RecipeDetail, RecipeDetailsResponse>().ReverseMap();
             CreateMap<Ingredient, IngredientResponse>().ReverseMap();
-            CreateMap<Ingredient, CreatedIngredientRequest>().ReverseMap(); 
+            CreateMap<Ingredient, CreatedIngredientRequest>().ReverseMap();
             CreateMap<Ingredient, UpdatedIngredientRequest>().ReverseMap();
         }
+        private void CreateUserMap()
+        {
+            CreateMap<LoginGoogleDTO, Customer>().ReverseMap();
+            CreateMap<RegisterDTO, Customer>().ReverseMap();
+
+        }
+
+
     }
 }

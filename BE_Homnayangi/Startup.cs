@@ -56,23 +56,23 @@ namespace BE_Homnayangi
             services.Configure<AppSetting>(Configuration.GetSection("AppSetting"));
             var secretKey = Configuration["AppSetting:SecretKey"];
             var secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
-       services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-             .AddJwtBearer(opt =>
-             {
-                 opt.TokenValidationParameters = new TokenValidationParameters
-                 {  
-                        ValidateIssuer = false,
-                     ValidateAudience = false,
-                        ValidateIssuerSigningKey = true,
-                     IssuerSigningKey = new SymmetricSecurityKey(secretKeyBytes),
+            services.AddAuthentication(options =>
+                 {
+                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                 })
+                  .AddJwtBearer(opt =>
+                  {
+                      opt.TokenValidationParameters = new TokenValidationParameters
+                      {
+                          ValidateIssuer = false,
+                          ValidateAudience = false,
+                          ValidateIssuerSigningKey = true,
+                          IssuerSigningKey = new SymmetricSecurityKey(secretKeyBytes),
 
-                     ClockSkew = TimeSpan.Zero
-                 };
-             });
+                          ClockSkew = TimeSpan.Zero
+                      };
+                  });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BE_Homnayangi", Version = "v1" });
@@ -117,18 +117,17 @@ namespace BE_Homnayangi
 
             //BlogTag Module
             services.AddScoped<IBlogTagRepository, BlogTagRepository>();
-<<<<<<< HEAD
+
             //User Module
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IUserService, UserService>();
 
-=======
 
             //Tag Module
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<ITagService, TagService>();
->>>>>>> develop
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
