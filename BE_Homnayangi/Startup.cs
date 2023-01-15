@@ -33,7 +33,9 @@ using Library.Models;
 
 using BE_Homnayangi.Modules.TagModule.Interface;
 using BE_Homnayangi.Modules.TagModule;
-
+using System.Linq;
+using System.Net;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BE_Homnayangi
 {
@@ -53,6 +55,24 @@ namespace BE_Homnayangi
             services.AddControllers();
             services.AddDbContext<HomnayangiContext>(
                  options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddMvcCore().ConfigureApiBehaviorOptions(options =>
+            {
+                options.InvalidModelStateResponseFactory = (errorContext) =>
+                {
+                    var errors = errorContext.ModelState.Values.SelectMany(e => e.Errors.Select(m => new
+                    {
+                        ErrorMessage = m.ErrorMessage
+                    })).ToList();
+                    var result = new
+                    {
+
+                        Errors = errors.Select(e => e.ErrorMessage).ToList()
+
+                    };
+                    return new BadRequestObjectResult(result);
+                };
+            });
+
             services.Configure<AppSetting>(Configuration.GetSection("AppSetting"));
             var secretKey = Configuration["AppSetting:SecretKey"];
             var secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
