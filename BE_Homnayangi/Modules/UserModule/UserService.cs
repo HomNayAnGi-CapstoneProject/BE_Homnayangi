@@ -60,7 +60,7 @@ namespace BE_Homnayangi.Modules.UserModule
                     new Claim("Phone Number", customer.Phonenumber),
                     new Claim("Displayname", customer.Displayname == null ? "" : user.Displayname),
                     new Claim("Firstname", customer.Firstname),
-                    new Claim("Latname",customer.Lastname),
+                    new Claim("Lastname",customer.Lastname),
                     new Claim(ClaimTypes.Gender,customer.Gender.ToString()),
                     new Claim("Avatar", customer.Avatar  == null ? "" : customer.Avatar),
                     new Claim(ClaimTypes.Role, CommonEnum.RoleEnum.CUSTOMER)
@@ -95,7 +95,7 @@ namespace BE_Homnayangi.Modules.UserModule
                     new Claim("Phone Number", user.Phonenumber),
                     new Claim("Displayname", user.Displayname == null ? "" : user.Displayname),
                     new Claim("Firstname", user.Firstname),
-                    new Claim("Latname",user.Lastname),
+                    new Claim("Lastname",user.Lastname),
                     new Claim(ClaimTypes.Gender,user.Gender.ToString()),
                     new Claim("Avatar", user.Avatar  == null ? "" : user.Avatar),
                     new Claim(ClaimTypes.Role, user.Role == 1 ? CommonEnum.RoleEnum.MANAGER :  CommonEnum.RoleEnum.STAFF)
@@ -155,7 +155,7 @@ namespace BE_Homnayangi.Modules.UserModule
                     new Claim("Phone Number", customer.Phonenumber == null ? "": customer.Phonenumber),
                     new Claim("Displayname", customer.Displayname),
                     new Claim("Firstname", customer.Firstname == null ? "": customer.Firstname),
-                    new Claim("Latname",customer.Lastname == null ? "": customer.Lastname),
+                    new Claim("Lastname",customer.Lastname == null ? "": customer.Lastname),
                     new Claim(ClaimTypes.Gender,customer.Gender.ToString() == null ? "": customer.Gender.ToString()),
                     new Claim("Avatar", customer.Avatar  == null ? "" : customer.Avatar),
                     new Claim(ClaimTypes.Role, CommonEnum.RoleEnum.CUSTOMER)
@@ -191,7 +191,7 @@ namespace BE_Homnayangi.Modules.UserModule
                     new Claim("Phone Number", cus.Phonenumber == null ? "": cus.Phonenumber),
                     new Claim("Displayname", cus.Displayname),
                     new Claim("Firstname", cus.Firstname == null ? "": cus.Firstname),
-                    new Claim("Latname",cus.Lastname == null ? "": cus.Lastname),
+                    new Claim("Lastname",cus.Lastname == null ? "": cus.Lastname),
                     new Claim(ClaimTypes.Gender,cus.Gender.ToString() == null ? "": cus.Gender.ToString()),
                     new Claim("Avatar", cus.Avatar  == null ? "" : cus.Avatar),
                     new Claim(ClaimTypes.Role, CommonEnum.RoleEnum.CUSTOMER)
@@ -228,7 +228,7 @@ namespace BE_Homnayangi.Modules.UserModule
                     new Claim("Phone Number", user.Phonenumber == null ? "": user.Phonenumber),
                     new Claim("Displayname", user.Displayname),
                     new Claim("Firstname", user.Firstname == null ? "": user.Firstname),
-                    new Claim("Latname",user.Lastname == null ? "": user.Lastname),
+                    new Claim("Lastname",user.Lastname == null ? "": user.Lastname),
                     new Claim(ClaimTypes.Gender,user.Gender.ToString() == null ? "": user.Gender.ToString()),
                     new Claim("Avatar", user.Avatar  == null ? "" : user.Avatar),
                     new Claim(ClaimTypes.Role,user.Role == 1 ? CommonEnum.RoleEnum.MANAGER : CommonEnum.RoleEnum.STAFF)
