@@ -80,13 +80,14 @@ namespace BE_Homnayangi.Controllers
 
                     var displayName = tokenS.Claims.First(claim => claim.Type == "name").Value;
                     var email = tokenS.Claims.First(claim => claim.Type == "email").Value;
+                    var avatar = tokenS.Claims.First(claim => claim.Type == "picture").Value;
 
                     var loginGoogle = new LoginGoogleDTO
                     {
 
                         Email = email,
                         Displayname = displayName,
-
+                        Avatar = avatar
                     };
 
 
@@ -118,7 +119,10 @@ namespace BE_Homnayangi.Controllers
                 }
                 else if (cus.Username == register.Username)
                 {
-                    return Ok("Account is already existed");
+                    return BadRequest(new
+                    {
+                        error = "Username is already existed"
+                    });
                 }
                 return Unauthorized();
             }
