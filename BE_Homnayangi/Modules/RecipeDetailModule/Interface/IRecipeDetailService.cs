@@ -17,6 +17,8 @@ namespace BE_Homnayangi.Modules.RecipeDetailModule.Interface
             Func<IQueryable<RecipeDetail>, ICollection<RecipeDetail>> options = null,
             string includeProperties = null);
         public RecipeDetail GetRecipeDetailByID(Guid? cateID);
+
+        public Task<ICollection<RecipeDetail>> GetRecipeDetailsByID(Guid recipeDetailID);
     }
 }
 

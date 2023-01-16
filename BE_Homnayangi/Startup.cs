@@ -15,6 +15,8 @@ using BE_Homnayangi.Modules.RecipeModule;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
 using BE_Homnayangi.Modules.TagModule;
 using BE_Homnayangi.Modules.TagModule.Interface;
+using BE_Homnayangi.Modules.TypeModule;
+using BE_Homnayangi.Modules.TypeModule.Interface;
 using BE_Homnayangi.Modules.UserModule;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.VoucherModule;
@@ -158,6 +160,10 @@ namespace BE_Homnayangi
             //CustomerVoucher Module
             services.AddScoped<ICustomerVoucherRepository, CustomerVoucherRepository>();
             services.AddScoped<ICustomerVoucherService, CustomerVoucherService>();
+
+            //Type Module
+            services.AddScoped<ITypeRepository, TypeRepository>();
+            services.AddScoped<ITypeService, TypeService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

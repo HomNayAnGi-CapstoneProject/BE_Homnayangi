@@ -9,8 +9,8 @@ using BE_Homnayangi.Modules.RecipeDetailModule.Interface;
 
 namespace BE_Homnayangi.Modules.RecipeDetailModule
 {
-	public class RecipeDetailService : IRecipeDetailService
-	{
+    public class RecipeDetailService : IRecipeDetailService
+    {
         private readonly IRecipeDetailRepository _recipeDetailRepository;
 
         public RecipeDetailService(IRecipeDetailRepository recipeDetailRepository)
@@ -48,6 +48,21 @@ namespace BE_Homnayangi.Modules.RecipeDetailModule
         public RecipeDetail GetRecipeDetailByID(Guid? recipeDetailID)
         {
             return _recipeDetailRepository.GetFirstOrDefaultAsync(x => x.RecipeId.Equals(recipeDetailID)).Result;
+        }
+
+        public async Task<ICollection<RecipeDetail>> GetRecipeDetailsByID(Guid recipeDetailID)
+        {
+            ICollection<RecipeDetail> list = null;
+            try
+            {
+                list = await _recipeDetailRepository.GetRecipeDetailsBy(x => x.RecipeId.Equals(recipeDetailID), includeProperties: "Ingredient");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at GetRecipeDetailsByID: " + ex.Message);
+                throw;
+            }
+            return list;
         }
     }
 }

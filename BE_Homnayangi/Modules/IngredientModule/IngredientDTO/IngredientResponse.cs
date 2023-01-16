@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Library.Models;
+using System;
+using Type = Library.Models.Type;
+
 namespace BE_Homnayangi.Modules.DTO.IngredientDTO
 {
-	public class IngredientResponse
-	{
+    public class IngredientResponse
+    {
         public Guid IngredientId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
@@ -12,9 +15,9 @@ namespace BE_Homnayangi.Modules.DTO.IngredientDTO
         public DateTime? UpdatedDate { get; set; }
         public bool? Status { get; set; }
         public decimal? Price { get; set; }
-        public Guid? TypeId { get; set; }
-
-        public virtual Type Type { get; set; }
+        public Guid TypeId { get; set; }
+        public string TypeName { get; set; }
+        public string TypeDescription { get; set; }
     }
 }
 

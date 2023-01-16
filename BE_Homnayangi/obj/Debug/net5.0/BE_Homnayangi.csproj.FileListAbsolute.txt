@@ -506,6 +506,7 @@ E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Google.Apis.dll
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Google.Apis.Auth.PlatformServices.dll
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Google.Apis.Auth.dll
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Google.Apis.Core.dll
+<<<<<<< HEAD
 E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\appsettings.Development.json
 E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\appsettings.json
 E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\BE_Homnayangi.exe
@@ -690,3 +691,5 @@ C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Google.Apis.Core
 C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\GSF.Core.dll
 C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.Google.dll
 C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+=======
+>>>>>>> 7fcbf72 ([BE]: Get blog detail v2)
