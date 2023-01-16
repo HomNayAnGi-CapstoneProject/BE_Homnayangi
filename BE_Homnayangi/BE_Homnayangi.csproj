@@ -41,6 +41,12 @@
     <None Remove="Modules\RecipeDetailModule\RecipeDetailsDTO\" />
     <None Remove="Modules\RecipeModule\RecipeDTO\" />
     <None Remove="Modules\AutoMapper\" />
+    <None Remove="Modules\RewardModule\" />
+    <None Remove="Modules\RewardModule\Interface\" />
+    <None Remove="Modules\RewardModule\DTO\" />
+    <None Remove="Modules\RewardModule\DTO\Response\" />
+    <None Remove="Modules\RewardModule\DTO\Request\" />
+    <None Remove="Modules\Utils\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Modules\BlogModule\Request\" />
@@ -53,5 +59,11 @@
     <Folder Include="Modules\RecipeDetailModule\RecipeDetailsDTO\" />
     <Folder Include="Modules\RecipeModule\RecipeDTO\" />
     <Folder Include="Modules\AutoMapper\" />
+    <Folder Include="Modules\RewardModule\" />
+    <Folder Include="Modules\RewardModule\Interface\" />
+    <Folder Include="Modules\RewardModule\DTO\" />
+    <Folder Include="Modules\RewardModule\DTO\Response\" />
+    <Folder Include="Modules\RewardModule\DTO\Request\" />
+    <Folder Include="Modules\Utils\" />
   </ItemGroup>
 </Project>

@@ -7,6 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Library.DataAccess;
 using Library.Models;
+using AutoMapper;
+using BE_Homnayangi.Modules.RewardModule.Interface;
+using Library.PagedList;
+using BE_Homnayangi.Modules.Utils;
+using BE_Homnayangi.Modules.RewardModule.DTO.Request;
 
 namespace BE_Homnayangi.Controllers
 {
@@ -14,25 +19,55 @@ namespace BE_Homnayangi.Controllers
     [ApiController]
     public class RewardsController : ControllerBase
     {
-        private readonly HomnayangiContext _context;
+        private readonly IMapper _mapper;
+        private readonly IRewardService _rewardService;
 
-        public RewardsController(HomnayangiContext context)
+        public RewardsController(IRewardService rewardService, IMapper mapper)
         {
-            _context = context;
+            _mapper = mapper;
+            _rewardService = rewardService;
         }
 
         // GET: api/Rewards
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Reward>>> GetRewards()
+        public async Task<ActionResult<IEnumerable<Reward>>> GetRewards([FromQuery] RewardFilterRequest request)
         {
-            return await _context.Rewards.ToListAsync();
+            try
+            {
+                if (request.fromDate.HasValue && request.toDate.HasValue
+                    && !DateTimeUtils.CheckValidFromAndToDate(request.fromDate.Value, request.toDate.Value))
+                {
+                    return BadRequest();
+                }
+
+                var response = await _rewardService.GetAllPaged(request);
+                return Ok(response);
+            }
+            catch
+            {
+                return NoContent();
+            }
+        }
+
+        [HttpGet("existed_name")]
+        public async Task<ActionResult<bool>> CheckExistedName([FromQuery] string name)
+        {
+            try
+            {
+                var response = await _rewardService.CheckExistedName(name);
+                return Ok(response);
+            }
+            catch
+            {
+                return NoContent();
+            }
         }
 
         // GET: api/Rewards/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Reward>> GetReward(Guid id)
         {
-            var reward = await _context.Rewards.FindAsync(id);
+            var reward = await _rewardService.GetRewardByID(id);
 
             if (reward == null)
             {
@@ -52,11 +87,9 @@ namespace BE_Homnayangi.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(reward).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _rewardService.UpdateReward(rewardUpdate: reward);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -78,10 +111,9 @@ namespace BE_Homnayangi.Controllers
         [HttpPost]
         public async Task<ActionResult<Reward>> PostReward(Reward reward)
         {
-            _context.Rewards.Add(reward);
             try
             {
-                await _context.SaveChangesAsync();
+                await _rewardService.AddNewReward(reward);
             }
             catch (DbUpdateException)
             {
@@ -102,21 +134,20 @@ namespace BE_Homnayangi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteReward(Guid id)
         {
-            var reward = await _context.Rewards.FindAsync(id);
+            var reward = await _rewardService.GetRewardByID(id);
             if (reward == null)
             {
                 return NotFound();
             }
-
-            _context.Rewards.Remove(reward);
-            await _context.SaveChangesAsync();
+            reward.Status = false;
+            await _rewardService.UpdateReward(reward);
 
             return NoContent();
         }
 
         private bool RewardExists(Guid id)
         {
-            return _context.Rewards.Any(e => e.RewardId == id);
+            return _rewardService.GetRewardByID(id).Result != null;
         }
     }
 }
