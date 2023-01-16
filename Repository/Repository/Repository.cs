@@ -39,7 +39,7 @@ namespace Repository.Repository
             await _db.SaveChangesAsync();
         }
 
-        public async Task<T> GetByIdAsync(string key)
+        public async Task<T> GetByIdAsync(Guid key)
         {
             return await DbSet.FindAsync(key);
         }

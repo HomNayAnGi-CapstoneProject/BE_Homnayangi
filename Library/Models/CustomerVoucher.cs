@@ -14,5 +14,18 @@ namespace Library.Models
 
         public virtual Customer Customer { get; set; }
         public virtual Voucher Voucher { get; set; }
+
+        public CustomerVoucher()
+        {
+
+        }
+
+        public CustomerVoucher(Guid voucherId, Guid customerId, DateTime createdDate, int quantity)
+        {
+            VoucherId = voucherId;
+            CustomerId = customerId;
+            CreatedDate = createdDate;
+            Quantity = quantity;
+        }
     }
 }

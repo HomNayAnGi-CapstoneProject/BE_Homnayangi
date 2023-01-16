@@ -1,41 +1,42 @@
-using System.Text.Json.Serialization;
+using BE_Homnayangi.Modules.AutoMapper;
+using BE_Homnayangi.Modules.BlogModule;
+using BE_Homnayangi.Modules.BlogModule.Interface;
+using BE_Homnayangi.Modules.BlogTagModule;
+using BE_Homnayangi.Modules.BlogTagModule.Interface;
 using BE_Homnayangi.Modules.CategoryModule;
 using BE_Homnayangi.Modules.CategoryModule.Interface;
+using BE_Homnayangi.Modules.CustomerVoucherModule;
+using BE_Homnayangi.Modules.CustomerVoucherModule.Interface;
 using BE_Homnayangi.Modules.IngredientModule;
 using BE_Homnayangi.Modules.IngredientModule.Interface;
 using BE_Homnayangi.Modules.RecipeDetailModule;
 using BE_Homnayangi.Modules.RecipeDetailModule.Interface;
-using BE_Homnayangi.Modules.BlogModule;
-using BE_Homnayangi.Modules.BlogModule.Interface;
 using BE_Homnayangi.Modules.RecipeModule;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
-using BE_Homnayangi.Modules.AutoMapper;
+using BE_Homnayangi.Modules.TagModule;
+using BE_Homnayangi.Modules.TagModule.Interface;
+using BE_Homnayangi.Modules.UserModule;
+using BE_Homnayangi.Modules.UserModule.Interface;
+using BE_Homnayangi.Modules.VoucherModule;
+using BE_Homnayangi.Modules.VoucherModule.Interface;
 using Library.DataAccess;
+using Library.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using BE_Homnayangi.Modules.BlogTagModule.Interface;
-using BE_Homnayangi.Modules.BlogTagModule;
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using System;
-using BE_Homnayangi.Modules.UserModule.Interface;
-using BE_Homnayangi.Modules.UserModule;
-using Library.Models;
-
-using BE_Homnayangi.Modules.TagModule.Interface;
-using BE_Homnayangi.Modules.TagModule;
 using System.Linq;
-using System.Net;
-using Microsoft.AspNetCore.Mvc;
+using System.Text;
 
 namespace BE_Homnayangi
 {
@@ -115,12 +116,15 @@ namespace BE_Homnayangi
             });
 
             services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
+            
             // Category Module
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ICategoryService, CategoryService>();
+            
             // Blog Module
             services.AddScoped<IBlogRepository, BlogRepository>();
             services.AddScoped<IBlogService, BlogService>();
+            
             // Recipe Module
             services.AddScoped<IRecipeRepository, RecipeRepository>();
             services.AddScoped<IRecipeService, RecipeService>();
@@ -143,11 +147,17 @@ namespace BE_Homnayangi
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IUserService, UserService>();
 
-
             //Tag Module
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<ITagService, TagService>();
 
+            //Voucher Module
+            services.AddScoped<IVoucherRepository, VoucherRepository>();
+            services.AddScoped<IVoucherService, VoucherService>();
+
+            //CustomerVoucher Module
+            services.AddScoped<ICustomerVoucherRepository, CustomerVoucherRepository>();
+            services.AddScoped<ICustomerVoucherService, CustomerVoucherService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
