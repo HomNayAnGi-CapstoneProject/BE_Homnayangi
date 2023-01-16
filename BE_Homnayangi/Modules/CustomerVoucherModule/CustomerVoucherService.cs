@@ -28,51 +28,6 @@ namespace BE_Homnayangi.Modules.VoucherModule
             return _customerVoucherRepository.GetCustomerVouchersBy(filter);
         }
 
-        public async Task<bool> DeleteCustomerVouchersByVoucherId(Guid voucherId)
-        {
-            bool isDeleted = false;
-            try
-            {
-                var list = await _customerVoucherRepository.GetCustomerVouchersBy(x => x.VoucherId == voucherId);
-                if (list.Count > 0)
-                {
-                    foreach (var cv in list)
-                    {
-                        await _customerVoucherRepository.RemoveAsync(cv);
-                        Console.WriteLine($"CustomerID: {cv.CustomerId}, VoucherID: {cv.VoucherId} was deleted!");
-                    }
-                    isDeleted = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error at DeleteCustomerVouchersByVoucherId: " + ex.Message);
-                throw;
-            }
-            return isDeleted;
-        }
-
-        public async Task<bool> DeleteCustomerVouchersByCusAndVoucherId(Guid voucherId, Guid customerId)
-        {
-            bool isDeleted = false;
-            try
-            {
-                var list = await _customerVoucherRepository.GetCustomerVouchersBy(x => x.VoucherId == voucherId && x.CustomerId == x.CustomerId);
-                if (list.Count > 0)
-                {
-                    await _customerVoucherRepository.RemoveAsync(list.ElementAt(0));
-                    Console.WriteLine($"CustomerID: {list.ElementAt(0).CustomerId}, VoucherID: {list.ElementAt(0).VoucherId} was deleted!");
-                    isDeleted = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error at DeleteCustomerVouchersByVoucherId: " + ex.Message);
-                throw;
-            }
-            return isDeleted;
-        }
-
         public async Task<ICollection<CustomerVoucherResponse>> GetAllCustomerVouchers()
         {
             List<CustomerVoucherResponse> result = null;
@@ -165,6 +120,29 @@ namespace BE_Homnayangi.Modules.VoucherModule
                 throw;
             }
             return result;
+        }
+
+        public async Task<bool> DeleteCustomerVouchersByVoucherId(Guid voucherId)
+        {
+            bool isDeleted = false;
+            try
+            {
+                var list = await _customerVoucherRepository.GetCustomerVouchersBy(x => x.VoucherId == voucherId);
+                if (list.Count > 0)
+                {
+                    foreach (var cv in list)
+                    {
+                        await _customerVoucherRepository.RemoveAsync(cv);
+                    }
+                    isDeleted = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at DeleteCustomerVouchersByVoucherId: " + ex.Message);
+                throw;
+            }
+            return isDeleted;
         }
 
         public CustomerVoucherResponse ConvertDTO(CustomerVoucher cv)
