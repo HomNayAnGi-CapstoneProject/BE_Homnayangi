@@ -806,6 +806,9 @@ namespace Library.DataAccess
                     .HasColumnType("money")
                     .HasColumnName("discount");
 
+                entity.Property(e => e.Quantity)
+                    .HasColumnName("quantity");
+
                 entity.Property(e => e.MaximumOrder)
                     .HasColumnType("money")
                     .HasColumnName("maximumOrder");

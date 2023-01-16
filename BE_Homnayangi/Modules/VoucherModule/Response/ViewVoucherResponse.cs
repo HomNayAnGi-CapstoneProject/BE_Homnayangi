@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 
-#nullable disable
-
-namespace Library.Models
+namespace BE_Homnayangi.Modules.VoucherModule.Response
 {
-    public partial class Voucher
+    public class ViewVoucherResponse
     {
-        public Voucher()
-        {
-            CustomerVouchers = new HashSet<CustomerVoucher>();
-        }
-
         public Guid VoucherId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
@@ -23,9 +15,6 @@ namespace Library.Models
         public decimal? Discount { get; set; }
         public decimal? MinimumOrder { get; set; }
         public decimal? MaximumOrder { get; set; }
-        public Guid? AuthorId { get; set; }
-
-        public virtual User Author { get; set; }
-        public virtual ICollection<CustomerVoucher> CustomerVouchers { get; set; }
+        public string AuthorName { get; set; }
     }
 }
