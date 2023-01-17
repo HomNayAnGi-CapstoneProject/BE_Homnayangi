@@ -43,6 +43,7 @@
     <None Remove="Modules\AutoMapper\" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Models2\" />
     <Folder Include="Modules\BlogModule\Request\" />
     <Folder Include="Modules\RecipeModule\" />
     <Folder Include="Modules\RecipeModule\Interface\" />

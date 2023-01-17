@@ -7,19 +7,13 @@ namespace Library.Models
 {
     public partial class Reward
     {
-        public Reward()
-        {
-            UserRewards = new HashSet<UserReward>();
-        }
-
         public Guid RewardId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime? CreateDate { get; set; }
         public string ImageUrl { get; set; }
         public bool? Status { get; set; }
-        public int? Condition { get; set; }
-
-        public virtual ICollection<UserReward> UserRewards { get; set; }
+        public int? ConditionType { get; set; }
+        public int? ConditionValue { get; set; }
     }
 }

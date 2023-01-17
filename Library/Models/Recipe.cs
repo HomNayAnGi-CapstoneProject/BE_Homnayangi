@@ -9,7 +9,6 @@ namespace Library.Models
     {
         public Recipe()
         {
-            ComboDetails = new HashSet<ComboDetail>();
             OrderCookedDetails = new HashSet<OrderCookedDetail>();
             OrderPackageDetails = new HashSet<OrderPackageDetail>();
             RecipeDetails = new HashSet<RecipeDetail>();
@@ -23,7 +22,6 @@ namespace Library.Models
         public int? Size { get; set; }
 
         public virtual Blog RecipeNavigation { get; set; }
-        public virtual ICollection<ComboDetail> ComboDetails { get; set; }
         public virtual ICollection<OrderCookedDetail> OrderCookedDetails { get; set; }
         public virtual ICollection<OrderPackageDetail> OrderPackageDetails { get; set; }
         public virtual ICollection<RecipeDetail> RecipeDetails { get; set; }

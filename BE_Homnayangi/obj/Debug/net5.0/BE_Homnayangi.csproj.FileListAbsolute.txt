@@ -681,3 +681,12 @@ E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\refint\BE_Homnaya
 E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.pdb
 E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.genruntimeconfig.cache
 E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\ref\BE_Homnayangi.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Antlr3.Runtime.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\ExpressionEvaluator.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Google.Apis.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Google.Apis.Auth.PlatformServices.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Google.Apis.Auth.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Google.Apis.Core.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\GSF.Core.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.Google.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
