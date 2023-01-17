@@ -41,7 +41,7 @@ namespace BE_Homnayangi.Controllers
 
         // GET: api/v1/vouchers/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Voucher>> GetVoucherById(Guid id)
+        public async Task<ActionResult<Voucher>> GetVoucherById([FromQuery]Guid id)
         {
             var result = await _voucherService.GetVoucherByID(id);
             return new JsonResult(new
@@ -51,7 +51,7 @@ namespace BE_Homnayangi.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> PutVoucher(UpdateVoucherRequest voucher)
+        public async Task<IActionResult> PutVoucher([FromBody]UpdateVoucherRequest voucher)
         {
             var mappedVoucher = _mapper.Map<Voucher>(voucher);
             bool isUpdated = await _voucherService.UpdateVoucher(mappedVoucher);

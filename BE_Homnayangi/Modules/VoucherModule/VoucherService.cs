@@ -28,15 +28,6 @@ namespace BE_Homnayangi.Modules.VoucherModule
             return _voucherRepository.GetVouchersBy(filter);
         }
 
-        public Task<ICollection<Voucher>> GetRandomVouchersBy(
-                Expression<Func<Voucher, bool>> filter = null,
-                Func<IQueryable<Voucher>, ICollection<Voucher>> options = null,
-                string includeProperties = null,
-                int numberItem = 0)
-        {
-            return _voucherRepository.GetNItemRandom(filter, numberItem: numberItem);
-        }
-
         public async Task<ICollection<ViewVoucherResponse>> GetAllVoucher()
         {
             List<ViewVoucherResponse> result = null;
@@ -54,7 +45,6 @@ namespace BE_Homnayangi.Modules.VoucherModule
                         vvr.Name = voucher.Name != null ? voucher.Name : "";
                         vvr.Description = voucher.Description != null ? voucher.Description : "";
                         vvr.Status = voucher.Status != null ? voucher.Status : 0;
-                        vvr.Quantity = voucher.Quantity != null ? voucher.Quantity : 0;
                         vvr.CreatedDate = voucher.CreatedDate != null ? voucher.CreatedDate : DateTime.Now; // tmp solution because dont have clear requirement about it!!!
                         vvr.ValidFrom = voucher.ValidFrom != null ? voucher.ValidFrom : DateTime.Now;
                         vvr.ValidTo = voucher.ValidTo != null ? voucher.ValidTo : DateTime.Now;
@@ -81,15 +71,14 @@ namespace BE_Homnayangi.Modules.VoucherModule
             try
             {
                 //Note: can not use GetByIdAsync here because GetByIdAsync can not get data from another table
-                var tmp = await _voucherRepository.GetVouchersBy(x => x.VoucherId == id, includeProperties: "Author");
-                if (tmp != null && tmp.Count > 0)
+                var tmp = await _voucherRepository.GetFirstOrDefaultAsync(x => x.VoucherId == id, includeProperties: "Author");
+                if (tmp != null)
                 {
-                    Voucher voucher = tmp.ElementAt(0);
+                    Voucher voucher = tmp;
                     result = new ViewVoucherResponse();
                     result.VoucherId = voucher.VoucherId;
                     result.Name = voucher.Name != null ? voucher.Name : "";
                     result.Description = voucher.Description != null ? voucher.Description : "";
-                    result.Quantity = voucher.Quantity != null ? voucher.Quantity : 0;
                     result.Status = voucher.Status != null ? voucher.Status : 0;
                     result.CreatedDate = voucher.CreatedDate != null ? voucher.CreatedDate : DateTime.Now; // tmp solution because dont have clear requirement about it!!!
                     result.ValidFrom = voucher.ValidFrom != null ? voucher.ValidFrom : DateTime.Now;
@@ -113,7 +102,7 @@ namespace BE_Homnayangi.Modules.VoucherModule
             bool isDeleted = false;
             try
             {
-                Voucher voucher = await _voucherRepository.GetByIdAsync(id);
+                Voucher voucher = await _voucherRepository.GetFirstOrDefaultAsync(x => x.VoucherId == id);
                 if (voucher != null)
                 {
                     voucher.Status = 0;
@@ -129,38 +118,17 @@ namespace BE_Homnayangi.Modules.VoucherModule
             return isDeleted;
         }
 
-        public async Task<bool> UpdateQuantityVoucher(Guid id, int newQuantity)
-        {
-            bool isUpdated = false;
-            try
-            {
-                Voucher voucher = await _voucherRepository.GetByIdAsync(id);
-                if (voucher != null)
-                {
-                    voucher.Quantity = newQuantity;
-                }
-                await _voucherRepository.UpdateAsync(voucher);
-                isUpdated = true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error at UpdateQuantityVoucher: " + ex.Message);
-                throw;
-            }
-            return isUpdated;
-        }
-
-        // Note: Hiện tại ko thể update UserID tạo nên voucher này, về sau nếu cần sẽ làm sau
+        // Note: Không update AuthorId
         public async Task<bool> UpdateVoucher(Voucher newVoucher)
         {
             bool isUpdated = false;
             try
             {
-                Voucher voucher = await _voucherRepository.GetByIdAsync(newVoucher.VoucherId);
+                Voucher voucher = await _voucherRepository.GetFirstOrDefaultAsync(x => x.VoucherId == newVoucher.VoucherId);
                 if (voucher != null)
                 {
                     voucher.Name = newVoucher.Name == null ? voucher.Name : newVoucher.Name;
-                    voucher.Quantity = newVoucher.Quantity == null ? voucher.Quantity : newVoucher.Quantity;
+                    voucher.Description = newVoucher.Description == null ? voucher.Description : newVoucher.Description;
                     voucher.Status = newVoucher.Status == null ? voucher.Status : newVoucher.Status;
                     voucher.CreatedDate = newVoucher.CreatedDate == null ? voucher.CreatedDate : newVoucher.CreatedDate;
                     voucher.ValidFrom = newVoucher.ValidFrom == null ? voucher.ValidFrom : newVoucher.ValidFrom;
