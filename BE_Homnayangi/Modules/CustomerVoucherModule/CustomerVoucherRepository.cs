@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BE_Homnayangi.Modules.CustomerVoucherModule
 {
-	public class CustomerVoucherRepository : Repository<CustomerVoucher>, ICustomerVoucherRepository
+    public class CustomerVoucherRepository : Repository<CustomerVoucher>, ICustomerVoucherRepository
 	{
         private readonly HomnayangiContext _db;
 

@@ -11,7 +11,6 @@ namespace Library.Models
         {
             CustomerRewards = new HashSet<CustomerReward>();
         }
-
         public Guid RewardId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }

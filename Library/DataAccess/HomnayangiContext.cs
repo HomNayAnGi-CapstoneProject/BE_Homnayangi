@@ -1,8 +1,6 @@
 ﻿using System;
 using Library.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.Extensions.Configuration;
 using Type = Library.Models.Type;
 
 #nullable disable
@@ -11,17 +9,13 @@ namespace Library.DataAccess
 {
     public partial class HomnayangiContext : DbContext
     {
-
         public HomnayangiContext()
         {
         }
 
-        public IConfiguration Configuration { get; }
-
-        public HomnayangiContext(DbContextOptions<HomnayangiContext> options, IConfiguration configuration)
+        public HomnayangiContext(DbContextOptions<HomnayangiContext> options)
             : base(options)
         {
-            Configuration = configuration;
         }
 
         public virtual DbSet<Accomplishment> Accomplishments { get; set; }
@@ -29,10 +23,9 @@ namespace Library.DataAccess
         public virtual DbSet<BlogReaction> BlogReactions { get; set; }
         public virtual DbSet<BlogTag> BlogTags { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
-        public virtual DbSet<Combo> Combos { get; set; }
-        public virtual DbSet<ComboDetail> ComboDetails { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
+        public virtual DbSet<CustomerReward> CustomerRewards { get; set; }
         public virtual DbSet<CustomerVoucher> CustomerVouchers { get; set; }
         public virtual DbSet<Ingredient> Ingredients { get; set; }
         public virtual DbSet<Notification> Notifications { get; set; }
@@ -47,14 +40,14 @@ namespace Library.DataAccess
         public virtual DbSet<Transaction> Transactions { get; set; }
         public virtual DbSet<Type> Types { get; set; }
         public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<CustomerReward> CustomerRewards { get; set; }
         public virtual DbSet<Voucher> Vouchers { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Server=MSI\\MONKINAM;Uid=sa;Pwd=Monki123;Database=Homnayangi;");
             }
         }
 
@@ -74,6 +67,8 @@ namespace Library.DataAccess
 
                 entity.Property(e => e.BlogId).HasColumnName("blogId");
 
+                entity.Property(e => e.ConfirmBy).HasColumnName("confirmBy");
+
                 entity.Property(e => e.Content).HasColumnName("content");
 
                 entity.Property(e => e.CreatedDate)
@@ -92,7 +87,7 @@ namespace Library.DataAccess
                     .HasForeignKey(d => d.BlogId)
                     .HasConstraintName("FK_Accomplishment_Blog");
 
-                entity.HasOne(d => d.User)
+                entity.HasOne(d => d.ConfirmByNavigation)
                     .WithMany(p => p.Accomplishments)
                     .HasForeignKey(d => d.ConfirmBy)
                     .HasConstraintName("FK_Accomplishment_User");
@@ -118,6 +113,8 @@ namespace Library.DataAccess
 
                 entity.Property(e => e.Description).HasColumnName("description");
 
+                entity.Property(e => e.Finished).HasColumnName("finished");
+
                 entity.Property(e => e.ImageUrl).HasColumnName("imageURL");
 
                 entity.Property(e => e.Preparation).HasColumnName("preparation");
@@ -131,6 +128,8 @@ namespace Library.DataAccess
                 entity.Property(e => e.UpdatedDate)
                     .HasColumnType("datetime")
                     .HasColumnName("updatedDate");
+
+                entity.Property(e => e.VideoUrl).HasColumnName("videoURL");
 
                 entity.Property(e => e.View).HasColumnName("view");
 
@@ -182,20 +181,22 @@ namespace Library.DataAccess
 
                 entity.Property(e => e.BlogId).HasColumnName("blogId");
 
+                entity.Property(e => e.TagId).HasColumnName("tagId");
+
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
                     .HasColumnName("createdDate");
 
-                entity.Property(e => e.TagId).HasColumnName("tagId");
-
                 entity.HasOne(d => d.Blog)
-                    .WithMany()
+                    .WithMany(p => p.BlogTags)
                     .HasForeignKey(d => d.BlogId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_BlogTag_Blog");
 
                 entity.HasOne(d => d.Tag)
-                    .WithMany()
+                    .WithMany(p => p.BlogTags)
                     .HasForeignKey(d => d.TagId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_BlogTag_Tag");
             });
 
@@ -207,61 +208,15 @@ namespace Library.DataAccess
                     .ValueGeneratedNever()
                     .HasColumnName("categoryId");
 
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("createdDate");
+
                 entity.Property(e => e.Description).HasColumnName("description");
 
                 entity.Property(e => e.Name).HasColumnName("name");
 
                 entity.Property(e => e.Status).HasColumnName("status");
-            });
-
-            modelBuilder.Entity<Combo>(entity =>
-            {
-                entity.ToTable("Combo");
-
-                entity.Property(e => e.ComboId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("comboId");
-
-                entity.Property(e => e.CookedPrice)
-                    .HasColumnType("money")
-                    .HasColumnName("cookedPrice");
-
-                entity.Property(e => e.Description).HasColumnName("description");
-
-                entity.Property(e => e.ImageUrl).HasColumnName("imageURL");
-
-                entity.Property(e => e.PackagePrice)
-                    .HasColumnType("money")
-                    .HasColumnName("packagePrice");
-
-                entity.Property(e => e.Size).HasColumnName("size");
-
-                entity.Property(e => e.Title).HasColumnName("title");
-            });
-
-            modelBuilder.Entity<ComboDetail>(entity =>
-            {
-                entity.HasKey(e => new { e.ComboId, e.RecipeId });
-
-                entity.ToTable("ComboDetail");
-
-                entity.Property(e => e.ComboId).HasColumnName("comboId");
-
-                entity.Property(e => e.RecipeId).HasColumnName("recipeId");
-
-                entity.Property(e => e.Description).HasColumnName("description");
-
-                entity.HasOne(d => d.Combo)
-                    .WithMany(p => p.ComboDetails)
-                    .HasForeignKey(d => d.ComboId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ComboDetail_Combo");
-
-                entity.HasOne(d => d.Recipe)
-                    .WithMany(p => p.ComboDetails)
-                    .HasForeignKey(d => d.RecipeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ComboDetail_Recipe");
             });
 
             modelBuilder.Entity<Comment>(entity =>
@@ -291,16 +246,15 @@ namespace Library.DataAccess
                     .HasForeignKey(d => d.AuthorId)
                     .HasConstraintName("FK_Comment_Customer");
 
+                entity.HasOne(d => d.AuthorNavigation)
+                    .WithMany(p => p.Comments)
+                    .HasForeignKey(d => d.AuthorId)
+                    .HasConstraintName("FK_Comment_User");
+
                 entity.HasOne(d => d.Blog)
                     .WithMany(p => p.Comments)
                     .HasForeignKey(d => d.BlogId)
                     .HasConstraintName("FK_Comment_Blog");
-
-                entity.HasOne(d => d.CommentNavigation)
-                    .WithOne(p => p.Comment)
-                    .HasForeignKey<Comment>(d => d.CommentId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Comment_User1");
 
                 entity.HasOne(d => d.Parent)
                     .WithMany(p => p.InverseParent)
@@ -322,7 +276,15 @@ namespace Library.DataAccess
                     .HasColumnType("datetime")
                     .HasColumnName("createdDate");
 
+                entity.Property(e => e.Displayname)
+                    .HasMaxLength(50)
+                    .HasColumnName("displayname");
+
                 entity.Property(e => e.Email).HasColumnName("email");
+
+                entity.Property(e => e.Firstname)
+                    .HasMaxLength(50)
+                    .HasColumnName("firstname");
 
                 entity.Property(e => e.Gender).HasColumnName("gender");
 
@@ -330,8 +292,6 @@ namespace Library.DataAccess
 
                 entity.Property(e => e.IsGoogle).HasColumnName("isGoogle");
 
-                entity.Property(e => e.Displayname).HasColumnName("displayname");
-                entity.Property(e => e.Firstname).HasColumnName("firstname");
                 entity.Property(e => e.Lastname).HasColumnName("lastname");
 
                 entity.Property(e => e.Password).HasColumnName("password");
@@ -342,7 +302,36 @@ namespace Library.DataAccess
                     .HasColumnType("datetime")
                     .HasColumnName("updatedDate");
 
-                entity.Property(e => e.Username).HasColumnName("username");
+                entity.Property(e => e.Username)
+                    .HasMaxLength(50)
+                    .HasColumnName("username");
+            });
+
+            modelBuilder.Entity<CustomerReward>(entity =>
+            {
+                entity.HasKey(e => new { e.CustomerId, e.RewardId });
+
+                entity.ToTable("CustomerReward");
+
+                entity.Property(e => e.CustomerId).HasColumnName("customerId");
+
+                entity.Property(e => e.RewardId).HasColumnName("rewardId");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("createdDate");
+
+                entity.HasOne(d => d.Customer)
+                    .WithMany(p => p.CustomerRewards)
+                    .HasForeignKey(d => d.CustomerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CustomerReward_Customer");
+
+                entity.HasOne(d => d.Reward)
+                    .WithMany(p => p.CustomerRewards)
+                    .HasForeignKey(d => d.RewardId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CustomerReward_Reward");
             });
 
             modelBuilder.Entity<CustomerVoucher>(entity =>
@@ -426,21 +415,9 @@ namespace Library.DataAccess
 
                 entity.Property(e => e.Description).HasColumnName("description");
 
-                entity.Property(e => e.OrderId).HasColumnName("orderId");
+                entity.Property(e => e.ReceiverId).HasColumnName("receiverId");
 
                 entity.Property(e => e.Status).HasColumnName("status");
-
-                entity.Property(e => e.UserId).HasColumnName("userId");
-
-                entity.HasOne(d => d.Order)
-                    .WithMany(p => p.Notifications)
-                    .HasForeignKey(d => d.OrderId)
-                    .HasConstraintName("FK_Notification_Order");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Notifications)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_Notification_Customer");
             });
 
             modelBuilder.Entity<Order>(entity =>
@@ -450,6 +427,8 @@ namespace Library.DataAccess
                 entity.Property(e => e.OrderId)
                     .ValueGeneratedNever()
                     .HasColumnName("orderId");
+
+                entity.Property(e => e.CustomerId).HasColumnName("customerId");
 
                 entity.Property(e => e.Discount)
                     .HasColumnType("money")
@@ -471,18 +450,18 @@ namespace Library.DataAccess
                     .HasColumnType("money")
                     .HasColumnName("totalPrice");
 
-                entity.Property(e => e.UserId).HasColumnName("userId");
+                entity.Property(e => e.VoucherId).HasColumnName("voucherId");
+
+                entity.HasOne(d => d.Customer)
+                    .WithMany(p => p.Orders)
+                    .HasForeignKey(d => d.CustomerId)
+                    .HasConstraintName("FK_Order_Customer");
 
                 entity.HasOne(d => d.OrderNavigation)
                     .WithOne(p => p.Order)
                     .HasForeignKey<Order>(d => d.OrderId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Order_Transaction");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Orders)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_Order_User");
             });
 
             modelBuilder.Entity<OrderCookedDetail>(entity =>
@@ -736,7 +715,15 @@ namespace Library.DataAccess
                     .HasColumnType("datetime")
                     .HasColumnName("createdDate");
 
+                entity.Property(e => e.Displayname)
+                    .HasMaxLength(50)
+                    .HasColumnName("displayname");
+
                 entity.Property(e => e.Email).HasColumnName("email");
+
+                entity.Property(e => e.Firstname)
+                    .HasMaxLength(50)
+                    .HasColumnName("firstname");
 
                 entity.Property(e => e.Gender).HasColumnName("gender");
 
@@ -744,8 +731,6 @@ namespace Library.DataAccess
 
                 entity.Property(e => e.IsGoogle).HasColumnName("isGoogle");
 
-                entity.Property(e => e.Displayname).HasColumnName("displayname");
-                entity.Property(e => e.Firstname).HasColumnName("firstname");
                 entity.Property(e => e.Lastname).HasColumnName("lastname");
 
                 entity.Property(e => e.Password).HasColumnName("password");
@@ -759,33 +744,6 @@ namespace Library.DataAccess
                     .HasColumnName("updatedDate");
 
                 entity.Property(e => e.Username).HasColumnName("username");
-            });
-
-            modelBuilder.Entity<CustomerReward>(entity =>
-            {
-                entity.HasKey(e => new { e.CustomerId, e.RewardId });
-
-                entity.ToTable("CustomerReward");
-
-                entity.Property(e => e.CustomerId).HasColumnName("customerId");
-
-                entity.Property(e => e.RewardId).HasColumnName("rewardId");
-
-                entity.Property(e => e.CreatedDate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("createdDate");
-
-                entity.HasOne(d => d.Reward)
-                    .WithMany(p => p.CustomerRewards)
-                    .HasForeignKey(d => d.RewardId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CustomerReward_Reward");
-
-                entity.HasOne(d => d.Customer)
-                    .WithMany(p => p.CustomerRewards)
-                    .HasForeignKey(d => d.CustomerId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CustomerReward_Customer");
             });
 
             modelBuilder.Entity<Voucher>(entity =>
@@ -808,9 +766,6 @@ namespace Library.DataAccess
                     .HasColumnType("money")
                     .HasColumnName("discount");
 
-                entity.Property(e => e.Quantity)
-                    .HasColumnName("quantity");
-
                 entity.Property(e => e.MaximumOrder)
                     .HasColumnType("money")
                     .HasColumnName("maximumOrder");
@@ -819,7 +774,9 @@ namespace Library.DataAccess
                     .HasColumnType("money")
                     .HasColumnName("minimumOrder");
 
-                entity.Property(e => e.Name).HasColumnName("name");
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name");
 
                 entity.Property(e => e.Status).HasColumnName("status");
 
@@ -828,13 +785,13 @@ namespace Library.DataAccess
                     .HasColumnName("validFrom");
 
                 entity.Property(e => e.ValidTo)
-                    .HasMaxLength(10)
-                    .HasColumnName("validTo")
-                    .IsFixedLength(true);
+                    .HasColumnType("datetime")
+                    .HasColumnName("validTo");
 
                 entity.HasOne(d => d.Author)
                     .WithMany(p => p.Vouchers)
                     .HasForeignKey(d => d.AuthorId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Voucher_User");
             });
 

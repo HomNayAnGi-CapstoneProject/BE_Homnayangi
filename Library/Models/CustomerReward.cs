@@ -11,7 +11,7 @@ namespace Library.Models
         public Guid RewardId { get; set; }
         public DateTime? CreatedDate { get; set; }
 
-        public virtual Reward Reward { get; set; }
         public virtual Customer Customer { get; set; }
+        public virtual Reward Reward { get; set; }
     }
 }
