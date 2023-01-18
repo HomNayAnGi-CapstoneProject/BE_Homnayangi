@@ -11,6 +11,7 @@
     <PackageReference Include="Google.Apis.Auth" Version="1.58.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="5.0.17" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.17" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.17" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.17" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.17">
       <PrivateAssets>all</PrivateAssets>

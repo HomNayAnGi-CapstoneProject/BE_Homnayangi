@@ -8,7 +8,7 @@ namespace Repository.Repository.Interface
 {
     public interface IRepository<T> where T : class
     {
-        Task<T> GetByIdAsync(string key);
+        Task<T> GetByIdAsync(Guid key);
 
         Task AddAsync(T entity);
 
