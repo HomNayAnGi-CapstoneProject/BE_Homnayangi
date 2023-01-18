@@ -309,17 +309,29 @@ namespace Library.DataAccess
 
             modelBuilder.Entity<CustomerReward>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => new { e.CustomerId, e.RewardId });
 
                 entity.ToTable("CustomerReward");
+
+                entity.Property(e => e.CustomerId).HasColumnName("customerId");
+
+                entity.Property(e => e.RewardId).HasColumnName("rewardId");
 
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
                     .HasColumnName("createdDate");
 
-                entity.Property(e => e.CustomerId).HasColumnName("customerId");
+                entity.HasOne(d => d.Customer)
+                    .WithMany(p => p.CustomerRewards)
+                    .HasForeignKey(d => d.CustomerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CustomerReward_Customer");
 
-                entity.Property(e => e.RewardId).HasColumnName("rewardId");
+                entity.HasOne(d => d.Reward)
+                    .WithMany(p => p.CustomerRewards)
+                    .HasForeignKey(d => d.RewardId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CustomerReward_Reward");
             });
 
             modelBuilder.Entity<CustomerVoucher>(entity =>

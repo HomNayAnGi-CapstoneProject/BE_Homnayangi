@@ -7,6 +7,10 @@ namespace Library.Models
 {
     public partial class Reward
     {
+        public Reward()
+        {
+            CustomerRewards = new HashSet<CustomerReward>();
+        }
         public Guid RewardId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
@@ -15,5 +19,7 @@ namespace Library.Models
         public bool? Status { get; set; }
         public int? ConditionType { get; set; }
         public int? ConditionValue { get; set; }
+
+        public virtual ICollection<CustomerReward> CustomerRewards { get; set; }
     }
 }
