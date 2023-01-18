@@ -5,13 +5,13 @@ using System.Collections.Generic;
 
 namespace Library.Models
 {
-    public partial class UserReward
+    public partial class CustomerReward
     {
-        public Guid UserId { get; set; }
+        public Guid CustomerId { get; set; }
         public Guid RewardId { get; set; }
         public DateTime? CreatedDate { get; set; }
 
         public virtual Reward Reward { get; set; }
-        public virtual Customer User { get; set; }
+        public virtual Customer Customer { get; set; }
     }
 }

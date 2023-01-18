@@ -13,7 +13,7 @@ namespace Library.Models.Enum
         {
             CREATEDDATE = 1,
             NAME = 2,
-            CONDITION = 3
+            CONDITION_VALUE = 3
         }
         public enum SortOrder
         {

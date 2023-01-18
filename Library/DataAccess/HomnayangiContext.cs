@@ -47,7 +47,7 @@ namespace Library.DataAccess
         public virtual DbSet<Transaction> Transactions { get; set; }
         public virtual DbSet<Type> Types { get; set; }
         public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<UserReward> UserRewards { get; set; }
+        public virtual DbSet<CustomerReward> CustomerRewards { get; set; }
         public virtual DbSet<Voucher> Vouchers { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -636,7 +636,9 @@ namespace Library.DataAccess
                     .ValueGeneratedNever()
                     .HasColumnName("rewardId");
 
-                entity.Property(e => e.Condition).HasColumnName("condition");
+                entity.Property(e => e.ConditionType).HasColumnName("conditionType");
+
+                entity.Property(e => e.ConditionValue).HasColumnName("conditionValue");
 
                 entity.Property(e => e.CreateDate)
                     .HasColumnType("datetime")
@@ -759,13 +761,13 @@ namespace Library.DataAccess
                 entity.Property(e => e.Username).HasColumnName("username");
             });
 
-            modelBuilder.Entity<UserReward>(entity =>
+            modelBuilder.Entity<CustomerReward>(entity =>
             {
-                entity.HasKey(e => new { e.UserId, e.RewardId });
+                entity.HasKey(e => new { e.CustomerId, e.RewardId });
 
-                entity.ToTable("UserReward");
+                entity.ToTable("CustomerReward");
 
-                entity.Property(e => e.UserId).HasColumnName("userId");
+                entity.Property(e => e.CustomerId).HasColumnName("customerId");
 
                 entity.Property(e => e.RewardId).HasColumnName("rewardId");
 
@@ -774,16 +776,16 @@ namespace Library.DataAccess
                     .HasColumnName("createdDate");
 
                 entity.HasOne(d => d.Reward)
-                    .WithMany(p => p.UserRewards)
+                    .WithMany(p => p.CustomerRewards)
                     .HasForeignKey(d => d.RewardId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_UserReward_Reward");
+                    .HasConstraintName("FK_CustomerReward_Reward");
 
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.UserRewards)
-                    .HasForeignKey(d => d.UserId)
+                entity.HasOne(d => d.Customer)
+                    .WithMany(p => p.CustomerRewards)
+                    .HasForeignKey(d => d.CustomerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_UserReward_Customer");
+                    .HasConstraintName("FK_CustomerReward_Customer");
             });
 
             modelBuilder.Entity<Voucher>(entity =>

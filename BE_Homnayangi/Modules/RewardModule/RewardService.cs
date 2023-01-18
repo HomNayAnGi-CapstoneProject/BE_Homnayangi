@@ -68,11 +68,11 @@ namespace BE_Homnayangi.Modules.RewardModule
                 var pageNumber = request.PageNumber;
                 var sort = request.sort;
                 var sortDesc = request.sortDesc;
-                var conditionFilter = request.condition;
+                var conditionType = request.conditionType;
                 var fromDate = request.fromDate;
                 var toDate = request.toDate;
 
-                var rewards = await _rewardRepository.GetRewardsBy(r => r.Status.Value && r.Condition.Equals(conditionFilter));
+                var rewards = await _rewardRepository.GetRewardsBy(r => r.Status.Value && r.ConditionType.Equals(conditionType));
 
                 if (fromDate.HasValue && toDate.HasValue)
                 {
@@ -81,20 +81,20 @@ namespace BE_Homnayangi.Modules.RewardModule
 
                 switch (sort)
                 {
-                    case (int)Sort.RewardsSortBy.CREATEDDATE:
+                    case (int) Sort.RewardsSortBy.CREATEDDATE:
                         rewards = sortDesc == true
                             ? rewards.OrderByDescending(r => r.CreateDate).ToList()
                             : rewards.OrderBy(r => r.CreateDate).ToList();
                         break;
-                    case (int)Sort.RewardsSortBy.NAME:
+                    case (int) Sort.RewardsSortBy.NAME:
                         rewards = sortDesc == true
                             ? rewards.OrderByDescending(r => r.Name).ToList()
                             : rewards.OrderBy(r => r.Name).ToList();
                         break;
-                    case (int)Sort.RewardsSortBy.CONDITION:
+                    case (int) Sort.RewardsSortBy.CONDITION_VALUE:
                         rewards = sortDesc == true
-                            ? rewards.OrderByDescending(r => r.Condition).ToList()
-                            : rewards.OrderBy(r => r.Condition).ToList();
+                            ? rewards.OrderByDescending(r => r.ConditionValue).ToList()
+                            : rewards.OrderBy(r => r.ConditionValue).ToList();
                         break;
                     default:
                         rewards = sortDesc == true

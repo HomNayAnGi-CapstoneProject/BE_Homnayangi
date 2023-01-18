@@ -15,7 +15,7 @@ namespace Library.Models
             CustomerVouchers = new HashSet<CustomerVoucher>();
             Notifications = new HashSet<Notification>();
             Transactions = new HashSet<Transaction>();
-            UserRewards = new HashSet<UserReward>();
+            CustomerRewards = new HashSet<CustomerReward>();
         }
 
         public Guid CustomerId { get; set; }
@@ -39,6 +39,6 @@ namespace Library.Models
         public virtual ICollection<CustomerVoucher> CustomerVouchers { get; set; }
         public virtual ICollection<Notification> Notifications { get; set; }
         public virtual ICollection<Transaction> Transactions { get; set; }
-        public virtual ICollection<UserReward> UserRewards { get; set; }
+        public virtual ICollection<CustomerReward> CustomerRewards { get; set; }
     }
 }
