@@ -370,7 +370,7 @@ namespace BE_Homnayangi.Modules.BlogModule
             BlogDetailResponse result = null;
             try
             {
-                var tmp = await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId == blogId && x.BlogStatus == 1,
+                var tmp = await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId == blogId && x.BlogStatus.Value == 1,
                     includeProperties: "Category,Recipe,Author");
                 if (tmp != null)
                 {
@@ -414,30 +414,33 @@ namespace BE_Homnayangi.Modules.BlogModule
                     result.Ingredients = new List<IngredientResponse>();
                     foreach (var item in recipeDetails)
                     {
+                        if (item.Ingredient.Status != null && item.Ingredient.Status.Value)
+                        {
+                            var type = await _typeRepository.GetFirstOrDefaultAsync(x => x.TypeId == item.Ingredient.TypeId);
+                            IngredientResponse ingredient = new IngredientResponse()
+                            {
+                                IngredientId = item.IngredientId,
+                                Name = item.Ingredient.Name,
+                                Description = item.Ingredient.Description,
+                                Quantitative = item.Ingredient.Quantitative,
+                                Picture = item.Ingredient.Picture,
+                                CreatedDate = item.Ingredient.CreatedDate,
+                                UpdatedDate = item.Ingredient.UpdatedDate,
+                                Status = item.Ingredient.Status,
+                                Price = item.Ingredient.Price,
+                                TypeId = type.TypeId,
+                                TypeName = type.Name,
+                                TypeDescription = type.Description,
+                            };
+                            result.Ingredients.Add(ingredient);
+                        }
                         RecipeDetailsResponse recipeDetail = new RecipeDetailsResponse()
                         {
                             RecipeId = item.RecipeId,
                             IngredientId = item.IngredientId,
                             Description = item.Description
                         };
-                        var type = await _typeRepository.GetFirstOrDefaultAsync(x => x.TypeId == item.Ingredient.TypeId);
-                        IngredientResponse ingredient = new IngredientResponse()
-                        {
-                            IngredientId = item.IngredientId,
-                            Name = item.Ingredient.Name,
-                            Description = item.Ingredient.Description,
-                            Quantitative = item.Ingredient.Quantitative,
-                            Picture = item.Ingredient.Picture,
-                            CreatedDate = item.Ingredient.CreatedDate,
-                            UpdatedDate = item.Ingredient.UpdatedDate,
-                            Status = item.Ingredient.Status,
-                            Price = item.Ingredient.Price,
-                            TypeId = type.TypeId,
-                            TypeName = type.Name,
-                            TypeDescription = type.Description,
-                        };
                         result.RecipeDetailss.Add(recipeDetail);
-                        result.Ingredients.Add(ingredient);
                     }
                 }
             }
