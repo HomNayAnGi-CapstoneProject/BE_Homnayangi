@@ -24,7 +24,7 @@ namespace BE_Homnayangi.Controllers
 
         // GET: api/v1/CustomerVouchers
         [HttpGet("customer/{cusId}/vouchers")]
-        public async Task<ActionResult<IEnumerable<CustomerVoucher>>> GetAllCustomerVouchersByCusId([FromQuery]Guid cusId)
+        public async Task<ActionResult<IEnumerable<CustomerVoucher>>> GetAllCustomerVouchersByCusId([FromRoute]Guid cusId)
         {
             var result = await _customerVoucherService.GetAllCustomerVouchersByCusId(cusId);
             return new JsonResult(new
