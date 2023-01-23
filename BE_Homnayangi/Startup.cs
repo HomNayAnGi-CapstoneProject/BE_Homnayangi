@@ -1,6 +1,8 @@
 using BE_Homnayangi.Modules.AutoMapper;
 using BE_Homnayangi.Modules.BlogModule;
 using BE_Homnayangi.Modules.BlogModule.Interface;
+using BE_Homnayangi.Modules.BlogReactionModule;
+using BE_Homnayangi.Modules.BlogReactionModule.Interface;
 using BE_Homnayangi.Modules.BlogTagModule;
 using BE_Homnayangi.Modules.BlogTagModule.Interface;
 using BE_Homnayangi.Modules.CategoryModule;
@@ -164,6 +166,10 @@ namespace BE_Homnayangi
             //Type Module
             services.AddScoped<ITypeRepository, TypeRepository>();
             services.AddScoped<ITypeService, TypeService>();
+            
+            //BlogReaction Module
+            services.AddScoped<IBlogReactionRepository, BlogReactionRepository>();
+            services.AddScoped<IBlogReactionService, BlogReactionService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
