@@ -3,11 +3,17 @@ namespace Library.Models.Enum
 {
     public static class Sort
     {
-        public enum SortBy
+        public enum BlogsSortBy
         {
             CREATEDDATE = 1,
             REACTION = 2,
             VIEW = 3
+        }
+        public enum RewardsSortBy
+        {
+            CREATEDDATE = 1,
+            NAME = 2,
+            CONDITION_VALUE = 3
         }
         public enum SortOrder
         {

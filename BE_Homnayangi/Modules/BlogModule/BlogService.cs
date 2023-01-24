@@ -263,13 +263,13 @@ namespace BE_Homnayangi.Modules.BlogModule
 
             switch (sort)
             {
-                case (int)Sort.SortBy.CREATEDDATE:
+                case (int) Sort.BlogsSortBy.CREATEDDATE:
                     filteredBlogs = filteredBlogs.OrderByDescending(r => r.CreatedDate).ToList();
                     break;
-                case (int)Sort.SortBy.REACTION:
+                case (int) Sort.BlogsSortBy.REACTION:
                     filteredBlogs = filteredBlogs.OrderByDescending(r => r.Reaction).ToList();
                     break;
-                case (int)Sort.SortBy.VIEW:
+                case (int) Sort.BlogsSortBy.VIEW:
                     filteredBlogs = filteredBlogs.OrderByDescending(r => r.View).ToList();
                     break;
                 default:
@@ -279,7 +279,7 @@ namespace BE_Homnayangi.Modules.BlogModule
 
             var response = PagedList<BlogsByCateAndTagResponse>.ToPagedList(source: filteredBlogs, pageNumber: pageNumber, pageSize: pageSize);
 
-            return response.ToPagedResposne();
+            return response.ToPagedResponse();
         }
 
         public async Task<ICollection<GetBlogsForHomePageResponse>> GetSoupAndNormalBlogs(Guid categoryId)
