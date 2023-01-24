@@ -2,17 +2,20 @@
 using BE_Homnayangi.Modules.BlogModule.Request;
 using BE_Homnayangi.Modules.BlogModule.Response;
 using BE_Homnayangi.Modules.BlogTagModule.Interface;
+using BE_Homnayangi.Modules.DTO.IngredientDTO;
+using BE_Homnayangi.Modules.DTO.RecipeDetailsDTO;
+using BE_Homnayangi.Modules.RecipeDetailModule.Interface;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
 using BE_Homnayangi.Modules.TagModule.Interface;
+using BE_Homnayangi.Modules.TypeModule.Interface;
 using Library.Models;
-using Library.PagedList;
 using Library.Models.Enum;
+using Library.PagedList;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using System.Collections;
 
 namespace BE_Homnayangi.Modules.BlogModule
 {
@@ -22,13 +25,18 @@ namespace BE_Homnayangi.Modules.BlogModule
         private readonly IRecipeRepository _recipeRepository;
         private readonly IBlogTagRepository _blogTagRepository;
         private readonly ITagRepository _tagRepository;
-        
-        public BlogService(IBlogRepository blogRepository, IRecipeRepository recipeRepository, IBlogTagRepository blogTagRepository, ITagRepository tagRepository)
+        private readonly IRecipeDetailRepository _recipeDetailRepository;
+        private readonly ITypeRepository _typeRepository;
+
+        public BlogService(IBlogRepository blogRepository, IRecipeRepository recipeRepository, IBlogTagRepository blogTagRepository,
+            ITagRepository tagRepository, IRecipeDetailRepository recipeDetailRepository, ITypeRepository typeRepository)
         {
             _blogRepository = blogRepository;
             _recipeRepository = recipeRepository;
             _blogTagRepository = blogTagRepository;
             _tagRepository = tagRepository;
+            _recipeDetailRepository = recipeDetailRepository;
+            _typeRepository = typeRepository;
         }
 
         public async Task<ICollection<Blog>> GetAll()
@@ -139,7 +147,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     View = b.View.Value,
                     AuthorName = b.Author.Displayname,
                     CategoryName = b.Category.Name,
-                    PackagePrice = b.Recipe.PackagePrice
+                    RecipePackagePrice = b.Recipe.PackagePrice
                 }).ToList();
             return listResponse;
         }
@@ -214,10 +222,10 @@ namespace BE_Homnayangi.Modules.BlogModule
 
             blogs = categoryId != null
                 ? await _blogRepository
-                    .GetBlogsBy(b => b.CategoryId.Equals(categoryId) && b.BlogStatus != (int) Status.BlogStatus.DELETED,
+                    .GetBlogsBy(b => b.CategoryId.Equals(categoryId) && b.BlogStatus != (int)Status.BlogStatus.DELETED,
                         includeProperties: "Category,Recipe")
                 : await _blogRepository
-                    .GetBlogsBy(b => b.BlogStatus != (int) Status.BlogStatus.DELETED,
+                    .GetBlogsBy(b => b.BlogStatus != (int)Status.BlogStatus.DELETED,
                         includeProperties: "Category,Recipe");
 
             filteredBlogs = blogs.Select(b => new BlogsByCateAndTagResponse
@@ -255,13 +263,13 @@ namespace BE_Homnayangi.Modules.BlogModule
 
             switch (sort)
             {
-                case (int) Sort.SortBy.CREATEDDATE:
+                case (int) Sort.BlogsSortBy.CREATEDDATE:
                     filteredBlogs = filteredBlogs.OrderByDescending(r => r.CreatedDate).ToList();
                     break;
-                case (int) Sort.SortBy.REACTION:
+                case (int) Sort.BlogsSortBy.REACTION:
                     filteredBlogs = filteredBlogs.OrderByDescending(r => r.Reaction).ToList();
                     break;
-                case (int) Sort.SortBy.VIEW:
+                case (int) Sort.BlogsSortBy.VIEW:
                     filteredBlogs = filteredBlogs.OrderByDescending(r => r.View).ToList();
                     break;
                 default:
@@ -271,7 +279,7 @@ namespace BE_Homnayangi.Modules.BlogModule
 
             var response = PagedList<BlogsByCateAndTagResponse>.ToPagedList(source: filteredBlogs, pageNumber: pageNumber, pageSize: pageSize);
 
-            return response.ToPagedResposne();
+            return response.ToPagedResponse();
         }
 
         public async Task<ICollection<GetBlogsForHomePageResponse>> GetSoupAndNormalBlogs(Guid categoryId)
@@ -362,31 +370,78 @@ namespace BE_Homnayangi.Modules.BlogModule
             BlogDetailResponse result = null;
             try
             {
-                var tmp = await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId == blogId && x.BlogStatus == 1, includeProperties: "Category,Recipe");
-
-                Blog blog = tmp;
-                if (blog != null)
+                var tmp = await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId == blogId && x.BlogStatus.Value == 1,
+                    includeProperties: "Category,Recipe,Author");
+                if (tmp != null)
                 {
                     result = new BlogDetailResponse()
                     {
-                        BlogId = blog.BlogId,
-                        Title = blog.Title,
-                        Description = blog.Description,
-                        Preparation = blog.Preparation,
-                        Processing = blog.Processing,
-                        ImageUrl = blog.ImageUrl,
-                        CreatedDate = blog.CreatedDate.Value,
-                        UpdatedDate = blog.UpdatedDate.Value,
-                        Reaction = blog.Reaction,
-                        View = blog.View,
-                        BlogStatus = blog.BlogStatus,
-                        CategoryName = blog.Category.Name,
-                        RecipeTitle = blog.Recipe.Title,
-                        RecipeImageURL = blog.Recipe.ImageUrl,
-                        RecipePackagePrice = blog.Recipe.PackagePrice,
-                        RecipeCookedPrice = blog.Recipe.CookedPrice,
-                        RecipeSize = blog.Recipe.Size,
+                        // Blog information
+                        BlogId = tmp.BlogId,
+                        Title = tmp.Title,
+                        Description = tmp.Description,
+                        Preparation = tmp.Preparation,
+                        Processing = tmp.Processing,
+                        ImageUrl = tmp.ImageUrl,
+                        CreatedDate = tmp.CreatedDate.Value,
+                        UpdatedDate = tmp.UpdatedDate.Value,
+                        Reaction = tmp.Reaction,
+                        View = tmp.View,
+                        BlogStatus = tmp.BlogStatus,
+                        CategoryId = tmp.CategoryId,
+                        CategoryName = tmp.Category.Name,
+                        AuthorName = tmp.Author.Firstname + " " + tmp.Author.Lastname,
+
+                        // Recipes information
+                        RecipeId = tmp.Recipe.RecipeId,
+                        RecipeTitle = tmp.Recipe.Title,
+                        RecipeImageURL = tmp.Recipe.ImageUrl,
+                        RecipePackagePrice = tmp.Recipe.PackagePrice,
+                        RecipeCookedPrice = tmp.Recipe.CookedPrice,
+                        RecipeSize = tmp.Recipe.Size,
                     };
+
+
+                    // List Tags
+                    var listBlogTag = await _blogTagRepository.GetAll(includeProperties: "Tag");
+                    var listTagName = GetListTagName(new List<Blog>() { tmp }, listBlogTag);
+                    result.Tags = listTagName;
+
+                    // List RecipeDetails & List Ingredients
+                    var recipeDetails = await _recipeDetailRepository.GetRecipeDetailsBy(x => x.RecipeId == result.RecipeId,
+                        includeProperties: "Ingredient");
+                    result.RecipeDetailss = new List<RecipeDetailsResponse>();
+                    result.Ingredients = new List<IngredientResponse>();
+                    foreach (var item in recipeDetails)
+                    {
+                        if (item.Ingredient.Status != null && item.Ingredient.Status.Value)
+                        {
+                            var type = await _typeRepository.GetFirstOrDefaultAsync(x => x.TypeId == item.Ingredient.TypeId);
+                            IngredientResponse ingredient = new IngredientResponse()
+                            {
+                                IngredientId = item.IngredientId,
+                                Name = item.Ingredient.Name,
+                                Description = item.Ingredient.Description,
+                                Quantitative = item.Ingredient.Quantitative,
+                                Picture = item.Ingredient.Picture,
+                                CreatedDate = item.Ingredient.CreatedDate,
+                                UpdatedDate = item.Ingredient.UpdatedDate,
+                                Status = item.Ingredient.Status,
+                                Price = item.Ingredient.Price,
+                                TypeId = type.TypeId,
+                                TypeName = type.Name,
+                                TypeDescription = type.Description,
+                            };
+                            result.Ingredients.Add(ingredient);
+                        }
+                        RecipeDetailsResponse recipeDetail = new RecipeDetailsResponse()
+                        {
+                            RecipeId = item.RecipeId,
+                            IngredientId = item.IngredientId,
+                            Description = item.Description
+                        };
+                        result.RecipeDetailss.Add(recipeDetail);
+                    }
                 }
             }
             catch (Exception ex)

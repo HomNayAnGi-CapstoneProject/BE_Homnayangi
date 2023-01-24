@@ -17,6 +17,6 @@ namespace Library.Models
 
         public virtual Customer Author { get; set; }
         public virtual Blog Blog { get; set; }
-        public virtual User User { get; set; }
+        public virtual User ConfirmByNavigation { get; set; }
     }
 }

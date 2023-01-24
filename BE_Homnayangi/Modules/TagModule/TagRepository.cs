@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BE_Homnayangi.Modules.TagModule
 {
-	public class TagRepository : Repository<Tag>, ITagRepository
+    public class TagRepository : Repository<Tag>, ITagRepository
 	{
         private readonly HomnayangiContext _db;
 

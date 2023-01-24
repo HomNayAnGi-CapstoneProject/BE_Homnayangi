@@ -21,8 +21,8 @@ namespace Library.Models
         public Guid? BlogId { get; set; }
 
         public virtual Customer Author { get; set; }
+        public virtual User AuthorNavigation { get; set; }
         public virtual Blog Blog { get; set; }
-        public virtual User CommentNavigation { get; set; }
         public virtual Comment Parent { get; set; }
         public virtual ICollection<Comment> InverseParent { get; set; }
     }

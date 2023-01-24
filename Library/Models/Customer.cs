@@ -13,9 +13,9 @@ namespace Library.Models
             BlogReactions = new HashSet<BlogReaction>();
             Comments = new HashSet<Comment>();
             CustomerVouchers = new HashSet<CustomerVoucher>();
-            Notifications = new HashSet<Notification>();
+            CustomerRewards = new HashSet<CustomerReward>();
+            Orders = new HashSet<Order>();
             Transactions = new HashSet<Transaction>();
-            UserRewards = new HashSet<UserReward>();
         }
 
         public Guid CustomerId { get; set; }
@@ -25,7 +25,7 @@ namespace Library.Models
         public string Lastname { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public string? Phonenumber { get; set; }
+        public string Phonenumber { get; set; }
         public bool? Gender { get; set; }
         public string Avatar { get; set; }
         public DateTime? CreatedDate { get; set; }
@@ -37,8 +37,8 @@ namespace Library.Models
         public virtual ICollection<BlogReaction> BlogReactions { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<CustomerVoucher> CustomerVouchers { get; set; }
-        public virtual ICollection<Notification> Notifications { get; set; }
+        public virtual ICollection<CustomerReward> CustomerRewards { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<Transaction> Transactions { get; set; }
-        public virtual ICollection<UserReward> UserRewards { get; set; }
     }
 }

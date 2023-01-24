@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Library.Models;
+using System;
 using System.Collections.Generic;
 
 #nullable disable
@@ -11,6 +12,7 @@ namespace Library.Models
         {
             Accomplishments = new HashSet<Accomplishment>();
             BlogReactions = new HashSet<BlogReaction>();
+            BlogTags = new HashSet<BlogTag>();
             Comments = new HashSet<Comment>();
         }
 
@@ -19,6 +21,7 @@ namespace Library.Models
         public string Description { get; set; }
         public string Preparation { get; set; }
         public string Processing { get; set; }
+        public string Finished { get; set; }
         public string ImageUrl { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
@@ -27,12 +30,14 @@ namespace Library.Models
         public Guid? AuthorId { get; set; }
         public int? BlogStatus { get; set; }
         public Guid? CategoryId { get; set; }
+        public string VideoUrl { get; set; }
 
         public virtual User Author { get; set; }
         public virtual Category Category { get; set; }
         public virtual Recipe Recipe { get; set; }
         public virtual ICollection<Accomplishment> Accomplishments { get; set; }
         public virtual ICollection<BlogReaction> BlogReactions { get; set; }
+        public virtual ICollection<BlogTag> BlogTags { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
     }
 }

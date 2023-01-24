@@ -17,6 +17,7 @@ namespace Library.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public bool? Status { get; set; }
+        public DateTime? CreatedDate { get; set; }
 
         public virtual ICollection<Blog> Blogs { get; set; }
         public virtual ICollection<Tag> Tags { get; set; }

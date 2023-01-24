@@ -11,7 +11,7 @@ using Repository.Repository;
 
 namespace BE_Homnayangi.Modules.RecipeModule
 {
-	public class RecipeRepository : Repository<Recipe>, IRecipeRepository
+    public class RecipeRepository : Repository<Recipe>, IRecipeRepository
 	{
         private readonly HomnayangiContext _db;
 
