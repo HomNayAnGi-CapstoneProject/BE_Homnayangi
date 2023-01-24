@@ -359,7 +359,7 @@ namespace BE_Homnayangi.Modules.BlogModule
             try
             {
                 var tmp = await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId == blogId && x.BlogStatus.Value == 1,
-                    includeProperties: "Category,Recipe,Author");
+                    includeProperties: "Recipe,Author");
                 if (tmp != null)
                 {
                     result = new BlogDetailResponse()
@@ -389,7 +389,7 @@ namespace BE_Homnayangi.Modules.BlogModule
 
 
                     // List SubCates
-                    var listBlogSubCate = await _blogSubCateRepository.GetAll(includeProperties: "Tag");
+                    var listBlogSubCate = await _blogSubCateRepository.GetAll(includeProperties: "SubCate");
                     var listSubCateName = GetListSubCateName(new List<Blog>() { tmp }, listBlogSubCate);
                     result.SubCates = listSubCateName;
 
