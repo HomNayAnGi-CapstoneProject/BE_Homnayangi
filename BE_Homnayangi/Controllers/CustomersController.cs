@@ -42,7 +42,7 @@ namespace BE_Homnayangi.Controllers
 
         // GET api/<ValuesController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetCustomerById(Guid id)
+        public async Task<ActionResult<User>> GetCustomerById([FromRoute] Guid id)
         {
             var result = await _userService.GetCustomerById(id);
             return new JsonResult(new
@@ -52,7 +52,7 @@ namespace BE_Homnayangi.Controllers
         }
         //DELETE api/<ValuesController>/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             bool? isBlocked = await _userService.BlockCustomerById(id);
             if (isBlocked == true)
