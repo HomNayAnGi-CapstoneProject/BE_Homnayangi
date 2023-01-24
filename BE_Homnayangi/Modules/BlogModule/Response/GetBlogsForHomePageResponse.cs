@@ -14,5 +14,6 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
         public decimal? PackagePrice { get; set; }
         public int? Reaction { get; set; }
         public int? View { get; set; }
+        public Guid? SubCateId { get; set; } 
     }
 }
