@@ -5,13 +5,13 @@ using System.Collections.Generic;
 
 namespace Library.Models
 {
-    public partial class BlogTag
+    public partial class BlogSubCate
     {
         public Guid BlogId { get; set; }
-        public Guid TagId { get; set; }
+        public Guid SubCateId { get; set; }
         public DateTime? CreatedDate { get; set; }
 
         public virtual Blog Blog { get; set; }
-        public virtual Tag Tag { get; set; }
+        public virtual SubCategory SubCate { get; set; }
     }
 }

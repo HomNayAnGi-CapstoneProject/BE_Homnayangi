@@ -27,15 +27,15 @@ namespace BE_Homnayangi.Controllers
             _recipeService = recipeService;
         }
 
-        [HttpGet("tag/{tagId}/blogs")]
-        public async Task<ActionResult<IEnumerable<GetBlogsForHomePageResponse>>> GetBlogsByTag(string tagId)
+        [HttpGet("subCategory/{subCateId}/blogs")]
+        public async Task<ActionResult<IEnumerable<GetBlogsForHomePageResponse>>> GetBlogsBySubCate([FromRoute] Guid? subCateId)
         {
-            if (!Guid.TryParse(tagId, out var _tagId))
+            if (subCateId == null)
             {
                 return BadRequest();
             }
 
-            var blogs = await _blogService.GetBlogsByTagForHomePage(_tagId, numberOfItems: (int)NumberItem.NumberItemShowEnum.EATING_STYLE);
+            var blogs = await _blogService.GetBlogsBySubCateForHomePage(subCateId, numberOfItems: (int)NumberItem.NumberItemShowEnum.EATING_STYLE);
 
             return new JsonResult(new
             {
@@ -84,14 +84,14 @@ namespace BE_Homnayangi.Controllers
         }
 
         [HttpGet("category/{categoryId}/blog-menu")]
-        public async Task<ActionResult<IEnumerable<GetBlogsForHomePageResponse>>> GetSoupAndNormalBlogs(string categoryId)
+        public async Task<ActionResult<IEnumerable<GetBlogsForHomePageResponse>>> GetSoupAndNormalBlogs([FromRoute] Guid? categoryId, Guid? subCategoryId)
         {
-            if (!Guid.TryParse(categoryId, out var _categoryId))
+            if (categoryId == null)
             {
                 return BadRequest();
             }
 
-            var result = await _blogService.GetSoupAndNormalBlogs(_categoryId);
+            var result = await _blogService.GetSoupAndNormalBlogs(categoryId, subCategoryId);
             if (result == null)
             {
                 return new JsonResult(new

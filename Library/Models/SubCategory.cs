@@ -5,14 +5,14 @@ using System.Collections.Generic;
 
 namespace Library.Models
 {
-    public partial class Tag
+    public partial class SubCategory
     {
-        public Tag()
+        public SubCategory()
         {
-            BlogTags = new HashSet<BlogTag>();
+            BlogSubCates = new HashSet<BlogSubCate>();
         }
 
-        public Guid TagId { get; set; }
+        public Guid SubCategoryId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime? CreatedDate { get; set; }
@@ -20,6 +20,6 @@ namespace Library.Models
         public Guid? CategoryId { get; set; }
 
         public virtual Category Category { get; set; }
-        public virtual ICollection<BlogTag> BlogTags { get; set; }
+        public virtual ICollection<BlogSubCate> BlogSubCates { get; set; }
     }
 }

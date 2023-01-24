@@ -20,7 +20,7 @@ namespace BE_Homnayangi.Modules.BlogReactionModule
             BlogReaction result = null;
             try
             {
-                result = await _blogReactionRepository.GetFirstOrDefaultAsync(br => br.BlogId == blogId && br.UserId == customerId);
+                result = await _blogReactionRepository.GetFirstOrDefaultAsync(br => br.BlogId == blogId && br.CustomerId == customerId);
             }
             catch (Exception ex)
             {
@@ -35,7 +35,7 @@ namespace BE_Homnayangi.Modules.BlogReactionModule
             return new BlogReactionResponse()
             {
                 BlogId = br.BlogId,
-                UserId = br.UserId,
+                CustomerId = br.CustomerId,
                 Status = br.Status != null && br.Status.Value
             };
         }
@@ -45,13 +45,13 @@ namespace BE_Homnayangi.Modules.BlogReactionModule
             BlogReactionResponse result = null;
             try
             {
-                var reaction = await _blogReactionRepository.GetFirstOrDefaultAsync(br => br.BlogId == blogId &&  br.UserId == customerId);
+                var reaction = await _blogReactionRepository.GetFirstOrDefaultAsync(br => br.BlogId == blogId &&  br.CustomerId == customerId);
                 if (reaction == null) //  insert a new record into db
                 {
                     reaction = new BlogReaction()
                     {
                         BlogId = blogId,
-                        UserId = customerId,
+                        CustomerId = customerId,
                         Status = true,
                         CreatedDate = DateTime.Now,
                     };
@@ -78,7 +78,7 @@ namespace BE_Homnayangi.Modules.BlogReactionModule
             BlogReactionResponse result = null;
             try
             {
-                var reaction = await _blogReactionRepository.GetFirstOrDefaultAsync(br => br.BlogId == blogId && br.UserId == customerId);
+                var reaction = await _blogReactionRepository.GetFirstOrDefaultAsync(br => br.BlogId == blogId && br.CustomerId == customerId);
                 if (reaction != null)
                 {
                     reaction.Status = false;

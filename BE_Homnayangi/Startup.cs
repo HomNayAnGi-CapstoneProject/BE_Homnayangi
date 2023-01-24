@@ -3,8 +3,8 @@ using BE_Homnayangi.Modules.BlogModule;
 using BE_Homnayangi.Modules.BlogModule.Interface;
 using BE_Homnayangi.Modules.BlogReactionModule;
 using BE_Homnayangi.Modules.BlogReactionModule.Interface;
-using BE_Homnayangi.Modules.BlogTagModule;
-using BE_Homnayangi.Modules.BlogTagModule.Interface;
+using BE_Homnayangi.Modules.BlogSubCateModule;
+using BE_Homnayangi.Modules.BlogSubCateModule.Interface;
 using BE_Homnayangi.Modules.CategoryModule;
 using BE_Homnayangi.Modules.CategoryModule.Interface;
 using BE_Homnayangi.Modules.CustomerVoucherModule;
@@ -17,8 +17,8 @@ using BE_Homnayangi.Modules.RecipeModule;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
 using BE_Homnayangi.Modules.RewardModule;
 using BE_Homnayangi.Modules.RewardModule.Interface;
-using BE_Homnayangi.Modules.TagModule;
-using BE_Homnayangi.Modules.TagModule.Interface;
+using BE_Homnayangi.Modules.SubCateModule;
+using BE_Homnayangi.Modules.SubCateModule.Interface;
 using BE_Homnayangi.Modules.TypeModule;
 using BE_Homnayangi.Modules.TypeModule.Interface;
 using BE_Homnayangi.Modules.UserModule;
@@ -146,16 +146,16 @@ namespace BE_Homnayangi
             services.AddScoped<IIngredientService, IngredientService>();
 
             //BlogTag Module
-            services.AddScoped<IBlogTagRepository, BlogTagRepository>();
+            services.AddScoped<IBlogSubCateRepository, BlogSubCateRepository>();
 
             //User Module
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IUserService, UserService>();
 
-            //Tag Module
-            services.AddScoped<ITagRepository, TagRepository>();
-            services.AddScoped<ITagService, TagService>();
+            //SubCate Module
+            services.AddScoped<ISubCateRepository, SubCateRepository>();
+            services.AddScoped<ISubCateService, SubCateService>();
 
             //Voucher Module
             services.AddScoped<IVoucherRepository, VoucherRepository>();
