@@ -358,40 +358,42 @@ namespace BE_Homnayangi.Modules.BlogModule
             BlogDetailResponse result = null;
             try
             {
-                var tmp = await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId == blogId && x.BlogStatus.Value == 1,
+                var blog = await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId == blogId && x.BlogStatus.Value == 1,
                     includeProperties: "Recipe,Author");
-                if (tmp != null)
+                if (blog != null)
                 {
+                    blog.View = blog.View.Value + 1;
+                    await _blogRepository.UpdateAsync(blog);
                     result = new BlogDetailResponse()
                     {
                         // Blog information
-                        BlogId = tmp.BlogId,
-                        Title = tmp.Title,
-                        Description = tmp.Description,
-                        Preparation = tmp.Preparation,
-                        Finished = tmp.Finished,
-                        Processing = tmp.Processing,
-                        ImageUrl = tmp.ImageUrl,
-                        CreatedDate = tmp.CreatedDate.Value,
-                        UpdatedDate = tmp.UpdatedDate.Value,
-                        Reaction = tmp.Reaction,
-                        View = tmp.View,
-                        BlogStatus = tmp.BlogStatus,
-                        AuthorName = tmp.Author.Firstname + " " + tmp.Author.Lastname,
+                        BlogId = blog.BlogId,
+                        Title = blog.Title,
+                        Description = blog.Description,
+                        Preparation = blog.Preparation,
+                        Finished = blog.Finished,
+                        Processing = blog.Processing,
+                        ImageUrl = blog.ImageUrl,
+                        CreatedDate = blog.CreatedDate.Value,
+                        UpdatedDate = blog.UpdatedDate.Value,
+                        Reaction = blog.Reaction,
+                        View = blog.View,
+                        BlogStatus = blog.BlogStatus,
+                        AuthorName = blog.Author.Firstname + " " + blog.Author.Lastname,
 
                         // Recipes information
-                        RecipeId = tmp.Recipe.RecipeId,
-                        RecipeTitle = tmp.Recipe.Title,
-                        RecipeImageURL = tmp.Recipe.ImageUrl,
-                        RecipePackagePrice = tmp.Recipe.PackagePrice,
-                        RecipeCookedPrice = tmp.Recipe.CookedPrice,
-                        RecipeSize = tmp.Recipe.Size,
+                        RecipeId = blog.Recipe.RecipeId,
+                        RecipeTitle = blog.Recipe.Title,
+                        RecipeImageURL = blog.Recipe.ImageUrl,
+                        RecipePackagePrice = blog.Recipe.PackagePrice,
+                        RecipeCookedPrice = blog.Recipe.CookedPrice,
+                        RecipeSize = blog.Recipe.Size,
                     };
 
 
                     // List SubCates
                     var listBlogSubCate = await _blogSubCateRepository.GetAll(includeProperties: "SubCate");
-                    var listSubCateName = GetListSubCateName(new List<Blog>() { tmp }, listBlogSubCate);
+                    var listSubCateName = GetListSubCateName(new List<Blog>() { blog }, listBlogSubCate);
                     result.SubCates = listSubCateName;
 
                     // List RecipeDetails & List Ingredients
