@@ -49,7 +49,7 @@ namespace BE_Homnayangi.Controllers
             }
         }
 
-        [HttpGet("existed_name")]
+        [HttpGet("existed-name")]
         public async Task<ActionResult<bool>> CheckExistedName([FromQuery] string name)
         {
             try
@@ -65,7 +65,7 @@ namespace BE_Homnayangi.Controllers
 
         // GET: api/Rewards/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Reward>> GetReward(Guid id)
+        public async Task<ActionResult<Reward>> GetReward([FromRoute] Guid id)
         {
             var reward = await _rewardService.GetRewardByID(id);
 
@@ -80,7 +80,7 @@ namespace BE_Homnayangi.Controllers
         // PUT: api/Rewards/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutReward(Guid id, Reward reward)
+        public async Task<IActionResult> PutReward([FromRoute] Guid id,[FromBody] Reward reward)
         {
             if (id != reward.RewardId)
             {
@@ -109,7 +109,7 @@ namespace BE_Homnayangi.Controllers
         // POST: api/Rewards
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Reward>> PostReward(Reward reward)
+        public async Task<ActionResult<Reward>> PostReward([FromBody] Reward reward)
         {
             try
             {
@@ -132,7 +132,7 @@ namespace BE_Homnayangi.Controllers
 
         // DELETE: api/Rewards/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteReward(Guid id)
+        public async Task<IActionResult> DeleteReward([FromRoute] Guid id)
         {
             var reward = await _rewardService.GetRewardByID(id);
             if (reward == null)
