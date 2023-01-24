@@ -309,7 +309,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                    ImageUrl = b.ImageUrl,
                    ListSubCateName = y.Value,
                    Reaction = b.Reaction.HasValue ? b.Reaction.Value : 0,
-                   View = b.View.HasValue ? b.View.Value : 0
+                   View = b.View.HasValue ? b.View.Value : 0,
+                   SubCateId = subCateId
                }).ToList();
 
             }
