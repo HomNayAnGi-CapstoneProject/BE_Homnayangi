@@ -34,15 +34,13 @@ namespace BE_Homnayangi.Modules.BlogModule.Interface
 
         public Task<ICollection<GetBlogsForHomePageResponse>> GetBlogsSortByPackagePriceAsc();
 
-        public Task<ICollection<BlogResponse>> GetBlogsByCategory(Guid categoryId, int numberItems);
-
         public Task<ICollection<SearchBlogsResponse>> GetBlogAndRecipeByName(String name);
 
         public Task<PagedResponse<PagedList<BlogsByCateAndTagResponse>>> GetBlogsByCategoryAndTag(BlogFilterByCateAndTagRequest blogFilter);
 
-        public Task<ICollection<GetBlogsForHomePageResponse>> GetBlogsByTagForHomePage(Guid? tagId, int numberOfItems = 0);
+        public Task<ICollection<GetBlogsForHomePageResponse>> GetBlogsBySubCateForHomePage(Guid? tagId, int numberOfItems = 0);
 
-        public Task<ICollection<GetBlogsForHomePageResponse>> GetSoupAndNormalBlogs(Guid categoryId);
+        public Task<ICollection<GetBlogsForHomePageResponse>> GetSoupAndNormalBlogs(Guid? categoryId, Guid? subCateId);
 
         public Task<BlogDetailResponse> GetBlogDetails(Guid blogId);
 

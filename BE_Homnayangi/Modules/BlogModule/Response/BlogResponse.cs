@@ -10,7 +10,6 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
         public int? Reaction { get; set; }
         public int? View { get; set; }
         public string AuthorName { get; set; }
-        public string CategoryName { get; set; }
         public decimal? RecipePackagePrice { get; set; }
 
     }

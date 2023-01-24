@@ -1,8 +1,8 @@
 ﻿using BE_Homnayangi.Modules.BlogModule.Interface;
 using BE_Homnayangi.Modules.BlogModule.Request;
 using BE_Homnayangi.Modules.BlogModule.Response;
-using BE_Homnayangi.Modules.TagModule.Interface;
-using BE_Homnayangi.Modules.TagModule.Response;
+using BE_Homnayangi.Modules.SubCateModule.Interface;
+using BE_Homnayangi.Modules.SubCateModule.Response;
 using Library.DataAccess;
 using Library.Models;
 using Library.PagedList;
@@ -21,9 +21,9 @@ namespace BE_Homnayangi.Controllers
     {
         private readonly HomnayangiContext _context;
         private readonly IBlogService _blogService;
-        private readonly ITagService _tagService;
+        private readonly ISubCateService _tagService;
 
-        public BlogsController(HomnayangiContext context, IBlogService blogService, ITagService tagService)
+        public BlogsController(HomnayangiContext context, IBlogService blogService, ISubCateService tagService)
         {
             _context = context;
             _blogService = blogService;
@@ -35,18 +35,6 @@ namespace BE_Homnayangi.Controllers
         public async Task<ActionResult<IEnumerable<Blog>>> GetBlogs()
         {
             return await _context.Blogs.ToListAsync();
-        }
-
-        [HttpGet("/api/v1/blogs/test")] // sort ascending by cookedprice
-        public async Task<ActionResult<IEnumerable<GetBlogsForHomePageResponse>>> GetTest(Guid categoryId, [FromQuery(Name = "numberItems")] int numberItems = 4)
-        {
-            var blogs = await _blogService.GetBlogsByCategory(categoryId, numberItems);
-
-            return new JsonResult(new
-            {
-                total_results = blogs.Count(),
-                result = blogs,
-            }); ;
         }
 
 
@@ -65,19 +53,6 @@ namespace BE_Homnayangi.Controllers
             {
                 result = blog
             });
-        }
-
-
-        [HttpGet("category/{categoryId}")]
-        public async Task<ActionResult<IEnumerable<BlogResponse>>> GetBlogsByCategory(Guid categoryId, [FromQuery(Name = "numberItems")] int numberItems = 4)
-        {
-            var blogs = await _blogService.GetBlogsByCategory(categoryId, numberItems);
-
-            return new JsonResult(new
-            {
-                total_results = blogs.Count(),
-                result = blogs,
-            }); ;
         }
 
         // PUT: api/Blogs/5
@@ -169,11 +144,11 @@ namespace BE_Homnayangi.Controllers
 
             return Ok(response);
         }
-        // Get tags by categoryId 
-        [HttpGet("tags/{categoryId}")]
-        public async Task<ActionResult<IEnumerable<TagResponse>>> GetTagsByCategoryId(Guid categoryId)
+        // Get sub-cates by categoryId 
+        [HttpGet("categories/{categoryId}/sub-categories")]
+        public async Task<ActionResult<IEnumerable<SubCateResponse>>> GetSubCatesByCategoryId(Guid categoryId)
         {
-            var tags = await _tagService.GetTagsByCategoryId(categoryId);
+            var tags = await _tagService.GetSubCatesByCategoryId(categoryId);
 
             return new JsonResult(new
             {

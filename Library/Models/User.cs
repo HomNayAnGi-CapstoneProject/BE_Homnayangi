@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Library.Models;
+using System;
 using System.Collections.Generic;
 
 #nullable disable
@@ -11,7 +12,6 @@ namespace Library.Models
         {
             Accomplishments = new HashSet<Accomplishment>();
             Blogs = new HashSet<Blog>();
-            Comments = new HashSet<Comment>();
             Vouchers = new HashSet<Voucher>();
         }
 
@@ -33,7 +33,6 @@ namespace Library.Models
 
         public virtual ICollection<Accomplishment> Accomplishments { get; set; }
         public virtual ICollection<Blog> Blogs { get; set; }
-        public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<Voucher> Vouchers { get; set; }
     }
 }

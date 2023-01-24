@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 #nullable disable
 
@@ -14,6 +13,7 @@ namespace Library.Models
         public int? Status { get; set; }
         public Guid? BlogId { get; set; }
         public Guid? ConfirmBy { get; set; }
+        public string VideoUrl { get; set; }
 
         public virtual Customer Author { get; set; }
         public virtual Blog Blog { get; set; }

@@ -6,26 +6,26 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Library.Models;
 using Repository.Repository;
-using BE_Homnayangi.Modules.TagModule.Interface;
 using Microsoft.EntityFrameworkCore;
+using BE_Homnayangi.Modules.SubCateModule.Interface;
 
-namespace BE_Homnayangi.Modules.TagModule
+namespace BE_Homnayangi.Modules.SubCateModule
 {
-    public class TagRepository : Repository<Tag>, ITagRepository
-	{
+    public class SubCateRepository : Repository<SubCategory>, ISubCateRepository
+    {
         private readonly HomnayangiContext _db;
 
-        public TagRepository(HomnayangiContext db) : base(db)
+        public SubCateRepository(HomnayangiContext db) : base(db)
         {
             _db = db;
         }
-        public async Task<ICollection<Tag>> GetTagsBy(
-            Expression<Func<Tag, bool>> filter = null,
-            Func<IQueryable<Tag>, ICollection<Tag>> options = null,
+        public async Task<ICollection<SubCategory>> GetSubCatesBy(
+            Expression<Func<SubCategory, bool>> filter = null,
+            Func<IQueryable<SubCategory>, ICollection<SubCategory>> options = null,
             string includeProperties = null
         )
         {
-            IQueryable<Tag> query = DbSet;
+            IQueryable<SubCategory> query = DbSet;
 
             if (filter != null)
             {

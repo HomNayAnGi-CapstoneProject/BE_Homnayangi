@@ -1,6 +1,7 @@
 ﻿using System;
 using Library.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Type = Library.Models.Type;
 
 #nullable disable
@@ -21,7 +22,7 @@ namespace Library.DataAccess
         public virtual DbSet<Accomplishment> Accomplishments { get; set; }
         public virtual DbSet<Blog> Blogs { get; set; }
         public virtual DbSet<BlogReaction> BlogReactions { get; set; }
-        public virtual DbSet<BlogTag> BlogTags { get; set; }
+        public virtual DbSet<BlogSubCate> BlogSubCates { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
@@ -36,7 +37,7 @@ namespace Library.DataAccess
         public virtual DbSet<Recipe> Recipes { get; set; }
         public virtual DbSet<RecipeDetail> RecipeDetails { get; set; }
         public virtual DbSet<Reward> Rewards { get; set; }
-        public virtual DbSet<Tag> Tags { get; set; }
+        public virtual DbSet<SubCategory> SubCategories { get; set; }
         public virtual DbSet<Transaction> Transactions { get; set; }
         public virtual DbSet<Type> Types { get; set; }
         public virtual DbSet<User> Users { get; set; }
@@ -77,6 +78,8 @@ namespace Library.DataAccess
 
                 entity.Property(e => e.Status).HasColumnName("status");
 
+                entity.Property(e => e.VideoUrl).HasColumnName("videoURL");
+
                 entity.HasOne(d => d.Author)
                     .WithMany(p => p.Accomplishments)
                     .HasForeignKey(d => d.AuthorId)
@@ -104,8 +107,6 @@ namespace Library.DataAccess
                 entity.Property(e => e.AuthorId).HasColumnName("authorId");
 
                 entity.Property(e => e.BlogStatus).HasColumnName("blogStatus");
-
-                entity.Property(e => e.CategoryId).HasColumnName("categoryId");
 
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
@@ -137,22 +138,17 @@ namespace Library.DataAccess
                     .WithMany(p => p.Blogs)
                     .HasForeignKey(d => d.AuthorId)
                     .HasConstraintName("FK_Blog_User");
-
-                entity.HasOne(d => d.Category)
-                    .WithMany(p => p.Blogs)
-                    .HasForeignKey(d => d.CategoryId)
-                    .HasConstraintName("FK_Blog_Category");
             });
 
             modelBuilder.Entity<BlogReaction>(entity =>
             {
-                entity.HasKey(e => new { e.BlogId, e.UserId });
+                entity.HasKey(e => new { e.BlogId, e.CustomerId });
 
                 entity.ToTable("BlogReaction");
 
                 entity.Property(e => e.BlogId).HasColumnName("blogId");
 
-                entity.Property(e => e.UserId).HasColumnName("userId");
+                entity.Property(e => e.CustomerId).HasColumnName("customerId");
 
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
@@ -166,38 +162,38 @@ namespace Library.DataAccess
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_BlogReaction_Blog");
 
-                entity.HasOne(d => d.User)
+                entity.HasOne(d => d.Customer)
                     .WithMany(p => p.BlogReactions)
-                    .HasForeignKey(d => d.UserId)
+                    .HasForeignKey(d => d.CustomerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_BlogReaction_Customer");
             });
 
-            modelBuilder.Entity<BlogTag>(entity =>
+            modelBuilder.Entity<BlogSubCate>(entity =>
             {
-                entity.HasKey(e => new { e.BlogId, e.TagId });
+                entity.HasKey(e => new { e.BlogId, e.SubCateId });
 
-                entity.ToTable("BlogTag");
+                entity.ToTable("BlogSubCate");
 
                 entity.Property(e => e.BlogId).HasColumnName("blogId");
 
-                entity.Property(e => e.TagId).HasColumnName("tagId");
+                entity.Property(e => e.SubCateId).HasColumnName("subCateId");
 
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
                     .HasColumnName("createdDate");
 
                 entity.HasOne(d => d.Blog)
-                    .WithMany(p => p.BlogTags)
+                    .WithMany(p => p.BlogSubCates)
                     .HasForeignKey(d => d.BlogId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_BlogTag_Blog");
+                    .HasConstraintName("FK_BlogSubCate_Blog");
 
-                entity.HasOne(d => d.Tag)
-                    .WithMany(p => p.BlogTags)
-                    .HasForeignKey(d => d.TagId)
+                entity.HasOne(d => d.SubCate)
+                    .WithMany(p => p.BlogSubCates)
+                    .HasForeignKey(d => d.SubCateId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_BlogTag_Tag");
+                    .HasConstraintName("FK_BlogSubCate_SubCategory");
             });
 
             modelBuilder.Entity<Category>(entity =>
@@ -213,6 +209,8 @@ namespace Library.DataAccess
                     .HasColumnName("createdDate");
 
                 entity.Property(e => e.Description).HasColumnName("description");
+
+                entity.Property(e => e.IsCombo).HasColumnName("isCombo");
 
                 entity.Property(e => e.Name).HasColumnName("name");
 
@@ -231,6 +229,8 @@ namespace Library.DataAccess
 
                 entity.Property(e => e.BlogId).HasColumnName("blogId");
 
+                entity.Property(e => e.ByStaff).HasColumnName("byStaff");
+
                 entity.Property(e => e.Content).HasColumnName("content");
 
                 entity.Property(e => e.CreatedDate)
@@ -240,16 +240,6 @@ namespace Library.DataAccess
                 entity.Property(e => e.ParentId).HasColumnName("parentId");
 
                 entity.Property(e => e.Status).HasColumnName("status");
-
-                entity.HasOne(d => d.Author)
-                    .WithMany(p => p.Comments)
-                    .HasForeignKey(d => d.AuthorId)
-                    .HasConstraintName("FK_Comment_Customer");
-
-                entity.HasOne(d => d.AuthorNavigation)
-                    .WithMany(p => p.Comments)
-                    .HasForeignKey(d => d.AuthorId)
-                    .HasConstraintName("FK_Comment_User");
 
                 entity.HasOne(d => d.Blog)
                     .WithMany(p => p.Comments)
@@ -634,13 +624,13 @@ namespace Library.DataAccess
                 entity.Property(e => e.Status).HasColumnName("status");
             });
 
-            modelBuilder.Entity<Tag>(entity =>
+            modelBuilder.Entity<SubCategory>(entity =>
             {
-                entity.ToTable("Tag");
+                entity.ToTable("SubCategory");
 
-                entity.Property(e => e.TagId)
+                entity.Property(e => e.SubCategoryId)
                     .ValueGeneratedNever()
-                    .HasColumnName("tagId");
+                    .HasColumnName("subCategoryId");
 
                 entity.Property(e => e.CategoryId).HasColumnName("categoryId");
 
@@ -655,7 +645,7 @@ namespace Library.DataAccess
                 entity.Property(e => e.Status).HasColumnName("status");
 
                 entity.HasOne(d => d.Category)
-                    .WithMany(p => p.Tags)
+                    .WithMany(p => p.SubCategories)
                     .HasForeignKey(d => d.CategoryId)
                     .HasConstraintName("FK_Tag_Category");
             });
@@ -672,17 +662,17 @@ namespace Library.DataAccess
                     .HasColumnType("datetime")
                     .HasColumnName("createdDate");
 
+                entity.Property(e => e.CustomerId).HasColumnName("customerId");
+
                 entity.Property(e => e.TotalAmount)
                     .HasColumnType("money")
                     .HasColumnName("totalAmount");
 
                 entity.Property(e => e.TransactionStatus).HasColumnName("transactionStatus");
 
-                entity.Property(e => e.UserId).HasColumnName("userId");
-
-                entity.HasOne(d => d.User)
+                entity.HasOne(d => d.Customer)
                     .WithMany(p => p.Transactions)
-                    .HasForeignKey(d => d.UserId)
+                    .HasForeignKey(d => d.CustomerId)
                     .HasConstraintName("FK_Transaction_Customer");
             });
 
