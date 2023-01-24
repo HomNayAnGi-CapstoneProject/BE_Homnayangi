@@ -300,6 +300,8 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 var listTagName = GetListSubCateName(listBlogs, listBlogSubCate);
 
+                subCateId = listSubCateMenu.Join(listMenuBlogSubCateEnd, x => x.SubCategoryId, y => y.SubCateId, (x,y) => x.SubCategoryId).ToList().First();
+
                 listResponse = listBlogs
                .Join(listTagName, b => b.BlogId, y => y.Key, (b, y) => new GetBlogsForHomePageResponse
                {
