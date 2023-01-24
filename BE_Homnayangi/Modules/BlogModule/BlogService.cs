@@ -369,6 +369,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                         Title = tmp.Title,
                         Description = tmp.Description,
                         Preparation = tmp.Preparation,
+                        Finished = tmp.Finished,
                         Processing = tmp.Processing,
                         ImageUrl = tmp.ImageUrl,
                         CreatedDate = tmp.CreatedDate.Value,

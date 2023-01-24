@@ -11,6 +11,7 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
         // Blog information
         public string Preparation { get; set; }
         public string Processing { get; set; }
+        public string Finished { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public int? BlogStatus { get; set; }
