@@ -50,9 +50,9 @@ namespace BE_Homnayangi.Controllers
         }
 
 
-        // GET: api/blogs/FA1CDF34-652D-4E8E-8BAF-19917D31772A
+        // GET: api/v1/blogs/57448A79-8855-42AD-BD2E-0295D1436037
         [HttpGet("{id}")]
-        public async Task<ActionResult<BlogDetailResponse>> GetBlog(Guid id) // tạm thời chưa lấy author_name
+        public async Task<ActionResult<BlogDetailResponse>> GetBlog([FromRoute] Guid id)
         {
             var blog = await _blogService.GetBlogDetails(id);
 
