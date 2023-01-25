@@ -44,7 +44,7 @@ namespace BE_Homnayangi.Modules.UserModule
             int pageSize = request.PageSize;
             var user = await _userRepository.GetUsersBy(x => x.Role != 1, includeProperties: "Blogs");
             var response = PagedList<User>.ToPagedList(source: user, pageNumber: pageNumber, pageSize: pageSize);
-            return response.ToPagedResposne();
+            return response.ToPagedResponse();
 
 
 
@@ -217,7 +217,7 @@ namespace BE_Homnayangi.Modules.UserModule
             int pageSize = request.PageSize;
             var customer = await _customerRepository.GetAll();
             var response = PagedList<Customer>.ToPagedList(source: customer, pageNumber: pageNumber, pageSize: pageSize);
-            return response.ToPagedResposne();
+            return response.ToPagedResponse();
         }
         public Customer GetCustomerByEmail(string? email)
         {
