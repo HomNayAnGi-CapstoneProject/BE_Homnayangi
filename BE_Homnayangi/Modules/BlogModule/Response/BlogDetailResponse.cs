@@ -11,10 +11,11 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
         // Blog information
         public string Preparation { get; set; }
         public string Processing { get; set; }
+        public string Finished { get; set; }
+        public string VideoUrl { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public int? BlogStatus { get; set; }
-        public Guid? CategoryId { get; set; }
 
 
         // Recipe information
@@ -28,8 +29,8 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
         public List<RecipeDetailsResponse> RecipeDetailss { get; set; }
 
 
-        // List Tags
-        public IDictionary<Guid, List<string>> Tags { get; set; }
+        // List SubCates
+        public IDictionary<Guid, List<string>> SubCates { get; set; }
 
 
         // List Ingredients

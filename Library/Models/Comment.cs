@@ -19,9 +19,8 @@ namespace Library.Models
         public bool? Status { get; set; }
         public Guid? ParentId { get; set; }
         public Guid? BlogId { get; set; }
+        public bool? ByStaff { get; set; }
 
-        public virtual Customer Author { get; set; }
-        public virtual User AuthorNavigation { get; set; }
         public virtual Blog Blog { get; set; }
         public virtual Comment Parent { get; set; }
         public virtual ICollection<Comment> InverseParent { get; set; }

@@ -8,25 +8,25 @@ using System.Linq.Expressions;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
-using BE_Homnayangi.Modules.BlogTagModule.Interface;
+using BE_Homnayangi.Modules.BlogSubCateModule.Interface;
 
-namespace BE_Homnayangi.Modules.BlogTagModule
+namespace BE_Homnayangi.Modules.BlogSubCateModule
 {
-    public class BlogTagRepository : Repository<BlogTag>, IBlogTagRepository
+    public class BlogSubCateRepository : Repository<BlogSubCate>, IBlogSubCateRepository
     {
         private readonly HomnayangiContext _db;
 
-        public BlogTagRepository(HomnayangiContext db) : base(db)
+        public BlogSubCateRepository(HomnayangiContext db) : base(db)
         {
             _db = db;
         }
-        public async Task<ICollection<BlogTag>> GetBlogTagsBy(
-            Expression<Func<BlogTag, bool>> filter = null,
-            Func<IQueryable<BlogTag>, ICollection<BlogTag>> options = null,
+        public async Task<ICollection<BlogSubCate>> GetBlogSubCatesBy(
+            Expression<Func<BlogSubCate, bool>> filter = null,
+            Func<IQueryable<BlogSubCate>, ICollection<BlogSubCate>> options = null,
             string includeProperties = null
         )
         {
-            IQueryable<BlogTag> query = DbSet;
+            IQueryable<BlogSubCate> query = DbSet;
 
             if (filter != null)
             {

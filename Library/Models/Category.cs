@@ -9,8 +9,7 @@ namespace Library.Models
     {
         public Category()
         {
-            Blogs = new HashSet<Blog>();
-            Tags = new HashSet<Tag>();
+            SubCategories = new HashSet<SubCategory>();
         }
 
         public Guid CategoryId { get; set; }
@@ -19,7 +18,6 @@ namespace Library.Models
         public bool? Status { get; set; }
         public DateTime? CreatedDate { get; set; }
 
-        public virtual ICollection<Blog> Blogs { get; set; }
-        public virtual ICollection<Tag> Tags { get; set; }
+        public virtual ICollection<SubCategory> SubCategories { get; set; }
     }
 }
