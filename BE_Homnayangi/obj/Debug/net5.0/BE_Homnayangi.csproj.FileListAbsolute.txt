@@ -175,6 +175,7 @@ C:\Users\USER\Desktop\New folder\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.ge
 C:\Users\USER\Desktop\New folder\BE_Homnayangi\obj\Debug\net5.0\ref\BE_Homnayangi.dll
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\appsettings.json
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\appsettings.Development.json
+E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\appsettings.json
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\BE_Homnayangi.exe
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\BE_Homnayangi.deps.json
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\BE_Homnayangi.runtimeconfig.json
@@ -187,8 +188,13 @@ E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\AutoMapper.dll
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\ExpressionEvaluator.dll
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\FluentValidation.dll
+E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Google.Apis.dll
+E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Google.Apis.Auth.PlatformServices.dll
+E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Google.Apis.Auth.dll
+E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Google.Apis.Core.dll
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\GSF.Core.dll
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Humanizer.dll
+E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.Google.dll
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.AspNetCore.Razor.Language.dll
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.Bcl.AsyncInterfaces.dll
@@ -328,7 +334,6 @@ E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Library.dll
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Repository.dll
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Library.pdb
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Repository.pdb
-E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.csproj.AssemblyReference.cache
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.GeneratedMSBuildEditorConfig.editorconfig
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.AssemblyInfoInputs.cache
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.AssemblyInfo.cs

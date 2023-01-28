@@ -1,4 +1,6 @@
-﻿using BE_Homnayangi.Modules.TypeModule.Interface;
+﻿using BE_Homnayangi.Modules.TypeModule.DTO.Request;
+using BE_Homnayangi.Modules.TypeModule.Interface;
+using Library.PagedList;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,10 +46,21 @@ namespace BE_Homnayangi.Modules.TypeModule
             await _TypeRepository.UpdateAsync(TypeUpdate);
         }
 
-        public Type GetTypeByID(Guid? id)
+        public async Task<Type> GetTypeByID(Guid? id)
         {
-            return _TypeRepository.GetFirstOrDefaultAsync(x => x.TypeId.Equals(id) && x.Status.Value).Result;
+            return await _TypeRepository.GetFirstOrDefaultAsync(x => x.TypeId.Equals(id) && x.Status.Value);
         }
+
+        public async Task<PagedResponse<PagedList<Type>>> GetAllPaged(TypeFilterRequest request)
+        {
+            int pageNumber = request.PageNumber;
+            int pageSize = request.PageSize;
+            var user = await _TypeRepository.GetTypesBy(x => x.Status != false);
+            var response = PagedList<Type>.ToPagedList(source: user, pageNumber: pageNumber, pageSize: pageSize);
+            return response.ToPagedResponse();
+
+        }
+
+
     }
 }
-
