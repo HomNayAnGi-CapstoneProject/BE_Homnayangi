@@ -173,8 +173,6 @@ C:\Users\USER\Desktop\New folder\BE_Homnayangi\obj\Debug\net5.0\refint\BE_Homnay
 C:\Users\USER\Desktop\New folder\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.pdb
 C:\Users\USER\Desktop\New folder\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.genruntimeconfig.cache
 C:\Users\USER\Desktop\New folder\BE_Homnayangi\obj\Debug\net5.0\ref\BE_Homnayangi.dll
-<<<<<<< HEAD
-=======
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\appsettings.json
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\appsettings.Development.json
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\BE_Homnayangi.exe
@@ -526,5 +524,4 @@ E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\refint\BE_Homnaya
 E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.pdb
 E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.genruntimeconfig.cache
 E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\ref\BE_Homnayangi.dll
->>>>>>> 7fcbf72 ([BE]: Get blog detail v2)
->>>>>>> d095abf ([BE]: increase view when see blog detail)
+
