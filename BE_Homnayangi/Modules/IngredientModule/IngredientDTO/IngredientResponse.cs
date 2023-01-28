@@ -13,6 +13,7 @@ namespace BE_Homnayangi.Modules.DTO.IngredientDTO
         public string Picture { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
+        public string ListImage { get; set; }
         public bool? Status { get; set; }
         public decimal? Price { get; set; }
         public Guid TypeId { get; set; }

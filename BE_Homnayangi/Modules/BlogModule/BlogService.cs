@@ -413,6 +413,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                                 Description = item.Ingredient.Description,
                                 Quantitative = item.Ingredient.Quantitative,
                                 Picture = item.Ingredient.Picture,
+                                ListImage = item.Ingredient.ListImage,
                                 CreatedDate = item.Ingredient.CreatedDate,
                                 UpdatedDate = item.Ingredient.UpdatedDate,
                                 Status = item.Ingredient.Status,

@@ -22,6 +22,7 @@ namespace Library.Models
         public DateTime? UpdatedDate { get; set; }
         public bool? Status { get; set; }
         public decimal? Price { get; set; }
+        public string ListImage { get; set; }
         public Guid? TypeId { get; set; }
 
         public virtual Type Type { get; set; }
