@@ -16,7 +16,8 @@ using System.Security.Cryptography;
 using System.IO;
 using Library.PagedList;
 using BE_Homnayangi.Modules.UserModule.Request;
-
+using System.Linq.Expressions;
+using BE_Homnayangi.Modules.CustomerModule.Interface;
 
 namespace BE_Homnayangi.Modules.UserModule
 {
@@ -36,6 +37,15 @@ namespace BE_Homnayangi.Modules.UserModule
             _appSettings = optionsMonitor.CurrentValue;
             _mapper = mapper;
         }
+
+        public Task<ICollection<User>> GetUsersBy(
+            Expression<Func<User, bool>> filter = null,
+            Func<IQueryable<User>, ICollection<User>> options = null,
+            string includeProperties = null)
+        {
+            return _userRepository.GetUsersBy(filter);
+        }
+
         #region CRUD User
         public async Task<PagedResponse<PagedList<User>>> GetAllUser(PagingUserRequest request)
         {

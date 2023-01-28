@@ -238,6 +238,7 @@ namespace Library.DataAccess
                 entity.Property(e => e.ParentId).HasColumnName("parentId");
 
                 entity.Property(e => e.Status).HasColumnName("status");
+                entity.Property(e => e.ByStaff).HasColumnName("byStaff");
 
                 entity.HasOne(d => d.Blog)
                     .WithMany(p => p.Comments)

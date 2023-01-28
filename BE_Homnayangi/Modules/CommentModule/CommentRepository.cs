@@ -1,4 +1,4 @@
-﻿using BE_Homnayangi.Modules.UserModule.Interface;
+﻿using BE_Homnayangi.Modules.CommentModule.Interface;
 using Library.DataAccess;
 using Library.Models;
 using Microsoft.EntityFrameworkCore;
@@ -9,24 +9,23 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace BE_Homnayangi.Modules.UserModule
+namespace BE_Homnayangi.Modules.CommentModule
 {
-    public class UserRepository : Repository<User>, IUserRepository
+    public class CommentRepository : Repository<Comment>, ICommentRepository
     {
-
         private readonly HomnayangiContext _db;
 
-        public UserRepository(HomnayangiContext db) : base(db)
+        public CommentRepository(HomnayangiContext db) : base(db)
         {
             _db = db;
         }
-
-        public async Task<ICollection<User>> GetUsersBy(
-            Expression<Func<User, bool>> filter = null,
-            Func<IQueryable<User>, ICollection<User>> options = null,
-            string includeProperties = null)
+        public async Task<ICollection<Comment>> GetCommentsBy(
+            Expression<Func<Comment, bool>> filter = null,
+            Func<IQueryable<Comment>, ICollection<Comment>> options = null,
+            string includeProperties = null
+        )
         {
-            IQueryable<User> query = DbSet;
+            IQueryable<Comment> query = DbSet;
 
             if (filter != null)
             {
