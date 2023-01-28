@@ -5,6 +5,7 @@ using BE_Homnayangi.Modules.DTO.RecipeDetailsDTO;
 using BE_Homnayangi.Modules.DTO.RecipeDTO;
 using BE_Homnayangi.Modules.IngredientModule.Request;
 using BE_Homnayangi.Modules.TypeModule.DTO;
+using BE_Homnayangi.Modules.UserModule.Request;
 using BE_Homnayangi.Modules.VoucherModule.Request;
 using BE_Homnayangi.Modules.VoucherModule.Response;
 using Library.Models;
@@ -50,7 +51,10 @@ namespace BE_Homnayangi.Modules.AutoMapper
         {
             CreateMap<LoginGoogleDTO, Customer>().ReverseMap();
             CreateMap<RegisterDTO, Customer>().ReverseMap();
-
+            CreateMap<UpdateCustomer, Customer>().ReverseMap();
+            CreateMap<UpdateUser, User>().ReverseMap();
+            // CreateMap<UpdateUserProfile, User>().ReverseMap();
+            CreateMap<CreateUser, User>().ReverseMap();
         }
 
 

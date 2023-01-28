@@ -105,6 +105,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
                     current.Description = newIg.Description;
                     current.Quantitative = newIg.Quantitative;
                     current.Picture = newIg.Picture;
+                    current.ListImage = newIg.ListImage;
                     current.UpdatedDate = DateTime.Now;
                     current.Status = newIg.Status;
                     current.Price = newIg.Price;

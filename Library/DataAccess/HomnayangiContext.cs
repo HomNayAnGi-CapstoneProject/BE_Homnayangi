@@ -368,6 +368,7 @@ namespace Library.DataAccess
                 entity.Property(e => e.Name).HasColumnName("name");
 
                 entity.Property(e => e.Picture).HasColumnName("picture");
+                entity.Property(e => e.ListImage).HasColumnName("listImage");
 
                 entity.Property(e => e.Price)
                     .HasColumnType("money")
