@@ -7,6 +7,10 @@ using BE_Homnayangi.Modules.BlogSubCateModule;
 using BE_Homnayangi.Modules.BlogSubCateModule.Interface;
 using BE_Homnayangi.Modules.CategoryModule;
 using BE_Homnayangi.Modules.CategoryModule.Interface;
+using BE_Homnayangi.Modules.CommentModule;
+using BE_Homnayangi.Modules.CommentModule.Interface;
+using BE_Homnayangi.Modules.CustomerModule;
+using BE_Homnayangi.Modules.CustomerModule.Interface;
 using BE_Homnayangi.Modules.CustomerVoucherModule;
 using BE_Homnayangi.Modules.CustomerVoucherModule.Interface;
 using BE_Homnayangi.Modules.IngredientModule;
@@ -126,15 +130,15 @@ namespace BE_Homnayangi
             });
 
             services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
-            
+
             // Category Module
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ICategoryService, CategoryService>();
-            
+
             // Blog Module
             services.AddScoped<IBlogRepository, BlogRepository>();
             services.AddScoped<IBlogService, BlogService>();
-            
+
             // Recipe Module
             services.AddScoped<IRecipeRepository, RecipeRepository>();
             services.AddScoped<IRecipeService, RecipeService>();
@@ -180,6 +184,9 @@ namespace BE_Homnayangi
             //BlogReaction Module
             services.AddScoped<IBlogReactionRepository, BlogReactionRepository>();
             services.AddScoped<IBlogReactionService, BlogReactionService>();
+            //Comment Module
+            services.AddScoped<ICommentRepository, CommentRepository>();
+            services.AddScoped<ICommentService, CommentService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

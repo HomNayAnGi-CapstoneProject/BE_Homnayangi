@@ -11,9 +11,9 @@ namespace BE_Homnayangi.Modules.UserModule.Interface
     public interface IUserRepository : IRepository<User>
     {
         public Task<ICollection<User>> GetUsersBy(
-         Expression<Func<User, bool>> filter = null,
-         Func<IQueryable<User>, ICollection<User>> options = null,
-         string includeProperties = null
+            Expression<Func<User, bool>> filter = null,
+            Func<IQueryable<User>, ICollection<User>> options = null,
+            string includeProperties = null
      );
     }
 }

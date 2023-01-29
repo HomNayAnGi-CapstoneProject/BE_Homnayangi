@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BE_Homnayangi.Modules.CommentModule.Response;
 using BE_Homnayangi.Modules.CustomerVoucherModule.Request;
 using BE_Homnayangi.Modules.DTO.IngredientDTO;
 using BE_Homnayangi.Modules.DTO.RecipeDetailsDTO;
@@ -46,6 +47,11 @@ namespace BE_Homnayangi.Modules.AutoMapper
             // Type
             CreateMap<Type, CreateTypeRequest>().ReverseMap();
             CreateMap<Type, UpdateTypeRequest>().ReverseMap();
+            
+            // Comment
+            CreateMap<Comment, ParentComment>().ReverseMap();
+            CreateMap<ParentComment, Comment>().ReverseMap();
+            CreateMap<ChildComment, Comment>().ReverseMap();
         }
         private void CreateUserMap()
         {
