@@ -10,6 +10,7 @@ using Library.Models;
 using BE_Homnayangi.Modules.IngredientModule.Interface;
 using BE_Homnayangi.Modules.IngredientModule.Request;
 using AutoMapper;
+using BE_Homnayangi.Modules.IngredientModule.IngredientDTO;
 
 namespace BE_Homnayangi.Controllers
 {
@@ -74,7 +75,7 @@ namespace BE_Homnayangi.Controllers
         [HttpPut()]
         public async Task<IActionResult> PutIngredient([FromBody] UpdatedIngredientRequest ingredient)
         {
-            var mapperIngredient = _mapper.Map<Ingredient>(ingredient);
+            var mapperIngredient = _mapper.Map<IngredientRequest>(ingredient);
             bool isUpdated = await _ingredientService.UpdateIngredient(mapperIngredient);
             if (isUpdated)
             {
@@ -112,7 +113,7 @@ namespace BE_Homnayangi.Controllers
         [HttpPost]
         public async Task<ActionResult<Ingredient>> PostIngredient(CreatedIngredientRequest newIg)
         {
-            var mapperIngredient = _mapper.Map<Ingredient>(newIg);
+            var mapperIngredient = _mapper.Map<IngredientRequest>(newIg);
             bool isInserted = await _ingredientService.CreateIngredient(mapperIngredient);
             if (isInserted)
             {

@@ -55,41 +55,41 @@ namespace BE_Homnayangi.Modules.CommentModule
 
                     foreach (var parent in parentComments)
                     {
-                        ParentComment parentComment = new ParentComment()
-                        {
-                            CommentId = parent.CommentId,
-                            AuthorId = parent.AuthorId.Value,
-                            FullNameAuthor = parent.Author != null
-                                        ? parent.Author.Firstname + " " + parent.Author.Lastname
-                                        : parent.AuthorNavigation.Firstname + " " + parent.AuthorNavigation.Lastname,
-                            Avatar = parent.Author != null ? parent.Author.Avatar : parent.AuthorNavigation.Avatar,
-                            CreatedDate = parent.CreatedDate.Value,
-                            Content = parent.Content,
-                            Status = parent.Status.Value,
-                        };
-                        List<ChildComment> childComments = new List<ChildComment>();
-                        foreach (var child in allComments)
-                        {
-                            if (child.ParentId != null && child.ParentId == parent.CommentId)
-                            {
-                                ChildComment childComment = new ChildComment()
-                                {
-                                    ParentCommentId = child.ParentId.Value,
-                                    CommentId = child.CommentId,
-                                    AuthorId = child.AuthorId.Value,
-                                    FullNameAuthor = child.Author != null
-                                        ? child.Author.Firstname + " " + child.Author.Lastname
-                                        : child.AuthorNavigation.Firstname + " " + child.AuthorNavigation.Lastname,
-                                    Avatar = child.Author != null ? child.Author.Avatar : child.AuthorNavigation.Avatar,
-                                    CreatedDate = child.CreatedDate.Value,
-                                    Content = child.Content,
-                                    Status = child.Status.Value,
-                                };
-                                childComments.Add(childComment);
-                            }
-                        }
-                        var tmp = Tuple.Create(parentComment, childComments);
-                        result.Add(tmp);
+                        //ParentComment parentComment = new ParentComment()
+                        //{
+                        //    CommentId = parent.CommentId,
+                        //    AuthorId = parent.AuthorId.Value,
+                        //    FullNameAuthor = parent.Author != null
+                        //                ? parent.Author.Firstname + " " + parent.Author.Lastname
+                        //                : parent.AuthorNavigation.Firstname + " " + parent.AuthorNavigation.Lastname,
+                        //    Avatar = parent.Author != null ? parent.Author.Avatar : parent.AuthorNavigation.Avatar,
+                        //    CreatedDate = parent.CreatedDate.Value,
+                        //    Content = parent.Content,
+                        //    Status = parent.Status.Value,
+                        //};
+                        //List<ChildComment> childComments = new List<ChildComment>();
+                        //foreach (var child in allComments)
+                        //{
+                        //    if (child.ParentId != null && child.ParentId == parent.CommentId)
+                        //    {
+                        //        ChildComment childComment = new ChildComment()
+                        //        {
+                        //            ParentCommentId = child.ParentId.Value,
+                        //            CommentId = child.CommentId,
+                        //            AuthorId = child.AuthorId.Value,
+                        //            FullNameAuthor = child.Author != null
+                        //                ? child.Author.Firstname + " " + child.Author.Lastname
+                        //                : child.AuthorNavigation.Firstname + " " + child.AuthorNavigation.Lastname,
+                        //            Avatar = child.Author != null ? child.Author.Avatar : child.AuthorNavigation.Avatar,
+                        //            CreatedDate = child.CreatedDate.Value,
+                        //            Content = child.Content,
+                        //            Status = child.Status.Value,
+                        //        };
+                        //        childComments.Add(childComment);
+                        //    }
+                        //}
+                        //var tmp = Tuple.Create(parentComment, childComments);
+                        //result.Add(tmp);
                     }
                 }
             }
@@ -117,30 +117,30 @@ namespace BE_Homnayangi.Modules.CommentModule
                     CreatedDate = DateTime.Now,
                     Status = true,
                 };
-                await _commentRepository.AddAsync(newComment);
-                if (comment.ByStaff) // get user info
-                {
-                    var authorNavigation = await _userRepository.GetByIdAsync(comment.AuthorId);
-                    newComment.AuthorNavigation = authorNavigation;
-                }
-                else                // get customer info
-                {
-                    var author = await _customerRepository.GetByIdAsync(comment.AuthorId);
-                    newComment.Author = author;
-                }
-                result = new ChildComment()
-                {
-                    ParentCommentId = newComment.ParentId != null ? newComment.ParentId : null,
-                    CommentId = newComment.CommentId,
-                    AuthorId = newComment.AuthorId.Value,
-                    FullNameAuthor = newComment.Author != null
-                                        ? newComment.Author.Firstname + " " + newComment.Author.Lastname
-                                        : newComment.AuthorNavigation.Firstname + " " + newComment.AuthorNavigation.Lastname,
-                    Avatar = newComment.Author != null ? newComment.Author.Avatar : newComment.AuthorNavigation.Avatar,
-                    CreatedDate = newComment.CreatedDate.Value,
-                    Content = newComment.Content,
-                    Status = newComment.Status.Value,
-                };
+                //await _commentRepository.AddAsync(newComment);
+                //if (comment.ByStaff) // get user info
+                //{
+                //    var authorNavigation = await _userRepository.GetByIdAsync(comment.AuthorId);
+                //    newComment.AuthorNavigation = authorNavigation;
+                //}
+                //else                // get customer info
+                //{
+                //    var author = await _customerRepository.GetByIdAsync(comment.AuthorId);
+                //    newComment.Author = author;
+                //}
+                //result = new ChildComment()
+                //{
+                //    ParentCommentId = newComment.ParentId != null ? newComment.ParentId : null,
+                //    CommentId = newComment.CommentId,
+                //    AuthorId = newComment.AuthorId.Value,
+                //    FullNameAuthor = newComment.Author != null
+                //                        ? newComment.Author.Firstname + " " + newComment.Author.Lastname
+                //                        : newComment.AuthorNavigation.Firstname + " " + newComment.AuthorNavigation.Lastname,
+                //    Avatar = newComment.Author != null ? newComment.Author.Avatar : newComment.AuthorNavigation.Avatar,
+                //    CreatedDate = newComment.CreatedDate.Value,
+                //    Content = newComment.Content,
+                //    Status = newComment.Status.Value,
+                //};
             }
             catch (Exception ex)
             {
