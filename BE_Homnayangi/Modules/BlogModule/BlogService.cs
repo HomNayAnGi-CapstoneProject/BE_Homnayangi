@@ -266,7 +266,7 @@ namespace BE_Homnayangi.Modules.BlogModule
             try
             {
                 var result = await _subCateRepository.GetFirstOrDefaultAsync(x => x.Name == subCateName);
-                var listSubCateMenu = await _subCateRepository.GetSubCatesBy(x => x.CategoryId == categoryId);
+                var listSubCateMenu = await _subCateRepository.GetSubCatesBy(x => x.CategoryId == categoryId && x.Status == true);
                 var listBlogSubCate = await _blogSubCateRepository.GetAll(includeProperties: "SubCate");
 
                 var listBlogSubCateMenu = listBlogSubCate.Join(listSubCateMenu, x => x.SubCateId, y => y.SubCategoryId, (x, y) => x).ToList();

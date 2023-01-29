@@ -55,7 +55,7 @@ namespace BE_Homnayangi.Modules.TypeModule
         {
             int pageNumber = request.PageNumber;
             int pageSize = request.PageSize;
-            var user = await _TypeRepository.GetTypesBy(x => x.Status != false);
+            var user = await _TypeRepository.GetAll();
             var response = PagedList<Type>.ToPagedList(source: user, pageNumber: pageNumber, pageSize: pageSize);
             return response.ToPagedResponse();
 
