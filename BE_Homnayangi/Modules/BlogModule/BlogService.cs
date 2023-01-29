@@ -8,6 +8,7 @@ using BE_Homnayangi.Modules.RecipeDetailModule.Interface;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
 using BE_Homnayangi.Modules.SubCateModule.Interface;
 using BE_Homnayangi.Modules.TypeModule.Interface;
+using BE_Homnayangi.Modules.Utils;
 using Library.Models;
 using Library.Models.Enum;
 using Library.PagedList;
@@ -413,7 +414,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                                 Description = item.Ingredient.Description,
                                 Quantitative = item.Ingredient.Quantitative,
                                 Picture = item.Ingredient.Picture,
-                                ListImage = item.Ingredient.ListImage,
+                                ListImage = StringUtils.ExtractContents(item.Ingredient.ListImage),
                                 CreatedDate = item.Ingredient.CreatedDate,
                                 UpdatedDate = item.Ingredient.UpdatedDate,
                                 Status = item.Ingredient.Status,

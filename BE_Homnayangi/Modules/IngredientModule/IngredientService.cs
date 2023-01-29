@@ -1,4 +1,7 @@
-﻿using BE_Homnayangi.Modules.IngredientModule.Interface;
+﻿using BE_Homnayangi.Modules.DTO.IngredientDTO;
+using BE_Homnayangi.Modules.IngredientModule.IngredientDTO;
+using BE_Homnayangi.Modules.IngredientModule.Interface;
+using BE_Homnayangi.Modules.Utils;
 using Library.Models;
 using System;
 using System.Collections.Generic;
@@ -17,27 +20,32 @@ namespace BE_Homnayangi.Modules.IngredientModule
             _IngredientRepository = IngredientRepository;
         }
 
-        public async Task<ICollection<Ingredient>> GetAll()
+        public async Task<ICollection<IngredientResponse>> GetAll()
         {
-            return await _IngredientRepository.GetAll();
+            var ingredients = await _IngredientRepository.GetAll();
+
+            return ingredients.Select(ToResponse).ToList();
         }
-        public Task<ICollection<Ingredient>> GetIngredientsBy(Expression<Func<Ingredient, bool>> filter = null,
+
+        public async Task<ICollection<IngredientResponse>> GetIngredientsBy(Expression<Func<Ingredient, bool>> filter = null,
             Func<IQueryable<Ingredient>, ICollection<Ingredient>> options = null,
             string includeProperties = null)
         {
-            return _IngredientRepository.GetIngredientsBy(filter, options, includeProperties);
+            var ingredients = await _IngredientRepository.GetIngredientsBy(filter, options, includeProperties);
+            return ingredients.Select(ToResponse).ToList();
         }
-        public async Task AddNewIngredient(Ingredient newIngredient)
+        public async Task AddNewIngredient(IngredientRequest newIngredient)
         {
             newIngredient.IngredientId = Guid.NewGuid();
-            await _IngredientRepository.AddAsync(newIngredient);
+            await _IngredientRepository.AddAsync(ToModel(newIngredient));
         }
 
-        public Ingredient GetIngredientByID(Guid? ingredientID)
+        public IngredientResponse GetIngredientByID(Guid? ingredientID)
         {
             try
             {
-                return _IngredientRepository.GetFirstOrDefaultAsync(x => x.IngredientId == ingredientID.Value && x.Status.Value).Result;
+                var ingredient = _IngredientRepository.GetFirstOrDefaultAsync(x => x.IngredientId == ingredientID.Value && x.Status.Value).Result;
+                return ToResponse(ingredient);
             }
             catch (Exception ex)
             {
@@ -46,11 +54,12 @@ namespace BE_Homnayangi.Modules.IngredientModule
             }
         }
 
-        public Task<ICollection<Ingredient>> GetAllIngredient() // status = 1
+        public async Task<ICollection<IngredientResponse>> GetAllIngredient() // status = 1
         {
             try
             {
-                return _IngredientRepository.GetIngredientsBy(x => x.Status.Value);
+                var ingredients = await _IngredientRepository.GetIngredientsBy(x => x.Status.Value);
+                return ingredients.Select(ToResponse).ToList();
             }
             catch (Exception ex)
             {
@@ -59,11 +68,12 @@ namespace BE_Homnayangi.Modules.IngredientModule
             }
         }
 
-        public Task<ICollection<Ingredient>> GetIngredientsByTypeId(Guid typeId)
+        public async Task<ICollection<IngredientResponse>> GetIngredientsByTypeId(Guid typeId)
         {
             try
             {
-                return _IngredientRepository.GetIngredientsBy(x => x.Status.Value && x.TypeId == typeId);
+                var ingredients = await _IngredientRepository.GetIngredientsBy(x => x.Status.Value && x.TypeId == typeId);
+                return ingredients.Select(ToResponse).ToList();
             }
             catch (Exception ex)
             {
@@ -93,7 +103,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
             return isDeleted;
         }
 
-        public async Task<bool> UpdateIngredient(Ingredient newIg)
+        public async Task<bool> UpdateIngredient(IngredientRequest newIg)
         {
             bool isUpdated = false;
             try
@@ -105,7 +115,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
                     current.Description = newIg.Description;
                     current.Quantitative = newIg.Quantitative;
                     current.Picture = newIg.Picture;
-                    current.ListImage = newIg.ListImage;
+                    current.ListImage = StringUtils.CompressContents(newIg.ListImage);
                     current.UpdatedDate = DateTime.Now;
                     current.Status = newIg.Status;
                     current.Price = newIg.Price;
@@ -123,7 +133,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
             return isUpdated;
         }
 
-        public async Task<bool> CreateIngredient(Ingredient newIg)
+        public async Task<bool> CreateIngredient(IngredientRequest newIg)
         {
             bool isInserted = false;
             try
@@ -131,7 +141,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
                 newIg.IngredientId = Guid.NewGuid();
                 newIg.Status = true;
                 newIg.CreatedDate = DateTime.Now;
-                await _IngredientRepository.AddAsync(newIg);
+                await _IngredientRepository.AddAsync(ToModel(newIg));
                 isInserted = true;
             }
             catch (Exception ex)
@@ -140,6 +150,44 @@ namespace BE_Homnayangi.Modules.IngredientModule
                 throw;
             }
             return isInserted;
+        }
+
+        public IngredientResponse ToResponse(Ingredient ingredient)
+        {
+            return new IngredientResponse()
+            {
+                IngredientId = ingredient.IngredientId,
+                Name = ingredient.Name,
+                Description = ingredient.Description,
+                Quantitative = ingredient.Quantitative,
+                Picture = ingredient.Picture,
+                ListImage = StringUtils.ExtractContents(ingredient.ListImage),
+                CreatedDate = ingredient.CreatedDate,
+                UpdatedDate = ingredient.UpdatedDate,
+                Status = ingredient.Status,
+                Price = ingredient.Price,
+                TypeId = ingredient.Type?.TypeId,
+                TypeName = ingredient.Type?.Name,
+                TypeDescription = ingredient.Type?.Description,
+            };
+        }
+
+        public Ingredient ToModel(IngredientRequest ingredientRequest)
+        {
+            return new Ingredient()
+            {
+                IngredientId = ingredientRequest.IngredientId,
+                Name = ingredientRequest.Name,
+                Description = ingredientRequest.Description,
+                Quantitative = ingredientRequest.Quantitative,
+                Picture = ingredientRequest.Picture,
+                ListImage = StringUtils.CompressContents(ingredientRequest.ListImage),
+                CreatedDate = ingredientRequest.CreatedDate,
+                UpdatedDate = ingredientRequest.UpdatedDate,
+                Status = ingredientRequest.Status,
+                Price = ingredientRequest.Price,
+                TypeId = ingredientRequest.TypeId
+            };
         }
     }
 }

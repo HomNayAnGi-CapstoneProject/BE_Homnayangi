@@ -1,11 +1,9 @@
-﻿using Library.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using Type = Library.Models.Type;
 
-namespace BE_Homnayangi.Modules.DTO.IngredientDTO
+namespace BE_Homnayangi.Modules.IngredientModule.IngredientDTO
 {
-    public class IngredientResponse
+    public class IngredientRequest
     {
         public Guid IngredientId { get; set; }
         public string Name { get; set; }
@@ -18,8 +16,6 @@ namespace BE_Homnayangi.Modules.DTO.IngredientDTO
         public bool? Status { get; set; }
         public decimal? Price { get; set; }
         public Guid? TypeId { get; set; }
-        public string TypeName { get; set; }
-        public string TypeDescription { get; set; }
     }
 }
 
