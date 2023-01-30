@@ -114,19 +114,19 @@ namespace BE_Homnayangi.Controllers
         public async Task<ActionResult<Ingredient>> PostIngredient(CreatedIngredientRequest newIg)
         {
             var mapperIngredient = _mapper.Map<IngredientRequest>(newIg);
-            bool isInserted = await _ingredientService.CreateIngredient(mapperIngredient);
-            if (isInserted)
+            Guid ingredientId = await _ingredientService.CreateIngredient(mapperIngredient);
+            if (!ingredientId.ToString().Equals(""))
             {
                 return new JsonResult(new
                 {
-                    message = "Created successfully!"
+                    status = "success",
+                    ingredient_id = ingredientId
                 });
             }
             else
             {
                 return BadRequest();
             }
-
         }
     }
 }

@@ -26,7 +26,7 @@ namespace BE_Homnayangi.Modules.IngredientModule.Interface
 
         public Task<bool> UpdateIngredient(IngredientRequest newIg);
 
-        public Task<bool> CreateIngredient(IngredientRequest newIg);
+        public Task<Guid> CreateIngredient(IngredientRequest newIg);
     }
 
 }
