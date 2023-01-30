@@ -133,23 +133,23 @@ namespace BE_Homnayangi.Modules.IngredientModule
             return isUpdated;
         }
 
-        public async Task<bool> CreateIngredient(IngredientRequest newIg)
+        public async Task<Guid> CreateIngredient(IngredientRequest newIg)
         {
-            bool isInserted = false;
+            Guid ingredientId;
             try
             {
                 newIg.IngredientId = Guid.NewGuid();
                 newIg.Status = true;
                 newIg.CreatedDate = DateTime.Now;
                 await _IngredientRepository.AddAsync(ToModel(newIg));
-                isInserted = true;
+                ingredientId = newIg.IngredientId;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error at CreateIngredient: " + ex.Message);
                 throw;
             }
-            return isInserted;
+            return ingredientId;
         }
 
         public IngredientResponse ToResponse(Ingredient ingredient)

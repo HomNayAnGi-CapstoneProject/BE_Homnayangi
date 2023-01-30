@@ -4,6 +4,7 @@ using BE_Homnayangi.Modules.CustomerVoucherModule.Request;
 using BE_Homnayangi.Modules.DTO.IngredientDTO;
 using BE_Homnayangi.Modules.DTO.RecipeDetailsDTO;
 using BE_Homnayangi.Modules.DTO.RecipeDTO;
+using BE_Homnayangi.Modules.IngredientModule.IngredientDTO;
 using BE_Homnayangi.Modules.IngredientModule.Request;
 using BE_Homnayangi.Modules.TypeModule.DTO;
 using BE_Homnayangi.Modules.UserModule.Request;
@@ -34,6 +35,7 @@ namespace BE_Homnayangi.Modules.AutoMapper
 
             // Ingredient
             CreateMap<Ingredient, IngredientResponse>().ReverseMap();
+            CreateMap<IngredientRequest, CreatedIngredientRequest>().ReverseMap();
             CreateMap<Ingredient, CreatedIngredientRequest>().ReverseMap();
             CreateMap<Ingredient, UpdatedIngredientRequest>().ReverseMap();
 
@@ -47,7 +49,7 @@ namespace BE_Homnayangi.Modules.AutoMapper
             // Type
             CreateMap<Type, CreateTypeRequest>().ReverseMap();
             CreateMap<Type, UpdateTypeRequest>().ReverseMap();
-            
+
             // Comment
             CreateMap<Comment, ParentComment>().ReverseMap();
             CreateMap<ParentComment, Comment>().ReverseMap();
