@@ -28,10 +28,23 @@ namespace BE_Homnayangi.Controllers
         }
 
         // GET: api/Ingredients
-        [HttpGet]
+        [HttpGet("for-customerw")]
         public async Task<ActionResult<IEnumerable<Ingredient>>> GetIngredients()
         {
             var result = await _ingredientService.GetAllIngredient();
+
+            return new JsonResult(new
+            {
+                total_results = result.Count(),
+                result = result,
+            });
+        }
+
+        // GET: api/Ingredients
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Ingredient>>> GetIngredientsForStaff()
+        {
+            var result = await _ingredientService.GetAll();
 
             return new JsonResult(new
             {
