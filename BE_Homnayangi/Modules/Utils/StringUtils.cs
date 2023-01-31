@@ -24,6 +24,7 @@ namespace BE_Homnayangi.Modules.Utils
             try
             {
                 var result = listContents.Split(";").ToList();
+                if (result.ElementAt(0) == "") result.RemoveAt(0);
                 return result;
             }
             catch
