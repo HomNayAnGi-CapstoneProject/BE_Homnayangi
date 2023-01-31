@@ -44,7 +44,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
         {
             try
             {
-                var ingredient = _IngredientRepository.GetFirstOrDefaultAsync(x => x.IngredientId == ingredientID.Value && x.Status.Value).Result;
+                var ingredient = _IngredientRepository.GetFirstOrDefaultAsync(x => x.IngredientId == ingredientID.Value && x.Status.Value, includeProperties: "Type").Result;
                 return ToResponse(ingredient);
             }
             catch (Exception ex)
