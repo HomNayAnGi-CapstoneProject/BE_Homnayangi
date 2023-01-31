@@ -13,5 +13,6 @@ namespace BE_Homnayangi.Modules.IngredientModule.Request
         public string Picture { get; set; }
         public decimal Price { get; set; }
         public Guid TypeId { get; set; }
+        public string ListImagePosition { get; set; }
     }
 }
