@@ -38,6 +38,7 @@ namespace BE_Homnayangi.Modules.AutoMapper
             CreateMap<IngredientRequest, CreatedIngredientRequest>().ReverseMap();
             CreateMap<Ingredient, CreatedIngredientRequest>().ReverseMap();
             CreateMap<Ingredient, UpdatedIngredientRequest>().ReverseMap();
+            CreateMap<IngredientRequest, UpdatedIngredientRequest>().ReverseMap();
 
             // Voucher
             CreateMap<Voucher, CreateVoucherRequest>().ReverseMap();
