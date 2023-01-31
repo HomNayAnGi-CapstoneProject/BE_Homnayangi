@@ -6,7 +6,8 @@ namespace Library.Models.Enum
         public enum BlogStatus
         {
             DELETED = 0,
-            ACTIVE = 1
+            ACTIVE = 1,
+            DRAFTED = 2
         }
     }
 }

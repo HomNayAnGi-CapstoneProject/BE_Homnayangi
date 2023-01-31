@@ -196,10 +196,10 @@ namespace BE_Homnayangi.Modules.BlogModule
 
             blogs = categoryId != null
                 ? await _blogRepository
-                    .GetBlogsBy(b => b.BlogStatus != (int)Status.BlogStatus.DELETED,
+                    .GetBlogsBy(b => b.BlogStatus == (int)Status.BlogStatus.ACTIVE,
                         includeProperties: "Category,Recipe")
                 : await _blogRepository
-                    .GetBlogsBy(b => b.BlogStatus != (int)Status.BlogStatus.DELETED,
+                    .GetBlogsBy(b => b.BlogStatus == (int)Status.BlogStatus.ACTIVE,
                         includeProperties: "Category,Recipe");
 
             filteredBlogs = blogs.Select(b => new BlogsByCateAndTagResponse

@@ -121,6 +121,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
                     current.Price = newIg.Price;
                     current.TypeId = newIg.TypeId;
                     await _IngredientRepository.UpdateAsync(current);
+                    current.ListImagePosition = newIg.ListImagePosition;
                     isUpdated = true;
                 }
 
@@ -169,6 +170,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
                 TypeId = ingredient.Type?.TypeId,
                 TypeName = ingredient.Type?.Name,
                 TypeDescription = ingredient.Type?.Description,
+                ListImagePosition = ingredient.ListImagePosition
             };
         }
 
@@ -186,7 +188,8 @@ namespace BE_Homnayangi.Modules.IngredientModule
                 UpdatedDate = ingredientRequest.UpdatedDate,
                 Status = ingredientRequest.Status,
                 Price = ingredientRequest.Price,
-                TypeId = ingredientRequest.TypeId
+                TypeId = ingredientRequest.TypeId,
+                ListImagePosition = ingredientRequest.ListImagePosition
             };
         }
     }

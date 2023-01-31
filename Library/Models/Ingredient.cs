@@ -24,6 +24,7 @@ namespace Library.Models
         public decimal? Price { get; set; }
         public string ListImage { get; set; }
         public Guid? TypeId { get; set; }
+        public string ListImagePosition { get; set; }
 
         public virtual Type Type { get; set; }
         public virtual ICollection<OrderIngredientDetail> OrderIngredientDetails { get; set; }

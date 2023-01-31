@@ -20,6 +20,7 @@ namespace BE_Homnayangi.Modules.DTO.IngredientDTO
         public Guid? TypeId { get; set; }
         public string TypeName { get; set; }
         public string TypeDescription { get; set; }
+        public string ListImagePosition { get; set; }
     }
 }
 
