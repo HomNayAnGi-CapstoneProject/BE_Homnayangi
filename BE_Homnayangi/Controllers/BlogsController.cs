@@ -32,9 +32,9 @@ namespace BE_Homnayangi.Controllers
 
         // GET: api/Blogs
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Blog>>> GetBlogs()
+        public async Task<ActionResult<IEnumerable<Blog>>> GetBlogs([FromQuery] PagedRequest request)
         {
-            return await _context.Blogs.ToListAsync();
+            return Ok(await _blogService.GetAllPaged(request));
         }
 
 
@@ -132,18 +132,6 @@ namespace BE_Homnayangi.Controllers
             return _context.Blogs.Any(e => e.BlogId == id);
         }
 
-        [HttpGet("category/tag")]
-        public async Task<ActionResult<PagedResponse<PagedList<BlogsByCateAndTagResponse>>>> GetBlogsByCateAndTag([FromQuery] BlogFilterByCateAndTagRequest blogFilter)
-        {
-            var response = await _blogService.GetBlogsByCategoryAndTag(blogFilter);
-
-            if (response == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(response);
-        }
         // Get sub-cates by categoryId 
         [HttpGet("categories/{categoryId}/sub-categories")]
         public async Task<ActionResult<IEnumerable<SubCateResponse>>> GetSubCatesByCategoryId(Guid categoryId)

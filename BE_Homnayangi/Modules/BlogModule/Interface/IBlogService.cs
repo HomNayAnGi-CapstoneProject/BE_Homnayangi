@@ -36,13 +36,13 @@ namespace BE_Homnayangi.Modules.BlogModule.Interface
 
         public Task<ICollection<SearchBlogsResponse>> GetBlogAndRecipeByName(String name);
 
-        public Task<PagedResponse<PagedList<BlogsByCateAndTagResponse>>> GetBlogsByCategoryAndTag(BlogFilterByCateAndTagRequest blogFilter);
-
         public Task<ICollection<GetBlogsForHomePageResponse>> GetBlogsBySubCateForHomePage(Guid? tagId, int numberOfItems = 0);
 
         public Task<ICollection<GetBlogsForHomePageResponse>> GetSoupAndNormalBlogs(Guid? categoryId, Guid? subCateId);
 
         public Task<BlogDetailResponse> GetBlogDetails(Guid blogId);
+
+        public Task<PagedResponse<PagedList<Blog>>> GetAllPaged(PagedRequest request);
 
     }
 }

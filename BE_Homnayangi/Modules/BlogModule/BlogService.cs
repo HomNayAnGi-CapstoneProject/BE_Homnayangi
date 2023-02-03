@@ -184,76 +184,6 @@ namespace BE_Homnayangi.Modules.BlogModule
             return listSubCateName;
         }
 
-        public async Task<PagedResponse<PagedList<BlogsByCateAndTagResponse>>> GetBlogsByCategoryAndTag(BlogFilterByCateAndTagRequest blogFilter)
-        {
-            var categoryId = blogFilter.CategoryId;
-            var tagId = blogFilter.TagId;
-            var pageSize = blogFilter.PageSize;
-            var pageNumber = blogFilter.PageNumber;
-            var sort = blogFilter.sort;
-            ICollection<BlogsByCateAndTagResponse> filteredBlogs;
-            ICollection<Blog> blogs;
-
-            blogs = categoryId != null
-                ? await _blogRepository
-                    .GetBlogsBy(b => b.BlogStatus == (int)Status.BlogStatus.ACTIVE,
-                        includeProperties: "Category,Recipe")
-                : await _blogRepository
-                    .GetBlogsBy(b => b.BlogStatus == (int)Status.BlogStatus.ACTIVE,
-                        includeProperties: "Category,Recipe");
-
-            filteredBlogs = blogs.Select(b => new BlogsByCateAndTagResponse
-            {
-                BlogId = b.BlogId,
-                RecipeName = b.Recipe?.Title,
-                Title = b.Title,
-                Description = b.Description,
-                ImageUrl = b.ImageUrl,
-                PackagePrice = b.Recipe?.PackagePrice,
-                CreatedDate = b.CreatedDate,
-                Reaction = b.Reaction,
-                View = b.View
-            }).ToList();
-
-            if (tagId != null)
-            {
-                var blogTags = await _blogSubCateRepository.GetBlogSubCatesBy(bt => bt.SubCateId.Equals(tagId));
-
-                filteredBlogs = blogTags.Join(blogs, bt => bt.BlogId, b => b.BlogId, (bt, b) => new BlogsByCateAndTagResponse
-                {
-                    BlogId = b.BlogId,
-                    RecipeName = b.Recipe?.Title,
-                    Title = b.Title,
-                    Description = b.Description,
-                    ImageUrl = b.ImageUrl,
-                    PackagePrice = b.Recipe?.PackagePrice,
-                    CreatedDate = b.CreatedDate,
-                    Reaction = b.Reaction,
-                    View = b.View
-                }).ToList();
-            }
-
-            switch (sort)
-            {
-                case (int)Sort.BlogsSortBy.CREATEDDATE:
-                    filteredBlogs = filteredBlogs.OrderByDescending(r => r.CreatedDate).ToList();
-                    break;
-                case (int)Sort.BlogsSortBy.REACTION:
-                    filteredBlogs = filteredBlogs.OrderByDescending(r => r.Reaction).ToList();
-                    break;
-                case (int)Sort.BlogsSortBy.VIEW:
-                    filteredBlogs = filteredBlogs.OrderByDescending(r => r.View).ToList();
-                    break;
-                default:
-                    filteredBlogs = filteredBlogs.OrderByDescending(r => r.CreatedDate).ToList();
-                    break;
-            }
-
-            var response = PagedList<BlogsByCateAndTagResponse>.ToPagedList(source: filteredBlogs, pageNumber: pageNumber, pageSize: pageSize);
-
-            return response.ToPagedResponse();
-        }
-
         public async Task<ICollection<GetBlogsForHomePageResponse>> GetSoupAndNormalBlogs(Guid? categoryId, Guid? subCateId)
         {
             string subCateName = GetSubCateNameByCurrentTime();
@@ -441,6 +371,51 @@ namespace BE_Homnayangi.Modules.BlogModule
                 throw;
             }
             return result;
+        }
+
+        public async Task<PagedResponse<PagedList<Blog>>> GetAllPaged(PagedRequest request)
+        {
+            var pageSize = request.PageSize;
+            var pageNumber = request.PageNumber;
+            var sort = request.sort;
+            var sortDesc = request.sortDesc;
+            ICollection<Blog> blogs = new List<Blog>();
+
+            try
+            {
+                blogs = await _blogRepository.GetAll();
+
+                switch (sort)
+                {
+                    case (int)Sort.BlogsSortBy.CREATEDDATE:
+                        blogs = sortDesc ?
+                            blogs.OrderByDescending(r => r.CreatedDate).ToList() :
+                            blogs.OrderBy(r => r.CreatedDate).ToList();
+                        break;
+                    case (int)Sort.BlogsSortBy.REACTION:
+                        blogs = sortDesc ?
+                            blogs.OrderByDescending(r => r.Reaction).ToList() :
+                            blogs.OrderBy(r => r.Reaction).ToList();
+                        break;
+                    case (int)Sort.BlogsSortBy.VIEW:
+                        blogs = sortDesc ? 
+                            blogs.OrderByDescending(r => r.View).ToList() : 
+                            blogs.OrderBy(r => r.View).ToList();
+                        break;
+                    default:
+                        blogs = sortDesc ?
+                            blogs.OrderByDescending(r => r.CreatedDate).ToList() :
+                            blogs.OrderBy(r => r.CreatedDate).ToList();
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at GetAllPaged: " + ex.Message);
+                throw;
+            }
+            var response = PagedList<Blog>.ToPagedList(source: blogs.ToList(), pageNumber: pageNumber, pageSize: pageSize);
+            return response.ToPagedResponse();
         }
     }
 }
