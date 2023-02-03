@@ -44,22 +44,24 @@ namespace BE_Homnayangi.Modules.CommentModule
                     {
                         CommentId = c.CommentId,
                         AuthorId = c.AuthorId.Value,
-                        FullNameAuthor = u.Firstname + " " + u.Lastname,
+                        FullNameAuthor = u.Displayname,
                         Avatar = u.Avatar,
                         CreatedDate = c.CreatedDate.Value,
                         Content = c.Content,
                         Status = c.Status.Value,
+                        ByStaff = c.ByStaff.Value,
                         ParentCommentId = c.ParentId != null ? c.ParentId.Value : null,
                     });
                     var customerComments = comments.Join(customers, c => c.AuthorId, cus => cus.CustomerId, (c, cus) => new ChildComment
                     {
                         CommentId = c.CommentId,
                         AuthorId = c.AuthorId.Value,
-                        FullNameAuthor = cus.Firstname + " " + cus.Lastname,
+                        FullNameAuthor = cus.Displayname,
                         Avatar = cus.Avatar,
                         CreatedDate = c.CreatedDate.Value,
                         Content = c.Content,
                         Status = c.Status.Value,
+                        ByStaff = c.ByStaff.Value,
                         ParentCommentId = c.ParentId != null ? c.ParentId.Value : null,
                     });
 
@@ -80,27 +82,11 @@ namespace BE_Homnayangi.Modules.CommentModule
                             CreatedDate = parent.CreatedDate,
                             Content = parent.Content,
                             Status = parent.Status,
+                            ByStaff = parent.ByStaff,
                         };
 
                         List<ChildComment> childComments = new List<ChildComment>();
-                        foreach (var child in allComments)
-                        {
-                            if (child.ParentCommentId != null && child.ParentCommentId == parent.CommentId)
-                            {
-                                ChildComment childComment = new ChildComment()
-                                {
-                                    ParentCommentId = child.ParentCommentId.Value,
-                                    CommentId = child.CommentId,
-                                    AuthorId = child.AuthorId,
-                                    FullNameAuthor = child.FullNameAuthor,
-                                    Avatar = child.Avatar,
-                                    CreatedDate = child.CreatedDate,
-                                    Content = child.Content,
-                                    Status = child.Status,
-                                };
-                                childComments.Add(childComment);
-                            }
-                        }
+                        childComments = allComments.Where(c => c.ParentCommentId != null && c.ParentCommentId == parent.CommentId).ToList();
                         var tmp = Tuple.Create(parentComment, childComments);
                         result.Add(tmp);
                     }
@@ -114,9 +100,9 @@ namespace BE_Homnayangi.Modules.CommentModule
             return result;
         }
 
-        public async Task<ChildComment> CreateANewComment(CreatedCommentRequest comment)
+        public async Task<bool> CreateANewComment(CreatedCommentRequest comment)
         {
-            ChildComment result = null;
+            bool isInserted = false;
             try
             {
                 Comment newComment = new Comment()
@@ -131,34 +117,15 @@ namespace BE_Homnayangi.Modules.CommentModule
                     BlogId = comment.BlogId,
                 };
                 await _commentRepository.AddAsync(newComment);
-                result = new ChildComment()
-                {
-                    CommentId = newComment.CommentId,
-                    AuthorId = newComment.AuthorId.Value,
-                    CreatedDate = newComment.CreatedDate.Value,
-                    Content = newComment.Content,
-                    Status = newComment.Status.Value,
-                    ParentCommentId = newComment.ParentId != null ? newComment.ParentId : null,
-                };
-                if (comment.ByStaff) // get user info
-                {
-                    var user = await _userRepository.GetByIdAsync(comment.AuthorId);
-                    result.FullNameAuthor = user.Firstname + " " + user.Lastname;
-                    result.Avatar = user.Avatar;
-                }
-                else                // get customer info
-                {
-                    var customer = await _customerRepository.GetByIdAsync(comment.AuthorId);
-                    result.FullNameAuthor = customer.Firstname + " " + customer.Lastname;
-                    result.Avatar = customer.Avatar;
-                }
+                isInserted = true;
+
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error at CreateANewComment: " + ex.Message);
                 throw;
             }
-            return result;
+            return isInserted;
         }
 
         public async Task<bool> DeleteAComment(Guid id)
