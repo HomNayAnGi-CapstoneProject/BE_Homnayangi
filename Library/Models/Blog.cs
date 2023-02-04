@@ -29,6 +29,7 @@ namespace Library.Models
         public Guid? AuthorId { get; set; }
         public int? BlogStatus { get; set; }
         public string VideoUrl { get; set; }
+        public Guid? RecipeId { get; set; }
 
         public virtual User Author { get; set; }
         public virtual Recipe Recipe { get; set; }

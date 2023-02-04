@@ -17,6 +17,7 @@ namespace Library.Models
         public string Description { get; set; }
         public bool? Status { get; set; }
         public DateTime? CreatedDate { get; set; }
+        public bool? IsCombo { get; set; }
 
         public virtual ICollection<SubCategory> SubCategories { get; set; }
     }

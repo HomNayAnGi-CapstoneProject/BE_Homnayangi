@@ -16,7 +16,8 @@ namespace Library.Models
         public Guid IngredientId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string Quantitative { get; set; }
+        public Guid? UnitId { get; set; }
+        public int? Quantity { get; set; }
         public string Picture { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
@@ -27,6 +28,7 @@ namespace Library.Models
         public string ListImagePosition { get; set; }
 
         public virtual Type Type { get; set; }
+        public virtual Unit Unit { get; set; }
         public virtual ICollection<OrderIngredientDetail> OrderIngredientDetails { get; set; }
         public virtual ICollection<RecipeDetail> RecipeDetails { get; set; }
     }
