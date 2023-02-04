@@ -71,7 +71,7 @@ namespace BE_Homnayangi.Modules.UnitModule
 
         public async Task DeleteUnit(Unit unitDelete)
         {
-            unitDelete.Status = true;
+            unitDelete.Status = false;
             await _unitRepository.UpdateAsync(unitDelete);
         }
 
