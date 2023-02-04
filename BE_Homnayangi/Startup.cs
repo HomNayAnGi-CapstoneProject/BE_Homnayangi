@@ -25,6 +25,8 @@ using BE_Homnayangi.Modules.SubCateModule;
 using BE_Homnayangi.Modules.SubCateModule.Interface;
 using BE_Homnayangi.Modules.TypeModule;
 using BE_Homnayangi.Modules.TypeModule.Interface;
+using BE_Homnayangi.Modules.UnitModule;
+using BE_Homnayangi.Modules.UnitModule.Interface;
 using BE_Homnayangi.Modules.UserModule;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.VoucherModule;
@@ -184,9 +186,14 @@ namespace BE_Homnayangi
             //BlogReaction Module
             services.AddScoped<IBlogReactionRepository, BlogReactionRepository>();
             services.AddScoped<IBlogReactionService, BlogReactionService>();
+
             //Comment Module
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<ICommentService, CommentService>();
+
+            //Unit Module
+            services.AddScoped<IUnitRepository, UnitRepository>();
+            services.AddScoped<IUnitService, UnitService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
