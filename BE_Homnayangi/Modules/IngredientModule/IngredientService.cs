@@ -108,12 +108,13 @@ namespace BE_Homnayangi.Modules.IngredientModule
             bool isUpdated = false;
             try
             {
-                Ingredient current = await _IngredientRepository.GetFirstOrDefaultAsync(x => newIg.IngredientId == x.IngredientId);
+                Ingredient current = await _IngredientRepository.GetFirstOrDefaultAsync(x => newIg.IngredientId == x.IngredientId, includeProperties: "Unit");
                 if (current != null)
                 {
                     current.Name = newIg.Name;
                     current.Description = newIg.Description;
-                    current.Quantitative = newIg.Quantitative;
+                    current.Quantity = newIg.Quantity;
+                    current.UnitId = newIg.UnitId;
                     current.Picture = newIg.Picture;
                     current.ListImage = StringUtils.CompressContents(newIg.ListImage);
                     current.UpdatedDate = DateTime.Now;
@@ -160,7 +161,8 @@ namespace BE_Homnayangi.Modules.IngredientModule
                 IngredientId = ingredient.IngredientId,
                 Name = ingredient.Name,
                 Description = ingredient.Description,
-                Quantitative = ingredient.Quantitative,
+                Quantity = ingredient.Quantity,
+                UnitName = ingredient.Unit.Name,
                 Picture = ingredient.Picture,
                 ListImage = StringUtils.ExtractContents(ingredient.ListImage),
                 CreatedDate = ingredient.CreatedDate,
@@ -181,7 +183,8 @@ namespace BE_Homnayangi.Modules.IngredientModule
                 IngredientId = ingredientRequest.IngredientId,
                 Name = ingredientRequest.Name,
                 Description = ingredientRequest.Description,
-                Quantitative = ingredientRequest.Quantitative,
+                Quantity = ingredientRequest.Quantity,
+                UnitId = ingredientRequest.UnitId,
                 Picture = ingredientRequest.Picture,
                 ListImage = StringUtils.CompressContents(ingredientRequest.ListImage),
                 CreatedDate = ingredientRequest.CreatedDate,

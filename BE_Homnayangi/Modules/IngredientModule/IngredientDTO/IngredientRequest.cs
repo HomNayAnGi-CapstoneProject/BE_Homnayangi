@@ -8,7 +8,8 @@ namespace BE_Homnayangi.Modules.IngredientModule.IngredientDTO
         public Guid IngredientId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string Quantitative { get; set; }
+        public Guid? UnitId { get; set; }
+        public int Quantity { get; set; }
         public string Picture { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }

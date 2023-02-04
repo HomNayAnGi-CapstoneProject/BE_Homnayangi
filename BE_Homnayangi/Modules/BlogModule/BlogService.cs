@@ -380,15 +380,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                         Reaction = blog.Reaction,
                         View = blog.View,
                         BlogStatus = blog.BlogStatus,
-                        AuthorName = blog.Author.Firstname + " " + blog.Author.Lastname,
-
-                        // Recipes information
-                        RecipeId = blog.Recipe.RecipeId,
-                        RecipeTitle = blog.Recipe.Title,
-                        RecipeImageURL = blog.Recipe.ImageUrl,
-                        RecipePackagePrice = blog.Recipe.PackagePrice,
-                        RecipeCookedPrice = blog.Recipe.CookedPrice,
-                        RecipeSize = blog.Recipe.Size,
+                        AuthorName = blog.Author.Firstname + " " + blog.Author.Lastname
                     };
 
 
@@ -412,7 +404,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                                 IngredientId = item.IngredientId,
                                 Name = item.Ingredient.Name,
                                 Description = item.Ingredient.Description,
-                                Quantitative = item.Ingredient.Quantitative,
+                                Quantity = item.Ingredient.Quantity,
+                                UnitName = item.Ingredient.Unit.Name,
                                 Picture = item.Ingredient.Picture,
                                 ListImage = StringUtils.ExtractContents(item.Ingredient.ListImage),
                                 CreatedDate = item.Ingredient.CreatedDate,

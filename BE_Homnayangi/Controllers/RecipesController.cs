@@ -43,8 +43,8 @@ namespace BE_Homnayangi.Controllers
                 .Select(_mapper.Map<RecipeDetail, RecipeDetailsResponse>)
                 .ToList();
 
-            var recipes = await _recipeServices.GetRecipesBy(includeProperties: "RecipeNavigation, RecipeDetails");
-            recipes.ToList().ForEach(r => r.RecipeNavigation.Recipe = null);
+            var recipes = await _recipeServices.GetRecipesBy(includeProperties: "RecipeDetails");
+            recipes.ToList();
 
             var recipesResponse = recipes.Select(_mapper.Map<Recipe, RecipeResponse>);
 

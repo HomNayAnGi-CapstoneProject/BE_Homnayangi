@@ -2,6 +2,7 @@
 using Library.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Type = Library.Models.Type;
 
 #nullable disable
 
