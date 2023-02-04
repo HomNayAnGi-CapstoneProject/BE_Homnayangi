@@ -28,7 +28,7 @@ namespace BE_Homnayangi.Modules.UnitModule
 
         public async Task<ICollection<UnitDropdownResponse>> GetUnitDropdowns()
         {
-            return _unitRepository.GetAll().Result.Select(x => new UnitDropdownResponse
+            return _unitRepository.GetAll().Result.Where(x => x.Status == true).Select(x => new UnitDropdownResponse
             {
                 UnitId = x.UnitId,
                 UnitName = x.Name

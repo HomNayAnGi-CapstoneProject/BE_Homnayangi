@@ -12,7 +12,7 @@ using FluentValidation.Results;
 
 namespace BE_Homnayangi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class UnitController : ControllerBase
     {
