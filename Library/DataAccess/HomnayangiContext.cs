@@ -606,6 +606,8 @@ namespace Library.DataAccess
 
                 entity.Property(e => e.MinSize).HasColumnName("minSize");
 
+                entity.Property(e => e.Status).HasColumnName("status");
+
                 entity.Property(e => e.Title).HasColumnName("title");
             });
 
