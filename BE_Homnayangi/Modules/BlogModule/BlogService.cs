@@ -435,5 +435,76 @@ namespace BE_Homnayangi.Modules.BlogModule
             }
             return result;
         }
+
+        public async Task<PagedResponse<PagedList<BlogsByCatesResponse>>> GetBlogsBySubCates(BlogsBySubCatesRequest request)
+        {
+            var subCateIds = request.subCateIds != null ? StringUtils.ExtractContents(request.subCateIds) : null;
+            var pageSize = request.PageSize;
+            var pageNumber = request.PageNumber;
+            var sort = request.sort;
+            var sortDesc = request.sortDesc;
+            try
+            {
+                List<Blog> blogs = new();
+
+                if (subCateIds == null)
+                {
+                    blogs = _blogRepository.GetBlogsBy(b => b.BlogStatus > 0).Result.ToList();
+                }
+                else
+                {
+                    var filteredBlogs = await _blogSubCateRepository
+                        .GetBlogSubCatesBy(options: (bs) => { return bs.Where(b => subCateIds.Contains(b.SubCateId.ToString())).ToList(); },
+                            includeProperties: "Blog");
+
+                    blogs = filteredBlogs.Select(f => f.Blog).ToList();
+                }
+
+                switch (sort)
+                {
+                    case (int) Sort.BlogsSortBy.CREATEDDATE:
+                        blogs = sortDesc ? 
+                            blogs.OrderByDescending(r => r.CreatedDate).ToList() :
+                            blogs.OrderBy(r => r.CreatedDate).ToList();
+                        break;
+                    case (int) Sort.BlogsSortBy.REACTION:
+                        blogs = sortDesc ?
+                            blogs.OrderByDescending(r => r.Reaction).ToList() :
+                            blogs.OrderBy(r => r.Reaction).ToList();
+                        break;
+                    case (int) Sort.BlogsSortBy.VIEW:
+                        blogs = sortDesc ? 
+                            blogs.OrderByDescending(r => r.View).ToList() : 
+                            blogs.OrderBy(r => r.View).ToList();
+                        break;
+                    default:
+                        blogs = sortDesc ? 
+                            blogs.OrderByDescending(r => r.CreatedDate).ToList() : 
+                            blogs.OrderBy(r => r.CreatedDate).ToList();
+                        break;
+                }
+
+                var blogsByCatesResponse = blogs.Select(b => new BlogsByCatesResponse
+                {
+                    BlogId = b.BlogId,
+                    RecipeName = b.Recipe?.Title,
+                    Title = b.Title,
+                    Description = b.Description,
+                    ImageUrl = b.ImageUrl,
+                    PackagePrice = b.Recipe?.PackagePrice,
+                    CreatedDate = b.CreatedDate,
+                    Reaction = b.Reaction,
+                    View = b.View
+                }).ToList();
+
+                var response = PagedList<BlogsByCatesResponse>.ToPagedList(source: blogsByCatesResponse, pageNumber: pageNumber, pageSize: pageSize);
+                return response.ToPagedResponse();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at GetBlogsBySubCates: " + ex.Message);
+                throw;
+            }
+        }
     }
 }

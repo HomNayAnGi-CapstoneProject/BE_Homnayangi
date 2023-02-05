@@ -144,6 +144,7 @@ namespace BE_Homnayangi.Controllers
 
             return Ok(response);
         }
+
         // Get sub-cates by categoryId 
         [HttpGet("categories/{categoryId}/sub-categories")]
         public async Task<ActionResult<IEnumerable<SubCateResponse>>> GetSubCatesByCategoryId(Guid categoryId)
@@ -155,6 +156,19 @@ namespace BE_Homnayangi.Controllers
                 total_results = tags.Count(),
                 result = tags,
             }); ;
+        }
+
+        [HttpGet("category/sub-categories")]
+        public async Task<ActionResult<PagedResponse<PagedList<BlogsByCateAndTagResponse>>>> GetBlogsBySubCates([FromQuery] BlogsBySubCatesRequest request)
+        {
+            var response = await _blogService.GetBlogsBySubCates(request);
+
+            if (response.Resource.Count == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(response);
         }
     }
 }
