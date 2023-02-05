@@ -422,7 +422,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                         {
                             RecipeId = item.RecipeId,
                             IngredientId = item.IngredientId,
-                            Description = item.Description
+                            Description = item.Description,
+                            Quantity = item.Quantity
                         };
                         result.RecipeDetailss.Add(recipeDetail);
                     }

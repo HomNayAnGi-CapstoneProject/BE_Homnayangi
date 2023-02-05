@@ -602,7 +602,9 @@ namespace Library.DataAccess
                     .HasColumnType("money")
                     .HasColumnName("packagePrice");
 
-                entity.Property(e => e.Size).HasColumnName("size");
+                entity.Property(e => e.MaxSize).HasColumnName("maxSize");
+
+                entity.Property(e => e.MinSize).HasColumnName("minSize");
 
                 entity.Property(e => e.Title).HasColumnName("title");
             });
@@ -618,6 +620,8 @@ namespace Library.DataAccess
                 entity.Property(e => e.IngredientId).HasColumnName("ingredientId");
 
                 entity.Property(e => e.Description).HasColumnName("description");
+
+                entity.Property(e => e.Quantity).HasColumnName("quantity");
 
                 entity.HasOne(d => d.Ingredient)
                     .WithMany(p => p.RecipeDetails)

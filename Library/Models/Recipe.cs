@@ -20,7 +20,8 @@ namespace Library.Models
         public string ImageUrl { get; set; }
         public decimal? PackagePrice { get; set; }
         public decimal? CookedPrice { get; set; }
-        public int? Size { get; set; }
+        public int? MaxSize { get; set; }
+        public int? MinSize { get; set; }
 
         public virtual ICollection<Blog> Blogs { get; set; }
         public virtual ICollection<OrderCookedDetail> OrderCookedDetails { get; set; }
