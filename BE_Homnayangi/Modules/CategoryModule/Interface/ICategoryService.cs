@@ -1,4 +1,5 @@
-﻿using Library.Models;
+﻿using BE_Homnayangi.Modules.CategoryModule.Response;
+using Library.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace BE_Homnayangi.Modules.CategoryModule.Interface
         public Task UpdateCategory(Category categoryUpdate);
         public Task DeleteCategory(Guid? ID);
         public Task<ICollection<Category>> GetAll();
+        public Task<ICollection<OverviewCategory>> GetAllAvailableCategories();
         public Task<ICollection<Category>> GetCategoriesBy(Expression<Func<Category, bool>> filter = null,
             Func<IQueryable<Category>, ICollection<Category>> options = null,
             string includeProperties = null);
