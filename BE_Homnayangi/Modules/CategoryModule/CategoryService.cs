@@ -1,4 +1,5 @@
 ﻿using BE_Homnayangi.Modules.CategoryModule.Interface;
+using BE_Homnayangi.Modules.CategoryModule.Request;
 using BE_Homnayangi.Modules.CategoryModule.Response;
 using Library.Models;
 using System;
@@ -34,14 +35,24 @@ namespace BE_Homnayangi.Modules.CategoryModule
         {
             return _categoryRepository.GetNItemRandom(filter, numberItem: numberItem);
         }
-        public async Task AddNewCategory(Category newCategory)
+        public async Task<Guid> AddNewCategory(CreateCategoryRequest categoryRequest)
         {
+            var newCategory = new Category();
             newCategory.CategoryId = Guid.NewGuid();
+            newCategory.Name = categoryRequest.Name;
+            newCategory.Description = categoryRequest.Description;
+            newCategory.Status = true;
+            newCategory.CreatedDate = new DateTime();
             await _categoryRepository.AddAsync(newCategory);
+
+            return newCategory.CategoryId;
         }
-        public async Task UpdateCategory(Category categoryUpdate)
+        public async Task<Boolean> UpdateCategory(UpdateCategoryRequest categoryRequest)
         {
+            var categoryUpdate = _categoryRepository.GetFirstOrDefaultAsync(x => x.CategoryId == categoryRequest.CategoryId).Result;
+            if (categoryUpdate == null) return false;
             await _categoryRepository.UpdateAsync(categoryUpdate);
+            return true;
         }
         public async Task DeleteCategory(Guid? id)
         {
@@ -55,15 +66,15 @@ namespace BE_Homnayangi.Modules.CategoryModule
             return _categoryRepository.GetFirstOrDefaultAsync(x => x.CategoryId.Equals(cateID)).Result;
         }
 
-        public async Task<ICollection<OverviewCategory>> GetAllAvailableCategories()
+        public async Task<ICollection<DropdownCategory>> GetDropdownCategory()
         {
-            List<OverviewCategory> result = new List<OverviewCategory>();
+            List<DropdownCategory> result = new List<DropdownCategory>();
             try
             {
                 var categories = await _categoryRepository.GetCategoriesBy(c => c.Status.Value);
                 if (categories.Count > 0)
                 {
-                    result = categories.Select(cate => new OverviewCategory()
+                    result = categories.Select(cate => new DropdownCategory()
                     {
                         CategoryId = cate.CategoryId,
                         Name = cate.Name

@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using BE_Homnayangi.Modules.CategoryModule.Interface;
+using BE_Homnayangi.Modules.CategoryModule.Request;
 using BE_Homnayangi.Modules.CategoryModule.Response;
+using FluentValidation;
+using FluentValidation.Results;
 using Library.DataAccess;
 using Library.Models;
 using Library.Models.DTO.CategoryDTO;
@@ -10,6 +13,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CreateCategoryRequest = BE_Homnayangi.Modules.CategoryModule.Request.CreateCategoryRequest;
+using CreateCategoryRequestValidator = BE_Homnayangi.Modules.CategoryModule.Request.CreateCategoryRequestValidator;
 
 namespace BE_Homnayangi.Controllers
 {
@@ -18,12 +23,10 @@ namespace BE_Homnayangi.Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly HomnayangiContext _context;
         private ICategoryService _categoryService;
 
         public CategoriesController(HomnayangiContext context, IMapper mapper, ICategoryService categoryService)
         {
-            _context = context;
             _mapper = mapper;
             _categoryService = categoryService;
         }
@@ -37,10 +40,10 @@ namespace BE_Homnayangi.Controllers
         }
 
         // GET: api/Categories/available
-        [HttpGet("getAvailableCategories")]
-        public async Task<ActionResult<IEnumerable<OverviewCategory>>> GetCategoriesAvailable()
+        [HttpGet("dropdown-category")]
+        public async Task<ActionResult<IEnumerable<DropdownCategory>>> GetCategoriesAvailable()
         {
-            var result = await _categoryService.GetAllAvailableCategories();
+            var result = await _categoryService.GetDropdownCategory();
             return new JsonResult(new
             {
                 total = result.Count,
@@ -52,7 +55,7 @@ namespace BE_Homnayangi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Category>> GetCategory(Guid id)
         {
-            var category = await _context.Categories.FindAsync(id);
+            var category = _categoryService.GetCategoryByID(id);
 
             if (category == null)
             {
@@ -64,33 +67,18 @@ namespace BE_Homnayangi.Controllers
 
         // PUT: api/Categories/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCategory(Guid id, Category category)
+        [HttpPut]
+        public async Task<IActionResult> PutCategory(UpdateCategoryRequest category)
         {
-            if (id != category.CategoryId)
+            ValidationResult result = new UpdateCategoryRequestValidator().Validate(category);
+            if (!result.IsValid)
             {
                 return BadRequest();
             }
 
-            _context.Entry(category).State = EntityState.Modified;
+            if (await _categoryService.UpdateCategory(category) == false) return NotFound();
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CategoryExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return Ok();
         }
 
         // POST: api/Categories
@@ -98,50 +86,21 @@ namespace BE_Homnayangi.Controllers
         [HttpPost]
         public async Task<ActionResult<Category>> PostCategory(CreateCategoryRequest reqCategory)
         {
-            var box = _mapper.Map<Category>(reqCategory);
-
-            var checkValid = new CreateCategoryRequestValidator().Validate(reqCategory);
-            if (!checkValid.IsValid) return NotFound();
-
-            _context.Categories.Add(box);
-            try
+            ValidationResult result = new CreateCategoryRequestValidator().Validate(reqCategory);
+            if (!result.IsValid)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (CategoryExists(box.CategoryId))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest();
             }
 
-            return CreatedAtAction("GetCategory", new { id = box.CategoryId }, box);
+            return Ok(await _categoryService.AddNewCategory(reqCategory));
         }
 
         // DELETE: api/Categories/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategory(Guid id)
         {
-            var category = await _context.Categories.FindAsync(id);
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            _context.Categories.Remove(category);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool CategoryExists(Guid id)
-        {
-            return _context.Categories.Any(e => e.CategoryId == id);
+            await _categoryService.DeleteCategory(id);
+            return Ok();
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace BE_Homnayangi.Modules.CategoryModule.Response
 {
-    public class OverviewCategory
+    public class DropdownCategory
     {
         public Guid CategoryId { get; set; }
         public string Name { get; set; }
