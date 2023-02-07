@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
+using BE_Homnayangi.Modules.CategoryModule.Interface;
+using BE_Homnayangi.Modules.CategoryModule.Response;
+using Library.DataAccess;
+using Library.Models;
+using Library.Models.DTO.CategoryDTO;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Library.DataAccess;
-using Library.Models;
-using Library.Models.DTO.CategoryDTO;
-using BE_Homnayangi.Modules.CategoryModule.Interface;
 
 namespace BE_Homnayangi.Controllers
 {
@@ -34,6 +34,18 @@ namespace BE_Homnayangi.Controllers
         public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
         {
             return Ok(await _categoryService.GetAll());
+        }
+
+        // GET: api/Categories/available
+        [HttpGet("getAvailableCategories")]
+        public async Task<ActionResult<IEnumerable<OverviewCategory>>> GetCategoriesAvailable()
+        {
+            var result = await _categoryService.GetAllAvailableCategories();
+            return new JsonResult(new
+            {
+                total = result.Count,
+                result = result,
+            });
         }
 
         // GET: api/Categories/5

@@ -1,4 +1,5 @@
 ﻿using BE_Homnayangi.Modules.CategoryModule.Interface;
+using BE_Homnayangi.Modules.CategoryModule.Response;
 using Library.Models;
 using System;
 using System.Collections.Generic;
@@ -52,6 +53,29 @@ namespace BE_Homnayangi.Modules.CategoryModule
         public Category GetCategoryByID(Guid? cateID)
         {
             return _categoryRepository.GetFirstOrDefaultAsync(x => x.CategoryId.Equals(cateID)).Result;
+        }
+
+        public async Task<ICollection<OverviewCategory>> GetAllAvailableCategories()
+        {
+            List<OverviewCategory> result = new List<OverviewCategory>();
+            try
+            {
+                var categories = await _categoryRepository.GetCategoriesBy(c => c.Status.Value);
+                if (categories.Count > 0)
+                {
+                    result = categories.Select(cate => new OverviewCategory()
+                    {
+                        CategoryId = cate.CategoryId,
+                        Name = cate.Name
+                    }).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at GetAllAvailable: " + ex.Message);
+                throw;
+            }
+            return result;
         }
     }
 }
