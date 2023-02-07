@@ -6,11 +6,12 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using BE_Homnayangi.Modules.DTO.IngredientDTO;
 using BE_Homnayangi.Modules.IngredientModule.IngredientDTO;
+using BE_Homnayangi.Modules.IngredientModule.Response;
 
 namespace BE_Homnayangi.Modules.IngredientModule.Interface
 {
-	public interface IIngredientService
-	{
+    public interface IIngredientService
+    {
         public Task AddNewIngredient(IngredientRequest newIngredient);
         public Task<ICollection<IngredientResponse>> GetAll();
         public Task<ICollection<IngredientResponse>> GetIngredientsBy(Expression<Func<Ingredient, bool>> filter = null,
@@ -27,6 +28,7 @@ namespace BE_Homnayangi.Modules.IngredientModule.Interface
         public Task<bool> UpdateIngredient(IngredientRequest newIg);
 
         public Task<Guid> CreateIngredient(IngredientRequest newIg);
+        public Task<ICollection<SearchIngredientsResponse>> GetIngredientByName(string name);
     }
 
 }
