@@ -1,6 +1,7 @@
 ﻿using BE_Homnayangi.Modules.DTO.IngredientDTO;
 using BE_Homnayangi.Modules.IngredientModule.IngredientDTO;
 using BE_Homnayangi.Modules.IngredientModule.Interface;
+using BE_Homnayangi.Modules.IngredientModule.Response;
 using BE_Homnayangi.Modules.Utils;
 using Library.Models;
 using System;
@@ -153,6 +154,24 @@ namespace BE_Homnayangi.Modules.IngredientModule
             }
             return ingredientId;
         }
+        public async Task<ICollection<SearchIngredientsResponse>> GetIngredientByName(String name)
+        {
+
+            var Ingredients = await _IngredientRepository.GetIngredientsBy(x => x.Name.Contains(name) && x.Status == true, includeProperties: "Unit");
+
+            return Ingredients.Select(ToSearchResponse).ToList();
+        }
+
+        public SearchIngredientsResponse ToSearchResponse(Ingredient ingredient)
+        {
+            return new SearchIngredientsResponse()
+            {
+                IngredientId = ingredient.IngredientId,
+                Name = ingredient.Name,
+                UnitName = ingredient.Unit.Name,
+            };
+        }
+
 
         public IngredientResponse ToResponse(Ingredient ingredient)
         {
@@ -195,6 +214,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
                 ListImagePosition = ingredientRequest.ListImagePosition
             };
         }
+
     }
 }
 

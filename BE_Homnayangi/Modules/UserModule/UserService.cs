@@ -52,7 +52,7 @@ namespace BE_Homnayangi.Modules.UserModule
 
             int pageNumber = request.PageNumber;
             int pageSize = request.PageSize;
-            var user = await _userRepository.GetUsersBy(x => x.Role != 1, includeProperties: "Blogs");
+            var user = await _userRepository.GetUsersBy(x => x.Role == 1, includeProperties: "Blogs");
             var response = PagedList<User>.ToPagedList(source: user, pageNumber: pageNumber, pageSize: pageSize);
             return response.ToPagedResponse();
 
@@ -326,6 +326,7 @@ namespace BE_Homnayangi.Modules.UserModule
         public async Task<string> GenerateToken(LoginDTO login)
         {
             var user = await _userRepository.GetFirstOrDefaultAsync(x => x.Username == login.Username && x.Password == EncryptPassword(login.Password));
+            Console.WriteLine(EncryptPassword(login.Password));
             if (user == null)
             {
                 var customer = await _customerRepository.GetFirstOrDefaultAsync(x => x.Username == login.Username && x.Password == EncryptPassword(login.Password));
