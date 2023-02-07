@@ -100,9 +100,9 @@ namespace BE_Homnayangi.Modules.BlogModule
             {
                 b,
                 ListSubCateName = y.Value
-            }).Join(await _recipeRepository.GetNItemRandom(x => x.PackagePrice.Value >= ((decimal)Price.PriceEnum.MIN)
+            }).Join(await _recipeRepository.GetNItemRandom(x => x.PackagePrice >= ((decimal)Price.PriceEnum.MIN)
             && x.PackagePrice <= ((decimal)Price.PriceEnum.MAX), numberItem: (int)NumberItem.NumberItemRandomEnum.CHEAP_PRICE),
-                x => x.b.BlogId, y => y.RecipeId, (x, y) => new
+                x => x.b.RecipeId, y => y.RecipeId, (x, y) => new
                 {
                     BlogId = x.b.BlogId,
                     Title = x.b.Title,
@@ -423,7 +423,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                             RecipeId = item.RecipeId,
                             IngredientId = item.IngredientId,
                             Description = item.Description,
-                            Quantity = item.Quantity
+                            Quantity = (int)item.Quantity
                         };
                         result.RecipeDetailss.Add(recipeDetail);
                     }

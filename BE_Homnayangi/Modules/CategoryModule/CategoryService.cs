@@ -42,7 +42,7 @@ namespace BE_Homnayangi.Modules.CategoryModule
             newCategory.Name = categoryRequest.Name;
             newCategory.Description = categoryRequest.Description;
             newCategory.Status = true;
-            newCategory.CreatedDate = new DateTime();
+            newCategory.CreatedDate = DateTime.Now;
             await _categoryRepository.AddAsync(newCategory);
 
             return newCategory.CategoryId;
@@ -51,6 +51,11 @@ namespace BE_Homnayangi.Modules.CategoryModule
         {
             var categoryUpdate = _categoryRepository.GetFirstOrDefaultAsync(x => x.CategoryId == categoryRequest.CategoryId).Result;
             if (categoryUpdate == null) return false;
+
+            categoryUpdate.Name = categoryRequest.Name ?? categoryUpdate.Name;
+            categoryUpdate.Description = categoryRequest.Description ?? categoryUpdate.Description;
+            categoryUpdate.Status = categoryRequest.Status ?? categoryUpdate.Status;
+
             await _categoryRepository.UpdateAsync(categoryUpdate);
             return true;
         }

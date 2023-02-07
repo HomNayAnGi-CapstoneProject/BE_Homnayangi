@@ -29,7 +29,7 @@ namespace BE_Homnayangi.Controllers
         }
 
         // GET: api/Ingredients
-        [HttpGet("for-customerw")]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<Ingredient>>> GetIngredients()
         {
             var result = await _ingredientService.GetAllIngredient();
@@ -42,7 +42,7 @@ namespace BE_Homnayangi.Controllers
         }
 
         // GET: api/Ingredients
-        [HttpGet]
+        [HttpGet("managing")]
         public async Task<ActionResult<IEnumerable<Ingredient>>> GetIngredientsForStaff()
         {
             var result = await _ingredientService.GetAll();
