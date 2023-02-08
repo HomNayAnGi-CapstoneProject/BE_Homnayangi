@@ -21,13 +21,13 @@ namespace BE_Homnayangi.Controllers
     {
         private readonly HomnayangiContext _context;
         private readonly IBlogService _blogService;
-        private readonly ISubCateService _tagService;
+        private readonly ISubCateService _subCateService;
 
-        public BlogsController(HomnayangiContext context, IBlogService blogService, ISubCateService tagService)
+        public BlogsController(HomnayangiContext context, IBlogService blogService, ISubCateService subCateService)
         {
             _context = context;
             _blogService = blogService;
-            _tagService = tagService;
+            _subCateService = subCateService;
         }
 
         // GET: api/Blogs
@@ -147,12 +147,12 @@ namespace BE_Homnayangi.Controllers
         [HttpGet("categories/{categoryId}/sub-categories")]
         public async Task<ActionResult<IEnumerable<SubCateResponse>>> GetSubCatesByCategoryId(Guid categoryId)
         {
-            var tags = await _tagService.GetSubCatesByCategoryId(categoryId);
+            var subCates = await _subCateService.GetSubCatesByCategoryId(categoryId);
 
             return new JsonResult(new
             {
-                total_results = tags.Count(),
-                result = tags,
+                total_results = subCates.Count(),
+                result = subCates,
             }); ;
         }
 

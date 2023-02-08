@@ -5,16 +5,20 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using BE_Homnayangi.Modules.SubCateModule.Response;
+using BE_Homnayangi.Modules.SubCateModule.Request;
 
 namespace BE_Homnayangi.Modules.SubCateModule.Interface
 {
     public interface ISubCateService
     {
-        public Task AddNewSubCate(SubCategory newTag);
+        public Task<Boolean> AddNewSubCate(CreateSubCategoryRequest newSubCate);
 
-        public Task UpdateSubCate(SubCategory TagUpdate);
+        public Task<Boolean> UpdateSubCate(UpdateSubCategoryRequest subCateUpdate);
+        public Task<Boolean> DeleteSubCate(Guid? deleteSubCateId);
 
         public Task<ICollection<SubCategory>> GetAll();
+
+        public Task<ICollection<SubCategory>> GetAllForStaff();
 
         public Task<ICollection<SubCategory>> GetSubCatesBy(
             Expression<Func<SubCategory, bool>> filter = null,
@@ -23,8 +27,10 @@ namespace BE_Homnayangi.Modules.SubCateModule.Interface
 
         public SubCategory GetSubCateByID(Guid? id);
 
-        public Task<ICollection<SubCateResponse>> GetSubCatesByCategoryId(Guid id);
+        public SubCategory GetSubCateByIDForStaff(Guid? id);
 
+        public Task<ICollection<SubCateResponse>> GetSubCatesByCategoryId(Guid id);
+        public Task<ICollection<SubCateResponse>> GetSubCatesByCategoryIdForStaff(Guid id);
     }
 }
 
