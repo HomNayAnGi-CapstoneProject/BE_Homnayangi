@@ -98,8 +98,12 @@ namespace BE_Homnayangi.Modules.SubCateModule
             }
 
             var listBlogSubCateDelete = _blogSubCateRepository.GetBlogSubCatesBy(x => x.SubCateId == _deleteSubCate.SubCategoryId).Result.ToList();
+            foreach(var item in listBlogSubCateDelete)
+            {
+                item.Status = false;
+            }
 
-            await _blogSubCateRepository.RemoveRangeAsync(listBlogSubCateDelete);
+            await _blogSubCateRepository.UpdateRangeAsync(listBlogSubCateDelete);
 
             _deleteSubCate.Status = false;
             await _subCateRepository.UpdateAsync(_deleteSubCate);

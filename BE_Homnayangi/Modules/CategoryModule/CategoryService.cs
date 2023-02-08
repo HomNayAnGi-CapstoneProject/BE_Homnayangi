@@ -1,6 +1,7 @@
 ﻿using BE_Homnayangi.Modules.CategoryModule.Interface;
 using BE_Homnayangi.Modules.CategoryModule.Request;
 using BE_Homnayangi.Modules.CategoryModule.Response;
+using BE_Homnayangi.Modules.SubCateModule.Interface;
 using Library.Models;
 using System;
 using System.Collections.Generic;
@@ -13,10 +14,12 @@ namespace BE_Homnayangi.Modules.CategoryModule
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _categoryRepository;
+        private readonly ISubCateRepository _subCateRepository;
 
-        public CategoryService(ICategoryRepository categoryRepository)
+        public CategoryService(ICategoryRepository categoryRepository, ISubCateRepository subCateRepository)
         {
             _categoryRepository = categoryRepository;
+            _subCateRepository = subCateRepository;
         }
         public async Task<ICollection<Category>> GetAll()
         {
@@ -64,6 +67,14 @@ namespace BE_Homnayangi.Modules.CategoryModule
             Category categoryDelete = _categoryRepository.GetFirstOrDefaultAsync(x => x.CategoryId.Equals(id) && x.Status == true).Result;
             if (categoryDelete == null) return;
             categoryDelete.Status = false;
+
+            var listSubCateFollowByCate = _subCateRepository.GetSubCatesBy(x => x.CategoryId == categoryDelete.CategoryId).Result;
+            foreach(var item in listSubCateFollowByCate)
+            {
+                item.Status = false;
+            }
+
+            await _subCateRepository.UpdateRangeAsync(listSubCateFollowByCate);
             await _categoryRepository.UpdateAsync(categoryDelete);
         }
         public Category GetCategoryByID(Guid? cateID)

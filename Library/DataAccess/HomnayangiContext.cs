@@ -188,6 +188,8 @@ namespace Library.DataAccess
 
                 entity.Property(e => e.SubCateId).HasColumnName("subCateId");
 
+                entity.Property(e => e.Status).HasColumnName("status");
+
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
                     .HasColumnName("createdDate");
