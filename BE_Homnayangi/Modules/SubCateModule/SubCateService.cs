@@ -59,6 +59,7 @@ namespace BE_Homnayangi.Modules.SubCateModule
             newSubCate.Description = newSubCateReq.Description;
             newSubCate.CreatedDate = DateTime.Now;
             newSubCate.Status = true;
+            newSubCate.CategoryId = newSubCateReq.CategoryId;
 
             await _subCateRepository.AddAsync(newSubCate);
             return true;
