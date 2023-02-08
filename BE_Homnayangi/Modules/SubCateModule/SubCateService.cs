@@ -77,14 +77,15 @@ namespace BE_Homnayangi.Modules.SubCateModule
             }
             subCateUpdate.Name = subCateUpdateReq.Name ?? subCateUpdate.Name;
             subCateUpdate.Description = subCateUpdateReq.Description ?? subCateUpdate.Description;
-            if(subCateUpdate.Status == false && subCateUpdateReq.Status == true)
+            if (subCateUpdate.Status == false && subCateUpdateReq.Status == true)
             {
                 var listBlogSubCate = _blogSubCateRepository.GetBlogSubCatesBy(x => x.SubCateId == subCateUpdate.SubCategoryId).Result;
-                foreach( var item in listBlogSubCate)
+                foreach (var item in listBlogSubCate)
                 {
                     item.Status = true;
 
                     await _blogSubCateRepository.UpdateRangeAsync(listBlogSubCate);
+                }
             }
             subCateUpdate.Status = subCateUpdateReq.Status ?? subCateUpdate.Status;
             subCateUpdate.CategoryId = subCateUpdateReq.CategoryId ?? subCateUpdate.CategoryId;
