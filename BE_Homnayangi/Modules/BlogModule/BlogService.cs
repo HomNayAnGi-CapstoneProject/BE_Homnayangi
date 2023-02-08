@@ -106,16 +106,20 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 foreach (var r in request.RecipeDetails)
                 {
-                    if (joinRecipeDetail.Contains(r))
-                        await _recipeDetailRepository.UpdateAsync(r);
-                    else
+                    if (!joinRecipeDetail.Contains(r))
                         await _recipeDetailRepository.AddAsync(r);
                 }
                 // check if leftover then remove
                 foreach (var rd in recipeDetails)
                 {
-                    if (!joinRecipeDetail.Contains(rd))
+                    var r = joinRecipeDetail.Find(r => r.IngredientId.Equals(rd.IngredientId));
+                    if (r == null)
                         await _recipeDetailRepository.RemoveAsync(rd);
+                    else
+                    {
+                        rd.Quantity = r.Quantity;
+                        await _recipeDetailRepository.UpdateAsync(rd);
+                    }
                 }
 
                 // check if not exist then add
