@@ -12,6 +12,8 @@ using BE_Homnayangi.Modules.Utils;
 using Library.Models;
 using Library.Models.Enum;
 using Library.PagedList;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,9 +70,92 @@ namespace BE_Homnayangi.Modules.BlogModule
             await _blogRepository.AddAsync(newBlog);
         }
 
-        public async Task UpdateBlog(Blog blogUpdate)
+        public async Task UpdateBlog(BlogUpdateRequest request)
         {
-            await _blogRepository.UpdateAsync(blogUpdate);
+            try
+            {
+                var blog = _blogRepository
+                    .GetBlogsBy(b => b.BlogId.Equals(request.Blog.BlogId),
+                        options: (l) => l.AsNoTracking().ToList(),
+                        includeProperties: "Recipe")
+                    .Result
+                    .FirstOrDefault();
+
+                if (blog == null)
+                    throw new Exception("Blog not found");
+
+                // get sub cates of blog 
+                var subCates = await  _blogSubCateRepository
+                    .GetBlogSubCatesBy(b => b.BlogId.Equals(request.Blog.BlogId),
+                        options: (l) => l.AsNoTracking().ToList());
+
+                // get ingredients of recipe
+                var recipeDetails = await _recipeDetailRepository
+                    .GetRecipeDetailsBy(r => r.RecipeId.Equals(blog.RecipeId),
+                        options: (l) => l.AsNoTracking().ToList());
+
+                // update recipe
+                request.Recipe.RecipeId = blog.RecipeId.GetValueOrDefault();
+                request.Recipe.Status = blog.Recipe.Status;
+                await _recipeRepository.UpdateAsync(request.Recipe);
+
+                // check if exist then update, else add
+                var joinRecipeDetail = request.RecipeDetails
+                    .Join(recipeDetails, l => l.IngredientId, r => r.IngredientId,
+                    (l, r) => l).ToList();
+
+                foreach (var r in request.RecipeDetails)
+                {
+                    if (!joinRecipeDetail.Contains(r))
+                        await _recipeDetailRepository.AddAsync(r);
+                }
+                // check if leftover then remove
+                foreach (var rd in recipeDetails)
+                {
+                    var r = joinRecipeDetail.Find(r => r.IngredientId.Equals(rd.IngredientId));
+                    if (r == null)
+                        await _recipeDetailRepository.RemoveAsync(rd);
+                    else
+                    {
+                        rd.Quantity = r.Quantity;
+                        await _recipeDetailRepository.UpdateAsync(rd);
+                    }
+                }
+
+                // check if not exist then add
+                var joinSubCate = request.BlogSubCates
+                    .Join(subCates, l => l.SubCateId, r => r.SubCateId,
+                    (l, r) => l).ToList();
+
+                foreach (var b in request.BlogSubCates)
+                {
+                    if (!joinSubCate.Contains(b))
+                    {
+                        b.CreatedDate = DateTime.Now;
+                        await _blogSubCateRepository.AddAsync(b);
+                    }
+                }
+                // check if leftover then remove
+                foreach(var s in subCates)
+                {
+                    if (!joinSubCate.Contains(s))
+                    {
+                        await _blogSubCateRepository.RemoveAsync(s);
+                    }
+                }
+
+                // update blog
+                request.Blog.UpdatedDate = DateTime.Now;
+                request.Blog.RecipeId = blog.RecipeId;
+                request.Blog.CreatedDate = blog.CreatedDate;
+                request.Blog.Finished = blog.Finished;
+                request.Blog.BlogStatus = blog.BlogStatus;
+                await _blogRepository.UpdateAsync(request.Blog);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at UpdateBlog: " + ex.Message);
+            }
         }
 
         public async Task DeleteBlog(Guid? id)
