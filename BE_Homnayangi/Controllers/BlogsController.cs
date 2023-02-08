@@ -170,5 +170,13 @@ namespace BE_Homnayangi.Controllers
 
             return Ok(response);
         }
+
+        [HttpPatch]
+        public async Task<IActionResult> PatchBlog([FromBody] BlogUpdateRequest request)
+        {
+            await _blogService.UpdateBlog(request);
+
+            return NoContent();
+        }
     }
 }
