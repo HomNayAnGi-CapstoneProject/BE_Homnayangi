@@ -135,7 +135,7 @@ namespace BE_Homnayangi.Modules.SubCateModule
 
         public SubCategory GetSubCateByIDForStaff(Guid? id)
         {
-            return _subCateRepository.GetFirstOrDefaultAsync(x => x.SubCategoryId.Equals(id)).Result;
+            return _subCateRepository.GetFirstOrDefaultAsync(x => x.SubCategoryId.Equals(id), includeProperties: "Category").Result;
         }
 
         public async Task<ICollection<SubCateResponse>> GetSubCatesByCategoryId(Guid id)
