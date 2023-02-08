@@ -75,6 +75,12 @@ namespace BE_Homnayangi.Modules.SubCateModule
             {
                 return false;
             }
+            var category = _categoryRepository.GetByIdAsync((Guid)subCateUpdate.CategoryId);
+            if (category.Result.Status == false && subCateUpdateReq.Status == true && subCateUpdate.Status == false)
+            {
+                return false;
+            }
+
             subCateUpdate.Name = subCateUpdateReq.Name ?? subCateUpdate.Name;
             subCateUpdate.Description = subCateUpdateReq.Description ?? subCateUpdate.Description;
             if (subCateUpdate.Status == false && subCateUpdateReq.Status == true)
