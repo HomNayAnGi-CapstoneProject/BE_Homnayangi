@@ -20,7 +20,7 @@ namespace BE_Homnayangi.Modules.CategoryModule
         }
         public async Task<ICollection<Category>> GetAll()
         {
-            return await _categoryRepository.GetAll();
+            return await _categoryRepository.GetAll(includeProperties: "SubCategories");
         }
         public Task<ICollection<Category>> GetCategoriesBy(Expression<Func<Category, bool>> filter = null,
             Func<IQueryable<Category>, ICollection<Category>> options = null,
