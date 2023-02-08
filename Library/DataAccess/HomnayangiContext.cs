@@ -146,7 +146,7 @@ namespace Library.DataAccess
                 entity.HasOne(d => d.Recipe)
                     .WithMany(p => p.Blogs)
                     .HasForeignKey(d => d.RecipeId)
-                    .HasConstraintName("FK_Blog_Recipe");
+                    .HasConstraintName("FK_Blog_Recipe1");
             });
 
             modelBuilder.Entity<BlogReaction>(entity =>
@@ -218,8 +218,6 @@ namespace Library.DataAccess
                     .HasColumnName("createdDate");
 
                 entity.Property(e => e.Description).HasColumnName("description");
-
-                entity.Property(e => e.IsCombo).HasColumnName("isCombo");
 
                 entity.Property(e => e.Name).HasColumnName("name");
 
@@ -598,13 +596,13 @@ namespace Library.DataAccess
 
                 entity.Property(e => e.ImageUrl).HasColumnName("imageURL");
 
-                entity.Property(e => e.PackagePrice)
-                    .HasColumnType("money")
-                    .HasColumnName("packagePrice");
-
                 entity.Property(e => e.MaxSize).HasColumnName("maxSize");
 
                 entity.Property(e => e.MinSize).HasColumnName("minSize");
+
+                entity.Property(e => e.PackagePrice)
+                    .HasColumnType("money")
+                    .HasColumnName("packagePrice");
 
                 entity.Property(e => e.Status).HasColumnName("status");
 

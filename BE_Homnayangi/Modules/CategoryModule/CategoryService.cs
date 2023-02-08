@@ -1,4 +1,6 @@
 ﻿using BE_Homnayangi.Modules.CategoryModule.Interface;
+using BE_Homnayangi.Modules.CategoryModule.Request;
+using BE_Homnayangi.Modules.CategoryModule.Response;
 using Library.Models;
 using System;
 using System.Collections.Generic;
@@ -33,14 +35,29 @@ namespace BE_Homnayangi.Modules.CategoryModule
         {
             return _categoryRepository.GetNItemRandom(filter, numberItem: numberItem);
         }
-        public async Task AddNewCategory(Category newCategory)
+        public async Task<Guid> AddNewCategory(CreateCategoryRequest categoryRequest)
         {
+            var newCategory = new Category();
             newCategory.CategoryId = Guid.NewGuid();
+            newCategory.Name = categoryRequest.Name;
+            newCategory.Description = categoryRequest.Description;
+            newCategory.Status = true;
+            newCategory.CreatedDate = DateTime.Now;
             await _categoryRepository.AddAsync(newCategory);
+
+            return newCategory.CategoryId;
         }
-        public async Task UpdateCategory(Category categoryUpdate)
+        public async Task<Boolean> UpdateCategory(UpdateCategoryRequest categoryRequest)
         {
+            var categoryUpdate = _categoryRepository.GetFirstOrDefaultAsync(x => x.CategoryId == categoryRequest.CategoryId).Result;
+            if (categoryUpdate == null) return false;
+
+            categoryUpdate.Name = categoryRequest.Name ?? categoryUpdate.Name;
+            categoryUpdate.Description = categoryRequest.Description ?? categoryUpdate.Description;
+            categoryUpdate.Status = categoryRequest.Status ?? categoryUpdate.Status;
+
             await _categoryRepository.UpdateAsync(categoryUpdate);
+            return true;
         }
         public async Task DeleteCategory(Guid? id)
         {
@@ -52,6 +69,29 @@ namespace BE_Homnayangi.Modules.CategoryModule
         public Category GetCategoryByID(Guid? cateID)
         {
             return _categoryRepository.GetFirstOrDefaultAsync(x => x.CategoryId.Equals(cateID)).Result;
+        }
+
+        public async Task<ICollection<DropdownCategory>> GetDropdownCategory()
+        {
+            List<DropdownCategory> result = new List<DropdownCategory>();
+            try
+            {
+                var categories = await _categoryRepository.GetCategoriesBy(c => c.Status.Value);
+                if (categories.Count > 0)
+                {
+                    result = categories.Select(cate => new DropdownCategory()
+                    {
+                        CategoryId = cate.CategoryId,
+                        Name = cate.Name
+                    }).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at GetAllAvailable: " + ex.Message);
+                throw;
+            }
+            return result;
         }
     }
 }

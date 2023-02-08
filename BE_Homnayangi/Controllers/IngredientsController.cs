@@ -11,6 +11,7 @@ using BE_Homnayangi.Modules.IngredientModule.Interface;
 using BE_Homnayangi.Modules.IngredientModule.Request;
 using AutoMapper;
 using BE_Homnayangi.Modules.IngredientModule.IngredientDTO;
+using BE_Homnayangi.Modules.IngredientModule.Response;
 
 namespace BE_Homnayangi.Controllers
 {
@@ -28,7 +29,7 @@ namespace BE_Homnayangi.Controllers
         }
 
         // GET: api/Ingredients
-        [HttpGet("for-customerw")]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<Ingredient>>> GetIngredients()
         {
             var result = await _ingredientService.GetAllIngredient();
@@ -41,7 +42,7 @@ namespace BE_Homnayangi.Controllers
         }
 
         // GET: api/Ingredients
-        [HttpGet]
+        [HttpGet("managing")]
         public async Task<ActionResult<IEnumerable<Ingredient>>> GetIngredientsForStaff()
         {
             var result = await _ingredientService.GetAll();
@@ -141,5 +142,33 @@ namespace BE_Homnayangi.Controllers
                 return BadRequest();
             }
         }
+        [HttpGet("ingredient-searching")]
+        public async Task<ActionResult<IEnumerable<SearchIngredientsResponse>>> GetBlogAndRecipeByName([FromQuery(Name = "name")] string name)
+        {
+            if (name is string && !String.IsNullOrEmpty(name))
+            {
+                name = name.TrimStart(' ');
+                var result = await _ingredientService.GetIngredientByName(name);
+                if (result.Any())
+                {
+                    return new JsonResult(new
+                    {
+                        result = result,
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        result = "",
+                    });
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
     }
 }

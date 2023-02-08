@@ -181,9 +181,9 @@ namespace BE_Homnayangi.Modules.BlogModule
             {
                 b,
                 ListSubCateName = y.Value
-            }).Join(await _recipeRepository.GetNItemRandom(x => x.PackagePrice.Value >= ((decimal)Price.PriceEnum.MIN)
+            }).Join(await _recipeRepository.GetNItemRandom(x => x.PackagePrice >= ((decimal)Price.PriceEnum.MIN)
             && x.PackagePrice <= ((decimal)Price.PriceEnum.MAX), numberItem: (int)NumberItem.NumberItemRandomEnum.CHEAP_PRICE),
-                x => x.b.BlogId, y => y.RecipeId, (x, y) => new
+                x => x.b.RecipeId, y => y.RecipeId, (x, y) => new
                 {
                     BlogId = x.b.BlogId,
                     Title = x.b.Title,
@@ -382,7 +382,7 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 var listTagName = GetListSubCateName(listBlogs, listBlogSubCate);
 
-                subCateId = listSubCateMenu.Join(listMenuBlogSubCateEnd, x => x.SubCategoryId, y => y.SubCateId, (x,y) => x.SubCategoryId).ToList().First();
+                subCateId = listSubCateMenu.Join(listMenuBlogSubCateEnd, x => x.SubCategoryId, y => y.SubCateId, (x, y) => x.SubCategoryId).ToList().First();
 
                 listResponse = listBlogs
                .Join(listTagName, b => b.BlogId, y => y.Key, (b, y) => new GetBlogsForHomePageResponse
@@ -504,7 +504,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                             RecipeId = item.RecipeId,
                             IngredientId = item.IngredientId,
                             Description = item.Description,
-                            Quantity = item.Quantity
+                            Quantity = (int)item.Quantity
                         };
                         result.RecipeDetailss.Add(recipeDetail);
                     }
@@ -544,24 +544,24 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 switch (sort)
                 {
-                    case (int) Sort.BlogsSortBy.CREATEDDATE:
-                        blogs = sortDesc ? 
+                    case (int)Sort.BlogsSortBy.CREATEDDATE:
+                        blogs = sortDesc ?
                             blogs.OrderByDescending(r => r.CreatedDate).ToList() :
                             blogs.OrderBy(r => r.CreatedDate).ToList();
                         break;
-                    case (int) Sort.BlogsSortBy.REACTION:
+                    case (int)Sort.BlogsSortBy.REACTION:
                         blogs = sortDesc ?
                             blogs.OrderByDescending(r => r.Reaction).ToList() :
                             blogs.OrderBy(r => r.Reaction).ToList();
                         break;
-                    case (int) Sort.BlogsSortBy.VIEW:
-                        blogs = sortDesc ? 
-                            blogs.OrderByDescending(r => r.View).ToList() : 
+                    case (int)Sort.BlogsSortBy.VIEW:
+                        blogs = sortDesc ?
+                            blogs.OrderByDescending(r => r.View).ToList() :
                             blogs.OrderBy(r => r.View).ToList();
                         break;
                     default:
-                        blogs = sortDesc ? 
-                            blogs.OrderByDescending(r => r.CreatedDate).ToList() : 
+                        blogs = sortDesc ?
+                            blogs.OrderByDescending(r => r.CreatedDate).ToList() :
                             blogs.OrderBy(r => r.CreatedDate).ToList();
                         break;
                 }
@@ -587,6 +587,39 @@ namespace BE_Homnayangi.Modules.BlogModule
                 Console.WriteLine("Error at GetBlogsBySubCates: " + ex.Message);
                 throw;
             }
+        }
+
+        public async Task<Guid> CreateEmptyBlog()
+        {
+            Guid id = new Guid();
+            try
+            {
+                // add an empty recipe
+                Guid recipeId = Guid.NewGuid();
+                Recipe recipe = new Recipe()
+                {
+                    RecipeId = recipeId,
+                    Status = 2 // drafted
+                };
+                await _recipeRepository.AddAsync(recipe);
+
+                // add an empty blog
+                Blog blog = new Blog()
+                {
+                    BlogId = recipeId,
+                    RecipeId = recipeId,
+                    CreatedDate =DateTime.Now,
+                    BlogStatus = 2 // drafted
+                };
+                await _blogRepository.AddAsync(blog);
+                id = blog.BlogId;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at CreateEmptyBlog: " + ex.Message);
+                throw;
+            }
+            return id;
         }
     }
 }

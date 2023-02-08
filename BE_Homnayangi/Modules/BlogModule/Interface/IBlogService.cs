@@ -16,6 +16,8 @@ namespace BE_Homnayangi.Modules.BlogModule.Interface
 
         public Task UpdateBlog(BlogUpdateRequest request);
 
+        public Task<Guid> CreateEmptyBlog();
+
         public Task DeleteBlog(Guid? ID);
 
         public Task<ICollection<Blog>> GetAll();

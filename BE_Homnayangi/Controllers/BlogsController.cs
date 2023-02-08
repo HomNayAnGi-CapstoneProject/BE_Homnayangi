@@ -89,26 +89,24 @@ namespace BE_Homnayangi.Controllers
         // POST: api/Blogs
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Blog>> PostBlog(Blog blog)
+        public async Task<ActionResult> CreateEmptyBlog()
         {
-            _context.Blogs.Add(blog);
-            try
+            var id = await _blogService.CreateEmptyBlog();
+            if (id.ToString() == "00000000-0000-0000-0000-000000000000")
             {
-                await _context.SaveChangesAsync();
+                return new JsonResult(new
+                {
+                    status = "fail"
+                });
             }
-            catch (DbUpdateException)
+            else
             {
-                if (BlogExists(blog.BlogId))
+                return new JsonResult(new
                 {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                    status = "success",
+                    blog_id = id,
+                });
             }
-
-            return CreatedAtAction("GetBlog", new { id = blog.BlogId }, blog);
         }
 
         // DELETE: api/Blogs/5
