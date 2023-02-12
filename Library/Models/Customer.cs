@@ -11,10 +11,10 @@ namespace Library.Models
         {
             Accomplishments = new HashSet<Accomplishment>();
             BlogReactions = new HashSet<BlogReaction>();
+            Carts = new HashSet<Cart>();
             CustomerRewards = new HashSet<CustomerReward>();
             CustomerVouchers = new HashSet<CustomerVoucher>();
             Orders = new HashSet<Order>();
-            Transactions = new HashSet<Transaction>();
         }
 
         public Guid CustomerId { get; set; }
@@ -32,12 +32,11 @@ namespace Library.Models
         public bool? IsBlocked { get; set; }
         public bool? IsGoogle { get; set; }
 
-        public virtual Cart Cart { get; set; }
         public virtual ICollection<Accomplishment> Accomplishments { get; set; }
         public virtual ICollection<BlogReaction> BlogReactions { get; set; }
+        public virtual ICollection<Cart> Carts { get; set; }
         public virtual ICollection<CustomerReward> CustomerRewards { get; set; }
         public virtual ICollection<CustomerVoucher> CustomerVouchers { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
-        public virtual ICollection<Transaction> Transactions { get; set; }
     }
 }

@@ -7,12 +7,16 @@ namespace Library.Models
 {
     public partial class Cart
     {
-        public Guid CartId { get; set; }
-        public Guid? ItemId { get; set; }
-        public int? Quantity { get; set; }
-        public decimal? UnitPrice { get; set; }
-        public decimal? TotalPrice { get; set; }
+        public Cart()
+        {
+            CartDetails = new HashSet<CartDetail>();
+        }
 
-        public virtual Customer CartNavigation { get; set; }
+        public Guid CartId { get; set; }
+        public Guid? CustomerId { get; set; }
+        public int? QuantityOfItem { get; set; }
+
+        public virtual Customer Customer { get; set; }
+        public virtual ICollection<CartDetail> CartDetails { get; set; }
     }
 }

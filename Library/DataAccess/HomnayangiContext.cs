@@ -24,6 +24,7 @@ namespace Library.DataAccess
         public virtual DbSet<BlogReaction> BlogReactions { get; set; }
         public virtual DbSet<BlogSubCate> BlogSubCates { get; set; }
         public virtual DbSet<Cart> Carts { get; set; }
+        public virtual DbSet<CartDetail> CartDetails { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
@@ -216,23 +217,38 @@ namespace Library.DataAccess
                     .ValueGeneratedNever()
                     .HasColumnName("cartId");
 
+                entity.Property(e => e.CustomerId).HasColumnName("customerId");
+
+                entity.Property(e => e.QuantityOfItem).HasColumnName("quantityOfItem");
+
+                entity.HasOne(d => d.Customer)
+                    .WithMany(p => p.Carts)
+                    .HasForeignKey(d => d.CustomerId)
+                    .HasConstraintName("FK_Cart_Customer1");
+            });
+
+            modelBuilder.Entity<CartDetail>(entity =>
+            {
+                entity.HasKey(e => new { e.CartId, e.ItemId })
+                    .HasName("PK_Cart");
+
+                entity.ToTable("CartDetail");
+
+                entity.Property(e => e.CartId).HasColumnName("cartId");
+
                 entity.Property(e => e.ItemId).HasColumnName("itemId");
 
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
-
-                entity.Property(e => e.TotalPrice)
-                    .HasColumnType("money")
-                    .HasColumnName("totalPrice");
 
                 entity.Property(e => e.UnitPrice)
                     .HasColumnType("money")
                     .HasColumnName("unitPrice");
 
-                entity.HasOne(d => d.CartNavigation)
-                    .WithOne(p => p.Cart)
-                    .HasForeignKey<Cart>(d => d.CartId)
+                entity.HasOne(d => d.Cart)
+                    .WithMany(p => p.CartDetails)
+                    .HasForeignKey(d => d.CartId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Cart_Customer");
+                    .HasConstraintName("FK_CartDetail_Cart");
             });
 
             modelBuilder.Entity<Category>(entity =>
@@ -501,7 +517,7 @@ namespace Library.DataAccess
                     .WithOne(p => p.Order)
                     .HasForeignKey<Order>(d => d.OrderId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Order_Transaction");
+                    .HasConstraintName("FK_Order_Transaction1");
             });
 
             modelBuilder.Entity<OrderCookedDetail>(entity =>
@@ -742,11 +758,6 @@ namespace Library.DataAccess
                     .HasColumnName("totalAmount");
 
                 entity.Property(e => e.TransactionStatus).HasColumnName("transactionStatus");
-
-                entity.HasOne(d => d.Customer)
-                    .WithMany(p => p.Transactions)
-                    .HasForeignKey(d => d.CustomerId)
-                    .HasConstraintName("FK_Transaction_Customer");
             });
 
             modelBuilder.Entity<Type>(entity =>
