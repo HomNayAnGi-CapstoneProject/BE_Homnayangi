@@ -45,7 +45,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
         {
             try
             {
-                var ingredient = _IngredientRepository.GetFirstOrDefaultAsync(x => x.IngredientId == ingredientID.Value && x.Status.Value, 
+                var ingredient = _IngredientRepository.GetFirstOrDefaultAsync(x => x.IngredientId == ingredientID.Value && x.Status.Value,
                     includeProperties: "Type,Unit").Result;
                 return ToResponse(ingredient);
             }
@@ -165,56 +165,80 @@ namespace BE_Homnayangi.Modules.IngredientModule
 
         public SearchIngredientsResponse ToSearchResponse(Ingredient ingredient)
         {
-            return new SearchIngredientsResponse()
+            if (ingredient != null)
             {
-                IngredientId = ingredient.IngredientId,
-                Name = ingredient.Name,
-                UnitName = ingredient.Unit.Name,
-                Price = ingredient.Price.Value,
-            };
+                return new SearchIngredientsResponse()
+                {
+                    IngredientId = ingredient.IngredientId,
+                    Name = ingredient.Name,
+                    UnitName = ingredient.Unit.Name,
+                    Price = ingredient.Price.Value,
+                };
+            }
+            else
+            {
+                return null;
+            }
         }
 
 
         public IngredientResponse ToResponse(Ingredient ingredient)
         {
-            return new IngredientResponse()
+            if (ingredient != null)
             {
-                IngredientId = ingredient.IngredientId,
-                Name = ingredient.Name,
-                Description = ingredient.Description,
-                Quantity = ingredient.Quantity,
-                UnitName = ingredient.Unit.Name,
-                Picture = ingredient.Picture,
-                ListImage = ingredient.ListImage != null ? StringUtils.ExtractContents(ingredient.ListImage) : null,
-                CreatedDate = ingredient.CreatedDate,
-                UpdatedDate = ingredient.UpdatedDate,
-                Status = ingredient.Status,
-                Price = ingredient.Price,
-                TypeId = ingredient.Type?.TypeId,
-                TypeName = ingredient.Type?.Name,
-                TypeDescription = ingredient.Type?.Description,
-                ListImagePosition = ingredient.ListImagePosition
-            };
+
+                return new IngredientResponse()
+                {
+                    IngredientId = ingredient.IngredientId,
+                    UnitId = ingredient.UnitId,
+                    Name = ingredient.Name,
+                    Description = ingredient.Description,
+                    Quantity = ingredient.Quantity,
+                    UnitName = ingredient.Unit.Name,
+                    Picture = ingredient.Picture,
+                    ListImage = ingredient.ListImage != null ? StringUtils.ExtractContents(ingredient.ListImage) : null,
+                    CreatedDate = ingredient.CreatedDate,
+                    UpdatedDate = ingredient.UpdatedDate,
+                    Status = ingredient.Status,
+                    Price = ingredient.Price,
+                    TypeId = ingredient.Type?.TypeId,
+                    TypeName = ingredient.Type?.Name,
+                    TypeDescription = ingredient.Type?.Description,
+                    ListImagePosition = ingredient.ListImagePosition
+                };
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public Ingredient ToModel(IngredientRequest ingredientRequest)
         {
-            return new Ingredient()
+            if (ingredientRequest != null)
             {
-                IngredientId = ingredientRequest.IngredientId,
-                Name = ingredientRequest.Name,
-                Description = ingredientRequest.Description,
-                Quantity = ingredientRequest.Quantity,
-                UnitId = ingredientRequest.UnitId,
-                Picture = ingredientRequest.Picture,
-                ListImage = StringUtils.CompressContents(ingredientRequest.ListImage),
-                CreatedDate = ingredientRequest.CreatedDate,
-                UpdatedDate = ingredientRequest.UpdatedDate,
-                Status = ingredientRequest.Status,
-                Price = ingredientRequest.Price,
-                TypeId = ingredientRequest.TypeId,
-                ListImagePosition = ingredientRequest.ListImagePosition
-            };
+
+                return new Ingredient()
+                {
+                    IngredientId = ingredientRequest.IngredientId,
+                    Name = ingredientRequest.Name,
+                    Description = ingredientRequest.Description,
+                    Quantity = ingredientRequest.Quantity,
+                    UnitId = ingredientRequest.UnitId,
+                    Picture = ingredientRequest.Picture,
+                    ListImage = StringUtils.CompressContents(ingredientRequest.ListImage),
+                    CreatedDate = ingredientRequest.CreatedDate,
+                    UpdatedDate = ingredientRequest.UpdatedDate,
+                    Status = ingredientRequest.Status,
+                    Price = ingredientRequest.Price,
+                    TypeId = ingredientRequest.TypeId,
+                    ListImagePosition = ingredientRequest.ListImagePosition
+                };
+            }
+            else
+            {
+                return null;
+            }
         }
 
     }
