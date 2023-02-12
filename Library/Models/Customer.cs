@@ -32,6 +32,7 @@ namespace Library.Models
         public bool? IsBlocked { get; set; }
         public bool? IsGoogle { get; set; }
 
+        public virtual Cart Cart { get; set; }
         public virtual ICollection<Accomplishment> Accomplishments { get; set; }
         public virtual ICollection<BlogReaction> BlogReactions { get; set; }
         public virtual ICollection<CustomerReward> CustomerRewards { get; set; }

@@ -19,6 +19,7 @@ namespace Library.Models
         public Guid? UnitId { get; set; }
         public int? Quantity { get; set; }
         public string Picture { get; set; }
+        public int? Kcal { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public bool? Status { get; set; }

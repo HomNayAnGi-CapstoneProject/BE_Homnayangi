@@ -23,6 +23,7 @@ namespace Library.DataAccess
         public virtual DbSet<Blog> Blogs { get; set; }
         public virtual DbSet<BlogReaction> BlogReactions { get; set; }
         public virtual DbSet<BlogSubCate> BlogSubCates { get; set; }
+        public virtual DbSet<Cart> Carts { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
@@ -188,11 +189,11 @@ namespace Library.DataAccess
 
                 entity.Property(e => e.SubCateId).HasColumnName("subCateId");
 
-                entity.Property(e => e.Status).HasColumnName("status");
-
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
                     .HasColumnName("createdDate");
+
+                entity.Property(e => e.Status).HasColumnName("status");
 
                 entity.HasOne(d => d.Blog)
                     .WithMany(p => p.BlogSubCates)
@@ -205,6 +206,33 @@ namespace Library.DataAccess
                     .HasForeignKey(d => d.SubCateId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_BlogSubCate_SubCategory");
+            });
+
+            modelBuilder.Entity<Cart>(entity =>
+            {
+                entity.ToTable("Cart");
+
+                entity.Property(e => e.CartId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("cartId");
+
+                entity.Property(e => e.ItemId).HasColumnName("itemId");
+
+                entity.Property(e => e.Quantity).HasColumnName("quantity");
+
+                entity.Property(e => e.TotalPrice)
+                    .HasColumnType("money")
+                    .HasColumnName("totalPrice");
+
+                entity.Property(e => e.UnitPrice)
+                    .HasColumnType("money")
+                    .HasColumnName("unitPrice");
+
+                entity.HasOne(d => d.CartNavigation)
+                    .WithOne(p => p.Cart)
+                    .HasForeignKey<Cart>(d => d.CartId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Cart_Customer");
             });
 
             modelBuilder.Entity<Category>(entity =>
@@ -375,6 +403,8 @@ namespace Library.DataAccess
                     .HasColumnName("createdDate");
 
                 entity.Property(e => e.Description).HasColumnName("description");
+
+                entity.Property(e => e.Kcal).HasColumnName("kcal");
 
                 entity.Property(e => e.ListImage).HasColumnName("listImage");
 
@@ -609,6 +639,8 @@ namespace Library.DataAccess
                 entity.Property(e => e.Status).HasColumnName("status");
 
                 entity.Property(e => e.Title).HasColumnName("title");
+
+                entity.Property(e => e.TotalKcal).HasColumnName("totalKcal");
             });
 
             modelBuilder.Entity<RecipeDetail>(entity =>

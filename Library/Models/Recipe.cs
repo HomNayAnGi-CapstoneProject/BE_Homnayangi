@@ -22,6 +22,7 @@ namespace Library.Models
         public decimal? CookedPrice { get; set; }
         public int? MinSize { get; set; }
         public int? MaxSize { get; set; }
+        public int? TotalKcal { get; set; }
         public int? Status { get; set; }
 
         public virtual ICollection<Blog> Blogs { get; set; }
