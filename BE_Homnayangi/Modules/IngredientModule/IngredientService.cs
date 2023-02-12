@@ -174,6 +174,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
                     Name = ingredient.Name,
                     UnitName = ingredient.Unit.Name,
                     Price = ingredient.Price.Value,
+                    Kcal = ingredient.Kcal.Value
                 };
             }
             else

@@ -13,5 +13,6 @@ namespace BE_Homnayangi.Modules.IngredientModule.Response
         public string Name { get; set; }
         public string UnitName { get; set; }
         public decimal Price { get; set; }
+        public int Kcal { get; set; }
     }
 }
