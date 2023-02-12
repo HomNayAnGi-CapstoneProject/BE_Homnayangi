@@ -19,6 +19,7 @@ namespace BE_Homnayangi.Modules.DTO.IngredientDTO
         public ICollection<string> ListImage { get; set; }
         public bool? Status { get; set; }
         public decimal? Price { get; set; }
+        public int? Kcal { get; set; }
         public Guid? TypeId { get; set; }
         public string TypeName { get; set; }
         public string TypeDescription { get; set; }

@@ -203,6 +203,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
                     UpdatedDate = ingredient.UpdatedDate,
                     Status = ingredient.Status,
                     Price = ingredient.Price,
+                    Kcal = ingredient.Kcal,
                     TypeId = ingredient.Type?.TypeId,
                     TypeName = ingredient.Type?.Name,
                     TypeDescription = ingredient.Type?.Description,
@@ -233,6 +234,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
                     UpdatedDate = ingredientRequest.UpdatedDate,
                     Status = ingredientRequest.Status,
                     Price = ingredientRequest.Price,
+                    Kcal = ingredientRequest.Kcal,
                     TypeId = ingredientRequest.TypeId,
                     ListImagePosition = ingredientRequest.ListImagePosition
                 };
