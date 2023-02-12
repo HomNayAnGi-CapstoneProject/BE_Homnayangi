@@ -1,17 +1,14 @@
-﻿using System;
+﻿using AutoMapper;
+using BE_Homnayangi.Modules.IngredientModule.IngredientDTO;
+using BE_Homnayangi.Modules.IngredientModule.Interface;
+using BE_Homnayangi.Modules.IngredientModule.Request;
+using BE_Homnayangi.Modules.IngredientModule.Response;
+using Library.Models;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Library.DataAccess;
-using Library.Models;
-using BE_Homnayangi.Modules.IngredientModule.Interface;
-using BE_Homnayangi.Modules.IngredientModule.Request;
-using AutoMapper;
-using BE_Homnayangi.Modules.IngredientModule.IngredientDTO;
-using BE_Homnayangi.Modules.IngredientModule.Response;
 
 namespace BE_Homnayangi.Controllers
 {
@@ -32,7 +29,7 @@ namespace BE_Homnayangi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Ingredient>>> GetIngredients()
         {
-            var result = await _ingredientService.GetAllIngredient();
+            var result = await _ingredientService.GetAllIngredients();
 
             return new JsonResult(new
             {

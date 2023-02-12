@@ -19,7 +19,7 @@ namespace BE_Homnayangi.Modules.IngredientModule.Interface
             string includeProperties = null);
         public IngredientResponse GetIngredientByID(Guid? IngredientId);
 
-        public Task<ICollection<IngredientResponse>> GetAllIngredient();
+        public Task<ICollection<IngredientResponse>> GetAllIngredients();
 
         public Task<ICollection<IngredientResponse>> GetIngredientsByTypeId(Guid typeId);
 

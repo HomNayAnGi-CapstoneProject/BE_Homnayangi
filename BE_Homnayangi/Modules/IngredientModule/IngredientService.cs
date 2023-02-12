@@ -23,7 +23,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
 
         public async Task<ICollection<IngredientResponse>> GetAll()
         {
-            var ingredients = await _IngredientRepository.GetAll();
+            var ingredients = await _IngredientRepository.GetIngredientsBy(includeProperties: "Type,Unit");
 
             return ingredients.Select(ToResponse).ToList();
         }
@@ -45,7 +45,8 @@ namespace BE_Homnayangi.Modules.IngredientModule
         {
             try
             {
-                var ingredient = _IngredientRepository.GetFirstOrDefaultAsync(x => x.IngredientId == ingredientID.Value && x.Status.Value, includeProperties: "Type").Result;
+                var ingredient = _IngredientRepository.GetFirstOrDefaultAsync(x => x.IngredientId == ingredientID.Value && x.Status.Value, 
+                    includeProperties: "Type,Unit").Result;
                 return ToResponse(ingredient);
             }
             catch (Exception ex)
@@ -55,16 +56,16 @@ namespace BE_Homnayangi.Modules.IngredientModule
             }
         }
 
-        public async Task<ICollection<IngredientResponse>> GetAllIngredient() // status = 1
+        public async Task<ICollection<IngredientResponse>> GetAllIngredients() // status = 1
         {
             try
             {
-                var ingredients = await _IngredientRepository.GetIngredientsBy(x => x.Status.Value);
+                var ingredients = await _IngredientRepository.GetIngredientsBy(x => x.Status.Value, includeProperties: "Type,Unit");
                 return ingredients.Select(ToResponse).ToList();
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error at GetAllIngredient: " + ex.Message);
+                Console.WriteLine("Error at GetAllIngredients: " + ex.Message);
                 throw;
             }
         }
@@ -73,7 +74,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
         {
             try
             {
-                var ingredients = await _IngredientRepository.GetIngredientsBy(x => x.Status.Value && x.TypeId == typeId);
+                var ingredients = await _IngredientRepository.GetIngredientsBy(x => x.Status.Value && x.TypeId == typeId, includeProperties: "Type,Unit");
                 return ingredients.Select(ToResponse).ToList();
             }
             catch (Exception ex)
@@ -169,6 +170,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
                 IngredientId = ingredient.IngredientId,
                 Name = ingredient.Name,
                 UnitName = ingredient.Unit.Name,
+                Price = ingredient.Price.Value,
             };
         }
 
@@ -183,7 +185,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
                 Quantity = ingredient.Quantity,
                 UnitName = ingredient.Unit.Name,
                 Picture = ingredient.Picture,
-                ListImage = StringUtils.ExtractContents(ingredient.ListImage),
+                ListImage = ingredient.ListImage != null ? StringUtils.ExtractContents(ingredient.ListImage) : null,
                 CreatedDate = ingredient.CreatedDate,
                 UpdatedDate = ingredient.UpdatedDate,
                 Status = ingredient.Status,
