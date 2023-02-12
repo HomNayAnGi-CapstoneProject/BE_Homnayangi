@@ -119,6 +119,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
                     current.UnitId = newIg.UnitId;
                     current.Picture = newIg.Picture;
                     current.ListImage = StringUtils.CompressContents(newIg.ListImage);
+                    current.Kcal = newIg.Kcal;
                     current.UpdatedDate = DateTime.Now;
                     current.Status = newIg.Status;
                     current.Price = newIg.Price;

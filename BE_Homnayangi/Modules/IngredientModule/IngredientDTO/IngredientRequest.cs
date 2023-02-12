@@ -11,6 +11,7 @@ namespace BE_Homnayangi.Modules.IngredientModule.IngredientDTO
         public Guid? UnitId { get; set; }
         public int Quantity { get; set; }
         public string Picture { get; set; }
+        public int Kcal { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public ICollection<string> ListImage { get; set; }
