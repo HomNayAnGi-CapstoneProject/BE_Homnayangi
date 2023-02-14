@@ -3,6 +3,7 @@ using BE_Homnayangi.Modules.BlogModule.Request;
 using BE_Homnayangi.Modules.BlogModule.Response;
 using BE_Homnayangi.Modules.SubCateModule.Interface;
 using BE_Homnayangi.Modules.SubCateModule.Response;
+using BE_Homnayangi.Modules.UserModule.Interface;
 using Library.DataAccess;
 using Library.Models;
 using Library.PagedList;
@@ -22,12 +23,14 @@ namespace BE_Homnayangi.Controllers
         private readonly HomnayangiContext _context;
         private readonly IBlogService _blogService;
         private readonly ISubCateService _subCateService;
+        private readonly IUserService _userService;
 
-        public BlogsController(HomnayangiContext context, IBlogService blogService, ISubCateService subCateService)
+        public BlogsController(HomnayangiContext context, IBlogService blogService, ISubCateService subCateService, IUserService userService)
         {
             _context = context;
             _blogService = blogService;
             _subCateService = subCateService;
+            _userService = userService;
         }
 
         // GET: api/Blogs
@@ -91,7 +94,8 @@ namespace BE_Homnayangi.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateEmptyBlog()
         {
-            var id = await _blogService.CreateEmptyBlog();
+            Guid authorId = _userService.GetCurrentLoginUserId(Request.Headers["Authorization"]);
+            var id = await _blogService.CreateEmptyBlog(authorId);
             if (id.ToString() == "00000000-0000-0000-0000-000000000000")
             {
                 return new JsonResult(new

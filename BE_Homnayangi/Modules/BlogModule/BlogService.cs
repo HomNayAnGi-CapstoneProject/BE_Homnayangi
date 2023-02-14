@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -40,6 +41,7 @@ namespace BE_Homnayangi.Modules.BlogModule
             _subCateRepository = subCateRepository;
             _recipeDetailRepository = recipeDetailRepository;
             _typeRepository = typeRepository;
+            _userRepositor
         }
 
         public async Task<ICollection<Blog>> GetAll()
@@ -85,7 +87,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     throw new Exception("Blog not found");
 
                 // get sub cates of blog 
-                var subCates = await  _blogSubCateRepository
+                var subCates = await _blogSubCateRepository
                     .GetBlogSubCatesBy(b => b.BlogId.Equals(request.Blog.BlogId),
                         options: (l) => l.AsNoTracking().ToList());
 
@@ -136,7 +138,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     }
                 }
                 // check if leftover then remove
-                foreach(var s in subCates)
+                foreach (var s in subCates)
                 {
                     if (!joinSubCate.Contains(s))
                     {
@@ -593,7 +595,7 @@ namespace BE_Homnayangi.Modules.BlogModule
             }
         }
 
-        public async Task<Guid> CreateEmptyBlog()
+        public async Task<Guid> CreateEmptyBlog(Guid authorId)
         {
             Guid id = new Guid();
             try
@@ -612,8 +614,9 @@ namespace BE_Homnayangi.Modules.BlogModule
                 {
                     BlogId = recipeId,
                     RecipeId = recipeId,
-                    CreatedDate =DateTime.Now,
-                    BlogStatus = 2 // drafted
+                    CreatedDate = DateTime.Now,
+                    BlogStatus = 2, // drafted
+                    AuthorId = authorId
                 };
                 await _blogRepository.AddAsync(blog);
                 id = blog.BlogId;
@@ -626,4 +629,5 @@ namespace BE_Homnayangi.Modules.BlogModule
             return id;
         }
     }
+
 }
