@@ -41,7 +41,6 @@ namespace BE_Homnayangi.Modules.BlogModule
             _subCateRepository = subCateRepository;
             _recipeDetailRepository = recipeDetailRepository;
             _typeRepository = typeRepository;
-            _userRepositor
         }
 
         public async Task<ICollection<Blog>> GetAll()
