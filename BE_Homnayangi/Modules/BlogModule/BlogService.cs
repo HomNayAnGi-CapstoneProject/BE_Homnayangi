@@ -97,6 +97,8 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 // update recipe
                 request.Recipe.RecipeId = blog.RecipeId.GetValueOrDefault();
+                request.Recipe.MaxSize = blog.Recipe.MaxSize;
+                request.Recipe.MinSize = blog.Recipe.MinSize;
                 request.Recipe.Status = blog.Recipe.Status;
                 await _recipeRepository.UpdateAsync(request.Recipe);
 
