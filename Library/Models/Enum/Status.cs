@@ -7,7 +7,8 @@ namespace Library.Models.Enum
         {
             DELETED = 0,
             ACTIVE = 1,
-            DRAFTED = 2
+            DRAFTED = 2,
+            PENDING = 3
         }
     }
 }
