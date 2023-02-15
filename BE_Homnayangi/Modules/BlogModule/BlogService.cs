@@ -10,6 +10,7 @@ using BE_Homnayangi.Modules.SubCateModule.Interface;
 using BE_Homnayangi.Modules.TypeModule.Interface;
 using BE_Homnayangi.Modules.Utils;
 using Library.Models;
+using Library.Models.Constant;
 using Library.Models.Enum;
 using Library.PagedList;
 using Microsoft.EntityFrameworkCore;
@@ -75,6 +76,12 @@ namespace BE_Homnayangi.Modules.BlogModule
         {
             try
             {
+                #region validation
+                // sub cates exceed limit
+                if (request.BlogSubCates.Count > 5)
+                    throw new Exception(ErrorMessage.BlogError.BLOG_SUBCATES_LIMIT);
+
+                // blog not existed
                 var blog = _blogRepository
                     .GetBlogsBy(b => b.BlogId.Equals(request.Blog.BlogId),
                         options: (l) => l.AsNoTracking().ToList(),
@@ -83,8 +90,10 @@ namespace BE_Homnayangi.Modules.BlogModule
                     .FirstOrDefault();
 
                 if (blog == null)
-                    throw new Exception("Blog not found");
+                    throw new Exception(ErrorMessage.BlogError.BLOG_NOT_FOUND);
+                #endregion
 
+                #region update recipe and recipe details
                 // get ingredients of recipe
                 var recipeDetails = await _recipeDetailRepository
                     .GetRecipeDetailsBy(r => r.RecipeId.Equals(blog.RecipeId),
@@ -118,13 +127,14 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 // update recipe
                 request.Recipe.RecipeId = blog.RecipeId == null
-                    ? throw new Exception("Blog not binding to Recipe")
+                    ? throw new Exception(ErrorMessage.BlogError.BLOG_NOT_BINDING_TO_RECIPE)
                     : blog.RecipeId.GetValueOrDefault();
                 request.Recipe.Status = blog.Recipe.Status;
                 request.Recipe.Title = blog.Title;
                 await _recipeRepository.UpdateAsync(request.Recipe);
+                #endregion
 
-
+                #region update blog and subcates
                 // get sub cates of blog 
                 var subCates = await _blogSubCateRepository
                     .GetBlogSubCatesBy(b => b.BlogId.Equals(request.Blog.BlogId),
@@ -159,6 +169,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                 request.Blog.Reaction = blog.Reaction;
                 request.Blog.View = blog.View;
                 await _blogRepository.UpdateAsync(request.Blog);
+                #endregion
             }
             catch (Exception ex)
             {

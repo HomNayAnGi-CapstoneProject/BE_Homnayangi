@@ -521,7 +521,7 @@ namespace BE_Homnayangi.Modules.UserModule
         public async Task Register(RegisterDTO register)
         {
             var cus = GetCustomerByUsername(register.Username);
-            if (cus != null) throw new Exception(Error.UserError.USER_EXISTED);
+            if (cus != null) throw new Exception(ErrorMessage.UserError.USER_EXISTED);
 
             register.Password = EncryptPassword(register.Password);
             var customer = _mapper.Map<Customer>(register);
