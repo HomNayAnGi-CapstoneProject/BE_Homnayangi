@@ -82,9 +82,7 @@ namespace BE_Homnayangi
                     })).ToList();
                     var result = new
                     {
-
                         Errors = errors.Select(e => e.ErrorMessage).ToList()
-
                     };
                     return new BadRequestObjectResult(result);
                 };

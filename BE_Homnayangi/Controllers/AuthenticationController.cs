@@ -110,25 +110,14 @@ namespace BE_Homnayangi.Controllers
 
             try
             {
-                var cus = _userService.GetCustomerByUsername(register.Username);
-                if (cus == null)
-                {
-                    await _userService.Register(register);
-                    return Ok("Register successful");
-                }
-                else if (cus.Username == register.Username)
-                {
-                    return BadRequest(new
-                    {
-                        error = "Username is already existed"
-                    });
-                }
-                return Unauthorized();
+                await _userService.Register(register);
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
+
+            return Ok("Register successful");
         }
     }
 }

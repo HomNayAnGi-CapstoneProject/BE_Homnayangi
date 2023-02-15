@@ -18,6 +18,7 @@ using Library.PagedList;
 using BE_Homnayangi.Modules.UserModule.Request;
 using System.Linq.Expressions;
 using BE_Homnayangi.Modules.CustomerModule.Interface;
+using Library.Models.Constant;
 
 namespace BE_Homnayangi.Modules.UserModule
 {
@@ -519,13 +520,15 @@ namespace BE_Homnayangi.Modules.UserModule
         }
         public async Task Register(RegisterDTO register)
         {
+            var cus = GetCustomerByUsername(register.Username);
+            if (cus != null) throw new Exception(ErrorMessage.UserError.USER_EXISTED);
+
             register.Password = EncryptPassword(register.Password);
             var customer = _mapper.Map<Customer>(register);
             customer.CustomerId = Guid.NewGuid();
             customer.IsBlocked = false;
             customer.CreatedDate = DateTime.Now;
             await _customerRepository.AddAsync(customer);
-
         }
 
         public string EncryptPassword(string plainText)
