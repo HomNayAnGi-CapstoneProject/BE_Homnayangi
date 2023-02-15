@@ -19,8 +19,10 @@
 
   <ItemGroup>
     <None Remove="PagedList\" />
+    <None Remove="Models\Constant\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="PagedList\" />
+    <Folder Include="Models\Constant\" />
   </ItemGroup>
 </Project>
