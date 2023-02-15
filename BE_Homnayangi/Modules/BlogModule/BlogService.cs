@@ -85,22 +85,10 @@ namespace BE_Homnayangi.Modules.BlogModule
                 if (blog == null)
                     throw new Exception("Blog not found");
 
-                // get sub cates of blog 
-                var subCates = await _blogSubCateRepository
-                    .GetBlogSubCatesBy(b => b.BlogId.Equals(request.Blog.BlogId),
-                        options: (l) => l.AsNoTracking().ToList());
-
                 // get ingredients of recipe
                 var recipeDetails = await _recipeDetailRepository
                     .GetRecipeDetailsBy(r => r.RecipeId.Equals(blog.RecipeId),
                         options: (l) => l.AsNoTracking().ToList());
-
-                // update recipe
-                request.Recipe.RecipeId = blog.RecipeId.GetValueOrDefault();
-                request.Recipe.MaxSize = blog.Recipe.MaxSize;
-                request.Recipe.MinSize = blog.Recipe.MinSize;
-                request.Recipe.Status = blog.Recipe.Status;
-                await _recipeRepository.UpdateAsync(request.Recipe);
 
                 // check if exist then update, else add
                 var joinRecipeDetail = request.RecipeDetails
@@ -110,7 +98,10 @@ namespace BE_Homnayangi.Modules.BlogModule
                 foreach (var r in request.RecipeDetails)
                 {
                     if (!joinRecipeDetail.Contains(r))
+                    {
+                        r.RecipeId = blog.Recipe.RecipeId;
                         await _recipeDetailRepository.AddAsync(r);
+                    } 
                 }
                 // check if leftover then remove
                 foreach (var rd in recipeDetails)
@@ -124,6 +115,20 @@ namespace BE_Homnayangi.Modules.BlogModule
                         await _recipeDetailRepository.UpdateAsync(rd);
                     }
                 }
+
+                // update recipe
+                request.Recipe.RecipeId = blog.RecipeId == null
+                    ? throw new Exception("Blog not binding to Recipe")
+                    : blog.RecipeId.GetValueOrDefault();
+                request.Recipe.Status = blog.Recipe.Status;
+                request.Recipe.Title = blog.Title;
+                await _recipeRepository.UpdateAsync(request.Recipe);
+
+
+                // get sub cates of blog 
+                var subCates = await _blogSubCateRepository
+                    .GetBlogSubCatesBy(b => b.BlogId.Equals(request.Blog.BlogId),
+                        options: (l) => l.AsNoTracking().ToList());
 
                 // check if not exist then add
                 var joinSubCate = request.BlogSubCates
@@ -141,7 +146,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                 // check if leftover then remove
                 foreach (var s in subCates)
                 {
-                    if (!joinSubCate.Contains(s))
+                    if (!joinSubCate.Select(j => j.SubCateId).ToList().Contains(s.SubCateId))
                     {
                         await _blogSubCateRepository.RemoveAsync(s);
                     }
@@ -151,13 +156,14 @@ namespace BE_Homnayangi.Modules.BlogModule
                 request.Blog.UpdatedDate = DateTime.Now;
                 request.Blog.RecipeId = blog.RecipeId;
                 request.Blog.CreatedDate = blog.CreatedDate;
-                request.Blog.Finished = blog.Finished;
-                request.Blog.BlogStatus = blog.BlogStatus;
+                request.Blog.Reaction = blog.Reaction;
+                request.Blog.View = blog.View;
                 await _blogRepository.UpdateAsync(request.Blog);
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error at UpdateBlog: " + ex.Message);
+                throw new Exception(ex.Message);
             }
         }
 

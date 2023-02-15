@@ -60,34 +60,34 @@ namespace BE_Homnayangi.Controllers
 
         // PUT: api/Blogs/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutBlog(Guid id, Blog blog)
-        {
-            if (id != blog.BlogId)
-            {
-                return BadRequest();
-            }
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutBlog(Guid id, Blog blog)
+        //{
+        //    if (id != blog.BlogId)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            _context.Entry(blog).State = EntityState.Modified;
+        //    _context.Entry(blog).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!BlogExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!BlogExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
         // POST: api/Blogs
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -173,12 +173,18 @@ namespace BE_Homnayangi.Controllers
             return Ok(response);
         }
 
-        [HttpPatch]
-        public async Task<IActionResult> PatchBlog([FromBody] BlogUpdateRequest request)
+        [HttpPut]
+        public async Task<IActionResult> PutBlog([FromBody] BlogUpdateRequest request)
         {
-            await _blogService.UpdateBlog(request);
-
-            return NoContent();
+            try
+            {
+                await _blogService.UpdateBlog(request);
+                return Ok("Update success");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
