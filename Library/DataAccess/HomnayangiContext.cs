@@ -240,6 +240,8 @@ namespace Library.DataAccess
 
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
 
+                entity.Property(e => e.IsCooked).HasColumnName("isCooked");
+
                 entity.Property(e => e.UnitPrice)
                     .HasColumnType("money")
                     .HasColumnName("unitPrice");

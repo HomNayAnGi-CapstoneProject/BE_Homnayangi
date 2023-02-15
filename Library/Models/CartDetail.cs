@@ -11,6 +11,7 @@ namespace Library.Models
         public Guid ItemId { get; set; }
         public int? Quantity { get; set; }
         public decimal? UnitPrice { get; set; }
+        public bool? IsCooked { get; set; }
 
         public virtual Cart Cart { get; set; }
     }
