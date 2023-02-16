@@ -36,11 +36,13 @@ using Library.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -72,6 +74,7 @@ namespace BE_Homnayangi
 
             services.AddDbContext<HomnayangiContext>(
                  options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddMvcCore().ConfigureApiBehaviorOptions(options =>
             {
                 options.InvalidModelStateResponseFactory = (errorContext) =>
@@ -128,6 +131,9 @@ namespace BE_Homnayangi
                                     .AllowAnyHeader()
                                     .AllowCredentials());
             });
+            services.AddSession();
+            services.AddDistributedMemoryCache();
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
@@ -180,7 +186,7 @@ namespace BE_Homnayangi
             //Type Module
             services.AddScoped<ITypeRepository, TypeRepository>();
             services.AddScoped<ITypeService, TypeService>();
-            
+
             //BlogReaction Module
             services.AddScoped<IBlogReactionRepository, BlogReactionRepository>();
             services.AddScoped<IBlogReactionService, BlogReactionService>();
@@ -203,7 +209,7 @@ namespace BE_Homnayangi
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BE_Homnayangi v1"));
             }
-
+            app.UseSession();
             app.UseCors("CorsPolicy");
 
             app.UseHttpsRedirection();
