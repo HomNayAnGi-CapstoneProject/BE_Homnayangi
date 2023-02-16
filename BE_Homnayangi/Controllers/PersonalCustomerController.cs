@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Request;
+using BE_Homnayangi.Modules.UserModule.Response;
 using Library.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -30,13 +31,13 @@ namespace BE_Homnayangi.Controllers
 
         // GET api/<ValuesController>/5
         [HttpGet]
-        public async Task<ActionResult<Customer>> GetUserById()
+        public async Task<ActionResult<CurrentUserResponse>> GetUserById()
         {
-            Guid id = _userService.GetCurrentLoginUserId(Request.Headers["Authorization"]);
-            var result = await _userService.GetCustomerById(id);
+            CurrentUserResponse currentUser = _userService.GetCurrentLoginUser();
+
             return new JsonResult(new
             {
-                result = result,
+                result = currentUser,
             });
         }
 
@@ -44,8 +45,8 @@ namespace BE_Homnayangi.Controllers
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] UpdateCustomer customerUpdate)
         {
-            Guid id = _userService.GetCurrentLoginUserId(Request.Headers["Authorization"]);
-            if (id != customerUpdate.CustomerId)
+            CurrentUserResponse currentUser = _userService.GetCurrentLoginUser();
+            if (currentUser.Id != customerUpdate.CustomerId)
             {
                 return BadRequest();
             }
@@ -73,12 +74,12 @@ namespace BE_Homnayangi.Controllers
         [HttpPut("password")]
         public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordRequest request)
         {
-            Guid id = _userService.GetCurrentLoginUserId(Request.Headers["Authorization"]);
+            CurrentUserResponse currentUser = _userService.GetCurrentLoginUser();
             try
             {
 
 
-                await _userService.UpdateCustomerPassword(id, request.oldPassword, request.newPassword);
+                await _userService.UpdateCustomerPassword(currentUser.Id, request.oldPassword, request.newPassword);
 
 
             }

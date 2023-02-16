@@ -1,4 +1,5 @@
 ﻿using BE_Homnayangi.Modules.UserModule.Request;
+using BE_Homnayangi.Modules.UserModule.Response;
 using Library.Models;
 using Library.Models.DTO.UserDTO;
 using Library.PagedList;
@@ -40,6 +41,6 @@ namespace BE_Homnayangi.Modules.UserModule.Interface
         public Task Register(RegisterDTO register);
         #endregion
 
-        public Guid GetCurrentLoginUserId(string authHeader);
+        public CurrentUserResponse GetCurrentLoginUser();
     }
 }
