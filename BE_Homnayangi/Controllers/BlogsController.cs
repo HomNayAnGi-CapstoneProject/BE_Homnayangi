@@ -4,6 +4,7 @@ using BE_Homnayangi.Modules.BlogModule.Response;
 using BE_Homnayangi.Modules.SubCateModule.Interface;
 using BE_Homnayangi.Modules.SubCateModule.Response;
 using BE_Homnayangi.Modules.UserModule.Interface;
+using BE_Homnayangi.Modules.UserModule.Response;
 using Library.DataAccess;
 using Library.Models;
 using Library.PagedList;
@@ -94,8 +95,8 @@ namespace BE_Homnayangi.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateEmptyBlog()
         {
-            Guid authorId = _userService.GetCurrentLoginUserId(Request.Headers["Authorization"]);
-            var id = await _blogService.CreateEmptyBlog(authorId);
+            CurrentUserResponse currentUser = _userService.GetCurrentLoginUser();
+            var id = await _blogService.CreateEmptyBlog(currentUser.Id);
             if (id.ToString() == "00000000-0000-0000-0000-000000000000")
             {
                 return new JsonResult(new

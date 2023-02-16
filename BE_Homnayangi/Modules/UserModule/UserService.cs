@@ -19,6 +19,8 @@ using BE_Homnayangi.Modules.UserModule.Request;
 using System.Linq.Expressions;
 using BE_Homnayangi.Modules.CustomerModule.Interface;
 using Library.Models.Constant;
+using Microsoft.AspNetCore.Http;
+using BE_Homnayangi.Modules.UserModule.Response;
 
 namespace BE_Homnayangi.Modules.UserModule
 {
@@ -29,14 +31,15 @@ namespace BE_Homnayangi.Modules.UserModule
         private readonly ICustomerRepository _customerRepository;
         private readonly AppSetting _appSettings;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-
-        public UserService(IUserRepository userRepository, ICustomerRepository customerRepository, IOptionsMonitor<AppSetting> optionsMonitor, IMapper mapper)
+        public UserService(IUserRepository userRepository, ICustomerRepository customerRepository, IOptionsMonitor<AppSetting> optionsMonitor, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _userRepository = userRepository;
             _customerRepository = customerRepository;
             _appSettings = optionsMonitor.CurrentValue;
             _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public Task<ICollection<User>> GetUsersBy(
@@ -356,7 +359,9 @@ namespace BE_Homnayangi.Modules.UserModule
                         Expires = DateTime.UtcNow.AddMinutes(60),
                         SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytesCustomer), SecurityAlgorithms.HmacSha512Signature)
                     };
-
+                    var principal = new ClaimsPrincipal(tokenDescriptionCustomer.Subject);
+                    _httpContextAccessor.HttpContext.User = principal;
+                    Console.WriteLine(_httpContextAccessor.HttpContext.User.Identity.Name);
                     var tokenCustomer = jwtTokenHandlerCustomer.CreateToken(tokenDescriptionCustomer);
 
                     return jwtTokenHandlerCustomer.WriteToken(tokenCustomer);
@@ -392,7 +397,8 @@ namespace BE_Homnayangi.Modules.UserModule
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha512Signature)
 
                 };
-
+                var principal = new ClaimsPrincipal(tokenDescription.Subject);
+                _httpContextAccessor.HttpContext.User = principal;
                 var token = jwtTokenHandler.CreateToken(tokenDescription);
 
                 return jwtTokenHandler.WriteToken(token);
@@ -436,7 +442,8 @@ namespace BE_Homnayangi.Modules.UserModule
                         Expires = DateTime.UtcNow.AddMinutes(60),
                         SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytesCustomer), SecurityAlgorithms.HmacSha512Signature)
                     };
-
+                    var principal = new ClaimsPrincipal(tokenDescriptionCustomer.Subject);
+                    _httpContextAccessor.HttpContext.User = principal;
                     var tokenCustomer = jwtTokenHandlerCustomer.CreateToken(tokenDescriptionCustomer);
 
                     return jwtTokenHandlerCustomer.WriteToken(tokenCustomer);
@@ -472,7 +479,8 @@ namespace BE_Homnayangi.Modules.UserModule
                         Expires = DateTime.UtcNow.AddMinutes(60),
                         SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytesCustomer), SecurityAlgorithms.HmacSha512Signature)
                     };
-
+                    var principal = new ClaimsPrincipal(tokenDescriptionCustomer.Subject);
+                    _httpContextAccessor.HttpContext.User = principal;
                     var tokenCustomer = jwtTokenHandlerCustomer.CreateToken(tokenDescriptionCustomer);
 
                     return jwtTokenHandlerCustomer.WriteToken(tokenCustomer);
@@ -507,8 +515,11 @@ namespace BE_Homnayangi.Modules.UserModule
                 }),
                     Expires = DateTime.UtcNow.AddMinutes(60),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha512Signature)
-
                 };
+
+
+                var principal = new ClaimsPrincipal(tokenDescription.Subject);
+                _httpContextAccessor.HttpContext.User = principal;
 
                 var token = jwtTokenHandler.CreateToken(tokenDescription);
 
@@ -590,15 +601,30 @@ namespace BE_Homnayangi.Modules.UserModule
 
         #endregion
 
-        public Guid GetCurrentLoginUserId(string authHeader)
+        public CurrentUserResponse GetCurrentLoginUser()
         {
-            string token = authHeader.Split(" ")[1];
-            var handler = new JwtSecurityTokenHandler();
-            var jsonToken = handler.ReadToken(token);
-            var tokenS = jsonToken as JwtSecurityToken;
-            var id = tokenS.Claims.First(claim => claim.Type == "Id").Value;
-            Guid userId = new Guid(id);
-            return userId;
+
+            var user = _httpContextAccessor.HttpContext.User;
+            var identity = user.Identity as ClaimsIdentity;
+            if (identity != null)
+            {
+                var userClaims = identity.Claims;
+                CurrentUserResponse currentUser = new CurrentUserResponse()
+                {
+                    Id = new Guid(userClaims.FirstOrDefault(x => x.Type == "Id")?.Value),
+                    Displayname = userClaims.FirstOrDefault(x => x.Type == "Displayname")?.Value,
+                    Username = userClaims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value,
+                    Firstname = userClaims.FirstOrDefault(x => x.Type == "Firstname")?.Value,
+                    Lastname = userClaims.FirstOrDefault(x => x.Type == "Lastname")?.Value,
+                    Email = userClaims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value,
+                    Avatar = userClaims.FirstOrDefault(x => x.Type == "Avatar")?.Value,
+                    Phonenumber = userClaims.FirstOrDefault(x => x.Type == "Phone Number")?.Value,
+                    Gender = Int32.Parse(userClaims.FirstOrDefault(x => x.Type == ClaimTypes.Gender)?.Value),
+                    Role = userClaims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value
+                };
+                return currentUser;
+            }
+            return null;
         }
     }
 }
