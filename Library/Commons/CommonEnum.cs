@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Library.Commons
+﻿namespace Library.Commons
 {
     public class CommonEnum
     {
@@ -12,6 +7,13 @@ namespace Library.Commons
             public const string CUSTOMER = "Customer";
             public const string MANAGER = "Manager";
             public const string STAFF = "Staff";
+        }
+
+        public class ItemInCart
+        {
+            public const string INGREDIENT = "INGREDIENT";
+            public const string COOKED = "COOKED";
+            public const string PACKAGE_INGREDIENT = "PACKAGE_INGREDIENT";
         }
     }
 }

@@ -229,7 +229,7 @@ namespace Library.DataAccess
 
             modelBuilder.Entity<CartDetail>(entity =>
             {
-                entity.HasKey(e => new { e.CartId, e.ItemId })
+                entity.HasKey(e => new { e.CartId, e.ItemId, e.IsCooked })
                     .HasName("PK_Cart");
 
                 entity.ToTable("CartDetail");
@@ -241,7 +241,6 @@ namespace Library.DataAccess
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
 
                 entity.Property(e => e.IsCooked).HasColumnName("isCooked");
-
                 entity.Property(e => e.UnitPrice)
                     .HasColumnType("money")
                     .HasColumnName("unitPrice");
