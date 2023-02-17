@@ -130,6 +130,21 @@ namespace BE_Homnayangi.Controllers
             return NoContent();
         }
 
+        // REMOVE: api/Blogs/5
+        [HttpDelete("remove-draft/{id}")]
+        public async Task<IActionResult> RemoveBlogDraft(Guid id)
+        {
+            var blog = _blogService.GetBlogByID(id);
+            if (blog == null)
+            {
+                return NotFound();
+            }
+
+            await _blogService.RemoveBlogDraft(blog.BlogId);
+
+            return NoContent();
+        }
+
         private bool BlogExists(Guid id)
         {
             return _context.Blogs.Any(e => e.BlogId == id);
@@ -179,7 +194,8 @@ namespace BE_Homnayangi.Controllers
         {
             try
             {
-                await _blogService.UpdateBlog(request);
+                var currentUserId = _userService.GetCurrentLoginUser().Id;
+                await _blogService.UpdateBlog(request, currentUserId); ;
                 return Ok("Update success");
             }
             catch (Exception ex)
