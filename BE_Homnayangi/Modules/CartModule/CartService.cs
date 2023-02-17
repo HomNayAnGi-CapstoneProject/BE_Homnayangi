@@ -1,9 +1,11 @@
 ﻿using BE_Homnayangi.Modules.CartDetailModule.Interface;
 using BE_Homnayangi.Modules.CartDetailModule.Request;
 using BE_Homnayangi.Modules.CartModule.Interface;
+using BE_Homnayangi.Modules.CustomerModule.Interface;
 using BE_Homnayangi.Modules.IngredientModule.Interface;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
 using Library.Models;
+using Library.Models.Constant;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,14 +20,17 @@ namespace BE_Homnayangi.Modules.CartModule
         private readonly ICartDetailRepository _cartDetailRepository;
         private readonly IIngredientRepository _ingredientRepository;
         private readonly IRecipeRepository _recipeRepository;
+        private readonly ICustomerRepository _customerRepository;
 
         public CartService(ICartRepository cartRepository, ICartDetailRepository cartDetailRepository,
-            IIngredientRepository ingredientRepository, IRecipeRepository recipeRepository)
+            IIngredientRepository ingredientRepository, IRecipeRepository recipeRepository,
+            ICustomerRepository customerRepository)
         {
             _cartRepository = cartRepository;
             _cartDetailRepository = cartDetailRepository;
             _ingredientRepository = ingredientRepository;
             _recipeRepository = recipeRepository;
+            _customerRepository = customerRepository;
         }
 
         public Task<ICollection<Cart>> GetCartsBy(
@@ -41,12 +46,17 @@ namespace BE_Homnayangi.Modules.CartModule
             Cart result = null;
             try
             {
+                CheckCustomerIsExisted(customerId);
                 result = _cartRepository.GetFirstOrDefaultAsync(c => c.CustomerId == customerId).Result;
+                if (result == null)
+                {
+                    throw new Exception(ErrorMessage.CartError.CART_NOT_FOUND);
+                }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error at GetCartByCustomerId: " + ex.Message);
-                throw;
+                throw new Exception(ex.Message);
             }
             return result;
         }
@@ -56,6 +66,8 @@ namespace BE_Homnayangi.Modules.CartModule
             Cart cart = null;
             try
             {
+                CheckCustomerIsExisted(newItem.CustomerId);
+                await CheckItemIsExisted(newItem.ItemId, newItem.TypeItem);
                 cart = CheckCartExistedByCustomerId(newItem.CustomerId);
 
                 // No exist cart with this customerId
@@ -105,7 +117,56 @@ namespace BE_Homnayangi.Modules.CartModule
             return cart;
         }
 
-        public Cart CheckCartExistedByCustomerId(Guid customerId)
+        private async Task CheckItemIsExisted(Guid itemId, bool type)
+        {
+            try
+            {
+                if (type) // cooked > recipe
+                {
+                    var item = await _recipeRepository.GetByIdAsync(itemId);
+                    if (item == null)
+                    {
+                        throw new Exception(ErrorMessage.CartError.ITEM_NOT_FOUND);
+                    }
+                }
+                else
+                {
+                    var recipe = await _recipeRepository.GetByIdAsync(itemId);
+                    if (recipe == null)
+                    {
+                        var ingredient = await _ingredientRepository.GetByIdAsync(itemId);
+                        if (ingredient == null)
+                        {
+                            throw new Exception(ErrorMessage.CartError.ITEM_NOT_FOUND);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at CheckItemIsExisted: " + ex.Message);
+                throw new Exception(ex.Message);
+            }
+        }
+
+        private void CheckCustomerIsExisted(Guid customerId)
+        {
+            try
+            {
+                var customer = _customerRepository.GetFirstOrDefaultAsync(c => c.CustomerId == customerId).Result;
+                if (customer == null)
+                {
+                    throw new Exception(ErrorMessage.CartError.CUSTOMER_NOT_FOUND);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at CheckCustomerIsExisted: " + ex.Message);
+                throw new Exception(ex.Message);
+            }
+        }
+
+        private Cart CheckCartExistedByCustomerId(Guid customerId)
         {
             try
             {

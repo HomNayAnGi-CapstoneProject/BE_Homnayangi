@@ -24,16 +24,9 @@ namespace BE_Homnayangi.Controllers
         [HttpGet("{customerId}")]
         public async Task<ActionResult> GetCartDetailsByCustomerId([FromRoute] Guid customerId)
         {
-            var cart = _cartService.GetCartByCustomerId(customerId);
-            if (cart == null)
+            try
             {
-                return new JsonResult(new
-                {
-                    total_items_in_cart = 0
-                });
-            }
-            else
-            {
+                var cart = _cartService.GetCartByCustomerId(customerId);
                 var cart_details = await _cartDetailService.GetCartDetailsByCartId(cart.CartId);
                 return new JsonResult(new
                 {
@@ -41,26 +34,27 @@ namespace BE_Homnayangi.Controllers
                     cart_details = cart_details
                 });
             }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // PUT: api/v1/carts
         [HttpPut("update-cart")]
         public async Task<ActionResult> UpdateQuantityItemInCart([FromBody] UpdatedItemInCart updatedItemInCart)
         {
-            if (updatedItemInCart.Quantity == 0)
+            try
             {
-                var isDeleted = await _cartDetailService.DeleteItemInCart(updatedItemInCart.CartId, updatedItemInCart.ItemId, updatedItemInCart.TypeItem);
-            }
-            var result = await _cartDetailService.UpdateQuantityItemInCart(updatedItemInCart);
-            if (result == null)
-            {
-                return new JsonResult(new
+                if (updatedItemInCart.Quantity == 0)
                 {
-                    status = "failed"
-                });
-            }
-            else
-            {
+                    await _cartDetailService.DeleteItemInCart(updatedItemInCart.CartId, updatedItemInCart.ItemId, updatedItemInCart.TypeItem);
+                    return new JsonResult(new
+                    {
+                        status = "success"
+                    });
+                }
+                var result = await _cartDetailService.UpdateQuantityItemInCart(updatedItemInCart);
                 return new JsonResult(new
                 {
                     status = "success",
@@ -69,26 +63,27 @@ namespace BE_Homnayangi.Controllers
                     quantity = updatedItemInCart.Quantity,
                 });
             }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // DELETE: api/v1/carts
         [HttpDelete]
-        public async Task<ActionResult> DeleteItemInCart([FromBody]DeletedItemInCart item)
+        public async Task<ActionResult> DeleteItemInCart([FromBody] DeletedItemInCart item)
         {
-            var isDeleted = await _cartDetailService.DeleteItemInCart(item.CartId, item.ItemId, item.TypeItem);
-            if (!isDeleted)
+            try
             {
-                return new JsonResult(new
-                {
-                    status = "failed"
-                });
-            }
-            else
-            {
+                await _cartDetailService.DeleteItemInCart(item.CartId, item.ItemId, item.TypeItem);
                 return new JsonResult(new
                 {
                     status = "success"
                 });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
 
@@ -96,21 +91,17 @@ namespace BE_Homnayangi.Controllers
         [HttpPost]
         public async Task<ActionResult> AddNewItemIntoCart([FromBody] InsertedItemIntoCart newItem)
         {
-            var result = await _cartService.InsertNewItemIntoCart(newItem);
-
-            if (result == null)
+            try
             {
-                return new JsonResult(new
-                {
-                    status = "failed"
-                });
-            }
-            else
-            {
+                var result = await _cartService.InsertNewItemIntoCart(newItem);
                 return new JsonResult(new
                 {
                     status = "success"
                 });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }

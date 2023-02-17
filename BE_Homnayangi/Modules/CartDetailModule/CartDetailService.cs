@@ -5,6 +5,7 @@ using BE_Homnayangi.Modules.CartModule.Interface;
 using BE_Homnayangi.Modules.IngredientModule.Interface;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
 using Library.Models;
+using Library.Models.Constant;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -86,7 +87,11 @@ namespace BE_Homnayangi.Modules.CartDetailModule
             try
             {
                 var cartDetails = await _cartDetailRepository.GetCartDetailsBy(c => c.CartId == cartId);
-                if (cartDetails.Count() > 0)
+                if (cartDetails == null || cartDetails.Count == 0)
+                {
+                    throw new Exception(ErrorMessage.CartError.CART_NOT_FOUND);
+                }
+                else
                 {
                     result = await ToResponse(cartDetails.ToList());
                 }
@@ -94,7 +99,7 @@ namespace BE_Homnayangi.Modules.CartDetailModule
             catch (Exception ex)
             {
                 Console.WriteLine("Error at GetCartDetailsByCartId: " + ex.Message);
-                throw;
+                throw new Exception(ex.Message);
             }
             return result;
         }
@@ -105,7 +110,7 @@ namespace BE_Homnayangi.Modules.CartDetailModule
             {
                 if (updatedItemInCart == null || updatedItemInCart.Quantity < 0)
                 {
-                    return null;
+                    throw new Exception(ErrorMessage.CartError.QUANTITY_NOT_VALID);
                 }
 
                 var item = _cartDetailRepository.GetFirstOrDefaultAsync(cd =>
@@ -113,46 +118,53 @@ namespace BE_Homnayangi.Modules.CartDetailModule
                                                     && cd.ItemId == updatedItemInCart.ItemId
                                                     && cd.IsCooked == updatedItemInCart.TypeItem).Result;
 
-                if (item != null)
+                if (item == null)
+                {
+                    throw new Exception(ErrorMessage.CartError.ITEM_NOT_FOUND);
+                }
+                else
                 {
                     item.Quantity = updatedItemInCart.Quantity;
                     await _cartDetailRepository.UpdateAsync(item);
                     return updatedItemInCart;
                 }
-                return null;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error at UpdateQuantityItemInCart: " + ex.Message);
-                return null;
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
-        public async Task<bool> DeleteItemInCart(Guid cartId, Guid itemId, bool type)
+        public async Task DeleteItemInCart(Guid cartId, Guid itemId, bool type)
         {
-            bool isDeleted = false;
             try
-            { 
+            {
                 var item = _cartDetailRepository.GetFirstOrDefaultAsync(
                                                     cd => cd.CartId == cartId
                                                     && cd.ItemId == itemId
                                                     && cd.IsCooked == type).Result;
-                if (item != null)
+                if (item == null)
                 {
-                    await _cartDetailRepository.RemoveAsync(item);
-                    isDeleted = true;
+                    throw new Exception(ErrorMessage.CartError.ITEM_NOT_FOUND);
+                }
+                else
+                {
                     var cart = await _cartRepository.GetFirstOrDefaultAsync(c => c.CartId == cartId);
+                    if (cart == null)
+                    {
+                        throw new Exception(ErrorMessage.CartError.CART_NOT_FOUND);
+                    }
                     --cart.QuantityOfItem;
+                    await _cartDetailRepository.RemoveAsync(item);
                     await _cartRepository.UpdateAsync(cart);
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error at DeleteItemInCart: " + ex.Message);
-                throw;
+                throw new Exception(ex.Message);
             }
-            return isDeleted;
         }
     }
 }
