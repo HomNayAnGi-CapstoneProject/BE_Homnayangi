@@ -3,7 +3,6 @@ using BE_Homnayangi.Modules.CartDetailModule.Request;
 using BE_Homnayangi.Modules.CartModule.Interface;
 using BE_Homnayangi.Modules.IngredientModule.Interface;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
-using Library.Commons;
 using Library.Models;
 using System;
 using System.Collections.Generic;
@@ -81,24 +80,20 @@ namespace BE_Homnayangi.Modules.CartModule
                     bool isExisted = false;
                     foreach (var cd in cartDetails)
                     {
-                        if (cd.ItemId == newItem.ItemId)
+                        if (cd.ItemId == newItem.ItemId && cd.IsCooked == newItem.TypeItem)
                         {
-                            if (cd.IsCooked && newItem.TypeItem.Equals(CommonEnum.ItemInCart.COOKED)
-                                || !cd.IsCooked
-                                        && (newItem.TypeItem.Equals(CommonEnum.ItemInCart.PACKAGE_INGREDIENT)
-                                        || newItem.TypeItem.Equals(CommonEnum.ItemInCart.INGREDIENT)))
-                            {
-                                isExisted = true;
-                                ++cd.Quantity;
-                                await _cartDetailRepository.UpdateAsync(cd);
-                                break;
-                            }
+                            isExisted = true;
+                            ++cd.Quantity;
+                            await _cartDetailRepository.UpdateAsync(cd);
+                            break;
                         }
                     }
                     if (!isExisted)
                     {
                         // Insert new item into cart detail
                         await _cartDetailRepository.AddAsync(await InitCartDetail(cart.CartId, newItem.ItemId, newItem.TypeItem));
+                        ++cart.QuantityOfItem;
+                        await _cartRepository.UpdateAsync(cart);
                     }
                 }
             }
@@ -123,7 +118,7 @@ namespace BE_Homnayangi.Modules.CartModule
             }
         }
 
-        public async Task<CartDetail> InitCartDetail(Guid cartId, Guid itemId, string typeItem)
+        public async Task<CartDetail> InitCartDetail(Guid cartId, Guid itemId, bool typeItem)
         {
             CartDetail cartDetail = new CartDetail()
             {
@@ -133,23 +128,27 @@ namespace BE_Homnayangi.Modules.CartModule
             };
 
             // Get price based on type item
-            if (typeItem.Equals(CommonEnum.ItemInCart.INGREDIENT))
-            {
-                var ingredient = await _ingredientRepository.GetByIdAsync(itemId);
-                cartDetail.UnitPrice = ingredient.Price;
-                cartDetail.IsCooked = false;
-            }
-            else if (typeItem.Equals(CommonEnum.ItemInCart.PACKAGE_INGREDIENT))
-            {
-                var packageIngredient = await _recipeRepository.GetByIdAsync(itemId);
-                cartDetail.UnitPrice = packageIngredient.PackagePrice;
-                cartDetail.IsCooked = false;
-            }
-            else  // cooked
+            if (typeItem) // cooked
             {
                 var cookedItem = await _recipeRepository.GetByIdAsync(itemId);
                 cartDetail.UnitPrice = cookedItem.CookedPrice;
                 cartDetail.IsCooked = true;
+            }
+            else
+            {
+
+                var ingredient = await _ingredientRepository.GetByIdAsync(itemId);
+                if (ingredient != null) // ingredient
+                {
+                    cartDetail.UnitPrice = ingredient.Price;
+                    cartDetail.IsCooked = false;
+                }
+                else // PackagePrice
+                {
+                    var packageIngredient = await _recipeRepository.GetByIdAsync(itemId);
+                    cartDetail.UnitPrice = packageIngredient.PackagePrice;
+                    cartDetail.IsCooked = false;
+                }
             }
             return cartDetail;
         }

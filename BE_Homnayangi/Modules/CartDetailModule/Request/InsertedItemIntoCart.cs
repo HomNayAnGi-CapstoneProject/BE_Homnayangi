@@ -6,6 +6,6 @@ namespace BE_Homnayangi.Modules.CartDetailModule.Request
     {
         public Guid CustomerId { get; set; }
         public Guid ItemId { get; set; }
-        public string TypeItem { get; set; }
+        public bool TypeItem { get; set; }
     }
 }

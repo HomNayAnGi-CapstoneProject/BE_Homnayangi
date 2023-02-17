@@ -44,9 +44,13 @@ namespace BE_Homnayangi.Controllers
         }
 
         // PUT: api/v1/carts
-        [HttpPut("update-quantity-item")]
+        [HttpPut("update-cart")]
         public async Task<ActionResult> UpdateQuantityItemInCart([FromBody] UpdatedItemInCart updatedItemInCart)
         {
+            if (updatedItemInCart.Quantity == 0)
+            {
+                var isDeleted = await _cartDetailService.DeleteItemInCart(updatedItemInCart.CartId, updatedItemInCart.ItemId, updatedItemInCart.TypeItem);
+            }
             var result = await _cartDetailService.UpdateQuantityItemInCart(updatedItemInCart);
             if (result == null)
             {
@@ -69,7 +73,7 @@ namespace BE_Homnayangi.Controllers
 
         // DELETE: api/v1/carts
         [HttpDelete]
-        public async Task<ActionResult> UpdateQuantityItemInCart([FromBody]DeletedItemInCart item)
+        public async Task<ActionResult> DeleteItemInCart([FromBody]DeletedItemInCart item)
         {
             var isDeleted = await _cartDetailService.DeleteItemInCart(item.CartId, item.ItemId, item.TypeItem);
             if (!isDeleted)

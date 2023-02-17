@@ -1,10 +1,10 @@
 ﻿using BE_Homnayangi.Modules.CartDetailModule.Interface;
 using BE_Homnayangi.Modules.CartDetailModule.Request;
 using BE_Homnayangi.Modules.CartDetailModule.Response;
+using BE_Homnayangi.Modules.CartModule.Interface;
 using BE_Homnayangi.Modules.IngredientModule.Interface;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
 using Library.Models;
-using Library.Commons;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,13 +15,15 @@ namespace BE_Homnayangi.Modules.CartDetailModule
 {
     public class CartDetailService : ICartDetailService
     {
+        private readonly ICartRepository _cartRepository;
         private readonly ICartDetailRepository _cartDetailRepository;
         private readonly IIngredientRepository _ingredientRepository;
         private readonly IRecipeRepository _recipeRepository;
 
-        public CartDetailService(ICartDetailRepository cartDetailRepository,
+        public CartDetailService(ICartRepository cartRepository, ICartDetailRepository cartDetailRepository,
             IIngredientRepository ingredientRepository, IRecipeRepository recipeRepository)
         {
+            _cartRepository = cartRepository;
             _cartDetailRepository = cartDetailRepository;
             _ingredientRepository = ingredientRepository;
             _recipeRepository = recipeRepository;
@@ -105,22 +107,11 @@ namespace BE_Homnayangi.Modules.CartDetailModule
                 {
                     return null;
                 }
-                CartDetail item = null;
-                if (updatedItemInCart.TypeItem.Equals(CommonEnum.ItemInCart.PACKAGE_INGREDIENT)
-                    || updatedItemInCart.TypeItem.Equals(CommonEnum.ItemInCart.INGREDIENT)) // isCooked = false
-                {
-                    item = _cartDetailRepository.GetFirstOrDefaultAsync(cd =>
+
+                var item = _cartDetailRepository.GetFirstOrDefaultAsync(cd =>
                                                     cd.CartId == updatedItemInCart.CartId
                                                     && cd.ItemId == updatedItemInCart.ItemId
-                                                    && !cd.IsCooked).Result;
-                }
-                else if (updatedItemInCart.TypeItem.Equals(CommonEnum.ItemInCart.COOKED)) // isCooked = true
-                {
-                    item = _cartDetailRepository.GetFirstOrDefaultAsync(cd =>
-                                                    cd.CartId == updatedItemInCart.CartId
-                                                    && cd.ItemId == updatedItemInCart.ItemId
-                                                    && cd.IsCooked).Result;
-                }
+                                                    && cd.IsCooked == updatedItemInCart.TypeItem).Result;
 
                 if (item != null)
                 {
@@ -138,21 +129,22 @@ namespace BE_Homnayangi.Modules.CartDetailModule
             }
         }
 
-        public async Task<bool> DeleteItemInCart(Guid cartId, Guid itemId, string type)
+        public async Task<bool> DeleteItemInCart(Guid cartId, Guid itemId, bool type)
         {
             bool isDeleted = false;
             try
-            {
+            { 
                 var item = _cartDetailRepository.GetFirstOrDefaultAsync(
                                                     cd => cd.CartId == cartId
                                                     && cd.ItemId == itemId
-                                                    && ((cd.IsCooked && type.Equals(CommonEnum.ItemInCart.COOKED)) 
-                                                        || ((!cd.IsCooked && (type.Equals(CommonEnum.ItemInCart.INGREDIENT) 
-                                                            || type.Equals(CommonEnum.ItemInCart.PACKAGE_INGREDIENT)))))).Result;
+                                                    && cd.IsCooked == type).Result;
                 if (item != null)
                 {
                     await _cartDetailRepository.RemoveAsync(item);
                     isDeleted = true;
+                    var cart = await _cartRepository.GetFirstOrDefaultAsync(c => c.CartId == cartId);
+                    --cart.QuantityOfItem;
+                    await _cartRepository.UpdateAsync(cart);
                 }
             }
             catch (Exception ex)
