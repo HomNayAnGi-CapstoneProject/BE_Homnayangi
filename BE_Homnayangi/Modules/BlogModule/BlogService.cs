@@ -72,7 +72,7 @@ namespace BE_Homnayangi.Modules.BlogModule
             await _blogRepository.AddAsync(newBlog);
         }
 
-        public async Task UpdateBlog(BlogUpdateRequest request)
+        public async Task UpdateBlog(BlogUpdateRequest request, Guid currentUserId)
         {
             try
             {
@@ -164,6 +164,7 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 // update blog
                 request.Blog.UpdatedDate = DateTime.Now;
+                request.Blog.AuthorId = currentUserId;
                 request.Blog.RecipeId = blog.RecipeId;
                 request.Blog.CreatedDate = blog.CreatedDate;
                 request.Blog.Reaction = blog.Reaction;
@@ -184,6 +185,12 @@ namespace BE_Homnayangi.Modules.BlogModule
             if (blogDelete == null) return;
             blogDelete.BlogStatus = 0;
             await _blogRepository.UpdateAsync(blogDelete);
+        }
+        public async Task RemoveBlogDraft(Guid? id)
+        {
+            Blog blogDraftRemove = _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId.Equals(id) && x.BlogStatus == 2).Result;
+            if (blogDraftRemove == null) return;
+            await _blogRepository.RemoveAsync(blogDraftRemove);
         }
 
         public Blog GetBlogByID(Guid? id)

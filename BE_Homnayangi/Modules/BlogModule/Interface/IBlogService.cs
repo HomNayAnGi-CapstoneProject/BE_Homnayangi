@@ -12,13 +12,17 @@ namespace BE_Homnayangi.Modules.BlogModule.Interface
 {
     public interface IBlogService
     {
+        #region CRUD Blog
         public Task AddNewBlog(Blog newBlog);
 
-        public Task UpdateBlog(BlogUpdateRequest request);
+        public Task UpdateBlog(BlogUpdateRequest request, Guid currentUserId);
 
         public Task<Guid> CreateEmptyBlog(Guid authorId);
 
         public Task DeleteBlog(Guid? ID);
+
+        public Task RemoveBlogDraft(Guid? Id);
+        #endregion
 
         public Task<ICollection<Blog>> GetAll();
 
