@@ -3,6 +3,13 @@ namespace Library.Models.Constant
 {
     public static class ErrorMessage
     {
+        #region Common error message
+        public static class CommonError
+        {
+            public readonly static string ID_IS_NULL = "ID request is null";
+        }
+        #endregion
+
         #region User error message
         public static class UserError
         {

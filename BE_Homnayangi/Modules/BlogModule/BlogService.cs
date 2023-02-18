@@ -192,9 +192,18 @@ namespace BE_Homnayangi.Modules.BlogModule
         }
         public async Task RemoveBlogDraft(Guid? id)
         {
-            Blog blogDraftRemove = _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId.Equals(id) && x.BlogStatus == 2).Result;
-            if (blogDraftRemove == null) return;
-            await _blogRepository.RemoveAsync(blogDraftRemove);
+            try
+            {
+                if (id == null) throw new Exception(ErrorMessage.CommonError.ID_IS_NULL);
+                Blog blogDraftRemove = _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId == id && x.BlogStatus == 2).Result;
+                if (blogDraftRemove == null) throw new Exception(ErrorMessage.BlogError.BLOG_NOT_FOUND);
+                await _blogRepository.RemoveAsync(blogDraftRemove);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at Remove blog draft: " + ex.Message);
+                throw new Exception(ex.Message);
+            }
         }
 
         public Blog GetBlogByID(Guid? id)

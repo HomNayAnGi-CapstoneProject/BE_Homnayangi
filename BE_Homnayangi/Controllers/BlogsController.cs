@@ -7,6 +7,7 @@ using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Response;
 using Library.DataAccess;
 using Library.Models;
+using Library.Models.Constant;
 using Library.PagedList;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -134,20 +135,15 @@ namespace BE_Homnayangi.Controllers
         [HttpDelete("remove-draft/{id}")]
         public async Task<IActionResult> RemoveBlogDraft(Guid id)
         {
-            var blog = _blogService.GetBlogByID(id);
-            if (blog == null)
+            try
             {
-                return NotFound();
+                await _blogService.RemoveBlogDraft(id);
+                return NoContent();
             }
-
-            await _blogService.RemoveBlogDraft(blog.BlogId);
-
-            return NoContent();
-        }
-
-        private bool BlogExists(Guid id)
-        {
-            return _context.Blogs.Any(e => e.BlogId == id);
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("category/tag")]
