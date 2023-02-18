@@ -889,3 +889,4 @@ E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.dl
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\ref\BE_Homnayangi.dll
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.pdb
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.genruntimeconfig.cache
+E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\UnidecodeSharpFork.dll

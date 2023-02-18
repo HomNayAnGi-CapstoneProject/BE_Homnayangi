@@ -17,10 +17,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using UnidecodeSharpFork;
 
 namespace BE_Homnayangi.Modules.BlogModule
 {
@@ -110,7 +114,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     {
                         r.RecipeId = blog.Recipe.RecipeId;
                         await _recipeDetailRepository.AddAsync(r);
-                    } 
+                    }
                 }
                 // check if leftover then remove
                 foreach (var rd in recipeDetails)
@@ -268,22 +272,34 @@ namespace BE_Homnayangi.Modules.BlogModule
 
         public async Task<ICollection<SearchBlogsResponse>> GetBlogAndRecipeByName(String name)
         {
-
-            var Blogs = await _blogRepository.GetBlogsBy(x => x.Title.Contains(name) && x.BlogStatus == 1);
-            var blogResponse = Blogs.Join(
-                await _recipeRepository.GetAll(),
-                b => b.BlogId,
-                r => r.RecipeId,
-                (b, r) => new SearchBlogsResponse
-                {
-                    BlogId = b.BlogId,
-                    Title = b.Title,
-                }).ToList();
+            var Blogs = await _blogRepository.GetBlogsBy(x =>
+  x.BlogStatus == 1);
+            var blogResponse = Blogs.Where(x => ConvertToUnSign(x.Title).Contains(name, StringComparison.CurrentCultureIgnoreCase) || x.Title.Contains(name)).ToList().Select(x => new SearchBlogsResponse
+            {
+                Title = x.Title,
+                BlogId = x.BlogId
+            }
+            ).ToList();
 
             return blogResponse;
         }
 
-
+        private string ConvertToUnSign(string input)
+        {
+            input = input.Trim();
+            for (int i = 0x20; i < 0x30; i++)
+            {
+                input = input.Replace(((char)i).ToString(), " ");
+            }
+            Regex regex = new Regex(@"\p{IsCombiningDiacriticalMarks}+");
+            string str = input.Normalize(NormalizationForm.FormD);
+            string str2 = regex.Replace(str, string.Empty).Replace('đ', 'd').Replace('Đ', 'D');
+            while (str2.IndexOf("?") >= 0)
+            {
+                str2 = str2.Remove(str2.IndexOf("?"), 1);
+            }
+            return str2;
+        }
         internal IDictionary<Guid, List<string>> GetListSubCateName(ICollection<Blog> blogs, ICollection<BlogSubCate> blogSubCates)
         {
 
