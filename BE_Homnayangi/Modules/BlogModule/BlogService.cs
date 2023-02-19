@@ -685,25 +685,20 @@ namespace BE_Homnayangi.Modules.BlogModule
                 {
                     var listBlogSubCate = await _blogSubCateRepository.GetAll(includeProperties: "SubCate");
                     var listTagNames = GetListSubCateName(blogs, listBlogSubCate);
-                    list = new List<OverviewBlog>();
-                    foreach (var blog in blogs)
+                    list = blogs.Select(blog => new OverviewBlog()
                     {
-                        OverviewBlog tmp = new OverviewBlog()
-                        {
-                            BlogId = blog.BlogId,
-                            Title = blog?.Title,
-                            Description = blog?.Description,
-                            ImageUrl = blog?.ImageUrl,
-                            CreatedDate = blog.CreatedDate.Value,
-                            View = blog?.View,
-                            Reaction = blog?.Reaction,
-                            ListSubCateName = listTagNames[blog.BlogId],
-                            RecipeName = blog.Recipe?.Title,
-                            CookedPrice = blog.Recipe?.CookedPrice,
-                            TotalKcal = blog.Recipe?.TotalKcal,
-                        };
-                        list.Add(tmp);
-                    }
+                        BlogId = blog.BlogId,
+                        Title = blog?.Title,
+                        Description = blog?.Description,
+                        ImageUrl = blog?.ImageUrl,
+                        CreatedDate = blog.CreatedDate.Value,
+                        View = blog?.View,
+                        Reaction = blog?.Reaction,
+                        ListSubCateName = listTagNames[blog.BlogId],
+                        RecipeName = blog.Recipe?.Title,
+                        CookedPrice = blog.Recipe?.CookedPrice,
+                        TotalKcal = blog.Recipe?.TotalKcal,
+                    }).ToList();
                 }
             }
             catch (Exception ex)
@@ -721,23 +716,18 @@ namespace BE_Homnayangi.Modules.BlogModule
                 var blogs = await _blogRepository.GetBlogsBy(includeProperties: "Recipe,Author");
                 if (blogs != null && blogs.Count > 0)
                 {
-                    list = new List<OverviewBlog>();
-                    foreach (var blog in blogs)
+                    list = blogs.Select(blog => new OverviewBlog()
                     {
-                        OverviewBlog tmp = new OverviewBlog()
-                        {
-                            BlogId = blog.BlogId,
-                            AuthorName = blog.Author.Firstname + " " + blog.Author.Lastname,
-                            ImageUrl = blog?.ImageUrl,
-                            Title = blog?.Title,
-                            CreatedDate = blog.CreatedDate.Value,
-                            View = blog?.View,
-                            Reaction = blog?.Reaction,
-                            Status = blog.BlogStatus,
-                            TotalKcal = blog.Recipe?.TotalKcal,
-                        };
-                        list.Add(tmp);
-                    }
+                        BlogId = blog.BlogId,
+                        AuthorName = blog.Author.Firstname + " " + blog.Author.Lastname,
+                        ImageUrl = blog?.ImageUrl,
+                        Title = blog?.Title,
+                        CreatedDate = blog.CreatedDate.Value,
+                        View = blog?.View,
+                        Reaction = blog?.Reaction,
+                        Status = blog.BlogStatus,
+                        TotalKcal = blog.Recipe?.TotalKcal,
+                    }).ToList();
                 }
             }
             catch (Exception ex)
