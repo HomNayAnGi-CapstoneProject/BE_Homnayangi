@@ -156,7 +156,7 @@ namespace BE_Homnayangi.Modules.CartModule
                 var customer = _customerRepository.GetFirstOrDefaultAsync(c => c.CustomerId == customerId).Result;
                 if (customer == null)
                 {
-                    throw new Exception(ErrorMessage.CartError.CUSTOMER_NOT_FOUND);
+                    throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_FOUND);
                 }
             }
             catch (Exception ex)

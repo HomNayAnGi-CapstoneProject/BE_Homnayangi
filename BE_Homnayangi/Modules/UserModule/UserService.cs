@@ -603,28 +603,35 @@ namespace BE_Homnayangi.Modules.UserModule
 
         public CurrentUserResponse GetCurrentLoginUser()
         {
-
-            var user = _httpContextAccessor.HttpContext.User;
-            var identity = user.Identity as ClaimsIdentity;
-            if (identity != null)
+            CurrentUserResponse currentUser = null;
+            try
             {
-                var userClaims = identity.Claims;
-                CurrentUserResponse currentUser = new CurrentUserResponse()
+                var user = _httpContextAccessor.HttpContext.User;
+                var identity = user.Identity as ClaimsIdentity;
+                if (identity != null)
                 {
-                    Id = new Guid(userClaims.FirstOrDefault(x => x.Type == "Id")?.Value),
-                    Displayname = userClaims.FirstOrDefault(x => x.Type == "Displayname")?.Value,
-                    Username = userClaims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value,
-                    Firstname = userClaims.FirstOrDefault(x => x.Type == "Firstname")?.Value,
-                    Lastname = userClaims.FirstOrDefault(x => x.Type == "Lastname")?.Value,
-                    Email = userClaims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value,
-                    Avatar = userClaims.FirstOrDefault(x => x.Type == "Avatar")?.Value,
-                    Phonenumber = userClaims.FirstOrDefault(x => x.Type == "Phone Number")?.Value,
-                    Gender = Int32.Parse(userClaims.FirstOrDefault(x => x.Type == ClaimTypes.Gender)?.Value),
-                    Role = userClaims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value
-                };
-                return currentUser;
+                    var userClaims = identity.Claims;
+                    currentUser = new CurrentUserResponse()
+                    {
+                        Id = new Guid(userClaims.FirstOrDefault(x => x.Type == "Id")?.Value),
+                        Displayname = userClaims.FirstOrDefault(x => x.Type == "Displayname")?.Value,
+                        Username = userClaims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value,
+                        Firstname = userClaims.FirstOrDefault(x => x.Type == "Firstname")?.Value,
+                        Lastname = userClaims.FirstOrDefault(x => x.Type == "Lastname")?.Value,
+                        Email = userClaims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value,
+                        Avatar = userClaims.FirstOrDefault(x => x.Type == "Avatar")?.Value,
+                        Phonenumber = userClaims.FirstOrDefault(x => x.Type == "Phone Number")?.Value,
+                        Gender = Int32.Parse(userClaims.FirstOrDefault(x => x.Type == ClaimTypes.Gender)?.Value),
+                        Role = userClaims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value
+                    };
+                }
             }
-            return null;
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at GetCurrentLoginUser: " + ex.Message);
+                throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_FOUND);
+            }
+            return currentUser;
         }
     }
 }

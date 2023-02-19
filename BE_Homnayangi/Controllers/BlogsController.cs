@@ -96,22 +96,33 @@ namespace BE_Homnayangi.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateEmptyBlog()
         {
-            CurrentUserResponse currentUser = _userService.GetCurrentLoginUser();
-            var id = await _blogService.CreateEmptyBlog(currentUser.Id);
-            if (id.ToString() == "00000000-0000-0000-0000-000000000000")
+            try
             {
-                return new JsonResult(new
+                CurrentUserResponse currentUser = _userService.GetCurrentLoginUser();
+                if (currentUser == null)
                 {
-                    status = "fail"
-                });
+                    throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_FOUND);
+                }
+                var id = await _blogService.CreateEmptyBlog(currentUser.Id);
+                if (id.ToString() == "00000000-0000-0000-0000-000000000000")
+                {
+                    return new JsonResult(new
+                    {
+                        status = "fail"
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        status = "success",
+                        blog_id = id,
+                    });
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return new JsonResult(new
-                {
-                    status = "success",
-                    blog_id = id,
-                });
+                return BadRequest(ex.Message);
             }
         }
 
