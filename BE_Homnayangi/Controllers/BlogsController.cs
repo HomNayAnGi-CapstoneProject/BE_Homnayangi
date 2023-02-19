@@ -35,6 +35,88 @@ namespace BE_Homnayangi.Controllers
             _userService = userService;
         }
 
+        // Get all blogs: staff and manager manage all blogs of system
+        [HttpGet("user")] // blogid, authorName, img, title, created_date, views, reactions, status
+        public async Task<ActionResult> GetBlogsByUser([FromRoute] Guid userId)
+        {
+            try
+            {
+                CurrentUserResponse currentUser = _userService.GetCurrentLoginUser();
+                if (currentUser == null)
+                {
+                    throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
+                }
+                else if (currentUser.Role.Equals("Customer"))
+                {
+                    throw new Exception(ErrorMessage.UserError.ACTION_FOR_STAFF_AND_MANAGER_ROLE);
+                }
+
+                var blogs = await _blogService.GetBlogsByUser();
+                if (blogs == null || blogs.Count == 0)
+                {
+                    return new JsonResult(new
+                    {
+                        total_result = 0
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        total_result = blogs.Count,
+                        result = blogs
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // Get all blogs(customer)
+        [HttpGet("customer")] // Available blogs: blogid, recipeName, title, description, img, created_date, views, reactions,
+                              // cooked_price, subcates[] -> tags,
+                              // Recipe (Kcal, cookedPrice)
+        public async Task<ActionResult> GetBlogsByCustomer()
+        {
+            try
+            {
+                CurrentUserResponse currentUser = _userService.GetCurrentLoginUser();
+                if (currentUser == null)
+                {
+                    throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
+                }
+                else if (!currentUser.Role.Equals("Customer"))
+                {
+                    throw new Exception(ErrorMessage.UserError.ACTION_FOR_USER_ROLE_ONLY);
+                }
+
+                var blogs = await _blogService.GetBlogsByCustomer();
+                if (blogs == null || blogs.Count == 0)
+                {
+                    return new JsonResult(new
+                    {
+                        total_result = 0
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        total_result = blogs.Count,
+                        result = blogs
+                    });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
         // GET: api/Blogs
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Blog>>> GetBlogs()
@@ -60,37 +142,6 @@ namespace BE_Homnayangi.Controllers
             });
         }
 
-        // PUT: api/Blogs/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutBlog(Guid id, Blog blog)
-        //{
-        //    if (id != blog.BlogId)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    _context.Entry(blog).State = EntityState.Modified;
-
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!BlogExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return NoContent();
-        //}
-
         // POST: api/Blogs
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
@@ -101,24 +152,20 @@ namespace BE_Homnayangi.Controllers
                 CurrentUserResponse currentUser = _userService.GetCurrentLoginUser();
                 if (currentUser == null)
                 {
-                    throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_FOUND);
+                    throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
                 }
+                else if (!currentUser.Role.Equals("User"))
+                {
+                    throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_ALLOWED_TO_CREATE_BLOG);
+                }
+
+                // Role: User only
                 var id = await _blogService.CreateEmptyBlog(currentUser.Id);
-                if (id.ToString() == "00000000-0000-0000-0000-000000000000")
+                return new JsonResult(new
                 {
-                    return new JsonResult(new
-                    {
-                        status = "fail"
-                    });
-                }
-                else
-                {
-                    return new JsonResult(new
-                    {
-                        status = "success",
-                        blog_id = id,
-                    });
-                }
+                    status = "success",
+                    blog_id = id,
+                });
             }
             catch (Exception ex)
             {

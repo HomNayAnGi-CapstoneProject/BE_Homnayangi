@@ -629,7 +629,7 @@ namespace BE_Homnayangi.Modules.UserModule
             catch (Exception ex)
             {
                 Console.WriteLine("Error at GetCurrentLoginUser: " + ex.Message);
-                throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_FOUND);
+                throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
             }
             return currentUser;
         }
