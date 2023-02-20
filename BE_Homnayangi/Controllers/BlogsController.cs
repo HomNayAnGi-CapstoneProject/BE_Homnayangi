@@ -37,7 +37,7 @@ namespace BE_Homnayangi.Controllers
 
         // Get all blogs: staff and manager manage all blogs of system
         [HttpGet("user")] // blogid, authorName, img, title, created_date, views, reactions, status
-        public async Task<ActionResult> GetBlogsByUser([FromRoute] Guid userId)
+        public async Task<ActionResult> GetBlogsByUser()
         {
             try
             {
