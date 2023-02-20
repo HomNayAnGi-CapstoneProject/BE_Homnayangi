@@ -1,6 +1,8 @@
 ﻿using BE_Homnayangi.Modules.DTO.IngredientDTO;
 using BE_Homnayangi.Modules.DTO.RecipeDetailsDTO;
 using BE_Homnayangi.Modules.RecipeModule.RecipeDTO;
+using BE_Homnayangi.Modules.SubCateModule.Response;
+using Library.Models;
 using System;
 using System.Collections.Generic;
 
@@ -22,19 +24,18 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
         public Guid RecipeId { get; set; }
         public string RecipeTitle { get; set; }
         public string RecipeImageURL { get; set; }
-        public decimal? RecipeCookedPrice { get; set; }
-        public int? RecipeSize { get; set; }
-
-        // List RecipeDetails
-        public List<RecipeDetailsResponse> RecipeDetailss { get; set; }
+        public decimal? PackagePrice { get; set; }
+        public decimal? CookedPrice { get; set; }
+        public int? MaxSize { get; set; }
+        public int? MinSize { get; set; }
 
 
         // List SubCates
-        public IDictionary<Guid, List<string>> SubCates { get; set; }
+        public List<SubCateResponse> SubCates { get; set; }
 
 
         // List Ingredients
-        public List<IngredientResponse> Ingredients { get; set; }
+        public List<RecipeDetail> RecipeDetails { get; set; }
 
 
 
