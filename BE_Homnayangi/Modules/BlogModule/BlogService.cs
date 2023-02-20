@@ -14,17 +14,13 @@ using Library.Models.Constant;
 using Library.Models.Enum;
 using Library.PagedList;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using UnidecodeSharpFork;
 
 namespace BE_Homnayangi.Modules.BlogModule
 {
@@ -670,14 +666,75 @@ namespace BE_Homnayangi.Modules.BlogModule
                 };
                 await _blogRepository.AddAsync(blog);
                 id = blog.BlogId;
+                return id;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error at CreateEmptyBlog: " + ex.Message);
-                throw;
+                throw new Exception("Error at CreateEmptyBlog BlogService!!! Details: " + ex.Message);
             }
-            return id;
+        }
+
+        public async Task<ICollection<OverviewBlog>> GetBlogsByCustomer()
+        {
+            List<OverviewBlog> list = null;
+            try
+            {
+                var blogs = await _blogRepository.GetBlogsBy(blog => blog.BlogStatus == 1, includeProperties: "Recipe");
+                if (blogs != null && blogs.Count > 0)
+                {
+                    var listBlogSubCate = await _blogSubCateRepository.GetAll(includeProperties: "SubCate");
+                    var listTagNames = GetListSubCateName(blogs, listBlogSubCate);
+                    list = blogs.Select(blog => new OverviewBlog()
+                    {
+                        BlogId = blog.BlogId,
+                        Title = blog?.Title,
+                        Description = blog?.Description,
+                        ImageUrl = blog?.ImageUrl,
+                        CreatedDate = blog.CreatedDate.Value,
+                        View = blog?.View,
+                        Reaction = blog?.Reaction,
+                        ListSubCateName = listTagNames[blog.BlogId],
+                        RecipeName = blog.Recipe?.Title,
+                        CookedPrice = blog.Recipe?.CookedPrice,
+                        TotalKcal = blog.Recipe?.TotalKcal,
+                    }).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return list;
+        }
+
+        public async Task<ICollection<OverviewBlog>> GetBlogsByUser()
+        {
+            List<OverviewBlog> list = null;
+            try
+            {
+                var blogs = await _blogRepository.GetBlogsBy(includeProperties: "Recipe,Author");
+                if (blogs != null && blogs.Count > 0)
+                {
+                    list = blogs.Select(blog => new OverviewBlog()
+                    {
+                        BlogId = blog.BlogId,
+                        AuthorName = blog.Author.Firstname + " " + blog.Author.Lastname,
+                        ImageUrl = blog?.ImageUrl,
+                        Title = blog?.Title,
+                        CreatedDate = blog.CreatedDate.Value,
+                        View = blog?.View,
+                        Reaction = blog?.Reaction,
+                        Status = blog.BlogStatus,
+                        TotalKcal = blog.Recipe?.TotalKcal,
+                    }).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return list;
         }
     }
-
 }
