@@ -141,6 +141,20 @@ namespace BE_Homnayangi.Controllers
                 result = blog
             });
         }
+        
+        // GET: api/v1/blogs/57448A79-8855-42AD-BD2E-0295D1436037
+        [HttpGet("staff-preview/{id}")]
+        public async Task<ActionResult<BlogDetailResponse>> GetBlogForPreview([FromRoute] Guid id)
+        {
+            try
+            {
+                return Ok(await _blogService.GetBlogDetailPreview(id));
+            } 
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         // POST: api/Blogs
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -196,7 +210,7 @@ namespace BE_Homnayangi.Controllers
             try
             {
                 await _blogService.RemoveBlogDraft(id);
-                return NoContent();
+                return Ok();
             }
             catch (Exception ex)
             {

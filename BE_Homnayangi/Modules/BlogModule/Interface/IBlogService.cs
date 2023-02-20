@@ -49,6 +49,7 @@ namespace BE_Homnayangi.Modules.BlogModule.Interface
         public Task<ICollection<GetBlogsForHomePageResponse>> GetSoupAndNormalBlogs(Guid? categoryId, Guid? subCateId);
 
         public Task<BlogDetailResponse> GetBlogDetails(Guid blogId);
+        public Task<BlogDetailResponse> GetBlogDetailPreview(Guid blogId);
 
         public Task<PagedResponse<PagedList<BlogsByCatesResponse>>> GetBlogsBySubCates(BlogsBySubCatesRequest request);
 
