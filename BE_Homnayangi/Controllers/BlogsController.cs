@@ -168,7 +168,7 @@ namespace BE_Homnayangi.Controllers
                 {
                     throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
                 }
-                else if (!currentUser.Role.Equals("User"))
+                else if (currentUser.Role.Equals("Customer"))
                 {
                     throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_ALLOWED_TO_CREATE_BLOG);
                 }
