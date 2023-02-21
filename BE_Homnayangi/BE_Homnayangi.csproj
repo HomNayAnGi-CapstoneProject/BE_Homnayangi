@@ -65,6 +65,5 @@
     <Folder Include="Modules\RewardModule\DTO\" />
     <Folder Include="Modules\RewardModule\DTO\Response\" />
     <Folder Include="Modules\RewardModule\DTO\Request\" />
-    <Folder Include="Modules\Utils\" />
   </ItemGroup>
 </Project>

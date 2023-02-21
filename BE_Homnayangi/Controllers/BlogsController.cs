@@ -5,6 +5,7 @@ using BE_Homnayangi.Modules.SubCateModule.Interface;
 using BE_Homnayangi.Modules.SubCateModule.Response;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Response;
+using BE_Homnayangi.Utils;
 using Library.DataAccess;
 using Library.Models;
 using Library.Models.Constant;
@@ -41,12 +42,11 @@ namespace BE_Homnayangi.Controllers
         {
             try
             {
-                CurrentUserResponse currentUser = _userService.GetCurrentLoginUser();
-                if (currentUser == null)
+                if (CustomAuthorization.loginUser == null)
                 {
                     throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
                 }
-                else if (currentUser.Role.Equals("Customer"))
+                else if (CustomAuthorization.loginUser.Role.Equals("Customer"))
                 {
                     throw new Exception(ErrorMessage.UserError.ACTION_FOR_STAFF_AND_MANAGER_ROLE);
                 }
@@ -82,12 +82,11 @@ namespace BE_Homnayangi.Controllers
         {
             try
             {
-                CurrentUserResponse currentUser = _userService.GetCurrentLoginUser();
-                if (currentUser == null)
+                if (CustomAuthorization.loginUser == null)
                 {
                     throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
                 }
-                else if (!currentUser.Role.Equals("Customer"))
+                else if (!CustomAuthorization.loginUser.Role.Equals("Customer"))
                 {
                     throw new Exception(ErrorMessage.UserError.ACTION_FOR_USER_ROLE_ONLY);
                 }
@@ -141,7 +140,7 @@ namespace BE_Homnayangi.Controllers
         //        result = blog
         //    });
         //}
-        
+
         // GET: api/v1/blogs/57448A79-8855-42AD-BD2E-0295D1436037
         [HttpGet("staff-preview/{id}")]
         public async Task<ActionResult<BlogDetailResponse>> GetBlogForPreview([FromRoute] Guid id)
@@ -149,7 +148,7 @@ namespace BE_Homnayangi.Controllers
             try
             {
                 return Ok(await _blogService.GetBlogDetailPreview(id));
-            } 
+            }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
@@ -163,18 +162,18 @@ namespace BE_Homnayangi.Controllers
         {
             try
             {
-                CurrentUserResponse currentUser = _userService.GetCurrentLoginUser();
-                if (currentUser == null)
+
+                if (CustomAuthorization.loginUser == null)
                 {
                     throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
                 }
-                else if (currentUser.Role.Equals("Customer"))
+                else if (CustomAuthorization.loginUser.Role.Equals("Customer"))
                 {
                     throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_ALLOWED_TO_CREATE_BLOG);
                 }
 
                 // Role: User only
-                var id = await _blogService.CreateEmptyBlog(currentUser.Id);
+                var id = await _blogService.CreateEmptyBlog(CustomAuthorization.loginUser.Id);
                 return new JsonResult(new
                 {
                     status = "success",
@@ -262,7 +261,7 @@ namespace BE_Homnayangi.Controllers
         {
             try
             {
-                var currentUserId = _userService.GetCurrentLoginUser().Id;
+                var currentUserId = CustomAuthorization.loginUser.Id;
                 await _blogService.UpdateBlog(request, currentUserId); ;
                 return Ok("Update success");
             }

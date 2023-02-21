@@ -41,6 +41,5 @@ namespace BE_Homnayangi.Modules.UserModule.Interface
         public Task Register(RegisterDTO register);
         #endregion
 
-        public CurrentUserResponse GetCurrentLoginUser();
     }
 }
