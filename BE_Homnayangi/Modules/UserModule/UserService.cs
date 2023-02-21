@@ -21,6 +21,7 @@ using BE_Homnayangi.Modules.CustomerModule.Interface;
 using Library.Models.Constant;
 using Microsoft.AspNetCore.Http;
 using BE_Homnayangi.Modules.UserModule.Response;
+using BE_Homnayangi.Utils;
 
 namespace BE_Homnayangi.Modules.UserModule
 {
@@ -363,7 +364,7 @@ namespace BE_Homnayangi.Modules.UserModule
                     _httpContextAccessor.HttpContext.User = principal;
                     Console.WriteLine(_httpContextAccessor.HttpContext.User.Identity.Name);
                     var tokenCustomer = jwtTokenHandlerCustomer.CreateToken(tokenDescriptionCustomer);
-
+                    GetCurrentUser();
                     return jwtTokenHandlerCustomer.WriteToken(tokenCustomer);
                 }
                 else
@@ -400,7 +401,7 @@ namespace BE_Homnayangi.Modules.UserModule
                 var principal = new ClaimsPrincipal(tokenDescription.Subject);
                 _httpContextAccessor.HttpContext.User = principal;
                 var token = jwtTokenHandler.CreateToken(tokenDescription);
-
+                GetCurrentUser();
                 return jwtTokenHandler.WriteToken(token);
 
 
@@ -445,7 +446,7 @@ namespace BE_Homnayangi.Modules.UserModule
                     var principal = new ClaimsPrincipal(tokenDescriptionCustomer.Subject);
                     _httpContextAccessor.HttpContext.User = principal;
                     var tokenCustomer = jwtTokenHandlerCustomer.CreateToken(tokenDescriptionCustomer);
-
+                    GetCurrentUser();
                     return jwtTokenHandlerCustomer.WriteToken(tokenCustomer);
                 }
                 else if (customer == null)
@@ -482,7 +483,7 @@ namespace BE_Homnayangi.Modules.UserModule
                     var principal = new ClaimsPrincipal(tokenDescriptionCustomer.Subject);
                     _httpContextAccessor.HttpContext.User = principal;
                     var tokenCustomer = jwtTokenHandlerCustomer.CreateToken(tokenDescriptionCustomer);
-
+                    GetCurrentUser();
                     return jwtTokenHandlerCustomer.WriteToken(tokenCustomer);
                 }
                 else
@@ -522,7 +523,7 @@ namespace BE_Homnayangi.Modules.UserModule
                 _httpContextAccessor.HttpContext.User = principal;
 
                 var token = jwtTokenHandler.CreateToken(tokenDescription);
-
+                GetCurrentUser();
                 return jwtTokenHandler.WriteToken(token);
 
 
@@ -601,7 +602,7 @@ namespace BE_Homnayangi.Modules.UserModule
 
         #endregion
 
-        public CurrentUserResponse GetCurrentLoginUser()
+        public void GetCurrentUser()
         {
             CurrentUserResponse currentUser = null;
             try
@@ -624,6 +625,8 @@ namespace BE_Homnayangi.Modules.UserModule
                         Gender = Int32.Parse(userClaims.FirstOrDefault(x => x.Type == ClaimTypes.Gender)?.Value),
                         Role = userClaims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value
                     };
+
+                    CustomAuthorization.Login(currentUser);
                 }
             }
             catch (Exception ex)
@@ -631,7 +634,6 @@ namespace BE_Homnayangi.Modules.UserModule
                 Console.WriteLine("Error at GetCurrentLoginUser: " + ex.Message);
                 throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
             }
-            return currentUser;
         }
     }
 }

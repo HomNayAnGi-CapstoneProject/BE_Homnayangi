@@ -2,6 +2,7 @@
 using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Request;
 using BE_Homnayangi.Modules.UserModule.Response;
+using BE_Homnayangi.Utils;
 using Library.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -33,10 +34,10 @@ namespace BE_Homnayangi.Controllers
         [HttpGet]
         public async Task<ActionResult<CurrentUserResponse>> GetUserById()
         {
-            CurrentUserResponse currentUser = _userService.GetCurrentLoginUser();
+
             return new JsonResult(new
             {
-                result = currentUser,
+                result = CustomAuthorization.loginUser,
             });
         }
 
@@ -48,8 +49,7 @@ namespace BE_Homnayangi.Controllers
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] UpdateUser updateUser)
         {
-            CurrentUserResponse currentUser = _userService.GetCurrentLoginUser();
-            if (currentUser.Id != updateUser.UserId)
+            if (CustomAuthorization.loginUser.Id != updateUser.UserId)
             {
                 return BadRequest();
             }
@@ -79,12 +79,11 @@ namespace BE_Homnayangi.Controllers
         [HttpPut("password")]
         public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordRequest request)
         {
-            CurrentUserResponse currentUser = _userService.GetCurrentLoginUser();
             try
             {
 
 
-                await _userService.UpdateUserPassword(currentUser.Id, request.oldPassword, request.newPassword);
+                await _userService.UpdateUserPassword(CustomAuthorization.loginUser.Id, request.oldPassword, request.newPassword);
 
             }
             catch (Exception ex)
