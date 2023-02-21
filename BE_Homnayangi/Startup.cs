@@ -3,6 +3,8 @@ using BE_Homnayangi.Modules.BlogModule;
 using BE_Homnayangi.Modules.BlogModule.Interface;
 using BE_Homnayangi.Modules.BlogReactionModule;
 using BE_Homnayangi.Modules.BlogReactionModule.Interface;
+using BE_Homnayangi.Modules.BlogReferenceModule;
+using BE_Homnayangi.Modules.BlogReferenceModule.Interface;
 using BE_Homnayangi.Modules.BlogSubCateModule;
 using BE_Homnayangi.Modules.BlogSubCateModule.Interface;
 using BE_Homnayangi.Modules.CartDetailModule;
@@ -210,6 +212,9 @@ namespace BE_Homnayangi
             //Cart detail Module
             services.AddScoped<ICartDetailRepository, CartDetailRepository>();
             services.AddScoped<ICartDetailService, CartDetailService>();
+            
+            //Blog reference Module
+            services.AddScoped<IBlogReferenceRepository, BlogReferenceRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
