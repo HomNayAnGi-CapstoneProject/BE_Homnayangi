@@ -213,7 +213,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
                     Name = ingredient.Name,
                     Description = ingredient.Description,
                     Quantity = ingredient.Quantity,
-                    UnitName = ingredient.Unit.Name,
+                    UnitName = ingredient.Unit?.Name,
                     Picture = ingredient.Picture,
                     ListImage = ingredient.ListImage != null ? StringUtils.ExtractContents(ingredient.ListImage) : null,
                     CreatedDate = ingredient.CreatedDate,

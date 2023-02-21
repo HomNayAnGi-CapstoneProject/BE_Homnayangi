@@ -8,13 +8,23 @@ using System.Collections.Generic;
 
 namespace BE_Homnayangi.Modules.BlogModule.Response
 {
-    public class BlogDetailResponse : BlogResponse
+    public class BlogDetailResponse
     {
-        // Blog information
-        public string Preparation { get; set; }
-        public string Processing { get; set; }
-        public string Finished { get; set; }
+        public Guid BlogId { get; set; }
+        public string Title { get; set; }
+        public string DescriptionText { get; set; }
+        public string DescriptionHTML { get; set; }
+        public string PreparationText { get; set; }
+        public string PreparationHTML { get; set; }
+        public string ProcessingText { get; set; }
+        public string ProcessingHTML { get; set; }
+        public string FinishedText { get; set; }
+        public string FinishedHTML { get; set; }
+        public string ImageUrl { get; set; }
         public string VideoUrl { get; set; }
+        public int? Reaction { get; set; }
+        public int? View { get; set; }
+        public string AuthorName { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public int? BlogStatus { get; set; }
@@ -36,8 +46,6 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
 
         // List Ingredients
         public List<RecipeDetail> RecipeDetails { get; set; }
-
-
 
         // Note: về sau sẽ lấy blogreaction lên để xem user đó react hay chưa => on | off nút react
     }

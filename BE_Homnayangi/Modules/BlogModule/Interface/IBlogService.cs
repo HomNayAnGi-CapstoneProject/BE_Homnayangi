@@ -12,8 +12,7 @@ namespace BE_Homnayangi.Modules.BlogModule.Interface
 {
     public interface IBlogService
     {
-        #region CRUD Blog
-        public Task AddNewBlog(Blog newBlog);
+        #region CUD Blog
 
         public Task UpdateBlog(BlogUpdateRequest request, Guid currentUserId);
 

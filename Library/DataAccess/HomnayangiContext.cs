@@ -22,6 +22,7 @@ namespace Library.DataAccess
         public virtual DbSet<Accomplishment> Accomplishments { get; set; }
         public virtual DbSet<Blog> Blogs { get; set; }
         public virtual DbSet<BlogReaction> BlogReactions { get; set; }
+        public virtual DbSet<BlogReference> BlogReferences { get; set; }
         public virtual DbSet<BlogSubCate> BlogSubCates { get; set; }
         public virtual DbSet<Cart> Carts { get; set; }
         public virtual DbSet<CartDetail> CartDetails { get; set; }
@@ -116,15 +117,7 @@ namespace Library.DataAccess
                     .HasColumnType("datetime")
                     .HasColumnName("createdDate");
 
-                entity.Property(e => e.Description).HasColumnName("description");
-
-                entity.Property(e => e.Finished).HasColumnName("finished");
-
                 entity.Property(e => e.ImageUrl).HasColumnName("imageURL");
-
-                entity.Property(e => e.Preparation).HasColumnName("preparation");
-
-                entity.Property(e => e.Processing).HasColumnName("processing");
 
                 entity.Property(e => e.Reaction).HasColumnName("reaction");
 
@@ -178,6 +171,30 @@ namespace Library.DataAccess
                     .HasForeignKey(d => d.CustomerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_BlogReaction_Customer");
+            });
+
+            modelBuilder.Entity<BlogReference>(entity =>
+            {
+                entity.ToTable("BlogReference");
+
+                entity.Property(e => e.BlogReferenceId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("blogReferenceId");
+
+                entity.Property(e => e.BlogId).HasColumnName("blogId");
+
+                entity.Property(e => e.Html).HasColumnName("html");
+
+                entity.Property(e => e.Text).HasColumnName("text");
+
+                entity.Property(e => e.Type).HasColumnName("type");
+                
+                entity.Property(e => e.Status).HasColumnName("status");
+
+                entity.HasOne(d => d.Blog)
+                    .WithMany(p => p.BlogReferences)
+                    .HasForeignKey(d => d.BlogId)
+                    .HasConstraintName("FK_BlogReference_Blog");
             });
 
             modelBuilder.Entity<BlogSubCate>(entity =>
@@ -238,9 +255,10 @@ namespace Library.DataAccess
 
                 entity.Property(e => e.ItemId).HasColumnName("itemId");
 
+                entity.Property(e => e.IsCooked).HasColumnName("isCooked");
+
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
 
-                entity.Property(e => e.IsCooked).HasColumnName("isCooked");
                 entity.Property(e => e.UnitPrice)
                     .HasColumnType("money")
                     .HasColumnName("unitPrice");
