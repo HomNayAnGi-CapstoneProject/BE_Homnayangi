@@ -81,7 +81,6 @@ namespace BE_Homnayangi.Modules.BlogModule
         #region CUD Blog
         public async Task<Guid> CreateEmptyBlog(Guid authorId)
         {
-            Guid id = new Guid();
             try
             {
                 // add an empty recipe
@@ -103,8 +102,23 @@ namespace BE_Homnayangi.Modules.BlogModule
                     AuthorId = authorId
                 };
                 await _blogRepository.AddAsync(blog);
-                id = blog.BlogId;
-                return id;
+
+                //add blog reference
+                var listBlogRef = new List<BlogReference>();
+                for(int i =0; i<=3; i++)
+                {
+                    BlogReference blogReference = new BlogReference()
+                    {
+                        BlogReferenceId = Guid.NewGuid(),
+                        BlogId = blog.BlogId,
+                        Status = 2,
+                        Type = i
+                    };
+                    listBlogRef.Add(blogReference);
+                }
+                await _blogReferenceRepository.AddRangeAsync(listBlogRef);
+
+                return blog.BlogId;
             }
             catch (Exception ex)
             {
@@ -202,6 +216,18 @@ namespace BE_Homnayangi.Modules.BlogModule
                         await _blogSubCateRepository.RemoveAsync(s);
                     }
                 }
+
+                #region Update blog reference
+                var listBlogRefUpdate = _blogReferenceRepository.GetBlogReferencesBy(x => x.BlogId == blog.BlogId).Result.ToList().Join(request.BlogReferences, x => x.Type, y => y.Type, (x,y) => new BlogReference
+                {
+                    BlogId = blog.BlogId,
+                    Type = x.Type,
+                    BlogReferenceId = x.BlogReferenceId,
+                    Text = y.Text,
+                    Html = y.Html,
+                    Status = x.Status
+                });
+                #endregion
 
                 // update blog
                 request.Blog.UpdatedDate = DateTime.Now;

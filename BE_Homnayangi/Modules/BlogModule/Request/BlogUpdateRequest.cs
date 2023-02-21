@@ -10,11 +10,13 @@ namespace BE_Homnayangi.Modules.BlogModule.Request
         public Recipe Recipe { get; set; }
         public List<RecipeDetail> RecipeDetails { get; set; }
         public List<BlogSubCate> BlogSubCates { get; set; }
+        public List<BlogReference> BlogReferences { get; set; }
 
         public BlogUpdateRequest()
         {
             RecipeDetails = new List<RecipeDetail>();
             BlogSubCates = new List<BlogSubCate>();
+            BlogReferences = new List<BlogReference>();
         }
     }
 }
