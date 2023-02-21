@@ -163,18 +163,8 @@ namespace BE_Homnayangi.Controllers
         {
             try
             {
-                CurrentUserResponse currentUser = _userService.GetCurrentLoginUser();
-                if (currentUser == null)
-                {
-                    throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
-                }
-                else if (currentUser.Role.Equals("Customer"))
-                {
-                    throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_ALLOWED_TO_CREATE_BLOG);
-                }
-
                 // Role: User only
-                var id = await _blogService.CreateEmptyBlog(currentUser.Id);
+                var id = await _blogService.CreateEmptyBlog(Guid.Parse("749f5b3b-dea1-49a4-98b8-96da197d123f"));
                 return new JsonResult(new
                 {
                     status = "success",
@@ -262,8 +252,8 @@ namespace BE_Homnayangi.Controllers
         {
             try
             {
-                var currentUserId = _userService.GetCurrentLoginUser().Id;
-                await _blogService.UpdateBlog(request, currentUserId); ;
+                var test = Guid.Parse("749f5b3b-dea1-49a4-98b8-96da197d123f");
+                await _blogService.UpdateBlog(request, test); ;
                 return Ok("Update success");
             }
             catch (Exception ex)

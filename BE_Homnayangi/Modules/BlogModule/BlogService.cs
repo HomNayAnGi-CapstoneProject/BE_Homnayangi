@@ -218,15 +218,18 @@ namespace BE_Homnayangi.Modules.BlogModule
                 }
 
                 #region Update blog reference
-                var listBlogRefUpdate = _blogReferenceRepository.GetBlogReferencesBy(x => x.BlogId == blog.BlogId).Result.ToList().Join(request.BlogReferences, x => x.Type, y => y.Type, (x,y) => new BlogReference
+                var listBlogRef = _blogReferenceRepository.GetBlogReferencesBy(x => x.BlogId == blog.BlogId, options: x => x.AsNoTracking().ToList()).Result.ToList();
+                var listBlogRefUpdate = listBlogRef.Join(request.BlogReferences, x => x.Type, y => y.Type, (x,y) => new BlogReference
                 {
                     BlogId = blog.BlogId,
                     Type = x.Type,
                     BlogReferenceId = x.BlogReferenceId,
                     Text = y.Text,
-                    Html = y.Html,
+                    Html = y.HTML,
                     Status = x.Status
                 });
+
+                await _blogReferenceRepository.UpdateRangeAsync(listBlogRefUpdate);
                 #endregion
 
                 // update blog
