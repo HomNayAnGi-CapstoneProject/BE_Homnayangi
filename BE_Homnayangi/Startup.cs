@@ -221,7 +221,7 @@ namespace BE_Homnayangi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -231,7 +231,7 @@ namespace BE_Homnayangi
             }
             app.UseSession();
             app.UseCors("CorsPolicy");
-
+            var httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
             app.UseHttpsRedirection();
 
             app.UseRouting();
