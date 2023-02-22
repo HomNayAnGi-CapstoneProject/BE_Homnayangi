@@ -140,18 +140,20 @@ namespace BE_Homnayangi.Controllers
 
         // DELETE: api/Blogs/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBlog(Guid id)
+        public async Task<IActionResult> DeleteBlog([FromRoute] Guid id)
         {
-            var blog = await _context.Blogs.FindAsync(id);
-            if (blog == null)
+            try
             {
-                return NotFound();
+                await _blogService.DeleteBlog(id);
+                return new JsonResult(new
+                {
+                    status = "success"
+                });
             }
-
-            _context.Blogs.Remove(blog);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // REMOVE: api/Blogs/5

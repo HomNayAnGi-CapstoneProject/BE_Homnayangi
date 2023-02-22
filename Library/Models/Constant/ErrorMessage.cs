@@ -24,9 +24,16 @@ namespace Library.Models.Constant
         #region Blog error message
         public static class BlogError
         {
-            public readonly static string BLOG_NOT_FOUND = "Blog not found";
+            public readonly static string BLOG_NOT_FOUND = "Blog is not found";
             public readonly static string BLOG_NOT_BINDING_TO_RECIPE = "This Blog was not binding to any Recipe";
             public readonly static string BLOG_SUBCATES_LIMIT = "Max Sub categories for blog is 5";
+        }
+        #endregion
+
+        #region Recipe error message
+        public static class RecipeError
+        {
+            public readonly static string RECIPE_NOT_FOUND = "Recipe is not found";
         }
         #endregion
 

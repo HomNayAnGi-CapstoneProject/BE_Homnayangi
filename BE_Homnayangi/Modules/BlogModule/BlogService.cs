@@ -7,7 +7,6 @@ using BE_Homnayangi.Modules.RecipeDetailModule.Interface;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
 using BE_Homnayangi.Modules.SubCateModule.Interface;
 using BE_Homnayangi.Modules.SubCateModule.Response;
-using BE_Homnayangi.Modules.TypeModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.Utils;
 using Library.Models;
@@ -257,13 +256,39 @@ namespace BE_Homnayangi.Modules.BlogModule
             }
         }
 
-        public async Task DeleteBlog(Guid? id)
+        #region Delete and Restore blog
+        // blogsubcate, recipe, recipedetail: 
+        // 2 api delete: blog và recipe
+        // 2 api restore: blog và recipe
+        // bỏ chung recipe và blog vô 1 region
+        // logic: tắt hết những status các bảng liên quan!!!
+        public async Task DeleteBlog(Guid id)
         {
-            Blog blogDelete = _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId.Equals(id) && x.BlogStatus == 1).Result;
-            if (blogDelete == null) return;
-            blogDelete.BlogStatus = 0;
-            await _blogRepository.UpdateAsync(blogDelete);
+            try
+            {
+                Blog removedBlog = await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId.Equals(id) && x.BlogStatus == 1);
+                if (removedBlog == null)
+                    throw new Exception(ErrorMessage.BlogError.BLOG_NOT_FOUND);
+
+                #region update blog status into 0
+                removedBlog.BlogStatus = 0;
+                await _blogRepository.UpdateAsync(removedBlog);
+                #endregion
+
+                Recipe removedRecipe = await _recipeRepository.GetFirstOrDefaultAsync(recipe => recipe.RecipeId == id && recipe.Status == 1);
+                if (removedRecipe == null)
+                    throw new Exception(ErrorMessage.BlogError.BLOG_NOT_FOUND);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at: " + ex.Message);
+                throw new Exception(ex.Message);
+            }
+
         }
+        #endregion
+
         public async Task RemoveBlogDraft(Guid? id)
         {
             try

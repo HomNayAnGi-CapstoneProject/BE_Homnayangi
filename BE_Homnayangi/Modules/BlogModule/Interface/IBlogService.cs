@@ -18,7 +18,7 @@ namespace BE_Homnayangi.Modules.BlogModule.Interface
 
         public Task<Guid> CreateEmptyBlog(Guid authorId);
 
-        public Task DeleteBlog(Guid? ID);
+        public Task DeleteBlog(Guid ID);
 
         public Task RemoveBlogDraft(Guid? Id);
         #endregion

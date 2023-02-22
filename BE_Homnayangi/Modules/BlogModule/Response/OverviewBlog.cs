@@ -15,6 +15,7 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
         public int? Reaction { get; set; }
         public Guid? SubCateId { get; set; }
         public DateTime CreatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
         public decimal? CookedPrice { get; set; }
         public int? TotalKcal { get; set; }
 
