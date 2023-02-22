@@ -6,7 +6,7 @@ namespace BE_Homnayangi.Utils
 {
     public class CustomAuthorization : ICustomAuthorization
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private IHttpContextAccessor _httpContextAccessor;
         public CustomAuthorization(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
@@ -20,7 +20,6 @@ namespace BE_Homnayangi.Utils
 
         public void Login(CurrentUserResponse user)
         {
-
             _httpContextAccessor.HttpContext.Session.SetString("LoginUser", JsonUtils.SerializeComplexData(user));
         }
     }
