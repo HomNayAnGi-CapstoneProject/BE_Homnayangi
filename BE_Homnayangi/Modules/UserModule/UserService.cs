@@ -618,7 +618,7 @@ namespace BE_Homnayangi.Modules.UserModule
                     {
                         Id = new Guid(userClaims.FirstOrDefault(x => x.Type == "Id")?.Value),
                         Displayname = userClaims.FirstOrDefault(x => x.Type == "Displayname")?.Value,
-                        Username = userClaims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value,
+                        Username = userClaims.FirstOrDefault(x => x.Type == "Username")?.Value,
                         Firstname = userClaims.FirstOrDefault(x => x.Type == "Firstname")?.Value,
                         Lastname = userClaims.FirstOrDefault(x => x.Type == "Lastname")?.Value,
                         Email = userClaims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value,
@@ -630,6 +630,47 @@ namespace BE_Homnayangi.Modules.UserModule
 
                     _customAuthorization.Login(currentUser);
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at GetCurrentLoginUser: " + ex.Message);
+                throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
+            }
+        }
+
+        public CurrentUserResponse GetCurrentLoginUserId(string authHeader)
+        {
+            try
+            {
+                string token = authHeader.Split(" ")[1];
+                var handler = new JwtSecurityTokenHandler();
+                var jsonToken = handler.ReadToken(token);
+                var tokenS = jsonToken as JwtSecurityToken;
+                var id = new Guid(tokenS.Claims.First(claim => claim.Type == "Id").Value);
+                var Displayname = tokenS.Claims.First(x => x.Type == "Displayname")?.Value;
+                var Username = tokenS.Claims.First(x => x.Type == "unique_name")?.Value;
+                var Firstname = tokenS.Claims.First(x => x.Type == "Firstname")?.Value;
+                var Lastname = tokenS.Claims.First(x => x.Type == "Lastname")?.Value;
+                var Email = tokenS.Claims.First(x => x.Type == "email")?.Value;
+                var Avatar = tokenS.Claims.First(x => x.Type == "Avatar")?.Value;
+                var Phonenumber = tokenS.Claims.First(x => x.Type == "Phone Number")?.Value;
+                var Gender = Int32.Parse(tokenS.Claims.First(x => x.Type == "gender")?.Value);
+                var Role = tokenS.Claims.First(x => x.Type == "role")?.Value;
+                CurrentUserResponse currentUser = new CurrentUserResponse()
+                {
+                    Id = id,
+                    Displayname = Displayname,
+                    Username = Username,
+                    Firstname = Firstname,
+                    Lastname = Lastname,
+                    Email = Email,
+                    Avatar = Avatar,
+                    Phonenumber = Phonenumber,
+                    Gender = Gender,
+                    Role = Role
+                };
+
+                return currentUser;
             }
             catch (Exception ex)
             {

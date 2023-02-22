@@ -44,11 +44,11 @@ namespace BE_Homnayangi.Controllers
         {
             try
             {
-                if (_customAuthorization.loginUser() == null)
+                if (_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]) == null)
                 {
                     throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
                 }
-                else if (_customAuthorization.loginUser().Role.Equals("Customer"))
+                else if (_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]).Role.Equals("Customer"))
                 {
                     throw new Exception(ErrorMessage.UserError.ACTION_FOR_STAFF_AND_MANAGER_ROLE);
                 }
@@ -84,11 +84,11 @@ namespace BE_Homnayangi.Controllers
         {
             try
             {
-                if (_customAuthorization.loginUser() == null)
+                if (_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]) == null)
                 {
                     throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
                 }
-                else if (!_customAuthorization.loginUser().Role.Equals("Customer"))
+                else if (!_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]).Role.Equals("Customer"))
                 {
                     throw new Exception(ErrorMessage.UserError.ACTION_FOR_USER_ROLE_ONLY);
                 }
@@ -165,17 +165,17 @@ namespace BE_Homnayangi.Controllers
             try
             {
 
-                if (_customAuthorization.loginUser() == null)
+                if (_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]) == null)
                 {
                     throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
                 }
-                else if (_customAuthorization.loginUser().Role.Equals("Customer"))
+                else if (_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]).Role.Equals("Customer"))
                 {
                     throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_ALLOWED_TO_CREATE_BLOG);
                 }
 
                 // Role: User only
-                var id = await _blogService.CreateEmptyBlog(_customAuthorization.loginUser().Id);
+                var id = await _blogService.CreateEmptyBlog(_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]).Id);
                 return new JsonResult(new
                 {
                     status = "success",
@@ -263,7 +263,7 @@ namespace BE_Homnayangi.Controllers
         {
             try
             {
-                var currentUserId = _customAuthorization.loginUser().Id;
+                var currentUserId = _userService.GetCurrentLoginUserId(Request.Headers["Authorization"]).Id;
                 await _blogService.UpdateBlog(request, currentUserId); ;
                 return Ok("Update success");
             }
