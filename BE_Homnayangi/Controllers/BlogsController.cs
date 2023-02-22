@@ -5,6 +5,7 @@ using BE_Homnayangi.Modules.SubCateModule.Interface;
 using BE_Homnayangi.Modules.SubCateModule.Response;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Response;
+using BE_Homnayangi.Modules.Utils;
 using BE_Homnayangi.Utils;
 using Library.DataAccess;
 using Library.Models;
@@ -27,26 +28,27 @@ namespace BE_Homnayangi.Controllers
         private readonly IBlogService _blogService;
         private readonly ISubCateService _subCateService;
         private readonly IUserService _userService;
+        private readonly ICustomAuthorization _customAuthorization;
 
-        public BlogsController(HomnayangiContext context, IBlogService blogService, ISubCateService subCateService, IUserService userService)
+        public BlogsController(HomnayangiContext context, IBlogService blogService, ISubCateService subCateService, IUserService userService, ICustomAuthorization customAuthorization)
         {
             _context = context;
             _blogService = blogService;
             _subCateService = subCateService;
             _userService = userService;
+            _customAuthorization = customAuthorization;
         }
-
         // Get all blogs: staff and manager manage all blogs of system
         [HttpGet("user")] // blogid, authorName, img, title, created_date, views, reactions, status
         public async Task<ActionResult> GetBlogsByUser()
         {
             try
             {
-                if (CustomAuthorization.loginUser == null)
+                if (_customAuthorization.loginUser() == null)
                 {
                     throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
                 }
-                else if (CustomAuthorization.loginUser.Role.Equals("Customer"))
+                else if (_customAuthorization.loginUser().Role.Equals("Customer"))
                 {
                     throw new Exception(ErrorMessage.UserError.ACTION_FOR_STAFF_AND_MANAGER_ROLE);
                 }
@@ -82,11 +84,11 @@ namespace BE_Homnayangi.Controllers
         {
             try
             {
-                if (CustomAuthorization.loginUser == null)
+                if (_customAuthorization.loginUser() == null)
                 {
                     throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
                 }
-                else if (!CustomAuthorization.loginUser.Role.Equals("Customer"))
+                else if (!_customAuthorization.loginUser().Role.Equals("Customer"))
                 {
                     throw new Exception(ErrorMessage.UserError.ACTION_FOR_USER_ROLE_ONLY);
                 }
@@ -163,17 +165,17 @@ namespace BE_Homnayangi.Controllers
             try
             {
 
-                if (CustomAuthorization.loginUser == null)
+                if (_customAuthorization.loginUser() == null)
                 {
                     throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
                 }
-                else if (CustomAuthorization.loginUser.Role.Equals("Customer"))
+                else if (_customAuthorization.loginUser().Role.Equals("Customer"))
                 {
                     throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_ALLOWED_TO_CREATE_BLOG);
                 }
 
                 // Role: User only
-                var id = await _blogService.CreateEmptyBlog(CustomAuthorization.loginUser.Id);
+                var id = await _blogService.CreateEmptyBlog(_customAuthorization.loginUser().Id);
                 return new JsonResult(new
                 {
                     status = "success",
@@ -261,7 +263,7 @@ namespace BE_Homnayangi.Controllers
         {
             try
             {
-                var currentUserId = CustomAuthorization.loginUser.Id;
+                var currentUserId = _customAuthorization.loginUser().Id;
                 await _blogService.UpdateBlog(request, currentUserId); ;
                 return Ok("Update success");
             }

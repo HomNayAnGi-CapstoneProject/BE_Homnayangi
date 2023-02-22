@@ -2,6 +2,7 @@
 using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Request;
 using BE_Homnayangi.Modules.UserModule.Response;
+using BE_Homnayangi.Modules.Utils;
 using BE_Homnayangi.Utils;
 using Library.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -21,12 +22,13 @@ namespace BE_Homnayangi.Controllers
         private readonly IMapper _mapper;
 
         private readonly IUserService _userService;
-
-        public PersonalCustomerController(IUserService userService, IMapper mapper)
+        private readonly ICustomAuthorization _customAuthorization;
+        public PersonalCustomerController(IUserService userService, IMapper mapper, ICustomAuthorization customAuthorization)
         {
 
             _userService = userService;
             _mapper = mapper;
+            _customAuthorization = customAuthorization;
         }
 
         // GET api/<ValuesController>/5
@@ -35,7 +37,7 @@ namespace BE_Homnayangi.Controllers
         {
             return new JsonResult(new
             {
-                result = CustomAuthorization.loginUser,
+                result = _customAuthorization.loginUser(),
             });
         }
 
@@ -43,7 +45,7 @@ namespace BE_Homnayangi.Controllers
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] UpdateCustomer customerUpdate)
         {
-            if (CustomAuthorization.loginUser.Id != customerUpdate.CustomerId)
+            if (_customAuthorization.loginUser().Id != customerUpdate.CustomerId)
             {
                 return BadRequest();
             }
@@ -76,7 +78,7 @@ namespace BE_Homnayangi.Controllers
             {
 
 
-                await _userService.UpdateCustomerPassword(CustomAuthorization.loginUser.Id, request.oldPassword, request.newPassword);
+                await _userService.UpdateCustomerPassword(_customAuthorization.loginUser().Id, request.oldPassword, request.newPassword);
 
 
             }

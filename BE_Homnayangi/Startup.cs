@@ -35,8 +35,10 @@ using BE_Homnayangi.Modules.UnitModule;
 using BE_Homnayangi.Modules.UnitModule.Interface;
 using BE_Homnayangi.Modules.UserModule;
 using BE_Homnayangi.Modules.UserModule.Interface;
+using BE_Homnayangi.Modules.Utils;
 using BE_Homnayangi.Modules.VoucherModule;
 using BE_Homnayangi.Modules.VoucherModule.Interface;
+using BE_Homnayangi.Utils;
 using Library.DataAccess;
 using Library.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -139,7 +141,8 @@ namespace BE_Homnayangi
             });
             services.AddSession();
             services.AddDistributedMemoryCache();
-            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<ICustomAuthorization, CustomAuthorization>();
 
             services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
@@ -212,7 +215,7 @@ namespace BE_Homnayangi
             //Cart detail Module
             services.AddScoped<ICartDetailRepository, CartDetailRepository>();
             services.AddScoped<ICartDetailService, CartDetailService>();
-            
+
             //Blog reference Module
             services.AddScoped<IBlogReferenceRepository, BlogReferenceRepository>();
         }

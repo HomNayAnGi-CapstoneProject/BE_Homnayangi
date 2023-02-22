@@ -22,6 +22,7 @@ using Library.Models.Constant;
 using Microsoft.AspNetCore.Http;
 using BE_Homnayangi.Modules.UserModule.Response;
 using BE_Homnayangi.Utils;
+using BE_Homnayangi.Modules.Utils;
 
 namespace BE_Homnayangi.Modules.UserModule
 {
@@ -33,14 +34,15 @@ namespace BE_Homnayangi.Modules.UserModule
         private readonly AppSetting _appSettings;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public UserService(IUserRepository userRepository, ICustomerRepository customerRepository, IOptionsMonitor<AppSetting> optionsMonitor, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+        private readonly ICustomAuthorization _customAuthorization;
+        public UserService(IUserRepository userRepository, ICustomerRepository customerRepository, IOptionsMonitor<AppSetting> optionsMonitor, IMapper mapper, IHttpContextAccessor httpContextAccessor, ICustomAuthorization customAuthorization)
         {
             _userRepository = userRepository;
             _customerRepository = customerRepository;
             _appSettings = optionsMonitor.CurrentValue;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
+            _customAuthorization = customAuthorization;
         }
 
         public Task<ICollection<User>> GetUsersBy(
@@ -626,7 +628,7 @@ namespace BE_Homnayangi.Modules.UserModule
                         Role = userClaims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value
                     };
 
-                    CustomAuthorization.Login(currentUser);
+                    _customAuthorization.Login(currentUser);
                 }
             }
             catch (Exception ex)
