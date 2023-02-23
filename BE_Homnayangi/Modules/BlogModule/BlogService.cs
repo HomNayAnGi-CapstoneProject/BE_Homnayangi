@@ -176,6 +176,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     else
                     {
                         rd.Quantity = r.Quantity;
+                        rd.Description = r.Description;
                         await _recipeDetailRepository.UpdateAsync(rd);
                     }
                 }
