@@ -1,12 +1,16 @@
-﻿using BE_Homnayangi.Modules.BlogModule.Interface;
+﻿using BE_Homnayangi.Modules.AccomplishmentModule.Interface;
+using BE_Homnayangi.Modules.BlogModule.Interface;
 using BE_Homnayangi.Modules.BlogModule.Request;
 using BE_Homnayangi.Modules.BlogModule.Response;
+using BE_Homnayangi.Modules.BlogReactionModule.Interface;
 using BE_Homnayangi.Modules.BlogReferenceModule.Interface;
 using BE_Homnayangi.Modules.BlogSubCateModule.Interface;
+using BE_Homnayangi.Modules.CommentModule.Interface;
 using BE_Homnayangi.Modules.RecipeDetailModule.Interface;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
 using BE_Homnayangi.Modules.SubCateModule.Interface;
 using BE_Homnayangi.Modules.SubCateModule.Response;
+using BE_Homnayangi.Modules.TypeModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.Utils;
 using Library.Models;
@@ -14,7 +18,6 @@ using Library.Models.Constant;
 using Library.Models.Enum;
 using Library.PagedList;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,10 +40,14 @@ namespace BE_Homnayangi.Modules.BlogModule
         private readonly IRecipeDetailRepository _recipeDetailRepository;
         private readonly IUserRepository _userRepository;
         private readonly IBlogReferenceRepository _blogReferenceRepository;
+        private readonly ICommentRepository _commentRepository;
+        private readonly IBlogReactionRepository _blogReactionRepository;
+        private readonly IAccomplishmentRepository _accomplishmentRepository;
 
         public BlogService(IBlogRepository blogRepository, IRecipeRepository recipeRepository, IBlogSubCateRepository blogSubCateRepository,
-            ISubCateRepository subCateRepository, IRecipeDetailRepository recipeDetailRepository, IUserRepository userRepository,
-            IBlogReferenceRepository blogReferenceRepository)
+            ISubCateRepository subCateRepository, IRecipeDetailRepository recipeDetailRepository, ITypeRepository typeRepository,
+            IUserRepository userRepository, IBlogReferenceRepository blogReferenceRepository, ICommentRepository commentRepository,
+            IBlogReactionRepository blogReactionRepository, IAccomplishmentRepository accomplishmentRepository)
         {
             _blogRepository = blogRepository;
             _recipeRepository = recipeRepository;
@@ -49,6 +56,9 @@ namespace BE_Homnayangi.Modules.BlogModule
             _recipeDetailRepository = recipeDetailRepository;
             _userRepository = userRepository;
             _blogReferenceRepository = blogReferenceRepository;
+            _commentRepository = commentRepository;
+            _blogReactionRepository = blogReactionRepository;
+            _accomplishmentRepository = accomplishmentRepository;
         }
         #endregion
 
@@ -257,7 +267,7 @@ namespace BE_Homnayangi.Modules.BlogModule
         }
 
         #region Delete and Restore blog
-        // blogsubcate, recipe, recipedetail: 
+        // blog, recipe, blogsubcate, comment, blogReaction, Accomplishment, blogReference: OFF
         // 2 api delete: blog và recipe
         // 2 api restore: blog và recipe
         // bỏ chung recipe và blog vô 1 region
@@ -266,26 +276,202 @@ namespace BE_Homnayangi.Modules.BlogModule
         {
             try
             {
+                #region update Blog status into 0 > throw Error if not existed
                 Blog removedBlog = await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId.Equals(id) && x.BlogStatus == 1);
                 if (removedBlog == null)
                     throw new Exception(ErrorMessage.BlogError.BLOG_NOT_FOUND);
 
-                #region update blog status into 0
                 removedBlog.BlogStatus = 0;
                 await _blogRepository.UpdateAsync(removedBlog);
                 #endregion
 
+                #region update Recipe status into 0 > throw Error if not existed
                 Recipe removedRecipe = await _recipeRepository.GetFirstOrDefaultAsync(recipe => recipe.RecipeId == id && recipe.Status == 1);
                 if (removedRecipe == null)
-                    throw new Exception(ErrorMessage.BlogError.BLOG_NOT_FOUND);
+                    throw new Exception(ErrorMessage.RecipeError.RECIPE_NOT_FOUND);
 
+                removedRecipe.Status = 0;
+                await _recipeRepository.UpdateAsync(removedRecipe);
+                #endregion
+
+                #region update RecipeDetails status into 0
+                ICollection<RecipeDetail> recipeDetails = await _recipeDetailRepository.GetRecipeDetailsBy(item => item.RecipeId == id && item.Status == 1);
+                if (recipeDetails != null)
+                {
+                    foreach (var item in recipeDetails.ToList())
+                    {
+                        item.Status = 0;
+                    }
+                    await _recipeDetailRepository.UpdateRangeAsync(recipeDetails);
+                }
+                #endregion
+
+                #region update BlogSubCates status into 0
+                ICollection<BlogSubCate> blogSubCates = await _blogSubCateRepository.GetBlogSubCatesBy(item => item.BlogId == id && item.Status.Value);
+                if (blogSubCates != null)
+                {
+                    foreach (var item in blogSubCates.ToList())
+                    {
+                        item.Status = false;
+                    }
+                    await _blogSubCateRepository.UpdateRangeAsync(blogSubCates);
+                }
+                #endregion
+
+                #region update Comments status into 0
+                ICollection<Comment> comments = await _commentRepository.GetCommentsBy(c => c.BlogId == id && c.Status.Value);
+                if (comments != null)
+                {
+                    foreach (var item in comments.ToList())
+                    {
+                        item.Status = false;
+                    }
+                    await _commentRepository.UpdateRangeAsync(comments);
+                }
+                #endregion
+
+                #region update BlogReactions status into 0
+                ICollection<BlogReaction> blogReactions = await _blogReactionRepository.GetBlogReactionsBy(b => b.BlogId == id && b.Status.Value);
+                if (blogReactions != null)
+                {
+                    foreach (var item in blogReactions.ToList())
+                    {
+                        item.Status = false;
+                    }
+                    await _blogReactionRepository.UpdateRangeAsync(blogReactions);
+                }
+                #endregion
+
+                #region update Accomplishments status into 0
+                ICollection<Accomplishment> accomplishments = await _accomplishmentRepository.GetAccomplishmentsBy(ac => ac.BlogId == id && ac.Status == 1);
+                if (accomplishments != null)
+                {
+                    foreach (var item in accomplishments.ToList())
+                    {
+                        item.Status = 0;
+                    }
+                    await _accomplishmentRepository.UpdateRangeAsync(accomplishments);
+                }
+                #endregion
+
+                #region update BlogReferences status into 0
+                ICollection<BlogReference> blogReferences = await _blogReferenceRepository.GetBlogReferencesBy(br => br.BlogId == id && br.Status == 1);
+                if (blogReferences != null)
+                {
+                    foreach (var item in blogReferences.ToList())
+                    {
+                        item.Status = 0;
+                    }
+                    await _blogReferenceRepository.UpdateRangeAsync(blogReferences);
+                }
+                #endregion
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error at: " + ex.Message);
+                Console.WriteLine("Error at DeleteBlog: " + ex.Message);
                 throw new Exception(ex.Message);
             }
+        }
 
+        public async Task RestoreBlog(Guid id)
+        {
+            try
+            {
+                #region update Blog status into 1 > throw Error if not existed
+                Blog restoredBlog = await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId.Equals(id) && x.BlogStatus == 0);
+                if (restoredBlog == null)
+                    throw new Exception(ErrorMessage.BlogError.BLOG_NOT_FOUND);
+
+                restoredBlog.BlogStatus = 1;
+                await _blogRepository.UpdateAsync(restoredBlog);
+                #endregion 
+
+                #region update Recipe status into 1 > throw Error if not existed
+                Recipe restoredRecipe = await _recipeRepository.GetFirstOrDefaultAsync(recipe => recipe.RecipeId == id && recipe.Status == 0);
+                if (restoredRecipe == null)
+                    throw new Exception(ErrorMessage.RecipeError.RECIPE_NOT_FOUND);
+
+                restoredRecipe.Status = 1;
+                await _recipeRepository.UpdateAsync(restoredRecipe);
+                #endregion
+
+                #region update RecipeDetails status into 1
+                ICollection<RecipeDetail> recipeDetails = await _recipeDetailRepository.GetRecipeDetailsBy(item => item.RecipeId == id && item.Status == 0);
+                if (recipeDetails != null)
+                {
+                    foreach (var item in recipeDetails.ToList())
+                    {
+                        item.Status = 1;
+                    }
+                    await _recipeDetailRepository.UpdateRangeAsync(recipeDetails);
+                }
+                #endregion
+
+                #region update BlogSubCate status into 1
+                ICollection<BlogSubCate> blogSubCates = await _blogSubCateRepository.GetBlogSubCatesBy(item => item.BlogId == id && !item.Status.Value);
+                if (blogSubCates != null)
+                {
+                    foreach (var item in blogSubCates.ToList())
+                    {
+                        item.Status = true;
+                    }
+                    await _blogSubCateRepository.UpdateRangeAsync(blogSubCates);
+                }
+                #endregion
+
+                #region update Comments status into 1
+                ICollection<Comment> comments = await _commentRepository.GetCommentsBy(c => c.BlogId == id && !c.Status.Value);
+                if (comments != null)
+                {
+                    foreach (var item in comments.ToList())
+                    {
+                        item.Status = true;
+                    }
+                    await _commentRepository.UpdateRangeAsync(comments);
+                }
+                #endregion
+
+                #region update BlogReaction status into 1
+                ICollection<BlogReaction> blogReactions = await _blogReactionRepository.GetBlogReactionsBy(b => b.BlogId == id && !b.Status.Value);
+                if (blogReactions != null)
+                {
+                    foreach (var item in blogReactions.ToList())
+                    {
+                        item.Status = true;
+                    }
+                    await _blogReactionRepository.UpdateRangeAsync(blogReactions);
+                }
+                #endregion
+
+                #region update Accomplishment status into 1
+                ICollection<Accomplishment> accomplishments = await _accomplishmentRepository.GetAccomplishmentsBy(ac => ac.BlogId == id && ac.Status == 0);
+                if (accomplishments != null)
+                {
+                    foreach (var item in accomplishments.ToList())
+                    {
+                        item.Status = 1;
+                    }
+                    await _accomplishmentRepository.UpdateRangeAsync(accomplishments);
+                }
+                #endregion
+
+                #region update BlogReference status into 1
+                ICollection<BlogReference> blogReferences = await _blogReferenceRepository.GetBlogReferencesBy(br => br.BlogId == id && br.Status == 0);
+                if (blogReferences != null)
+                {
+                    foreach (var item in blogReferences.ToList())
+                    {
+                        item.Status = 1;
+                    }
+                    await _blogReferenceRepository.UpdateRangeAsync(blogReferences);
+                }
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at RestoreBlog: " + ex.Message);
+                throw new Exception(ex.Message);
+            }
         }
         #endregion
 
@@ -394,8 +580,7 @@ namespace BE_Homnayangi.Modules.BlogModule
 
         public async Task<ICollection<SearchBlogsResponse>> GetBlogAndRecipeByName(String name)
         {
-            var Blogs = await _blogRepository.GetBlogsBy(x =>
-  x.BlogStatus == 1);
+            var Blogs = await _blogRepository.GetBlogsBy(x => x.BlogStatus == 1);
             var blogResponse = Blogs.Where(x => ConvertToUnSign(x.Title).Contains(name, StringComparison.CurrentCultureIgnoreCase) || x.Title.Contains(name)).ToList().Select(x => new SearchBlogsResponse
             {
                 Title = x.Title,
@@ -843,7 +1028,5 @@ namespace BE_Homnayangi.Modules.BlogModule
                 throw;
             }
         }
-
-
     }
 }

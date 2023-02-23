@@ -692,6 +692,8 @@ namespace Library.DataAccess
 
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
 
+                entity.Property(e => e.Status).HasColumnName("status");
+
                 entity.HasOne(d => d.Ingredient)
                     .WithMany(p => p.RecipeDetails)
                     .HasForeignKey(d => d.IngredientId)
