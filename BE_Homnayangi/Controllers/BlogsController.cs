@@ -127,21 +127,18 @@ namespace BE_Homnayangi.Controllers
 
 
         // GET: api/v1/blogs/57448A79-8855-42AD-BD2E-0295D1436037
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<BlogDetailResponse>> GetBlog([FromRoute] Guid id)
-        //{
-        //    var blog = await _blogService.GetBlogDetails(id);
-
-        //    if (blog == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return new JsonResult(new
-        //    {
-        //        result = blog
-        //    });
-        //}
+        [HttpGet("{id}")]
+        public async Task<ActionResult<BlogDetailResponse>> GetBlogByID([FromRoute] Guid id)
+        {
+            try
+            {
+                return Ok(_blogService.GetBlogByID(id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         // GET: api/v1/blogs/57448A79-8855-42AD-BD2E-0295D1436037
         [HttpGet("staff-preview/{id}")]
