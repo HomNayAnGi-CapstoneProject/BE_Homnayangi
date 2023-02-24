@@ -69,7 +69,7 @@ namespace BE_Homnayangi.Controllers
         {
             try
             {
-                return Ok(_blogService.GetBlogDetail(id));
+                return Ok(await _blogService.GetBlogDetail(id));
             }
             catch (Exception ex)
             {
