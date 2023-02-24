@@ -3,6 +3,7 @@ using BE_Homnayangi.Modules.BlogModule.Request;
 using BE_Homnayangi.Modules.BlogModule.Response;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using Library.Commons;
+using BE_Homnayangi.Modules.Utils;
 using Library.DataAccess;
 using Library.Models.Constant;
 using Library.PagedList;
@@ -20,11 +21,13 @@ namespace BE_Homnayangi.Controllers
         private readonly IBlogService _blogService;
         private readonly IUserService _userService;
 
-        public BlogsController(IBlogService blogService, IUserService userService)
+        public BlogsController(HomnayangiContext context, IBlogService blogService, ISubCateService subCateService, 
+            IUserService userService, ICustomAuthorization customAuthorization)
         {
             _blogService = blogService;
             _userService = userService;
         }
+        
         // Get all blogs: staff and manager manage all blogs of system
         [HttpGet("user")] // blogid, authorName, img, title, created_date, views, reactions, status
         public async Task<ActionResult> GetBlogsByUser()
@@ -78,6 +81,7 @@ namespace BE_Homnayangi.Controllers
         }
 
         // GET: api/v1/blogs/57448A79-8855-42AD-BD2E-0295D1436037
+
         [HttpGet("staff-preview/{id}")]
         public async Task<ActionResult<BlogDetailResponse>> GetBlogForPreview([FromRoute] Guid id)
         {
@@ -140,19 +144,62 @@ namespace BE_Homnayangi.Controllers
 
         // DELETE: api/Blogs/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBlog(Guid id)
+        public async Task<IActionResult> DeleteBlog([FromRoute] Guid id)
         {
-            var blog = await _context.Blogs.FindAsync(id);
-            if (blog == null)
+            try
             {
-                return NotFound();
+                #region Authorization
+                if (_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]) == null)
+                {
+                    throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
+                }
+                else if (_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]).Role.Equals("Customer"))
+                {
+                    throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_ALLOWED_TO_DELETE_BLOG);
+                }
+                #endregion
+
+                await _blogService.DeleteBlog(id);
+                return new JsonResult(new
+                {
+                    status = "success"
+                });
             }
-
-            _context.Blogs.Remove(blog);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
+
+        // RESTORE: api/Blogs/5
+        [HttpPut("restore-blog/{id}")]
+        public async Task<IActionResult> RestoreBlog([FromRoute] Guid id)
+        {
+            try
+            {
+                #region Authorization
+                if (_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]) == null)
+                {
+                    throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
+                }
+                else if (_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]).Role.Equals("Customer"))
+                {
+                    throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_ALLOWED_TO_RESTORE_BLOG);
+                }
+                #endregion
+
+                await _blogService.RestoreBlog(id);
+                return new JsonResult(new
+                {
+                    status = "success"
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        #endregion
 
         // REMOVE: api/Blogs/5
         [HttpDelete("remove-draft/{id}")]

@@ -24,9 +24,16 @@ namespace Library.Models.Constant
         #region Blog error message
         public static class BlogError
         {
-            public readonly static string BLOG_NOT_FOUND = "Blog not found";
+            public readonly static string BLOG_NOT_FOUND = "Blog is not found";
             public readonly static string BLOG_NOT_BINDING_TO_RECIPE = "This Blog was not binding to any Recipe";
             public readonly static string BLOG_SUBCATES_LIMIT = "Max Sub categories for blog is 5";
+        }
+        #endregion
+
+        #region Recipe error message
+        public static class RecipeError
+        {
+            public readonly static string RECIPE_NOT_FOUND = "Recipe is not found";
         }
         #endregion
 
@@ -43,7 +50,11 @@ namespace Library.Models.Constant
         public static class CustomerError
         {
             public readonly static string CUSTOMER_NOT_FOUND = "This customer can not be found";
-            public readonly static string CUSTOMER_NOT_ALLOWED_TO_CREATE_BLOG = "Only User role is allowed to create a new blog";
+            public readonly static string CUSTOMER_NOT_ALLOWED_TO_CREATE_BLOG = "User and Manager role are allowed to create a new blog";
+            public readonly static string CUSTOMER_NOT_ALLOWED_TO_DELETE_BLOG = "User and Manager role are allowed to delete a blog";
+            public readonly static string CUSTOMER_NOT_ALLOWED_TO_DELETE_RECIPE = "User and Manager role are allowed to delete a recipe";
+            public readonly static string CUSTOMER_NOT_ALLOWED_TO_RESTORE_BLOG = "User and Manager role are allowed to restore an old blog";
+            public readonly static string CUSTOMER_NOT_ALLOWED_TO_RESTORE_RECIPE = "User and Manager role are allowed to restore an old reipce";
             public readonly static string ACTION_FOR_CUSTOMER_ROLE_ONLY = "This action is only for Customer role";
         }
         #endregion

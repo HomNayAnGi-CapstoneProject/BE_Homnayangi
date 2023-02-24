@@ -1,4 +1,4 @@
-﻿using BE_Homnayangi.Modules.BlogReactionModule.Interface;
+﻿using BE_Homnayangi.Modules.AccomplishmentModule.Interface;
 using Library.DataAccess;
 using Library.Models;
 using Microsoft.EntityFrameworkCore;
@@ -9,23 +9,26 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace BE_Homnayangi.Modules.BlogReactionModule
+namespace BE_Homnayangi.Modules.AccomplishmentModule
 {
-    public class BlogReactionRepository : Repository<BlogReaction>, IBlogReactionRepository
+    public class AccomplishmentRepository : Repository<Accomplishment>, IAccomplishmentRepository
     {
         private readonly HomnayangiContext _db;
 
-        public BlogReactionRepository(HomnayangiContext db) : base(db)
+        public AccomplishmentRepository(HomnayangiContext db) : base(db)
         {
             _db = db;
         }
-        public async Task<ICollection<BlogReaction>> GetBlogReactionsBy(
-            Expression<Func<BlogReaction, bool>> filter = null,
-            Func<IQueryable<BlogReaction>, ICollection<BlogReaction>> options = null,
+
+        public async Task<ICollection<Accomplishment>> GetAccomplishmentsBy(
+            Expression<Func<Accomplishment,
+            bool>> filter = null,
+            Func<IQueryable<Accomplishment>,
+                ICollection<Accomplishment>> options = null,
             string includeProperties = null
-        )
+            )
         {
-            IQueryable<BlogReaction> query = DbSet;
+            IQueryable<Accomplishment> query = DbSet;
 
             if (filter != null)
             {

@@ -1,18 +1,17 @@
+using AutoMapper;
+using BE_Homnayangi.Modules.DTO.RecipeDetailsDTO;
+using BE_Homnayangi.Modules.DTO.RecipeDTO;
+using BE_Homnayangi.Modules.IngredientModule.Interface;
+using BE_Homnayangi.Modules.RecipeDetailModule.Interface;
+using BE_Homnayangi.Modules.RecipeModule.Interface;
+using BE_Homnayangi.Modules.UserModule.Interface;
+using Library.Models;
+using Library.Models.Constant;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Library.DataAccess;
-using Library.Models;
-using AutoMapper;
-using BE_Homnayangi.Modules.RecipeModule.Interface;
-using BE_Homnayangi.Modules.RecipeDetailModule.Interface;
-using BE_Homnayangi.Modules.IngredientModule.Interface;
-using BE_Homnayangi.Modules.DTO.RecipeDetailsDTO;
-using BE_Homnayangi.Modules.DTO.RecipeDTO;
 
 namespace BE_Homnayangi.Controllers
 {
@@ -24,13 +23,16 @@ namespace BE_Homnayangi.Controllers
         private readonly IRecipeService _recipeServices;
         private readonly IRecipeDetailService _recipeDetailService;
         private readonly IIngredientService _ingredientService;
+        private readonly IUserService _userService;
 
-        public RecipesController(IRecipeService recipeServices, IRecipeDetailService recipeDetailService, IIngredientService ingredientService, IMapper mapper)
+        public RecipesController(IRecipeService recipeServices, IRecipeDetailService recipeDetailService, IIngredientService ingredientService,
+            IMapper mapper, IUserService userService)
         {
             _mapper = mapper;
             _recipeServices = recipeServices;
             _recipeDetailService = recipeDetailService;
             _ingredientService = ingredientService;
+            _userService = userService;
         }
 
         // GET: api/Recipes
@@ -74,82 +76,63 @@ namespace BE_Homnayangi.Controllers
             return recipeResponse;
         }
 
-        // PUT: api/Recipes/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutRecipe(Guid id, Recipe recipe)
-        {
-            //if (id != recipe.RecipeId)
-            //{
-            //    return BadRequest();
-            //}
-
-            //_context.Entry(recipe).State = EntityState.Modified;
-
-            //try
-            //{
-            //    await _context.SaveChangesAsync();
-            //}
-            //catch (DbUpdateConcurrencyException)
-            //{
-            //    if (!RecipeExists(id))
-            //    {
-            //        return NotFound();
-            //    }
-            //    else
-            //    {
-            //        throw;
-            //    }
-            //}
-
-            return NoContent();
-        }
-
-        // POST: api/Recipes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Recipe>> PostRecipe(Recipe recipe)
-        {
-            //_context.Recipes.Add(recipe);
-            //try
-            //{
-            //    await _context.SaveChangesAsync();
-            //}
-            //catch (DbUpdateException)
-            //{
-            //    if (RecipeExists(recipe.RecipeId))
-            //    {
-                    return Conflict();
-            //    }
-            //    else
-            //    {
-            //        throw;
-            //    }
-            //}
-
-            //return CreatedAtAction("GetRecipe", new { id = recipe.RecipeId }, recipe);
-        }
-
+        #region DELETE - RESTORE RECIPE
         // DELETE: api/Recipes/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRecipe(Guid id)
+        public async Task<IActionResult> DeleteRecipe([FromRoute] Guid id)
         {
-            //var recipe = await _context.Recipes.FindAsync(id);
-            //if (recipe == null)
-            //{
-            //    return NotFound();
-            //}
+            try
+            {
+                #region Authorization
+                if (_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]) == null)
+                {
+                    throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
+                }
+                else if (_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]).Role.Equals("Customer"))
+                {
+                    throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_ALLOWED_TO_DELETE_RECIPE);
+                }
+                #endregion
 
-            //_context.Recipes.Remove(recipe);
-            //await _context.SaveChangesAsync();
-
-            return NoContent();
+                await _recipeServices.DeleteRecipe(id);
+                return new JsonResult(new
+                {
+                    status = "success"
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        private bool RecipeExists(Guid id)
+        [HttpPut("restore-recipe/{id}")]
+        public async Task<IActionResult> RestoreRecipe([FromRoute] Guid id)
         {
-            //return _context.Recipes.Any(e => e.RecipeId == id);
-            return false;
+            try
+            {
+                #region Authorization
+                if (_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]) == null)
+                {
+                    throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
+                }
+                else if (_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]).Role.Equals("Customer"))
+                {
+                    throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_ALLOWED_TO_RESTORE_RECIPE);
+                }
+                #endregion
+
+                await _recipeServices.RestoreRecipe(id);
+                return new JsonResult(new
+                {
+                    status = "success"
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
+        #endregion
     }
 }

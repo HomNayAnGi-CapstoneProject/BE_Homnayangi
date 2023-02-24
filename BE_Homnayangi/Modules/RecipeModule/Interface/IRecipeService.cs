@@ -26,5 +26,9 @@ namespace BE_Homnayangi.Modules.RecipeModule.Interface
             int numberItem = 0);
 
         public Recipe GetRecipeByID(Guid? id);
+
+        public Task DeleteRecipe(Guid id);
+
+        public Task RestoreRecipe(Guid id);
     }
 }

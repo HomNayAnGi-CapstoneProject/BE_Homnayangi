@@ -18,7 +18,7 @@ namespace BE_Homnayangi.Modules.BlogModule.Interface
 
         public Task<Guid> CreateEmptyBlog(Guid authorId);
 
-        public Task DeleteBlog(Guid? ID);
+        public Task DeleteBlog(Guid ID);
 
         public Task RemoveBlogDraft(Guid? Id);
         #endregion
@@ -43,5 +43,11 @@ namespace BE_Homnayangi.Modules.BlogModule.Interface
         public Task<ICollection<GetBlogsForHomePageResponse>> GetSoupAndNormalBlogs(Guid? categoryId, Guid? subCateId);
 
         public Task<PagedResponse<PagedList<BlogsByCatesResponse>>> GetBlogsBySubCates(BlogsBySubCatesRequest request);
+
+        public Task<ICollection<OverviewBlog>> GetBlogsByCustomer();
+        
+        public Task<ICollection<OverviewBlog>> GetBlogsByUser();
+
+        public Task RestoreBlog(Guid id);
     }
 }
