@@ -1,4 +1,5 @@
-﻿using BE_Homnayangi.Modules.RecipeDetailModule.Interface;
+﻿using BE_Homnayangi.Modules.BlogModule.Interface;
+using BE_Homnayangi.Modules.RecipeDetailModule.Interface;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
 using Library.Models;
 using Library.Models.Constant;
@@ -14,11 +15,14 @@ namespace BE_Homnayangi.Modules.RecipeModule
     {
         private readonly IRecipeRepository _recipeRepository;
         private readonly IRecipeDetailRepository _recipeDetailRepository;
+        private readonly IBlogRepository _blogRepository;
 
-        public RecipeService(IRecipeRepository recipeRepository, IRecipeDetailRepository recipeDetailRepository)
+        public RecipeService(IRecipeRepository recipeRepository, IRecipeDetailRepository recipeDetailRepository,
+            IBlogRepository blogRepository)
         {
             _recipeRepository = recipeRepository;
             _recipeDetailRepository = recipeDetailRepository;
+            _blogRepository = blogRepository;
         }
 
         public async Task<ICollection<Recipe>> GetAll()
@@ -67,13 +71,22 @@ namespace BE_Homnayangi.Modules.RecipeModule
         {
             try
             {
-                #region update Recipe status into 0
+                #region update Recipe status into 0 > throw Error if not existed
                 Recipe removedRecipe = await _recipeRepository.GetFirstOrDefaultAsync(recipe => recipe.RecipeId == id && recipe.Status == 1);
                 if (removedRecipe == null)
                     throw new Exception(ErrorMessage.RecipeError.RECIPE_NOT_FOUND);
 
                 removedRecipe.Status = 0;
                 await _recipeRepository.UpdateAsync(removedRecipe);
+                #endregion
+
+                #region update Blog status into 0 > throw Error if not existed
+                Blog removedBlog = await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId.Equals(id) && x.BlogStatus == 1);
+                if (removedBlog == null)
+                    throw new Exception(ErrorMessage.BlogError.BLOG_NOT_FOUND);
+
+                removedBlog.BlogStatus = 0;
+                await _blogRepository.UpdateAsync(removedBlog);
                 #endregion
 
                 #region update RecipeDetails status into 0
@@ -109,7 +122,7 @@ namespace BE_Homnayangi.Modules.RecipeModule
                 await _recipeRepository.UpdateAsync(restoredRecipe);
                 #endregion
 
-                #region update RecipeDetails status into 0
+                #region update RecipeDetails status into 1
                 ICollection<RecipeDetail> recipeDetails = await _recipeDetailRepository.GetRecipeDetailsBy(item => item.RecipeId == id && item.Status == 0);
                 if (recipeDetails != null)
                 {
