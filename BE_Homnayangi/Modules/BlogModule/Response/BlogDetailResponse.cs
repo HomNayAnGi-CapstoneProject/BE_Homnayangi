@@ -45,8 +45,16 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
 
 
         // List Ingredients
-        public List<RecipeDetail> RecipeDetails { get; set; }
+        public List<RecipeDetailResponse> RecipeDetails { get; set; }
 
         // Note: về sau sẽ lấy blogreaction lên để xem user đó react hay chưa => on | off nút react
+    }
+
+    public class RecipeDetailResponse
+    {
+        public Guid IngredientId { get; set; }
+        public string IngredientName { get; set; }
+        public string Description { get; set; }
+        public int? Quantity { get; set; }
     }
 }

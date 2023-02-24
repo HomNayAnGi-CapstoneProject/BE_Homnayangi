@@ -587,7 +587,7 @@ namespace BE_Homnayangi.Modules.BlogModule
             BlogDetailResponse result = null;
             try
             {
-                var blog = await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId == blogId && x.BlogStatus == (int?)BlogStatus.ACTIVE, includeProperties: "Recipe");
+                var blog = await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId == blogId, includeProperties: "Recipe");
 
                 if (blog == null) throw new Exception(ErrorMessage.BlogError.BLOG_NOT_FOUND);
 
@@ -647,8 +647,14 @@ namespace BE_Homnayangi.Modules.BlogModule
                 }).ToList();
 
                 // List RecipeDetails & List Ingredients
-                result.RecipeDetails = _recipeDetailRepository.GetRecipeDetailsBy(x => x.RecipeId == result.RecipeId, includeProperties: "Ingredient").Result.ToList();
-
+                result.RecipeDetails = _recipeDetailRepository.GetRecipeDetailsBy(x => x.RecipeId == result.RecipeId, includeProperties: "Ingredient").Result
+                    .Select(x => new RecipeDetailResponse
+                    {
+                        IngredientId = x.IngredientId,
+                        IngredientName = x.Ingredient.Name,
+                        Description = x.Description,
+                        Quantity = x.Quantity
+                    }).ToList();
             }
             catch (Exception ex)
             {
@@ -723,8 +729,14 @@ namespace BE_Homnayangi.Modules.BlogModule
                 }).ToList();
 
                 // List RecipeDetails & List Ingredients
-                result.RecipeDetails = _recipeDetailRepository.GetRecipeDetailsBy(x => x.RecipeId == result.RecipeId, includeProperties: "Ingredient").Result.ToList();
-
+                result.RecipeDetails = _recipeDetailRepository.GetRecipeDetailsBy(x => x.RecipeId == result.RecipeId, includeProperties: "Ingredient").Result
+                    .Select(x => new RecipeDetailResponse
+                    {
+                        IngredientId = x.IngredientId,
+                        IngredientName = x.Ingredient.Name,
+                        Description = x.Description,
+                        Quantity = x.Quantity
+                    }).ToList();
             }
             catch (Exception ex)
             {
