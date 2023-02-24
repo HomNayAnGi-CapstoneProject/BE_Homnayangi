@@ -37,7 +37,7 @@ namespace BE_Homnayangi.Controllers
         {
             return new JsonResult(new
             {
-                result = _userService.GetCurrentLoginUserId(Request.Headers["Authorization"]),
+                result = _userService.GetCurrentUser(Request.Headers["Authorization"]),
             });
         }
 
@@ -45,7 +45,7 @@ namespace BE_Homnayangi.Controllers
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] UpdateCustomer customerUpdate)
         {
-            if (_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]).Id != customerUpdate.CustomerId)
+            if (_userService.GetCurrentUser(Request.Headers["Authorization"]).Id != customerUpdate.CustomerId)
             {
                 return BadRequest();
             }
@@ -78,7 +78,7 @@ namespace BE_Homnayangi.Controllers
             {
 
 
-                await _userService.UpdateCustomerPassword(_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]).Id, request.oldPassword, request.newPassword);
+                await _userService.UpdateCustomerPassword(_userService.GetCurrentUser(Request.Headers["Authorization"]).Id, request.oldPassword, request.newPassword);
 
 
             }

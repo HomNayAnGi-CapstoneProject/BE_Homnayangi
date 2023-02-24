@@ -23,19 +23,14 @@ namespace BE_Homnayangi.Modules.BlogModule.Interface
         public Task RemoveBlogDraft(Guid? Id);
         #endregion
 
-        public Task<ICollection<Blog>> GetAll();
+        #region GET
+        public Task<ICollection<OverviewBlog>> GetBlogsByUser();
+        #endregion
 
-        public Task<ICollection<Blog>> GetBlogsBy(
-            Expression<Func<Blog, bool>> filter = null,
-            Func<IQueryable<Blog>, ICollection<Blog>> options = null,
-            string includeProperties = null);
-
-        public Task<ICollection<Blog>> GetRandomBlogsBy(Expression<Func<Blog, bool>> filter = null,
-            Func<IQueryable<Blog>, ICollection<Blog>> options = null,
-            string includeProperties = null,
-            int numberItem = 0);
-
-        public Blog GetBlogByID(Guid? id);
+        #region Blog detail
+        public Task<BlogDetailResponse> GetBlogDetail(Guid blogId);
+        public Task<BlogDetailResponse> GetBlogDetailPreview(Guid blogId);
+        #endregion
 
         public Task<ICollection<GetBlogsForHomePageResponse>> GetBlogsSortByPackagePriceAsc();
 
@@ -47,13 +42,6 @@ namespace BE_Homnayangi.Modules.BlogModule.Interface
 
         public Task<ICollection<GetBlogsForHomePageResponse>> GetSoupAndNormalBlogs(Guid? categoryId, Guid? subCateId);
 
-        //public Task<BlogDetailResponse> GetBlogDetails(Guid blogId);
-        public Task<BlogDetailResponse> GetBlogDetailPreview(Guid blogId);
-
         public Task<PagedResponse<PagedList<BlogsByCatesResponse>>> GetBlogsBySubCates(BlogsBySubCatesRequest request);
-
-        public Task<ICollection<OverviewBlog>> GetBlogsByCustomer();
-        
-        public Task<ICollection<OverviewBlog>> GetBlogsByUser();
     }
 }

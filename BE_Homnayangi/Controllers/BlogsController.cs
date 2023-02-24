@@ -1,21 +1,13 @@
 ﻿using BE_Homnayangi.Modules.BlogModule.Interface;
 using BE_Homnayangi.Modules.BlogModule.Request;
 using BE_Homnayangi.Modules.BlogModule.Response;
-using BE_Homnayangi.Modules.SubCateModule.Interface;
-using BE_Homnayangi.Modules.SubCateModule.Response;
 using BE_Homnayangi.Modules.UserModule.Interface;
-using BE_Homnayangi.Modules.UserModule.Response;
-using BE_Homnayangi.Modules.Utils;
-using BE_Homnayangi.Utils;
+using Library.Commons;
 using Library.DataAccess;
-using Library.Models;
 using Library.Models.Constant;
 using Library.PagedList;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace BE_Homnayangi.Controllers
@@ -26,17 +18,12 @@ namespace BE_Homnayangi.Controllers
     {
         private readonly HomnayangiContext _context;
         private readonly IBlogService _blogService;
-        private readonly ISubCateService _subCateService;
         private readonly IUserService _userService;
-        private readonly ICustomAuthorization _customAuthorization;
 
-        public BlogsController(HomnayangiContext context, IBlogService blogService, ISubCateService subCateService, IUserService userService, ICustomAuthorization customAuthorization)
+        public BlogsController(IBlogService blogService, IUserService userService)
         {
-            _context = context;
             _blogService = blogService;
-            _subCateService = subCateService;
             _userService = userService;
-            _customAuthorization = customAuthorization;
         }
         // Get all blogs: staff and manager manage all blogs of system
         [HttpGet("user")] // blogid, authorName, img, title, created_date, views, reactions, status
@@ -44,11 +31,11 @@ namespace BE_Homnayangi.Controllers
         {
             try
             {
-                if (_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]) == null)
+                if (_userService.GetCurrentUser(Request.Headers["Authorization"]) == null)
                 {
                     throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
                 }
-                else if (_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]).Role.Equals("Customer"))
+                else if (_userService.GetCurrentUser(Request.Headers["Authorization"]).Role.Equals(CommonEnum.RoleEnum.CUSTOMER))
                 {
                     throw new Exception(ErrorMessage.UserError.ACTION_FOR_STAFF_AND_MANAGER_ROLE);
                 }
@@ -76,63 +63,13 @@ namespace BE_Homnayangi.Controllers
             }
         }
 
-        // Get all blogs(customer)
-        [HttpGet("customer")] // Available blogs: blogid, recipeName, title, description, img, created_date, views, reactions,
-                              // cooked_price, subcates[] -> tags,
-                              // Recipe (Kcal, cookedPrice)
-        public async Task<ActionResult> GetBlogsByCustomer()
-        {
-            try
-            {
-                if (_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]) == null)
-                {
-                    throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
-                }
-                else if (!_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]).Role.Equals("Customer"))
-                {
-                    throw new Exception(ErrorMessage.UserError.ACTION_FOR_USER_ROLE_ONLY);
-                }
-
-                var blogs = await _blogService.GetBlogsByCustomer();
-                if (blogs == null || blogs.Count == 0)
-                {
-                    return new JsonResult(new
-                    {
-                        total_result = 0
-                    });
-                }
-                else
-                {
-                    return new JsonResult(new
-                    {
-                        total_result = blogs.Count,
-                        result = blogs
-                    });
-                }
-
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-
-        // GET: api/Blogs
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Blog>>> GetBlogs()
-        {
-            return await _context.Blogs.ToListAsync();
-        }
-
-
         // GET: api/v1/blogs/57448A79-8855-42AD-BD2E-0295D1436037
         [HttpGet("{id}")]
-        public async Task<ActionResult<BlogDetailResponse>> GetBlogByID([FromRoute] Guid id)
+        public async Task<ActionResult<BlogDetailResponse>> GetBlogDetail([FromRoute] Guid id)
         {
             try
             {
-                return Ok(_blogService.GetBlogByID(id));
+                return Ok(_blogService.GetBlogDetail(id));
             }
             catch (Exception ex)
             {
@@ -154,6 +91,7 @@ namespace BE_Homnayangi.Controllers
             }
         }
 
+        #region CUD Blog
         // POST: api/Blogs
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
@@ -162,22 +100,37 @@ namespace BE_Homnayangi.Controllers
             try
             {
 
-                if (_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]) == null)
+                if (_userService.GetCurrentUser(Request.Headers["Authorization"]) == null)
                 {
                     throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
                 }
-                else if (_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]).Role.Equals("Customer"))
+                else if (_userService.GetCurrentUser(Request.Headers["Authorization"]).Role.Equals("Customer"))
                 {
                     throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_ALLOWED_TO_CREATE_BLOG);
                 }
 
                 // Role: User only
-                var id = await _blogService.CreateEmptyBlog(_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]).Id);
+                var id = await _blogService.CreateEmptyBlog(_userService.GetCurrentUser(Request.Headers["Authorization"]).Id);
                 return new JsonResult(new
                 {
                     status = "success",
                     blog_id = id,
                 });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> PutBlog([FromBody] BlogUpdateRequest request)
+        {
+            try
+            {
+                var currentUserId = _userService.GetCurrentUser(Request.Headers["Authorization"]).Id;
+                await _blogService.UpdateBlog(request, currentUserId); ;
+                return Ok("Update success");
             }
             catch (Exception ex)
             {
@@ -207,6 +160,15 @@ namespace BE_Homnayangi.Controllers
         {
             try
             {
+                if (_userService.GetCurrentUser(Request.Headers["Authorization"]) == null)
+                {
+                    throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
+                }
+                else if (_userService.GetCurrentUser(Request.Headers["Authorization"]).Role.Equals("Customer"))
+                {
+                    throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_ALLOWED_TO_CREATE_BLOG);
+                }
+
                 await _blogService.RemoveBlogDraft(id);
                 return Ok();
             }
@@ -215,6 +177,7 @@ namespace BE_Homnayangi.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        #endregion
 
         [HttpGet("category/tag")]
         public async Task<ActionResult<PagedResponse<PagedList<BlogsByCateAndTagResponse>>>> GetBlogsByCateAndTag([FromQuery] BlogFilterByCateAndTagRequest blogFilter)
@@ -227,19 +190,6 @@ namespace BE_Homnayangi.Controllers
             }
 
             return Ok(response);
-        }
-
-        // Get sub-cates by categoryId 
-        [HttpGet("categories/{categoryId}/sub-categories")]
-        public async Task<ActionResult<IEnumerable<SubCateResponse>>> GetSubCatesByCategoryId(Guid categoryId)
-        {
-            var subCates = await _subCateService.GetSubCatesByCategoryId(categoryId);
-
-            return new JsonResult(new
-            {
-                total_results = subCates.Count(),
-                result = subCates,
-            }); ;
         }
 
         [HttpGet("category/sub-categories")]
@@ -255,19 +205,5 @@ namespace BE_Homnayangi.Controllers
             return Ok(response);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> PutBlog([FromBody] BlogUpdateRequest request)
-        {
-            try
-            {
-                var currentUserId = _userService.GetCurrentLoginUserId(Request.Headers["Authorization"]).Id;
-                await _blogService.UpdateBlog(request, currentUserId); ;
-                return Ok("Update success");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
     }
 }

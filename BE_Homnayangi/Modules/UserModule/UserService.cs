@@ -366,7 +366,6 @@ namespace BE_Homnayangi.Modules.UserModule
                     _httpContextAccessor.HttpContext.User = principal;
                     Console.WriteLine(_httpContextAccessor.HttpContext.User.Identity.Name);
                     var tokenCustomer = jwtTokenHandlerCustomer.CreateToken(tokenDescriptionCustomer);
-                    GetCurrentUser();
                     return jwtTokenHandlerCustomer.WriteToken(tokenCustomer);
                 }
                 else
@@ -403,7 +402,6 @@ namespace BE_Homnayangi.Modules.UserModule
                 var principal = new ClaimsPrincipal(tokenDescription.Subject);
                 _httpContextAccessor.HttpContext.User = principal;
                 var token = jwtTokenHandler.CreateToken(tokenDescription);
-                GetCurrentUser();
                 return jwtTokenHandler.WriteToken(token);
 
 
@@ -448,7 +446,6 @@ namespace BE_Homnayangi.Modules.UserModule
                     var principal = new ClaimsPrincipal(tokenDescriptionCustomer.Subject);
                     _httpContextAccessor.HttpContext.User = principal;
                     var tokenCustomer = jwtTokenHandlerCustomer.CreateToken(tokenDescriptionCustomer);
-                    GetCurrentUser();
                     return jwtTokenHandlerCustomer.WriteToken(tokenCustomer);
                 }
                 else if (customer == null)
@@ -485,7 +482,6 @@ namespace BE_Homnayangi.Modules.UserModule
                     var principal = new ClaimsPrincipal(tokenDescriptionCustomer.Subject);
                     _httpContextAccessor.HttpContext.User = principal;
                     var tokenCustomer = jwtTokenHandlerCustomer.CreateToken(tokenDescriptionCustomer);
-                    GetCurrentUser();
                     return jwtTokenHandlerCustomer.WriteToken(tokenCustomer);
                 }
                 else
@@ -525,7 +521,6 @@ namespace BE_Homnayangi.Modules.UserModule
                 _httpContextAccessor.HttpContext.User = principal;
 
                 var token = jwtTokenHandler.CreateToken(tokenDescription);
-                GetCurrentUser();
                 return jwtTokenHandler.WriteToken(token);
 
 
@@ -604,41 +599,7 @@ namespace BE_Homnayangi.Modules.UserModule
 
         #endregion
 
-        public void GetCurrentUser()
-        {
-            CurrentUserResponse currentUser = null;
-            try
-            {
-                var user = _httpContextAccessor.HttpContext.User;
-                var identity = user.Identity as ClaimsIdentity;
-                if (identity != null)
-                {
-                    var userClaims = identity.Claims;
-                    currentUser = new CurrentUserResponse()
-                    {
-                        Id = new Guid(userClaims.FirstOrDefault(x => x.Type == "Id")?.Value),
-                        Displayname = userClaims.FirstOrDefault(x => x.Type == "Displayname")?.Value,
-                        Username = userClaims.FirstOrDefault(x => x.Type == "Username")?.Value,
-                        Firstname = userClaims.FirstOrDefault(x => x.Type == "Firstname")?.Value,
-                        Lastname = userClaims.FirstOrDefault(x => x.Type == "Lastname")?.Value,
-                        Email = userClaims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value,
-                        Avatar = userClaims.FirstOrDefault(x => x.Type == "Avatar")?.Value,
-                        Phonenumber = userClaims.FirstOrDefault(x => x.Type == "Phone Number")?.Value,
-                        Gender = Int32.Parse(userClaims.FirstOrDefault(x => x.Type == ClaimTypes.Gender)?.Value),
-                        Role = userClaims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value
-                    };
-
-                    _customAuthorization.Login(currentUser);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error at GetCurrentLoginUser: " + ex.Message);
-                throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
-            }
-        }
-
-        public CurrentUserResponse GetCurrentLoginUserId(string authHeader)
+        public CurrentUserResponse GetCurrentUser(string authHeader)
         {
             try
             {

@@ -40,6 +40,6 @@ namespace BE_Homnayangi.Modules.UserModule.Interface
         public Task<string> GenerateGoolgleToken(LoginGoogleDTO loginGoogle);
         public Task Register(RegisterDTO register);
         #endregion
-        public CurrentUserResponse GetCurrentLoginUserId(string authHeader);
+        public CurrentUserResponse GetCurrentUser(string authHeader);
     }
 }

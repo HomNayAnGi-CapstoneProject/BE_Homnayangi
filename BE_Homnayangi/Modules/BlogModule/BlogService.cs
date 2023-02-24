@@ -35,12 +35,11 @@ namespace BE_Homnayangi.Modules.BlogModule
         private readonly IBlogSubCateRepository _blogSubCateRepository;
         private readonly ISubCateRepository _subCateRepository;
         private readonly IRecipeDetailRepository _recipeDetailRepository;
-        private readonly ITypeRepository _typeRepository;
         private readonly IUserRepository _userRepository;
         private readonly IBlogReferenceRepository _blogReferenceRepository;
 
         public BlogService(IBlogRepository blogRepository, IRecipeRepository recipeRepository, IBlogSubCateRepository blogSubCateRepository,
-            ISubCateRepository subCateRepository, IRecipeDetailRepository recipeDetailRepository, ITypeRepository typeRepository, IUserRepository userRepository,
+            ISubCateRepository subCateRepository, IRecipeDetailRepository recipeDetailRepository, IUserRepository userRepository,
             IBlogReferenceRepository blogReferenceRepository)
         {
             _blogRepository = blogRepository;
@@ -48,33 +47,40 @@ namespace BE_Homnayangi.Modules.BlogModule
             _blogSubCateRepository = blogSubCateRepository;
             _subCateRepository = subCateRepository;
             _recipeDetailRepository = recipeDetailRepository;
-            _typeRepository = typeRepository;
             _userRepository = userRepository;
             _blogReferenceRepository = blogReferenceRepository;
         }
         #endregion
 
         #region Get Blog
-        public async Task<ICollection<Blog>> GetAll()
-        {
-            return await _blogRepository.GetAll();
-        }
 
-        public Task<ICollection<Blog>> GetBlogsBy(
-            Expression<Func<Blog, bool>> filter = null,
-            Func<IQueryable<Blog>, ICollection<Blog>> options = null,
-            string includeProperties = null)
+        public async Task<ICollection<OverviewBlog>> GetBlogsByUser()
         {
-            return _blogRepository.GetBlogsBy(filter);
-        }
-
-        public Task<ICollection<Blog>> GetRandomBlogsBy(
-            Expression<Func<Blog, bool>> filter = null,
-            Func<IQueryable<Blog>, ICollection<Blog>> options = null,
-            string includeProperties = null,
-            int numberItem = 0)
-        {
-            return _blogRepository.GetNItemRandom(filter, numberItem: numberItem);
+            List<OverviewBlog> list = null;
+            try
+            {
+                var blogs = await _blogRepository.GetBlogsBy(includeProperties: "Recipe");
+                if (blogs != null && blogs.Count > 0)
+                {
+                    list = blogs.Join(_userRepository.GetAll().Result, x => x.AuthorId, y => y.UserId, (x, y) => new OverviewBlog()
+                    {
+                        BlogId = x.BlogId,
+                        AuthorName = y.Displayname,
+                        ImageUrl = x?.ImageUrl,
+                        Title = x?.Title,
+                        CreatedDate = x.CreatedDate.Value,
+                        View = x?.View,
+                        Reaction = x?.Reaction,
+                        Status = x.BlogStatus,
+                        TotalKcal = x.Recipe?.TotalKcal,
+                    }).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return list;
         }
         #endregion
 
@@ -111,7 +117,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     {
                         BlogReferenceId = Guid.NewGuid(),
                         BlogId = blog.BlogId,
-                        Status = 2,
+                        Status = 2, //drafted
                         Type = i
                     };
                     listBlogRef.Add(blogReference);
@@ -291,10 +297,6 @@ namespace BE_Homnayangi.Modules.BlogModule
         }
         #endregion
 
-        public Blog GetBlogByID(Guid? id)
-        {
-            return _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId.Equals(id) && x.BlogStatus == 1).Result;
-        }
 
         // [6] giá nguyên liệu: 50k-100k
         public async Task<ICollection<GetBlogsForHomePageResponse>> GetBlogsSortByPackagePriceAsc()
@@ -579,88 +581,82 @@ namespace BE_Homnayangi.Modules.BlogModule
         }
 
         #region Blog Detail
-        //public async Task<BlogDetailResponse> GetBlogDetails(Guid blogId)
-        //{
-        //    BlogDetailResponse result = null;
-        //    try
-        //    {
-        //        var blog = await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId == blogId && x.BlogStatus.Value == 1,
-        //            includeProperties: "Recipe,Author");
-        //        if (blog != null)
-        //        {
-        //            blog.View = blog.View.Value + 1;
-        //            await _blogRepository.UpdateAsync(blog);
-        //            result = new BlogDetailResponse()
-        //            {
-        //                 Blog information
-        //                BlogId = blog.BlogId,
-        //                Title = blog.Title,
-        //                Description = blog.Description,
-        //                Preparation = blog.Preparation,
-        //                Finished = blog.Finished,
-        //                Processing = blog.Processing,
-        //                ImageUrl = blog.ImageUrl,
-        //                CreatedDate = blog.CreatedDate.Value,
-        //                UpdatedDate = blog.UpdatedDate.Value,
-        //                Reaction = blog.Reaction,
-        //                View = blog.View,
-        //                BlogStatus = blog.BlogStatus,
-        //                AuthorName = blog.Author.Firstname + " " + blog.Author.Lastname
-        //            };
+        public async Task<BlogDetailResponse> GetBlogDetail(Guid blogId)
+        {
+            BlogDetailResponse result = null;
+            try
+            {
+                var blog = await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId == blogId && x.BlogStatus.Value == 1, //active
+                    includeProperties: "Recipe");
 
+                if (blog == null) throw new Exception(ErrorMessage.BlogError.BLOG_NOT_FOUND);
 
-        //             List SubCates
-        //            var listBlogSubCate = await _blogSubCateRepository.GetAll(includeProperties: "SubCate");
-        //            var listSubCateName = GetListSubCateName(new List<Blog>() { blog }, listBlogSubCate);
-        //            result.SubCates = listSubCateName;
+                var blogReferences = _blogReferenceRepository.GetBlogReferencesBy(x => x.BlogId == blog.BlogId).Result.ToList();
 
-        //             List RecipeDetails & List Ingredients
-        //            var recipeDetails = await _recipeDetailRepository.GetRecipeDetailsBy(x => x.RecipeId == result.RecipeId,
-        //                includeProperties: "Ingredient");
-        //            result.RecipeDetailss = new List<RecipeDetailsResponse>();
-        //            result.Ingredients = new List<IngredientResponse>();
-        //            foreach (var item in recipeDetails)
-        //            {
-        //                if (item.Ingredient.Status != null && item.Ingredient.Status.Value)
-        //                {
-        //                    var type = await _typeRepository.GetFirstOrDefaultAsync(x => x.TypeId == item.Ingredient.TypeId);
-        //                    IngredientResponse ingredient = new IngredientResponse()
-        //                    {
-        //                        IngredientId = item.IngredientId,
-        //                        Name = item.Ingredient.Name,
-        //                        Description = item.Ingredient.Description,
-        //                        Quantity = item.Ingredient.Quantity,
-        //                        UnitName = item.Ingredient.Unit.Name,
-        //                        Picture = item.Ingredient.Picture,
-        //                        ListImage = StringUtils.ExtractContents(item.Ingredient.ListImage),
-        //                        CreatedDate = item.Ingredient.CreatedDate,
-        //                        UpdatedDate = item.Ingredient.UpdatedDate,
-        //                        Status = item.Ingredient.Status,
-        //                        Price = item.Ingredient.Price,
-        //                        TypeId = type.TypeId,
-        //                        TypeName = type.Name,
-        //                        TypeDescription = type.Description,
-        //                    };
-        //                    result.Ingredients.Add(ingredient);
-        //                }
-        //                RecipeDetailsResponse recipeDetail = new RecipeDetailsResponse()
-        //                {
-        //                    RecipeId = item.RecipeId,
-        //                    IngredientId = item.IngredientId,
-        //                    Description = item.Description,
-        //                    Quantity = (int)item.Quantity
-        //                };
-        //                result.RecipeDetailss.Add(recipeDetail);
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine("Error at GetBlogDetails: " + ex.Message);
-        //        throw;
-        //    }
-        //    return result;
-        //}
+                result = new BlogDetailResponse()
+                {
+                    // Blog information
+                    BlogId = blog.BlogId,
+                    Title = blog.Title,
+                    ImageUrl = blog.ImageUrl,
+                    VideoUrl = blog.VideoUrl,
+                    CreatedDate = blog.CreatedDate.Value,
+                    UpdatedDate = blog.UpdatedDate.Value,
+                    Reaction = blog.Reaction,
+                    View = blog.View,
+                    BlogStatus = blog.BlogStatus,
+                    RecipeId = (Guid)blog.RecipeId,
+                    RecipeTitle = blog.Recipe.Title,
+                    RecipeImageURL = blog.Recipe.ImageUrl,
+                    MaxSize = blog.Recipe.MaxSize,
+                    MinSize = blog.Recipe.MinSize,
+                    PackagePrice = blog.Recipe.PackagePrice,
+                    CookedPrice = blog.Recipe.CookedPrice,
+                };
+
+                foreach (var item in blogReferences)
+                {
+                    switch (item.Type)
+                    {
+                        case (int)BlogReferenceType.DESCRIPTION:
+                            result.DescriptionText = item.Text;
+                            result.DescriptionHTML = item.Html;
+                            break;
+                        case (int)BlogReferenceType.PREPARATION:
+                            result.PreparationText = item.Text;
+                            result.PreparationHTML = item.Html;
+                            break;
+                        case (int)BlogReferenceType.PROCESSING:
+                            result.ProcessingText = item.Text;
+                            result.ProcessingHTML = item.Html;
+                            break;
+                        case (int)BlogReferenceType.FINISHED:
+                            result.FinishedText = item.Text;
+                            result.FinishedHTML = item.Html;
+                            break;
+                    }
+                }
+
+                result.AuthorName = _userRepository.GetFirstOrDefaultAsync(x => x.UserId == blog.AuthorId).Result.Displayname;
+
+                // List SubCates
+                result.SubCates = _blogSubCateRepository.GetBlogSubCatesBy(x => x.BlogId == blog.BlogId, includeProperties: "SubCate").Result.Select(x => new SubCateResponse
+                {
+                    SubCateId = x.SubCateId,
+                    Name = x.SubCate.Name
+                }).ToList();
+
+                // List RecipeDetails & List Ingredients
+                result.RecipeDetails = _recipeDetailRepository.GetRecipeDetailsBy(x => x.RecipeId == result.RecipeId, includeProperties: "Ingredient").Result.ToList();
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at GetBlogDetails: " + ex.Message);
+                throw;
+            }
+            return result;
+        }
 
         public async Task<BlogDetailResponse> GetBlogDetailPreview(Guid blogId)
         {
@@ -812,66 +808,6 @@ namespace BE_Homnayangi.Modules.BlogModule
             }
         }
 
-        public async Task<ICollection<OverviewBlog>> GetBlogsByCustomer()
-        {
-            List<OverviewBlog> list = null;
-            try
-            {
-                var blogs = await _blogRepository.GetBlogsBy(blog => blog.BlogStatus == 1, includeProperties: "Recipe");
-                if (blogs != null && blogs.Count > 0)
-                {
-                    var listBlogSubCate = await _blogSubCateRepository.GetAll(includeProperties: "SubCate");
-                    var listTagNames = GetListSubCateName(blogs, listBlogSubCate);
-                    list = blogs.Select(blog => new OverviewBlog()
-                    {
-                        BlogId = blog.BlogId,
-                        Title = blog?.Title,
-                        //Description = blog?.Description,
-                        ImageUrl = blog?.ImageUrl,
-                        CreatedDate = blog.CreatedDate.Value,
-                        View = blog?.View,
-                        Reaction = blog?.Reaction,
-                        ListSubCateName = listTagNames[blog.BlogId],
-                        RecipeName = blog.Recipe?.Title,
-                        CookedPrice = blog.Recipe?.CookedPrice,
-                        TotalKcal = blog.Recipe?.TotalKcal,
-                    }).ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            return list;
-        }
-
-        public async Task<ICollection<OverviewBlog>> GetBlogsByUser()
-        {
-            List<OverviewBlog> list = null;
-            try
-            {
-                var blogs = await _blogRepository.GetBlogsBy(includeProperties: "Recipe");
-                if (blogs != null && blogs.Count > 0)
-                {
-                    list = blogs.Join(_userRepository.GetAll().Result, x => x.AuthorId, y => y.UserId, (x, y) => new OverviewBlog()
-                    {
-                        BlogId = x.BlogId,
-                        AuthorName = y.Displayname,
-                        ImageUrl = x?.ImageUrl,
-                        Title = x?.Title,
-                        CreatedDate = x.CreatedDate.Value,
-                        View = x?.View,
-                        Reaction = x?.Reaction,
-                        Status = x.BlogStatus,
-                        TotalKcal = x.Recipe?.TotalKcal,
-                    }).ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            return list;
-        }
+        
     }
 }
