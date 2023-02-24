@@ -24,6 +24,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static Library.Models.Enum.ReferenceType;
+using static Library.Models.Enum.Status;
 
 namespace BE_Homnayangi.Modules.BlogModule
 {
@@ -111,7 +112,7 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 //add blog reference
                 var listBlogRef = new List<BlogReference>();
-                for(int i =0; i<=3; i++)
+                for (int i = 0; i <= 3; i++)
                 {
                     BlogReference blogReference = new BlogReference()
                     {
@@ -226,7 +227,7 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 #region Update blog reference
                 var listBlogRef = _blogReferenceRepository.GetBlogReferencesBy(x => x.BlogId == blog.BlogId, options: x => x.AsNoTracking().ToList()).Result.ToList();
-                var listBlogRefUpdate = listBlogRef.Join(request.BlogReferences, x => x.Type, y => y.Type, (x,y) => new BlogReference
+                var listBlogRefUpdate = listBlogRef.Join(request.BlogReferences, x => x.Type, y => y.Type, (x, y) => new BlogReference
                 {
                     BlogId = blog.BlogId,
                     Type = x.Type,
@@ -586,8 +587,7 @@ namespace BE_Homnayangi.Modules.BlogModule
             BlogDetailResponse result = null;
             try
             {
-                var blog = await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId == blogId && x.BlogStatus.Value == 1, //active
-                    includeProperties: "Recipe");
+                var blog = await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId == blogId && x.BlogStatus == (int?)BlogStatus.ACTIVE, includeProperties: "Recipe");
 
                 if (blog == null) throw new Exception(ErrorMessage.BlogError.BLOG_NOT_FOUND);
 
@@ -807,6 +807,6 @@ namespace BE_Homnayangi.Modules.BlogModule
             }
         }
 
-        
+
     }
 }
