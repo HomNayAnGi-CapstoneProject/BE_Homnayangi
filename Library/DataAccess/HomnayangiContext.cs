@@ -42,6 +42,7 @@ namespace Library.DataAccess
         public virtual DbSet<Recipe> Recipes { get; set; }
         public virtual DbSet<RecipeDetail> RecipeDetails { get; set; }
         public virtual DbSet<Reward> Rewards { get; set; }
+        public virtual DbSet<SeasonReference> SeasonReferences { get; set; }
         public virtual DbSet<SubCategory> SubCategories { get; set; }
         public virtual DbSet<Transaction> Transactions { get; set; }
         public virtual DbSet<Type> Types { get; set; }
@@ -747,6 +748,21 @@ namespace Library.DataAccess
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(50)
+                    .HasColumnName("name");
+
+                entity.Property(e => e.Status).HasColumnName("status");
+            });
+
+            modelBuilder.Entity<SeasonReference>(entity =>
+            {
+                entity.ToTable("SeasonReference");
+
+                entity.Property(e => e.SeasonReferenceId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("seasonReferenceId");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(150)
                     .HasColumnName("name");
 
                 entity.Property(e => e.Status).HasColumnName("status");
