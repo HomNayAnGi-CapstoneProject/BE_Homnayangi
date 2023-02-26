@@ -52,6 +52,7 @@
     <None Remove="Modules\Utils\" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Controllers\AdminControllers\" />
     <Folder Include="Modules\BlogModule\Request\" />
     <Folder Include="Modules\RecipeModule\Interface\" />
     <Folder Include="Modules\RecipeDetailModule\" />

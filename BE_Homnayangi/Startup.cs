@@ -1,5 +1,7 @@
 using BE_Homnayangi.Modules.AccomplishmentModule;
 using BE_Homnayangi.Modules.AccomplishmentModule.Interface;
+using BE_Homnayangi.Modules.AdminModules.CaloReferenceModule;
+using BE_Homnayangi.Modules.AdminModules.CaloReferenceModule.Interface;
 using BE_Homnayangi.Modules.AutoMapper;
 using BE_Homnayangi.Modules.BlogModule;
 using BE_Homnayangi.Modules.BlogModule.Interface;
@@ -220,8 +222,11 @@ namespace BE_Homnayangi
             //Blog reference Module
             services.AddScoped<IBlogReferenceRepository, BlogReferenceRepository>();
 
-            //Blog reference Module
+            //Accomplishment Module
             services.AddScoped<IAccomplishmentRepository, AccomplishmentRepository>();
+
+            //Calo reference Module
+            services.AddScoped<ICaloReferenceRepository, CaloReferenceRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
