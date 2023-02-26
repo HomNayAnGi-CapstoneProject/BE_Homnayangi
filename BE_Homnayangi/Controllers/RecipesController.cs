@@ -84,11 +84,11 @@ namespace BE_Homnayangi.Controllers
             try
             {
                 #region Authorization
-                if (_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]) == null)
+                if (_userService.GetCurrentUser(Request.Headers["Authorization"]) == null)
                 {
                     throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
                 }
-                else if (_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]).Role.Equals("Customer"))
+                else if (_userService.GetCurrentUser(Request.Headers["Authorization"]).Role.Equals("Customer"))
                 {
                     throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_ALLOWED_TO_DELETE_RECIPE);
                 }
@@ -112,11 +112,11 @@ namespace BE_Homnayangi.Controllers
             try
             {
                 #region Authorization
-                if (_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]) == null)
+                if (_userService.GetCurrentUser(Request.Headers["Authorization"]) == null)
                 {
                     throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
                 }
-                else if (_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]).Role.Equals("Customer"))
+                else if (_userService.GetCurrentUser(Request.Headers["Authorization"]).Role.Equals("Customer"))
                 {
                     throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_ALLOWED_TO_RESTORE_RECIPE);
                 }

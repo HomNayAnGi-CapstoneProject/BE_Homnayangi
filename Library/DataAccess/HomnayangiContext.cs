@@ -24,6 +24,7 @@ namespace Library.DataAccess
         public virtual DbSet<BlogReaction> BlogReactions { get; set; }
         public virtual DbSet<BlogReference> BlogReferences { get; set; }
         public virtual DbSet<BlogSubCate> BlogSubCates { get; set; }
+        public virtual DbSet<CaloReference> CaloReferences { get; set; }
         public virtual DbSet<Cart> Carts { get; set; }
         public virtual DbSet<CartDetail> CartDetails { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
@@ -185,11 +186,11 @@ namespace Library.DataAccess
 
                 entity.Property(e => e.Html).HasColumnName("html");
 
+                entity.Property(e => e.Status).HasColumnName("status");
+
                 entity.Property(e => e.Text).HasColumnName("text");
 
                 entity.Property(e => e.Type).HasColumnName("type");
-                
-                entity.Property(e => e.Status).HasColumnName("status");
 
                 entity.HasOne(d => d.Blog)
                     .WithMany(p => p.BlogReferences)
@@ -224,6 +225,23 @@ namespace Library.DataAccess
                     .HasForeignKey(d => d.SubCateId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_BlogSubCate_SubCategory");
+            });
+
+            modelBuilder.Entity<CaloReference>(entity =>
+            {
+                entity.ToTable("CaloReference");
+
+                entity.Property(e => e.CaloReferenceId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("caloReferenceId");
+
+                entity.Property(e => e.Calo).HasColumnName("calo");
+
+                entity.Property(e => e.FromAge).HasColumnName("fromAge");
+
+                entity.Property(e => e.IsMale).HasColumnName("isMale");
+
+                entity.Property(e => e.ToAge).HasColumnName("toAge");
             });
 
             modelBuilder.Entity<Cart>(entity =>

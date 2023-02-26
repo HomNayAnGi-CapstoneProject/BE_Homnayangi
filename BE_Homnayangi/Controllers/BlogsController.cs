@@ -10,6 +10,7 @@ using Library.PagedList;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using BE_Homnayangi.Modules.SubCateModule.Interface;
 
 namespace BE_Homnayangi.Controllers
 {
@@ -30,7 +31,7 @@ namespace BE_Homnayangi.Controllers
         
         // Get all blogs: staff and manager manage all blogs of system
         [HttpGet("user")] // blogid, authorName, img, title, created_date, views, reactions, status
-        public async Task<ActionResult> GetBlogsByUser()
+        public async Task<ActionResult> GetBlogsForStaff()
         {
             try
             {
@@ -149,11 +150,11 @@ namespace BE_Homnayangi.Controllers
             try
             {
                 #region Authorization
-                if (_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]) == null)
+                if (_userService.GetCurrentUser(Request.Headers["Authorization"]) == null)
                 {
                     throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
                 }
-                else if (_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]).Role.Equals("Customer"))
+                else if (_userService.GetCurrentUser(Request.Headers["Authorization"]).Role.Equals("Customer"))
                 {
                     throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_ALLOWED_TO_DELETE_BLOG);
                 }
@@ -178,11 +179,11 @@ namespace BE_Homnayangi.Controllers
             try
             {
                 #region Authorization
-                if (_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]) == null)
+                if (_userService.GetCurrentUser(Request.Headers["Authorization"]) == null)
                 {
                     throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
                 }
-                else if (_userService.GetCurrentLoginUserId(Request.Headers["Authorization"]).Role.Equals("Customer"))
+                else if (_userService.GetCurrentUser(Request.Headers["Authorization"]).Role.Equals("Customer"))
                 {
                     throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_ALLOWED_TO_RESTORE_BLOG);
                 }
@@ -224,7 +225,6 @@ namespace BE_Homnayangi.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        #endregion
 
         [HttpGet("category/tag")]
         public async Task<ActionResult<PagedResponse<PagedList<BlogsByCateAndTagResponse>>>> GetBlogsByCateAndTag([FromQuery] BlogFilterByCateAndTagRequest blogFilter)
