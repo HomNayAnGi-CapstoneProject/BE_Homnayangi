@@ -15,11 +15,9 @@ namespace BE_Homnayangi.Modules.BlogModule.Interface
         #region CUD Blog
 
         public Task UpdateBlog(BlogUpdateRequest request, Guid currentUserId);
-
         public Task<Guid> CreateEmptyBlog(Guid authorId);
-
+        public Task RestoreBlog(Guid id);
         public Task DeleteBlog(Guid ID);
-
         public Task RemoveBlogDraft(Guid? Id);
         #endregion
 
@@ -33,17 +31,11 @@ namespace BE_Homnayangi.Modules.BlogModule.Interface
         #endregion
 
         public Task<ICollection<GetBlogsForHomePageResponse>> GetBlogsSortByPackagePriceAsc();
-
         public Task<ICollection<SearchBlogsResponse>> GetBlogAndRecipeByName(String name);
-
         public Task<PagedResponse<PagedList<BlogsByCateAndTagResponse>>> GetBlogsByCategoryAndTag(BlogFilterByCateAndTagRequest blogFilter);
-
         public Task<ICollection<GetBlogsForHomePageResponse>> GetBlogsBySubCateForHomePage(Guid? tagId, int numberOfItems = 0);
-
         public Task<ICollection<GetBlogsForHomePageResponse>> GetSoupAndNormalBlogs(Guid? categoryId, Guid? subCateId);
-
         public Task<PagedResponse<PagedList<BlogsByCatesResponse>>> GetBlogsBySubCates(BlogsBySubCatesRequest request);
-
-        public Task RestoreBlog(Guid id);
+        public Task<ICollection<OverviewBlogResponse>> GetSuggestBlogByCalo(SuggestBlogByCaloRequest request);
     }
 }

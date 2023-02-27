@@ -1,4 +1,6 @@
 ﻿using BE_Homnayangi.Modules.AccomplishmentModule.Interface;
+using BE_Homnayangi.Modules.AdminModules.CaloReferenceModule.Interface;
+using BE_Homnayangi.Modules.AdminModules.SeasonReferenceModule.Interface;
 using BE_Homnayangi.Modules.BlogModule.Interface;
 using BE_Homnayangi.Modules.BlogModule.Request;
 using BE_Homnayangi.Modules.BlogModule.Response;
@@ -13,6 +15,7 @@ using BE_Homnayangi.Modules.SubCateModule.Response;
 using BE_Homnayangi.Modules.TypeModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.Utils;
+using FluentValidation.Results;
 using Library.Models;
 using Library.Models.Constant;
 using Library.Models.Enum;
@@ -21,12 +24,10 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static Library.Models.Enum.ReferenceType;
-using static Library.Models.Enum.Status;
 
 namespace BE_Homnayangi.Modules.BlogModule
 {
@@ -43,11 +44,14 @@ namespace BE_Homnayangi.Modules.BlogModule
         private readonly ICommentRepository _commentRepository;
         private readonly IBlogReactionRepository _blogReactionRepository;
         private readonly IAccomplishmentRepository _accomplishmentRepository;
+        private readonly ICaloReferenceRepository _caloReferenceRepository;
+        private readonly ISeasonReferenceRepository _seasonReferenceRepository;
 
         public BlogService(IBlogRepository blogRepository, IRecipeRepository recipeRepository, IBlogSubCateRepository blogSubCateRepository,
-            ISubCateRepository subCateRepository, IRecipeDetailRepository recipeDetailRepository, ITypeRepository typeRepository,
+            ISubCateRepository subCateRepository, IRecipeDetailRepository recipeDetailRepository,
             IUserRepository userRepository, IBlogReferenceRepository blogReferenceRepository, ICommentRepository commentRepository,
-            IBlogReactionRepository blogReactionRepository, IAccomplishmentRepository accomplishmentRepository)
+            IBlogReactionRepository blogReactionRepository, IAccomplishmentRepository accomplishmentRepository,
+            ICaloReferenceRepository caloReferenceRepository, ISeasonReferenceRepository seasonReferenceRepository)
         {
             _blogRepository = blogRepository;
             _recipeRepository = recipeRepository;
@@ -59,6 +63,8 @@ namespace BE_Homnayangi.Modules.BlogModule
             _commentRepository = commentRepository;
             _blogReactionRepository = blogReactionRepository;
             _accomplishmentRepository = accomplishmentRepository;
+            _caloReferenceRepository = caloReferenceRepository;
+            _seasonReferenceRepository = seasonReferenceRepository;
         }
         #endregion
 
@@ -1026,6 +1032,125 @@ namespace BE_Homnayangi.Modules.BlogModule
             {
                 Console.WriteLine("Error at GetBlogsBySubCates: " + ex.Message);
                 throw;
+            }
+        }
+
+        public async Task<ICollection<OverviewBlogResponse>> GetSuggestBlogByCalo(SuggestBlogByCaloRequest request)
+        {
+            try
+            {
+                ValidationResult validationResult = new SuggestBlogByCaloRequestValidator().Validate(request);
+                if (!validationResult.IsValid)
+                {
+                    throw new Exception(ErrorMessage.CommonError.INVALID_REQUEST);
+                }
+
+                var result = new List<OverviewBlogResponse>();
+
+                //get the suggest calo for user by request data
+                var suggestCalo = _caloReferenceRepository.GetFirstOrDefaultAsync(x => x.IsMale == request.IsMale && 
+                ((x.FromAge <= request.Age && x.ToAge > request.Age) || (x.FromAge < request.Age && x.ToAge >= request.Age))).Result;
+                //get all blog
+                var listBlog = _blogRepository.GetAll(includeProperties:"Recipe").Result.ToList();
+                //get list blogSubCate
+                var listBlogSubCate = _blogSubCateRepository.GetAll(includeProperties: "SubCate").Result;
+                //get list blogId by blogSubCate of soup blog
+                var listSoupBlogIdSubCate = listBlogSubCate.Where(x => x.SubCate.Name.Equals("Món canh")).Select(x => x.BlogId).ToList();
+                //take random 1 soup blog from list soup
+                Random rnd = new Random();
+                var soupBlog = listBlog.Join(listSoupBlogIdSubCate, x => x.BlogId, y => y, (x, y) => x).ToList()
+                    .ElementAt(rnd.Next(0, listSoupBlogIdSubCate.Count()));
+                //list blog reference description
+                var listBlogDescRef =_blogReferenceRepository.GetBlogReferencesBy(x => x.Type == (int)BlogReferenceType.DESCRIPTION).Result.Select(x => new
+                {
+                    x.Text,
+                    x.BlogId
+                });
+
+                result.Add(new OverviewBlogResponse
+                {
+                    BlogId = soupBlog.BlogId,
+                    Title = soupBlog.Title,
+                    Description = listBlogDescRef.FirstOrDefault(x => x.BlogId == soupBlog.BlogId).Text,
+                    ImageUrl = soupBlog.ImageUrl,
+                    ListSubCateName = listBlogSubCate.Where(x => x.BlogId.Equals(soupBlog.BlogId)).Select(x => x.SubCate.Name).ToList(),
+                    PackagePrice = (decimal)soupBlog.Recipe.PackagePrice,
+                    TotalKcal = (int)soupBlog.Recipe.TotalKcal
+                });
+
+                //minus suggest calo because we have the first blog
+                suggestCalo.Calo = suggestCalo.Calo - (int)soupBlog.Recipe.TotalKcal;
+
+                //take 2 other blog that calo is match the condition of suggest calo
+                do
+                {
+                    var firstBlog = listBlog.ElementAt(rnd.Next(0, listBlog.Count() - 1));
+                    var secondBlog = listBlog.ElementAt(rnd.Next(0, listBlog.Count() - 1));
+                    if (firstBlog.BlogId != secondBlog.BlogId)
+                    {
+                        if (!listSoupBlogIdSubCate.Contains(firstBlog.BlogId) && !listSoupBlogIdSubCate.Contains(secondBlog.BlogId))
+                        {
+                            if(request.IsLoseWeight == true)
+                            {
+                                if ((suggestCalo.Calo - (firstBlog.Recipe.TotalKcal + secondBlog.Recipe.TotalKcal)) < 30)
+                                {
+                                    result.Add(new OverviewBlogResponse
+                                    {
+                                        BlogId = firstBlog.BlogId,
+                                        Title = firstBlog.Title,
+                                        Description = listBlogDescRef.FirstOrDefault(x => x.BlogId == firstBlog.BlogId).Text,
+                                        ImageUrl = firstBlog.ImageUrl,
+                                        ListSubCateName = listBlogSubCate.Where(x => x.BlogId.Equals(firstBlog.BlogId)).Select(x => x.SubCate.Name).ToList(),
+                                        PackagePrice = (decimal)firstBlog.Recipe.PackagePrice,
+                                        TotalKcal = (int)firstBlog.Recipe.TotalKcal
+                                    });
+                                    result.Add(new OverviewBlogResponse
+                                    {
+                                        BlogId = secondBlog.BlogId,
+                                        Title = secondBlog.Title,
+                                        Description = listBlogDescRef.FirstOrDefault(x => x.BlogId == secondBlog.BlogId).Text,
+                                        ImageUrl = secondBlog.ImageUrl,
+                                        ListSubCateName = listBlogSubCate.Where(x => x.BlogId.Equals(secondBlog.BlogId)).Select(x => x.SubCate.Name).ToList(),
+                                        PackagePrice = (decimal)secondBlog.Recipe.PackagePrice,
+                                        TotalKcal = (int)secondBlog.Recipe.TotalKcal
+                                    });
+                                }
+                            } 
+                            else
+                            {
+                                if (((firstBlog.Recipe.TotalKcal + secondBlog.Recipe.TotalKcal) - suggestCalo.Calo) < 30)
+                                {
+                                    result.Add(new OverviewBlogResponse
+                                    {
+                                        BlogId = firstBlog.BlogId,
+                                        Title = firstBlog.Title,
+                                        Description = listBlogDescRef.FirstOrDefault(x => x.BlogId == firstBlog.BlogId).Text,
+                                        ImageUrl = firstBlog.ImageUrl,
+                                        ListSubCateName = listBlogSubCate.Where(x => x.BlogId.Equals(firstBlog.BlogId)).Select(x => x.SubCate.Name).ToList(),
+                                        PackagePrice = (decimal)firstBlog.Recipe.PackagePrice,
+                                        TotalKcal = (int)firstBlog.Recipe.TotalKcal
+                                    });
+                                    result.Add(new OverviewBlogResponse
+                                    {
+                                        BlogId = secondBlog.BlogId,
+                                        Title = secondBlog.Title,
+                                        Description = listBlogDescRef.FirstOrDefault(x => x.BlogId == secondBlog.BlogId).Text,
+                                        ImageUrl = secondBlog.ImageUrl,
+                                        ListSubCateName = listBlogSubCate.Where(x => x.BlogId.Equals(secondBlog.BlogId)).Select(x => x.SubCate.Name).ToList(),
+                                        PackagePrice = (decimal)secondBlog.Recipe.PackagePrice,
+                                        TotalKcal = (int)secondBlog.Recipe.TotalKcal
+                                    });
+                                }
+                            }
+                        }
+                    }
+                } while (result.Count() < 3);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
     }
