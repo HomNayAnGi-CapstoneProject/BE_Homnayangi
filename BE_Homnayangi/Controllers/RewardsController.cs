@@ -12,6 +12,7 @@ using BE_Homnayangi.Modules.RewardModule.Interface;
 using Library.PagedList;
 using BE_Homnayangi.Modules.Utils;
 using BE_Homnayangi.Modules.RewardModule.DTO.Request;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BE_Homnayangi.Controllers
 {
@@ -80,7 +81,8 @@ namespace BE_Homnayangi.Controllers
         // PUT: api/Rewards/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutReward([FromRoute] Guid id,[FromBody] Reward reward)
+        [Authorize(Roles = "Staff,Manager")]
+        public async Task<IActionResult> PutReward([FromRoute] Guid id, [FromBody] Reward reward)
         {
             if (id != reward.RewardId)
             {
@@ -109,6 +111,7 @@ namespace BE_Homnayangi.Controllers
         // POST: api/Rewards
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Roles = "Staff,Manager")]
         public async Task<ActionResult<Reward>> PostReward([FromBody] Reward reward)
         {
             try
@@ -132,6 +135,7 @@ namespace BE_Homnayangi.Controllers
 
         // DELETE: api/Rewards/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Staff,Manager")]
         public async Task<IActionResult> DeleteReward([FromRoute] Guid id)
         {
             var reward = await _rewardService.GetRewardByID(id);

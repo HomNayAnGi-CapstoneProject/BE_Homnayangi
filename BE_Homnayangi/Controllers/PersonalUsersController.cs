@@ -5,6 +5,7 @@ using BE_Homnayangi.Modules.UserModule.Response;
 using BE_Homnayangi.Modules.Utils;
 using BE_Homnayangi.Utils;
 using Library.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace BE_Homnayangi.Controllers
 {
     [Route("api/v1/personal-user")]
     [ApiController]
+    [Authorize(Roles = "Staff,Manager")]
     public class PersonalUsersController : ControllerBase
     {
         private readonly IMapper _mapper;

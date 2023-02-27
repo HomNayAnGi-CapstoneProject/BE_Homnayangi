@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using BE_Homnayangi.Modules.SubCateModule.Interface;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BE_Homnayangi.Controllers
 {
@@ -22,15 +23,16 @@ namespace BE_Homnayangi.Controllers
         private readonly IBlogService _blogService;
         private readonly IUserService _userService;
 
-        public BlogsController(HomnayangiContext context, IBlogService blogService, ISubCateService subCateService, 
+        public BlogsController(HomnayangiContext context, IBlogService blogService, ISubCateService subCateService,
             IUserService userService, ICustomAuthorization customAuthorization)
         {
             _blogService = blogService;
             _userService = userService;
         }
-        
+
         // Get all blogs: staff and manager manage all blogs of system
         [HttpGet("user")] // blogid, authorName, img, title, created_date, views, reactions, status
+        [Authorize(Roles = "Staff")]
         public async Task<ActionResult> GetBlogsForStaff()
         {
             try
@@ -39,10 +41,10 @@ namespace BE_Homnayangi.Controllers
                 {
                     throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
                 }
-                else if (_userService.GetCurrentUser(Request.Headers["Authorization"]).Role.Equals(CommonEnum.RoleEnum.CUSTOMER))
-                {
-                    throw new Exception(ErrorMessage.UserError.ACTION_FOR_STAFF_AND_MANAGER_ROLE);
-                }
+                /*       else if (_userService.GetCurrentUser(Request.Headers["Authorization"]).Role.Equals(CommonEnum.RoleEnum.CUSTOMER))
+                       {
+                           throw new Exception(ErrorMessage.UserError.ACTION_FOR_STAFF_AND_MANAGER_ROLE);
+                       }*/
 
                 var blogs = await _blogService.GetBlogsByUser();
                 if (blogs == null || blogs.Count == 0)
@@ -84,6 +86,7 @@ namespace BE_Homnayangi.Controllers
         // GET: api/v1/blogs/57448A79-8855-42AD-BD2E-0295D1436037
 
         [HttpGet("staff-preview/{id}")]
+        [Authorize(Roles = "Staff")]
         public async Task<ActionResult<BlogDetailResponse>> GetBlogForPreview([FromRoute] Guid id)
         {
             try
@@ -100,6 +103,7 @@ namespace BE_Homnayangi.Controllers
         // POST: api/Blogs
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Roles = "Staff,Manager")]
         public async Task<ActionResult> CreateEmptyBlog()
         {
             try
@@ -129,11 +133,13 @@ namespace BE_Homnayangi.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "Staff,Manager")]
         public async Task<IActionResult> PutBlog([FromBody] BlogUpdateRequest request)
         {
             try
             {
                 var currentUserId = _userService.GetCurrentUser(Request.Headers["Authorization"]).Id;
+
                 await _blogService.UpdateBlog(request, currentUserId); ;
                 return Ok("Update success");
             }
@@ -145,6 +151,7 @@ namespace BE_Homnayangi.Controllers
 
         // DELETE: api/Blogs/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Staff.Manager")]
         public async Task<IActionResult> DeleteBlog([FromRoute] Guid id)
         {
             try
@@ -174,6 +181,7 @@ namespace BE_Homnayangi.Controllers
 
         // RESTORE: api/Blogs/5
         [HttpPut("restore-blog/{id}")]
+        [Authorize(Roles = "Staff,Manager")]
         public async Task<IActionResult> RestoreBlog([FromRoute] Guid id)
         {
             try
@@ -204,6 +212,7 @@ namespace BE_Homnayangi.Controllers
 
         // REMOVE: api/Blogs/5
         [HttpDelete("remove-draft/{id}")]
+        [Authorize(Roles = "Staff,Manager")]
         public async Task<IActionResult> RemoveBlogDraft(Guid id)
         {
             try

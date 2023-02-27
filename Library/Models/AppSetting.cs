@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Library.Models
 {
-   public class AppSetting
+    public class AppSetting
     {
         public string SecretKey { get; set; }
     }

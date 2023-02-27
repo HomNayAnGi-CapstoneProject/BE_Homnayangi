@@ -2,6 +2,7 @@
 using BE_Homnayangi.Modules.CustomerVoucherModule.Interface;
 using BE_Homnayangi.Modules.CustomerVoucherModule.Request;
 using Library.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace BE_Homnayangi.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
+
     public class CustomerVouchersController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -24,7 +26,8 @@ namespace BE_Homnayangi.Controllers
 
         // GET: api/v1/CustomerVouchers
         [HttpGet("customer/{cusId}/vouchers")]
-        public async Task<ActionResult<IEnumerable<CustomerVoucher>>> GetAllCustomerVouchersByCusId([FromRoute]Guid cusId)
+        [Authorize(Roles = "Staff,Manager,Customer")]
+        public async Task<ActionResult<IEnumerable<CustomerVoucher>>> GetAllCustomerVouchersByCusId([FromRoute] Guid cusId)
         {
             var result = await _customerVoucherService.GetAllCustomerVouchersByCusId(cusId);
             return new JsonResult(new
@@ -35,7 +38,8 @@ namespace BE_Homnayangi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostVoucher([FromBody]CreatedCustomerVoucherRequest cv)
+        [Authorize(Roles = "Staff,Manager")]
+        public async Task<IActionResult> PostVoucher([FromBody] CreatedCustomerVoucherRequest cv)
         {
             var mappedObject = _mapper.Map<CustomerVoucher>(cv);
             var result = await _customerVoucherService.AddCustomerVoucher(mappedObject);

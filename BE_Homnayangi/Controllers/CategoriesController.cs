@@ -7,6 +7,7 @@ using FluentValidation.Results;
 using Library.DataAccess;
 using Library.Models;
 using Library.Models.DTO.CategoryDTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -68,6 +69,7 @@ namespace BE_Homnayangi.Controllers
         // PUT: api/Categories/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut]
+        [Authorize(Roles = "Staff,Manager")]
         public async Task<IActionResult> PutCategory(UpdateCategoryRequest category)
         {
             ValidationResult result = new UpdateCategoryRequestValidator().Validate(category);
@@ -84,6 +86,7 @@ namespace BE_Homnayangi.Controllers
         // POST: api/Categories
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Roles = "Staff,Manager")]
         public async Task<ActionResult<Category>> PostCategory(CreateCategoryRequest reqCategory)
         {
             ValidationResult result = new CreateCategoryRequestValidator().Validate(reqCategory);
@@ -97,6 +100,7 @@ namespace BE_Homnayangi.Controllers
 
         // DELETE: api/Categories/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Staff,Manager")]
         public async Task<IActionResult> DeleteCategory(Guid id)
         {
             await _categoryService.DeleteCategory(id);

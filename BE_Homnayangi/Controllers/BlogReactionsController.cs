@@ -1,5 +1,6 @@
 ﻿using BE_Homnayangi.Modules.BlogReactionModule.Interface;
 using Library.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -41,6 +42,7 @@ namespace BE_Homnayangi.Controllers
         }
 
         [HttpPut("blogs/{blogId}/customers/{customerId}")] // thả tym
+        [Authorize(Roles = "Staff,Manager,Customer")]
         public async Task<IActionResult> GiveReactionForBlog([FromRoute] Guid blogId, [FromRoute] Guid customerId)
         {
             var result = await _blogReactionService.GiveReactionForBlog(blogId, customerId);
@@ -64,6 +66,7 @@ namespace BE_Homnayangi.Controllers
 
 
         [HttpDelete("blogs/{blogId}/customers/{customerId}")] // xoá tym
+        [Authorize(Roles = "Staff,Manager,Customer")]
         public async Task<IActionResult> RemoveReactionForBlog([FromRoute] Guid blogId, [FromRoute] Guid customerId)
         {
             var result = await _blogReactionService.RemoveReactionForBlog(blogId, customerId);

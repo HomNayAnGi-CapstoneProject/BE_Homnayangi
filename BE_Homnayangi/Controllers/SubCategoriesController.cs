@@ -3,6 +3,7 @@ using BE_Homnayangi.Modules.SubCateModule.Request;
 using BE_Homnayangi.Modules.SubCateModule.Response;
 using FluentValidation.Results;
 using Library.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -54,6 +55,7 @@ namespace BE_Homnayangi.Controllers
 
         // GET: api/SubCategories
         [HttpGet("staff")]
+        [Authorize(Roles = "Staff,Manager")]
         public async Task<ActionResult<IEnumerable<SubCategory>>> GetSubCategoriesForStaff()
         {
             return Ok(await _subCateService.GetAllForStaff());
@@ -75,6 +77,7 @@ namespace BE_Homnayangi.Controllers
 
         // GET: api/SubCategories/5
         [HttpGet("{id}/staff")]
+        [Authorize(Roles = "Staff,Manager")]
         public async Task<ActionResult<SubCategory>> GetSubCategoryForStaff(Guid id)
         {
             var subCategory = _subCateService.GetSubCateByIDForStaff(id);
@@ -90,6 +93,7 @@ namespace BE_Homnayangi.Controllers
         // PUT: api/SubCategories/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut]
+        [Authorize(Roles = "Staff,Manager")]
         public async Task<IActionResult> PutSubCategory(UpdateSubCategoryRequest subCategoryUpdate)
         {
             ValidationResult result = new UpdateSubCategoryRequestValidator().Validate(subCategoryUpdate);
@@ -109,6 +113,7 @@ namespace BE_Homnayangi.Controllers
         // POST: api/SubCategories
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Roles = "Staff,Manager")]
         public async Task<ActionResult<SubCategory>> PostSubCategory(CreateSubCategoryRequest reqSubCategory)
         {
             ValidationResult result = new CreateSubCategoryRequestValidator().Validate(reqSubCategory);
@@ -127,6 +132,7 @@ namespace BE_Homnayangi.Controllers
 
         // DELETE: api/Categories/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Staff,Manager")]
         public async Task<IActionResult> DeleteCategory(Guid id)
         {
             await _subCateService.DeleteSubCate(id);

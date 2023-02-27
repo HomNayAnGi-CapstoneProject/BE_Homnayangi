@@ -32,14 +32,16 @@ namespace BE_Homnayangi.Modules.UserModule
         private readonly IUserRepository _userRepository;
         private readonly ICustomerRepository _customerRepository;
         private readonly AppSetting _appSettings;
+        private readonly AdministratorAccount _admin;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ICustomAuthorization _customAuthorization;
-        public UserService(IUserRepository userRepository, ICustomerRepository customerRepository, IOptionsMonitor<AppSetting> optionsMonitor, IMapper mapper, IHttpContextAccessor httpContextAccessor, ICustomAuthorization customAuthorization)
+        public UserService(IUserRepository userRepository, ICustomerRepository customerRepository, IOptionsMonitor<AppSetting> optionsMonitor, IOptionsMonitor<AdministratorAccount> admin, IMapper mapper, IHttpContextAccessor httpContextAccessor, ICustomAuthorization customAuthorization)
         {
             _userRepository = userRepository;
             _customerRepository = customerRepository;
             _appSettings = optionsMonitor.CurrentValue;
+            _admin = admin.CurrentValue;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
             _customAuthorization = customAuthorization;
@@ -333,7 +335,6 @@ namespace BE_Homnayangi.Modules.UserModule
         public async Task<string> GenerateToken(LoginDTO login)
         {
             var user = await _userRepository.GetFirstOrDefaultAsync(x => x.Username == login.Username && x.Password == EncryptPassword(login.Password));
-            Console.WriteLine(EncryptPassword(login.Password));
             if (user == null)
             {
                 var customer = await _customerRepository.GetFirstOrDefaultAsync(x => x.Username == login.Username && x.Password == EncryptPassword(login.Password));
@@ -359,9 +360,11 @@ namespace BE_Homnayangi.Modules.UserModule
                     new Claim(ClaimTypes.Role, CommonEnum.RoleEnum.CUSTOMER)
 
                 }),
+
                         Expires = DateTime.UtcNow.AddMinutes(60),
                         SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytesCustomer), SecurityAlgorithms.HmacSha512Signature)
                     };
+
                     var principal = new ClaimsPrincipal(tokenDescriptionCustomer.Subject);
                     _httpContextAccessor.HttpContext.User = principal;
                     Console.WriteLine(_httpContextAccessor.HttpContext.User.Identity.Name);
@@ -370,7 +373,34 @@ namespace BE_Homnayangi.Modules.UserModule
                 }
                 else
                 {
-                    return null;
+
+                    var admin = _admin;
+                    if (admin != null)
+                    {
+                        var jwtTokenHandlerAdmin = new JwtSecurityTokenHandler();
+
+                        var secretKeyBytesAdmin = Encoding.UTF8.GetBytes(_appSettings.SecretKey);
+
+                        var tokenDescriptionAdmin = new SecurityTokenDescriptor
+                        {
+                            Subject = new ClaimsIdentity(new[] {
+                    new Claim(ClaimTypes.Name, admin.Username),
+                    new Claim(ClaimTypes.Email, admin.Email),
+                    new Claim("Avatar", ""),
+                    new Claim(ClaimTypes.Role, CommonEnum.RoleEnum.ADMIN)
+
+                }),
+
+                            Expires = DateTime.UtcNow.AddMinutes(60),
+                            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytesAdmin), SecurityAlgorithms.HmacSha512Signature)
+                        };
+
+                        var principal = new ClaimsPrincipal(tokenDescriptionAdmin.Subject);
+                        _httpContextAccessor.HttpContext.User = principal;
+                        Console.WriteLine(_httpContextAccessor.HttpContext.User.Identity.Name);
+                        var tokenAdmin = jwtTokenHandlerAdmin.CreateToken(tokenDescriptionAdmin);
+                        return jwtTokenHandlerAdmin.WriteToken(tokenAdmin);
+                    }
                 }
             }
             else if (user.IsBlocked == false)
@@ -393,8 +423,9 @@ namespace BE_Homnayangi.Modules.UserModule
                     new Claim("Lastname",user.Lastname),
                     new Claim(ClaimTypes.Gender,user.Gender.ToString()),
                     new Claim("Avatar", user.Avatar  == null ? "" : user.Avatar),
-                    new Claim(ClaimTypes.Role, user.Role == 1 ? CommonEnum.RoleEnum.MANAGER :  CommonEnum.RoleEnum.STAFF)
+                    new Claim(ClaimTypes.Role, user.Role == 1 ? CommonEnum.RoleEnum.MANAGER : CommonEnum.RoleEnum.STAFF )
                 }),
+
                     Expires = DateTime.UtcNow.AddMinutes(60),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha512Signature)
 
@@ -414,19 +445,48 @@ namespace BE_Homnayangi.Modules.UserModule
         {
 
             var user = await _userRepository.GetFirstOrDefaultAsync(x => x.Email == loginGoogle.Email);
+            var admin = _admin;
             if (user == null)
             {
-                var customer = await _customerRepository.GetFirstOrDefaultAsync(x => x.Email == loginGoogle.Email);
-
-                if (customer != null && customer.IsBlocked == false)
+                if (admin.Email == loginGoogle.Email)
                 {
-                    var jwtTokenHandlerCustomer = new JwtSecurityTokenHandler();
+                    var jwtTokenHandlerAdmin = new JwtSecurityTokenHandler();
 
-                    var secretKeyBytesCustomer = Encoding.UTF8.GetBytes(_appSettings.SecretKey);
+                    var secretKeyBytesAdmin = Encoding.UTF8.GetBytes(_appSettings.SecretKey);
 
-                    var tokenDescriptionCustomer = new SecurityTokenDescriptor
+                    var tokenDescriptionAdmin = new SecurityTokenDescriptor
                     {
                         Subject = new ClaimsIdentity(new[] {
+                    new Claim(ClaimTypes.Name, admin.Username),
+                    new Claim(ClaimTypes.Email, admin.Email),
+                    new Claim("Avatar", ""),
+                    new Claim(ClaimTypes.Role, CommonEnum.RoleEnum.ADMIN)
+
+                }),
+
+                        Expires = DateTime.UtcNow.AddMinutes(60),
+                        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytesAdmin), SecurityAlgorithms.HmacSha512Signature)
+                    };
+
+                    var principal = new ClaimsPrincipal(tokenDescriptionAdmin.Subject);
+                    _httpContextAccessor.HttpContext.User = principal;
+                    Console.WriteLine(_httpContextAccessor.HttpContext.User.Identity.Name);
+                    var tokenAdmin = jwtTokenHandlerAdmin.CreateToken(tokenDescriptionAdmin);
+                    return jwtTokenHandlerAdmin.WriteToken(tokenAdmin);
+                }
+                else
+                {
+                    var customer = await _customerRepository.GetFirstOrDefaultAsync(x => x.Email == loginGoogle.Email);
+
+                    if (customer != null && customer.IsBlocked == false)
+                    {
+                        var jwtTokenHandlerCustomer = new JwtSecurityTokenHandler();
+
+                        var secretKeyBytesCustomer = Encoding.UTF8.GetBytes(_appSettings.SecretKey);
+
+                        var tokenDescriptionCustomer = new SecurityTokenDescriptor
+                        {
+                            Subject = new ClaimsIdentity(new[] {
 
                     new Claim("Id", customer.CustomerId.ToString()),
                     new Claim(ClaimTypes.Name, customer.Username == null ? "": customer.Username),
@@ -440,28 +500,28 @@ namespace BE_Homnayangi.Modules.UserModule
                     new Claim(ClaimTypes.Role, CommonEnum.RoleEnum.CUSTOMER)
 
                 }),
-                        Expires = DateTime.UtcNow.AddMinutes(60),
-                        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytesCustomer), SecurityAlgorithms.HmacSha512Signature)
-                    };
-                    var principal = new ClaimsPrincipal(tokenDescriptionCustomer.Subject);
-                    _httpContextAccessor.HttpContext.User = principal;
-                    var tokenCustomer = jwtTokenHandlerCustomer.CreateToken(tokenDescriptionCustomer);
-                    return jwtTokenHandlerCustomer.WriteToken(tokenCustomer);
-                }
-                else if (customer == null)
-                {
-                    var cus = _mapper.Map<Customer>(loginGoogle);
-                    cus.CustomerId = Guid.NewGuid();
-                    cus.IsBlocked = false;
-                    cus.IsGoogle = true;
-                    await _customerRepository.AddAsync(cus);
-                    var jwtTokenHandlerCustomer = new JwtSecurityTokenHandler();
-
-                    var secretKeyBytesCustomer = Encoding.UTF8.GetBytes(_appSettings.SecretKey);
-
-                    var tokenDescriptionCustomer = new SecurityTokenDescriptor
+                            Expires = DateTime.UtcNow.AddMinutes(60),
+                            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytesCustomer), SecurityAlgorithms.HmacSha512Signature)
+                        };
+                        var principal = new ClaimsPrincipal(tokenDescriptionCustomer.Subject);
+                        _httpContextAccessor.HttpContext.User = principal;
+                        var tokenCustomer = jwtTokenHandlerCustomer.CreateToken(tokenDescriptionCustomer);
+                        return jwtTokenHandlerCustomer.WriteToken(tokenCustomer);
+                    }
+                    else if (customer == null)
                     {
-                        Subject = new ClaimsIdentity(new[] {
+                        var cus = _mapper.Map<Customer>(loginGoogle);
+                        cus.CustomerId = Guid.NewGuid();
+                        cus.IsBlocked = false;
+                        cus.IsGoogle = true;
+                        await _customerRepository.AddAsync(cus);
+                        var jwtTokenHandlerCustomer = new JwtSecurityTokenHandler();
+
+                        var secretKeyBytesCustomer = Encoding.UTF8.GetBytes(_appSettings.SecretKey);
+
+                        var tokenDescriptionCustomer = new SecurityTokenDescriptor
+                        {
+                            Subject = new ClaimsIdentity(new[] {
 
 
                     new Claim("Id", cus.CustomerId.ToString()),
@@ -476,19 +536,19 @@ namespace BE_Homnayangi.Modules.UserModule
                     new Claim(ClaimTypes.Role, CommonEnum.RoleEnum.CUSTOMER)
 
                 }),
-                        Expires = DateTime.UtcNow.AddMinutes(60),
-                        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytesCustomer), SecurityAlgorithms.HmacSha512Signature)
-                    };
-                    var principal = new ClaimsPrincipal(tokenDescriptionCustomer.Subject);
-                    _httpContextAccessor.HttpContext.User = principal;
-                    var tokenCustomer = jwtTokenHandlerCustomer.CreateToken(tokenDescriptionCustomer);
-                    return jwtTokenHandlerCustomer.WriteToken(tokenCustomer);
+                            Expires = DateTime.UtcNow.AddMinutes(60),
+                            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytesCustomer), SecurityAlgorithms.HmacSha512Signature)
+                        };
+                        var principal = new ClaimsPrincipal(tokenDescriptionCustomer.Subject);
+                        _httpContextAccessor.HttpContext.User = principal;
+                        var tokenCustomer = jwtTokenHandlerCustomer.CreateToken(tokenDescriptionCustomer);
+                        return jwtTokenHandlerCustomer.WriteToken(tokenCustomer);
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
-                else
-                {
-                    return null;
-                }
-
             }
             else if (user.IsBlocked == false)
             {
@@ -603,35 +663,39 @@ namespace BE_Homnayangi.Modules.UserModule
         {
             try
             {
-                string token = authHeader.Split(" ")[1];
-                var handler = new JwtSecurityTokenHandler();
-                var jsonToken = handler.ReadToken(token);
-                var tokenS = jsonToken as JwtSecurityToken;
-                var id = new Guid(tokenS.Claims.First(claim => claim.Type == "Id").Value);
-                var Displayname = tokenS.Claims.First(x => x.Type == "Displayname")?.Value;
-                var Username = tokenS.Claims.First(x => x.Type == "unique_name")?.Value;
-                var Firstname = tokenS.Claims.First(x => x.Type == "Firstname")?.Value;
-                var Lastname = tokenS.Claims.First(x => x.Type == "Lastname")?.Value;
-                var Email = tokenS.Claims.First(x => x.Type == "email")?.Value;
-                var Avatar = tokenS.Claims.First(x => x.Type == "Avatar")?.Value;
-                var Phonenumber = tokenS.Claims.First(x => x.Type == "Phone Number")?.Value;
-                var Gender = Int32.Parse(tokenS.Claims.First(x => x.Type == "gender")?.Value);
-                var Role = tokenS.Claims.First(x => x.Type == "role")?.Value;
-                CurrentUserResponse currentUser = new CurrentUserResponse()
+                if (authHeader != null)
                 {
-                    Id = id,
-                    Displayname = Displayname,
-                    Username = Username,
-                    Firstname = Firstname,
-                    Lastname = Lastname,
-                    Email = Email,
-                    Avatar = Avatar,
-                    Phonenumber = Phonenumber,
-                    Gender = Gender,
-                    Role = Role
-                };
+                    string token = authHeader.Split(" ")[1];
+                    var handler = new JwtSecurityTokenHandler();
+                    var jsonToken = handler.ReadToken(token);
+                    var tokenS = jsonToken as JwtSecurityToken;
+                    var id = new Guid(tokenS.Claims.First(claim => claim.Type == "Id").Value);
+                    var Displayname = tokenS.Claims.First(x => x.Type == "Displayname")?.Value;
+                    var Username = tokenS.Claims.First(x => x.Type == "unique_name")?.Value;
+                    var Firstname = tokenS.Claims.First(x => x.Type == "Firstname")?.Value;
+                    var Lastname = tokenS.Claims.First(x => x.Type == "Lastname")?.Value;
+                    var Email = tokenS.Claims.First(x => x.Type == "email")?.Value;
+                    var Avatar = tokenS.Claims.First(x => x.Type == "Avatar")?.Value;
+                    var Phonenumber = tokenS.Claims.First(x => x.Type == "Phone Number")?.Value;
+                    var Gender = Int32.Parse(tokenS.Claims.First(x => x.Type == "gender")?.Value);
+                    var Role = tokenS.Claims.First(x => x.Type == "role")?.Value;
+                    CurrentUserResponse currentUser = new CurrentUserResponse()
+                    {
+                        Id = id,
+                        Displayname = Displayname,
+                        Username = Username,
+                        Firstname = Firstname,
+                        Lastname = Lastname,
+                        Email = Email,
+                        Avatar = Avatar,
+                        Phonenumber = Phonenumber,
+                        Gender = Gender,
+                        Role = Role
+                    };
 
-                return currentUser;
+                    return currentUser;
+                }
+                return null;
             }
             catch (Exception ex)
             {
