@@ -1079,7 +1079,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                 });
 
                 //minus suggest calo because we have the first blog
-                suggestCalo.Calo = suggestCalo.Calo - (int)soupBlog.Recipe.TotalKcal;
+                suggestCalo.Calo = suggestCalo.Calo/3 - (int)soupBlog.Recipe.TotalKcal;
 
                 //take 2 other blog that calo is match the condition of suggest calo
                 do
