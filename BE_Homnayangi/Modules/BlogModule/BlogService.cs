@@ -869,7 +869,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                         IngredientId = x.IngredientId,
                         IngredientName = x.Ingredient.Name,
                         Description = x.Description,
-                        Quantity = x.Quantity
+                        Quantity = x.Quantity,
+                        Kcal = x.Ingredient.Kcal
                     }).ToList();
             }
             catch (Exception ex)
@@ -951,7 +952,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                         IngredientId = x.IngredientId,
                         IngredientName = x.Ingredient.Name,
                         Description = x.Description,
-                        Quantity = x.Quantity
+                        Quantity = x.Quantity,
+                        Kcal = x.Ingredient.Kcal
                     }).ToList();
             }
             catch (Exception ex)
