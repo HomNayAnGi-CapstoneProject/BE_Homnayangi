@@ -7,6 +7,7 @@ using BE_Homnayangi.Modules.RecipeModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using Library.Models;
 using Library.Models.Constant;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -79,6 +80,7 @@ namespace BE_Homnayangi.Controllers
         #region DELETE - RESTORE RECIPE
         // DELETE: api/Recipes/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Staff,Manager")]
         public async Task<IActionResult> DeleteRecipe([FromRoute] Guid id)
         {
             try
@@ -107,6 +109,7 @@ namespace BE_Homnayangi.Controllers
         }
 
         [HttpPut("restore-recipe/{id}")]
+        [Authorize(Roles = "Staff,Manager")]
         public async Task<IActionResult> RestoreRecipe([FromRoute] Guid id)
         {
             try

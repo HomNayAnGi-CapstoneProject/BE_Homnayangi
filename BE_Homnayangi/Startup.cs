@@ -47,6 +47,7 @@ using BE_Homnayangi.Modules.VoucherModule.Interface;
 using BE_Homnayangi.Utils;
 using Library.DataAccess;
 using Library.Models;
+using Library.Models.DTO.UserDTO;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -105,6 +106,7 @@ namespace BE_Homnayangi
             });
 
             services.Configure<AppSetting>(Configuration.GetSection("AppSetting"));
+            services.Configure<AdministratorAccount>(Configuration.GetSection("AdministratorAccount"));
             var secretKey = Configuration["AppSetting:SecretKey"];
             var secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
             services.AddAuthentication(options =>

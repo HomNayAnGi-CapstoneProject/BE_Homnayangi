@@ -4,6 +4,7 @@ using BE_Homnayangi.Modules.VoucherModule.Interface;
 using BE_Homnayangi.Modules.VoucherModule.Request;
 using BE_Homnayangi.Modules.VoucherModule.Response;
 using Library.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -51,7 +52,8 @@ namespace BE_Homnayangi.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> PutVoucher([FromBody]UpdateVoucherRequest voucher)
+        [Authorize(Roles = "Staff,Manager")]
+        public async Task<IActionResult> PutVoucher([FromBody] UpdateVoucherRequest voucher)
         {
             var mappedVoucher = _mapper.Map<Voucher>(voucher);
             bool isUpdated = await _voucherService.UpdateVoucher(mappedVoucher);
@@ -62,6 +64,7 @@ namespace BE_Homnayangi.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Staff,Manager")]
         public async Task<IActionResult> PostVoucher([FromBody] CreateVoucherRequest voucher)
         {
             var mappedVoucher = _mapper.Map<Voucher>(voucher);
@@ -74,6 +77,7 @@ namespace BE_Homnayangi.Controllers
 
         // DELETE: api/v1/vouchers/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Staff,Manager")]
         public async Task<IActionResult> DeleteVoucher(Guid id)
         {
             bool isVoucherDeleted = await _voucherService.DeleteVoucherById(id);

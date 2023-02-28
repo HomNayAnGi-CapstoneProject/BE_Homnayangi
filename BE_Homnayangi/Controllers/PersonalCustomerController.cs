@@ -5,6 +5,7 @@ using BE_Homnayangi.Modules.UserModule.Response;
 using BE_Homnayangi.Modules.Utils;
 using BE_Homnayangi.Utils;
 using Library.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace BE_Homnayangi.Controllers
 {
     [Route("api/v1/personal-customer")]
     [ApiController]
+    [Authorize(Roles = "Customer")]
     public class PersonalCustomerController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -33,6 +35,7 @@ namespace BE_Homnayangi.Controllers
 
         // GET api/<ValuesController>/5
         [HttpGet]
+
         public async Task<ActionResult<CurrentUserResponse>> GetUserById()
         {
             return new JsonResult(new

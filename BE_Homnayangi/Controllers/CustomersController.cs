@@ -4,6 +4,7 @@ using BE_Homnayangi.Modules.UserModule.Request;
 using Library.DataAccess;
 using Library.Models;
 using Library.PagedList;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace BE_Homnayangi.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Staff,Manager")]
     public class CustomersController : ControllerBase
     {
         private readonly IMapper _mapper;

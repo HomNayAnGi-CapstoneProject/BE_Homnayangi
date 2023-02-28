@@ -2,6 +2,7 @@
 using BE_Homnayangi.Modules.TypeModule.DTO;
 using BE_Homnayangi.Modules.TypeModule.DTO.Request;
 using BE_Homnayangi.Modules.TypeModule.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace BE_Homnayangi.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
+
     public class TypesController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -59,6 +61,7 @@ namespace BE_Homnayangi.Controllers
 
         // POST api/<ValuesController>
         [HttpPost]
+        [Authorize(Roles = "Staff,Manager")]
         public async Task<ActionResult<Type>> PostType([FromBody] CreateTypeRequest typeRequest)
         {
 
@@ -85,6 +88,7 @@ namespace BE_Homnayangi.Controllers
 
         // PUT api/<ValuesController>/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "Staff,Manager")]
         public async Task<IActionResult> PutType([FromRoute] Guid id, [FromBody] UpdateTypeRequest typeRequest)
         {
 
@@ -115,6 +119,7 @@ namespace BE_Homnayangi.Controllers
 
         // DELETE api/<ValuesController>/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Staff,Manager")]
         public async Task<IActionResult> DeleteType([FromRoute] Guid id)
         {
             var type = await _typeService.GetTypeByID(id);

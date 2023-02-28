@@ -4,6 +4,7 @@ using BE_Homnayangi.Modules.IngredientModule.Interface;
 using BE_Homnayangi.Modules.IngredientModule.Request;
 using BE_Homnayangi.Modules.IngredientModule.Response;
 using Library.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -40,6 +41,7 @@ namespace BE_Homnayangi.Controllers
 
         // GET: api/Ingredients
         [HttpGet("managing")]
+        [Authorize(Roles = "Staff,Manager")]
         public async Task<ActionResult<IEnumerable<Ingredient>>> GetIngredientsForStaff()
         {
             var result = await _ingredientService.GetAll();
@@ -84,6 +86,7 @@ namespace BE_Homnayangi.Controllers
         // PUT: api/Ingredients/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut()]
+        [Authorize(Roles = "Staff,Manager")]
         public async Task<IActionResult> PutIngredient([FromBody] UpdatedIngredientRequest ingredient)
         {
             var mapperIngredient = _mapper.Map<IngredientRequest>(ingredient);
@@ -103,6 +106,7 @@ namespace BE_Homnayangi.Controllers
 
         // DELETE: api/Ingredients/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Staff,Manager")]
         public async Task<IActionResult> DeleteIngredient(Guid id)
         {
             bool isDeleted = await _ingredientService.DeleteIngredient(id);
@@ -122,6 +126,7 @@ namespace BE_Homnayangi.Controllers
         // POST: api/Ingredients
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Roles = "Staff,Manager")]
         public async Task<ActionResult<Ingredient>> PostIngredient(CreatedIngredientRequest newIg)
         {
             var mapperIngredient = _mapper.Map<IngredientRequest>(newIg);

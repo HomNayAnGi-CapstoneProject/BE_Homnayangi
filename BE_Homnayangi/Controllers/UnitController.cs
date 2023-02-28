@@ -9,6 +9,7 @@ using BE_Homnayangi.Modules.UnitModule.Interface;
 using Library.Models;
 using BE_Homnayangi.Modules.UnitModule.Request;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BE_Homnayangi.Controllers
 {
@@ -70,6 +71,7 @@ namespace BE_Homnayangi.Controllers
 
         // POST api/<ValuesController>
         [HttpPost]
+        [Authorize(Roles = "Staff,Manager")]
         public async Task<ActionResult<Unit>> CreateNewUnit([FromBody] CreateUnitRequest createUnitRequest)
         {
             ValidationResult result = new CreateUnitRequestValidator().Validate(createUnitRequest);
@@ -86,6 +88,7 @@ namespace BE_Homnayangi.Controllers
 
         // PUT api/<ValuesController>/5
         [HttpPut]
+        [Authorize(Roles = "Staff,Manager")]
         public async Task<IActionResult> PutUnit([FromBody] UpdateUnitRequest unitRequest)
         {
             var unit = await _unitService.GetUnitByID(unitRequest.UnitId);
@@ -101,6 +104,7 @@ namespace BE_Homnayangi.Controllers
 
         // DELETE api/<ValuesController>/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Staff,Manager")]
         public async Task<IActionResult> DeleteUnit([FromRoute] Guid id)
         {
             var unit = await _unitService.GetUnitByID(id);
