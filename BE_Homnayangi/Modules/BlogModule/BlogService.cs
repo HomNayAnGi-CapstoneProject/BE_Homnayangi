@@ -697,106 +697,6 @@ namespace BE_Homnayangi.Modules.BlogModule
             return response.ToPagedResponse();
         }
 
-        public async Task<ICollection<GetBlogsForHomePageResponse>> GetSoupAndNormalBlogs(Guid? categoryId, Guid? subCateId)
-        {
-            string subCateName = GetSubCateNameByCurrentTime();
-            if (subCateName.Equals(""))
-            {
-                return null;
-            }
-
-            var listResponse = new List<GetBlogsForHomePageResponse>();
-            try
-            {
-                var result = await _subCateRepository.GetFirstOrDefaultAsync(x => x.Name == subCateName);
-                var listSubCateMenu = await _subCateRepository.GetSubCatesBy(x => x.CategoryId == categoryId && x.Status == true);
-                var listBlogSubCate = await _blogSubCateRepository.GetAll(includeProperties: "SubCate");
-
-                var listBlogSubCateMenu = listBlogSubCate.Join(listSubCateMenu, x => x.SubCateId, y => y.SubCategoryId, (x, y) => x).ToList();
-
-                var listBlogSubCateWithSession = listBlogSubCate.Where(x => x.SubCateId == result.SubCategoryId).ToList();
-
-                var listMenuBlogSubCate = listBlogSubCateMenu.Join(listBlogSubCateWithSession, x => x.BlogId, y => y.BlogId, (x, y) => x).ToList();
-
-                if (listMenuBlogSubCate.Count() == 0)
-                {
-                    return null;
-                }
-
-                var listMenuBlogSubCateEnd = new List<BlogSubCate>();
-
-                if (subCateId != null)
-                {
-                    foreach (var item in listMenuBlogSubCate)
-                    {
-                        if (item.SubCateId != subCateId) listMenuBlogSubCateEnd.Add(item);
-                    }
-                    listMenuBlogSubCateEnd = listMenuBlogSubCateEnd.OrderByDescending(x => x.CreatedDate).ToList();
-                }
-                else
-                {
-                    listMenuBlogSubCateEnd = listMenuBlogSubCate.OrderByDescending(x => x.CreatedDate).ToList();
-                }
-
-                var listMenuBlog = listBlogSubCate.Where(x => x.SubCateId == listMenuBlogSubCateEnd.First().SubCateId).ToList();
-
-                var listBlogs = _blogRepository.GetBlogsBy(x => x.BlogStatus == 1).Result.Join(listMenuBlog, x => x.BlogId, y => y.BlogId, (x, y) => x).ToList();
-
-                var listTagName = GetListSubCateName(listBlogs, listBlogSubCate);
-
-                subCateId = listSubCateMenu.Join(listMenuBlogSubCateEnd, x => x.SubCategoryId, y => y.SubCateId, (x, y) => x.SubCategoryId).ToList().First();
-
-                listResponse = listBlogs
-               .Join(listTagName, b => b.BlogId, y => y.Key, (b, y) => new GetBlogsForHomePageResponse
-               {
-                   BlogId = b.BlogId,
-                   Title = b.Title,
-                   //Description = b.Description,
-                   ImageUrl = b.ImageUrl,
-                   ListSubCateName = y.Value,
-                   Reaction = b.Reaction.HasValue ? b.Reaction.Value : 0,
-                   View = b.View.HasValue ? b.View.Value : 0,
-                   SubCateId = subCateId
-               }).ToList();
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error at GetSoupAndNormalBlogs: " + ex.Message);
-            }
-            return listResponse;
-        }
-
-        private string GetSubCateNameByCurrentTime()
-        {
-            int hour = Int32.Parse(DateTime.Now.ToString("HH"));
-            string tagString = "";
-            Console.WriteLine("Now: " + hour);
-
-            if (hour >= 0 && hour < 10)
-            {
-                Console.WriteLine("Bữa sáng");
-                tagString = "Bữa sáng";
-            }
-            else if (hour >= 10 && hour < 15)
-            {
-                Console.WriteLine("Bữa trưa");
-                tagString = "Bữa trưa";
-            }
-            else if (hour >= 15 && hour < 24)
-            {
-                Console.WriteLine("Bữa tối");
-                tagString = "Bữa tối";
-            }
-            else
-            {
-                Console.WriteLine("Error at GetSoupAndNormalBlogs: Service does not provided at this time!");
-            }
-
-            return tagString;
-
-        }
-
         #region Blog Detail
         public async Task<BlogDetailResponse> GetBlogDetail(Guid blogId)
         {
@@ -1060,43 +960,33 @@ namespace BE_Homnayangi.Modules.BlogModule
                 var listBlogSubCate = _blogSubCateRepository.GetAll(includeProperties: "SubCate").Result;
                 //get list blogId by blogSubCate of soup blog
                 var listSoupBlogIdSubCate = listBlogSubCate.Where(x => x.SubCate.Name.Equals("Món canh")).Select(x => x.BlogId).ToList();
-                //take random 1 soup blog from list soup
+                //get list soup blog
+                var listSoupBlog = listBlog.Join(listSoupBlogIdSubCate, x => x.BlogId, y => y, (x, y) => x).ToList();
+                //get list normal blog
+                var listNormalBlog = listBlog.Except(listSoupBlog);
+                //create random variable
                 Random rnd = new Random();
-                var soupBlog = listBlog.Join(listSoupBlogIdSubCate, x => x.BlogId, y => y, (x, y) => x).ToList()
-                    .ElementAt(rnd.Next(0, listSoupBlogIdSubCate.Count()));
                 //list blog reference description
                 var listBlogDescRef =_blogReferenceRepository.GetBlogReferencesBy(x => x.Type == (int)BlogReferenceType.DESCRIPTION).Result.Select(x => new
                 {
                     x.Text,
                     x.BlogId
                 });
-
-                result.Add(new OverviewBlogResponse
-                {
-                    BlogId = soupBlog.BlogId,
-                    Title = soupBlog.Title,
-                    Description = listBlogDescRef.FirstOrDefault(x => x.BlogId == soupBlog.BlogId).Text,
-                    ImageUrl = soupBlog.ImageUrl,
-                    ListSubCateName = listBlogSubCate.Where(x => x.BlogId.Equals(soupBlog.BlogId)).Select(x => x.SubCate.Name).ToList(),
-                    PackagePrice = (decimal)soupBlog.Recipe.PackagePrice,
-                    TotalKcal = (int)soupBlog.Recipe.TotalKcal
-                });
-
-                //minus suggest calo because we have the first blog
-                suggestCalo.Calo = suggestCalo.Calo/3 - (int)soupBlog.Recipe.TotalKcal;
-
-                //take 2 other blog that calo is match the condition of suggest calo
+                //divide suggest calo to 1 of 3 brunch
+                suggestCalo.Calo = suggestCalo.Calo / 3;
+                //take 3 blog match the suggest calo
                 do
                 {
-                    var firstBlog = listBlog.ElementAt(rnd.Next(0, listBlog.Count() - 1));
-                    var secondBlog = listBlog.ElementAt(rnd.Next(0, listBlog.Count() - 1));
+                    var firstBlog = listNormalBlog.ElementAt(rnd.Next(0, listNormalBlog.Count() - 1));
+                    var secondBlog = listNormalBlog.ElementAt(rnd.Next(0, listNormalBlog.Count() - 1));
+                    var soupBlog = listSoupBlog.ElementAt(rnd.Next(0, listSoupBlog.Count() - 1));
                     if (firstBlog.BlogId != secondBlog.BlogId)
                     {
                         if (!listSoupBlogIdSubCate.Contains(firstBlog.BlogId) && !listSoupBlogIdSubCate.Contains(secondBlog.BlogId))
                         {
                             if(request.IsLoseWeight == true)
                             {
-                                if ((suggestCalo.Calo - (firstBlog.Recipe.TotalKcal + secondBlog.Recipe.TotalKcal)) < 30)
+                                if ((suggestCalo.Calo - (firstBlog.Recipe.TotalKcal + secondBlog.Recipe.TotalKcal + soupBlog.Recipe.TotalKcal)) < 30)
                                 {
                                     result.Add(new OverviewBlogResponse
                                     {
@@ -1117,12 +1007,22 @@ namespace BE_Homnayangi.Modules.BlogModule
                                         ListSubCateName = listBlogSubCate.Where(x => x.BlogId.Equals(secondBlog.BlogId)).Select(x => x.SubCate.Name).ToList(),
                                         PackagePrice = (decimal)secondBlog.Recipe.PackagePrice,
                                         TotalKcal = (int)secondBlog.Recipe.TotalKcal
+                                    });
+                                    result.Add(new OverviewBlogResponse
+                                    {
+                                        BlogId = soupBlog.BlogId,
+                                        Title = soupBlog.Title,
+                                        Description = listBlogDescRef.FirstOrDefault(x => x.BlogId == soupBlog.BlogId).Text,
+                                        ImageUrl = soupBlog.ImageUrl,
+                                        ListSubCateName = listBlogSubCate.Where(x => x.BlogId.Equals(soupBlog.BlogId)).Select(x => x.SubCate.Name).ToList(),
+                                        PackagePrice = (decimal)soupBlog.Recipe.PackagePrice,
+                                        TotalKcal = (int)soupBlog.Recipe.TotalKcal
                                     });
                                 }
                             } 
                             else
                             {
-                                if (((firstBlog.Recipe.TotalKcal + secondBlog.Recipe.TotalKcal) - suggestCalo.Calo) < 30)
+                                if (((firstBlog.Recipe.TotalKcal + secondBlog.Recipe.TotalKcal + soupBlog.Recipe.TotalKcal) - suggestCalo.Calo) < 30)
                                 {
                                     result.Add(new OverviewBlogResponse
                                     {
@@ -1143,6 +1043,16 @@ namespace BE_Homnayangi.Modules.BlogModule
                                         ListSubCateName = listBlogSubCate.Where(x => x.BlogId.Equals(secondBlog.BlogId)).Select(x => x.SubCate.Name).ToList(),
                                         PackagePrice = (decimal)secondBlog.Recipe.PackagePrice,
                                         TotalKcal = (int)secondBlog.Recipe.TotalKcal
+                                    }); 
+                                    result.Add(new OverviewBlogResponse
+                                    {
+                                        BlogId = soupBlog.BlogId,
+                                        Title = soupBlog.Title,
+                                        Description = listBlogDescRef.FirstOrDefault(x => x.BlogId == soupBlog.BlogId).Text,
+                                        ImageUrl = soupBlog.ImageUrl,
+                                        ListSubCateName = listBlogSubCate.Where(x => x.BlogId.Equals(soupBlog.BlogId)).Select(x => x.SubCate.Name).ToList(),
+                                        PackagePrice = (decimal)soupBlog.Recipe.PackagePrice,
+                                        TotalKcal = (int)soupBlog.Recipe.TotalKcal
                                     });
                                 }
                             }
