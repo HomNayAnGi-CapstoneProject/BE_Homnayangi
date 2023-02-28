@@ -34,6 +34,7 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
         public Guid RecipeId { get; set; }
         public string RecipeTitle { get; set; }
         public string RecipeImageURL { get; set; }
+        public int TotalKcal { get; set; }
         public decimal? PackagePrice { get; set; }
         public decimal? CookedPrice { get; set; }
         public int? MaxSize { get; set; }
