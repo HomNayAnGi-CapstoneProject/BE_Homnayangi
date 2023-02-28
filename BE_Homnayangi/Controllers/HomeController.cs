@@ -82,31 +82,6 @@ namespace BE_Homnayangi.Controllers
                 return BadRequest();
             }
         }
-
-        [HttpGet("category/{categoryId}/blog-menu")]
-        public async Task<ActionResult<IEnumerable<GetBlogsForHomePageResponse>>> GetSoupAndNormalBlogs([FromRoute] Guid? categoryId, Guid? subCategoryId)
-        {
-            if (categoryId == null)
-            {
-                return BadRequest();
-            }
-
-            var result = await _blogService.GetSoupAndNormalBlogs(categoryId, subCategoryId);
-            if (result == null)
-            {
-                return new JsonResult(new
-                {
-                    title = "Bad Request",
-                    status = 400,
-                    message = "Sorry, our service can not provided at this time!"
-                });
-            }
-            return new JsonResult(new
-            {
-                total_results = result.Count(),
-                result = result,
-            });
-        }
     }
 }
 

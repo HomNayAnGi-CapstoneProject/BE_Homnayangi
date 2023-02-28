@@ -2,6 +2,8 @@ using BE_Homnayangi.Modules.AccomplishmentModule;
 using BE_Homnayangi.Modules.AccomplishmentModule.Interface;
 using BE_Homnayangi.Modules.AdminModules.CaloReferenceModule;
 using BE_Homnayangi.Modules.AdminModules.CaloReferenceModule.Interface;
+using BE_Homnayangi.Modules.AdminModules.SeasonReferenceModule;
+using BE_Homnayangi.Modules.AdminModules.SeasonReferenceModule.Interface;
 using BE_Homnayangi.Modules.AutoMapper;
 using BE_Homnayangi.Modules.BlogModule;
 using BE_Homnayangi.Modules.BlogModule.Interface;
@@ -229,6 +231,11 @@ namespace BE_Homnayangi
 
             //Calo reference Module
             services.AddScoped<ICaloReferenceRepository, CaloReferenceRepository>();
+            services.AddScoped<ICaloReferenceService, CaloReferenceService>();
+
+            //Calo reference Module
+            services.AddScoped<ISeasonReferenceRepository, SeasonReferenceRepository>();
+            services.AddScoped<ISeasonReferenceService, SeasonReferenceService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

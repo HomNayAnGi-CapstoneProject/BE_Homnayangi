@@ -12,6 +12,8 @@ using System;
 using System.Threading.Tasks;
 using BE_Homnayangi.Modules.SubCateModule.Interface;
 using Microsoft.AspNetCore.Authorization;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace BE_Homnayangi.Controllers
 {
@@ -19,17 +21,17 @@ namespace BE_Homnayangi.Controllers
     [ApiController]
     public class BlogsController : ControllerBase
     {
-        private readonly HomnayangiContext _context;
         private readonly IBlogService _blogService;
         private readonly IUserService _userService;
 
-        public BlogsController(HomnayangiContext context, IBlogService blogService, ISubCateService subCateService,
+        public BlogsController(IBlogService blogService, ISubCateService subCateService, 
             IUserService userService, ICustomAuthorization customAuthorization)
         {
             _blogService = blogService;
             _userService = userService;
         }
 
+        #region Get
         // Get all blogs: staff and manager manage all blogs of system
         [HttpGet("user")] // blogid, authorName, img, title, created_date, views, reactions, status
         [Authorize(Roles = "Staff")]
@@ -98,6 +100,7 @@ namespace BE_Homnayangi.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        #endregion
 
         #region CUD Blog
         // POST: api/Blogs
@@ -208,7 +211,6 @@ namespace BE_Homnayangi.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        #endregion
 
         // REMOVE: api/Blogs/5
         [HttpDelete("remove-draft/{id}")]
@@ -234,6 +236,8 @@ namespace BE_Homnayangi.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        #endregion
+
 
         [HttpGet("category/tag")]
         public async Task<ActionResult<PagedResponse<PagedList<BlogsByCateAndTagResponse>>>> GetBlogsByCateAndTag([FromQuery] BlogFilterByCateAndTagRequest blogFilter)
@@ -261,5 +265,17 @@ namespace BE_Homnayangi.Controllers
             return Ok(response);
         }
 
+        [HttpGet("suggest-blog/{Age}/{IsMale}/{IsLoseWeight}")]
+        public async Task<ActionResult<ICollection<OverviewBlogResponse>>> GetSuggestBlogs([FromRoute] SuggestBlogByCaloRequest request)
+        {
+            try
+            {
+                return Ok(await _blogService.GetSuggestBlogByCalo(request));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

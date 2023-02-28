@@ -7,6 +7,8 @@ namespace Library.Models.Constant
         public static class CommonError
         {
             public readonly static string ID_IS_NULL = "ID request is null";
+            public readonly static string LIST_IS_NULL = "List have no data";
+            public readonly static string INVALID_REQUEST = "Request data is invalid";
         }
         #endregion
 
@@ -56,6 +58,27 @@ namespace Library.Models.Constant
             public readonly static string CUSTOMER_NOT_ALLOWED_TO_RESTORE_BLOG = "User and Manager role are allowed to restore an old blog";
             public readonly static string CUSTOMER_NOT_ALLOWED_TO_RESTORE_RECIPE = "User and Manager role are allowed to restore an old reipce";
             public readonly static string ACTION_FOR_CUSTOMER_ROLE_ONLY = "This action is only for Customer role";
+        }
+        #endregion
+
+        #region Calo Reference error message
+        public static class CaloRefError
+        {
+            public readonly static string CALO_REF_NOT_FOUND = "This calo reference can not be found";
+        }
+        #endregion
+
+        #region Season Reference error message
+        public static class SeasonRefError
+        {
+            public readonly static string SEASON_REF_NOT_FOUND = "This season reference can not be found";
+        }
+        #endregion
+
+        #region Admin error message
+        public static class AdminError
+        {
+            public readonly static string ADMIN_ONLY = "Only admin can do this function";
         }
         #endregion
     }

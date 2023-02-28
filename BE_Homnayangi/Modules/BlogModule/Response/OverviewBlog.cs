@@ -8,14 +8,11 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
         public Guid BlogId { get; set; }
         public string RecipeName { get; set; }
         public string Title { get; set; }
-        public string Description { get; set; }
         public string ImageUrl { get; set; }
         public List<string> ListSubCateName { get; set; }
         public int? View { get; set; }
         public int? Reaction { get; set; }
-        public Guid? SubCateId { get; set; }
         public DateTime CreatedDate { get; set; }
-        public DateTime UpdatedDate { get; set; }
         public decimal? CookedPrice { get; set; }
         public int? TotalKcal { get; set; }
 
