@@ -28,6 +28,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static Library.Models.Enum.ReferenceType;
+using static Library.Models.Enum.Status;
 
 namespace BE_Homnayangi.Modules.BlogModule
 {
@@ -89,7 +90,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                         Reaction = x?.Reaction,
                         Status = x.BlogStatus,
                         TotalKcal = x.Recipe?.TotalKcal,
-                    }).ToList();
+                    }).OrderByDescending(x => x.CreatedDate).ToList();
                 }
             }
             catch (Exception ex)
@@ -959,9 +960,9 @@ namespace BE_Homnayangi.Modules.BlogModule
                 var suggestCalo = _caloReferenceRepository.GetFirstOrDefaultAsync(x => x.IsMale == request.IsMale && 
                 ((x.FromAge <= request.Age && x.ToAge > request.Age) || (x.FromAge < request.Age && x.ToAge >= request.Age))).Result;
                 //get all blog
-                var listBlog = _blogRepository.GetAll(includeProperties:"Recipe").Result.ToList();
+                var listBlog = _blogRepository.GetBlogsBy(x => x.BlogStatus == ((int)BlogStatus.ACTIVE), includeProperties:"Recipe").Result.ToList();
                 //get list blogSubCate
-                var listBlogSubCate = _blogSubCateRepository.GetAll(includeProperties: "SubCate").Result;
+                var listBlogSubCate = _blogSubCateRepository.GetBlogSubCatesBy(x => x.Status != false, includeProperties: "SubCate").Result;
                 //get list blogId by blogSubCate of soup blog
                 var listSoupBlogIdSubCate = listBlogSubCate.Where(x => x.SubCate.Name.Equals("Món canh")).Select(x => x.BlogId).ToList();
                 //get list soup blog
@@ -978,6 +979,14 @@ namespace BE_Homnayangi.Modules.BlogModule
                 });
                 //divide suggest calo to 1 of 3 brunch
                 suggestCalo.Calo = suggestCalo.Calo / 3;
+                //check season reference
+                var checkSeasonRef = _seasonReferenceRepository.GetFirstOrDefaultAsync(x => x.Status == true).Result;
+                if (checkSeasonRef != null)
+                {
+                    var listSeasonRef = listBlogSubCate.Where(x => x.SubCate.Name.Equals(checkSeasonRef.Name)).Select(x => x.BlogId).ToList();
+                    listSoupBlog = listSoupBlog.Join(listSeasonRef, x => x.BlogId, y => y, (x, y) => x).ToList();
+                    listNormalBlog = listNormalBlog.Join(listSeasonRef, x => x.BlogId, y => y, (x, y) => x).ToList();
+                }
                 //take 3 blog match the suggest calo
                 do
                 {
