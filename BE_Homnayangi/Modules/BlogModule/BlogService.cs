@@ -709,6 +709,8 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 var blogReferences = _blogReferenceRepository.GetBlogReferencesBy(x => x.BlogId == blog.BlogId).Result.ToList();
 
+                blog.Reaction = GetTotalReactionOfBlog(blog.BlogId);
+
                 result = new BlogDetailResponse()
                 {
                     // Blog information
@@ -1069,5 +1071,21 @@ namespace BE_Homnayangi.Modules.BlogModule
                 throw new Exception(ex.Message);
             }
         }
+
+        public int GetTotalReactionOfBlog(Guid blogId)
+        {
+            int count = 0;
+            try
+            {
+                count = _blogReactionRepository.GetBlogReactionsBy(b => b.BlogId == blogId && b.Status.Value).Result.Count;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at: " + ex.Message);
+                throw;
+            }
+            return count;
+        }
+
     }
 }
