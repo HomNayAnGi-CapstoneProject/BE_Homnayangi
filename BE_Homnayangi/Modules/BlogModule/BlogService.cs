@@ -1007,7 +1007,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                         {
                             if(request.IsLoseWeight == true)
                             {
-                                if ((suggestCalo.Calo - (firstBlog.Recipe.TotalKcal + secondBlog.Recipe.TotalKcal + soupBlog.Recipe.TotalKcal)) < 30)
+                                if (suggestCalo.Calo > (firstBlog.Recipe.TotalKcal + secondBlog.Recipe.TotalKcal + soupBlog.Recipe.TotalKcal))
                                 {
                                     result.Add(new OverviewBlogResponse
                                     {
@@ -1043,7 +1043,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                             } 
                             else
                             {
-                                if (((firstBlog.Recipe.TotalKcal + secondBlog.Recipe.TotalKcal + soupBlog.Recipe.TotalKcal) - suggestCalo.Calo) < 30)
+                                if ((firstBlog.Recipe.TotalKcal + secondBlog.Recipe.TotalKcal + soupBlog.Recipe.TotalKcal) > suggestCalo.Calo)
                                 {
                                     result.Add(new OverviewBlogResponse
                                     {
