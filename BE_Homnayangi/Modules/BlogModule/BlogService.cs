@@ -959,8 +959,16 @@ namespace BE_Homnayangi.Modules.BlogModule
                 //get the suggest calo for user by request data
                 var suggestCalo = _caloReferenceRepository.GetFirstOrDefaultAsync(x => x.IsMale == request.IsMale && 
                 ((x.FromAge <= request.Age && x.ToAge > request.Age) || (x.FromAge < request.Age && x.ToAge >= request.Age))).Result;
+                if(suggestCalo == null)
+                {
+                    throw new Exception(ErrorMessage.CaloRefError.CALO_REF_NOT_FOUND);
+                }
                 //get all blog
                 var listBlog = _blogRepository.GetBlogsBy(x => x.BlogStatus == ((int)BlogStatus.ACTIVE), includeProperties:"Recipe").Result.ToList();
+                if(listBlog.Count() == 0)
+                {
+                    throw new Exception(ErrorMessage.CommonError.LIST_IS_NULL);
+                }
                 //get list blogSubCate
                 var listBlogSubCate = _blogSubCateRepository.GetBlogSubCatesBy(x => x.Status != false, includeProperties: "SubCate").Result;
                 //get list blogId by blogSubCate of soup blog
