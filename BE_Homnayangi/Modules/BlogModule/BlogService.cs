@@ -514,6 +514,29 @@ namespace BE_Homnayangi.Modules.BlogModule
                 throw new Exception(ex.Message);
             }
         }
+        public async Task UpdateView(Guid? id)
+        {
+            try
+            {
+
+                if (id == null)
+                {
+                    throw new Exception(ErrorMessage.CommonError.ID_IS_NULL);
+                }
+                Blog blog = _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId == id && x.BlogStatus == 1).Result;
+                if (blog == null)
+                    throw new Exception(ErrorMessage.BlogError.BLOG_NOT_FOUND);
+
+                blog.View = blog.View + 1;
+                await _blogRepository.UpdateAsync(blog);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at Update view: " + ex.Message);
+                throw new Exception(ex.Message);
+            }
+        }
+
         #endregion
 
 
@@ -957,15 +980,15 @@ namespace BE_Homnayangi.Modules.BlogModule
                 var result = new List<OverviewBlogResponse>();
 
                 //get the suggest calo for user by request data
-                var suggestCalo = _caloReferenceRepository.GetFirstOrDefaultAsync(x => x.IsMale == request.IsMale && 
+                var suggestCalo = _caloReferenceRepository.GetFirstOrDefaultAsync(x => x.IsMale == request.IsMale &&
                 ((x.FromAge <= request.Age && x.ToAge > request.Age) || (x.FromAge < request.Age && x.ToAge >= request.Age))).Result;
-                if(suggestCalo == null)
+                if (suggestCalo == null)
                 {
                     throw new Exception(ErrorMessage.CaloRefError.CALO_REF_NOT_FOUND);
                 }
                 //get all blog
-                var listBlog = _blogRepository.GetBlogsBy(x => x.BlogStatus == ((int)BlogStatus.ACTIVE), includeProperties:"Recipe").Result.ToList();
-                if(listBlog.Count() == 0)
+                var listBlog = _blogRepository.GetBlogsBy(x => x.BlogStatus == ((int)BlogStatus.ACTIVE), includeProperties: "Recipe").Result.ToList();
+                if (listBlog.Count() == 0)
                 {
                     throw new Exception(ErrorMessage.CommonError.LIST_IS_NULL);
                 }
@@ -980,7 +1003,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                 //create random variable
                 Random rnd = new Random();
                 //list blog reference description
-                var listBlogDescRef =_blogReferenceRepository.GetBlogReferencesBy(x => x.Type == (int)BlogReferenceType.DESCRIPTION).Result.Select(x => new
+                var listBlogDescRef = _blogReferenceRepository.GetBlogReferencesBy(x => x.Type == (int)BlogReferenceType.DESCRIPTION).Result.Select(x => new
                 {
                     x.Html,
                     x.BlogId
@@ -1005,7 +1028,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     {
                         if (!listSoupBlogIdSubCate.Contains(firstBlog.BlogId) && !listSoupBlogIdSubCate.Contains(secondBlog.BlogId))
                         {
-                            if(request.IsLoseWeight == true)
+                            if (request.IsLoseWeight == true)
                             {
                                 if (suggestCalo.Calo > (firstBlog.Recipe.TotalKcal + secondBlog.Recipe.TotalKcal + soupBlog.Recipe.TotalKcal))
                                 {
@@ -1040,7 +1063,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                                         TotalKcal = (int)soupBlog.Recipe.TotalKcal
                                     });
                                 }
-                            } 
+                            }
                             else
                             {
                                 if ((firstBlog.Recipe.TotalKcal + secondBlog.Recipe.TotalKcal + soupBlog.Recipe.TotalKcal) > suggestCalo.Calo)
@@ -1064,7 +1087,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                                         ListSubCateName = listBlogSubCate.Where(x => x.BlogId.Equals(secondBlog.BlogId)).Select(x => x.SubCate.Name).ToList(),
                                         PackagePrice = (decimal)secondBlog.Recipe.PackagePrice,
                                         TotalKcal = (int)secondBlog.Recipe.TotalKcal
-                                    }); 
+                                    });
                                     result.Add(new OverviewBlogResponse
                                     {
                                         BlogId = soupBlog.BlogId,

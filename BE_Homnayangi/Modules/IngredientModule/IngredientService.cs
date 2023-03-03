@@ -163,7 +163,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
 
             var Ingredients = await _IngredientRepository.GetIngredientsBy(x => x.Status == true, includeProperties: "Unit");
 
-            return Ingredients.Where(x => ConvertToUnSign(x.Name).Contains(name, StringComparison.CurrentCultureIgnoreCase) || x.Name.Contains(name)).ToList().Select(ToSearchResponse).ToList();
+            return Ingredients.Where(x => ConvertToUnSign(x.Name).Contains(name, StringComparison.CurrentCultureIgnoreCase) || x.Name.Contains(name, StringComparison.CurrentCultureIgnoreCase)).ToList().Select(ToSearchResponse).ToList();
         }
 
         public SearchIngredientsResponse ToSearchResponse(Ingredient ingredient)

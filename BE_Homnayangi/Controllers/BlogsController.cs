@@ -24,7 +24,7 @@ namespace BE_Homnayangi.Controllers
         private readonly IBlogService _blogService;
         private readonly IUserService _userService;
 
-        public BlogsController(IBlogService blogService, ISubCateService subCateService, 
+        public BlogsController(IBlogService blogService, ISubCateService subCateService,
             IUserService userService, ICustomAuthorization customAuthorization)
         {
             _blogService = blogService;
@@ -263,6 +263,19 @@ namespace BE_Homnayangi.Controllers
             }
 
             return Ok(response);
+        }
+        [HttpPatch("blog/view/{id}")]
+        public async Task<IActionResult> UpdateView(Guid? id)
+        {
+            try
+            {
+                await _blogService.UpdateView(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("suggest-blog/{Age}/{IsMale}/{IsLoseWeight}")]
