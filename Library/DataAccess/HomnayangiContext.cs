@@ -574,8 +574,6 @@ namespace Library.DataAccess
 
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
 
-                entity.Property(e => e.Session).HasColumnName("session");
-
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.OrderCookedDetails)
                     .HasForeignKey(d => d.OrderId)
