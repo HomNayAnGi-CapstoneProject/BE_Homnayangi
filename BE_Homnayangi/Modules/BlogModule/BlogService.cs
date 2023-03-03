@@ -974,7 +974,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                 //list blog reference description
                 var listBlogDescRef =_blogReferenceRepository.GetBlogReferencesBy(x => x.Type == (int)BlogReferenceType.DESCRIPTION).Result.Select(x => new
                 {
-                    x.Text,
+                    x.Html,
                     x.BlogId
                 });
                 //divide suggest calo to 1 of 3 brunch
@@ -1005,7 +1005,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                                     {
                                         BlogId = firstBlog.BlogId,
                                         Title = firstBlog.Title,
-                                        Description = listBlogDescRef.FirstOrDefault(x => x.BlogId == firstBlog.BlogId).Text,
+                                        Description = listBlogDescRef.FirstOrDefault(x => x.BlogId == firstBlog.BlogId).Html,
                                         ImageUrl = firstBlog.ImageUrl,
                                         ListSubCateName = listBlogSubCate.Where(x => x.BlogId.Equals(firstBlog.BlogId)).Select(x => x.SubCate.Name).ToList(),
                                         PackagePrice = (decimal)firstBlog.Recipe.PackagePrice,
@@ -1015,7 +1015,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                                     {
                                         BlogId = secondBlog.BlogId,
                                         Title = secondBlog.Title,
-                                        Description = listBlogDescRef.FirstOrDefault(x => x.BlogId == secondBlog.BlogId).Text,
+                                        Description = listBlogDescRef.FirstOrDefault(x => x.BlogId == secondBlog.BlogId).Html,
                                         ImageUrl = secondBlog.ImageUrl,
                                         ListSubCateName = listBlogSubCate.Where(x => x.BlogId.Equals(secondBlog.BlogId)).Select(x => x.SubCate.Name).ToList(),
                                         PackagePrice = (decimal)secondBlog.Recipe.PackagePrice,
@@ -1025,7 +1025,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                                     {
                                         BlogId = soupBlog.BlogId,
                                         Title = soupBlog.Title,
-                                        Description = listBlogDescRef.FirstOrDefault(x => x.BlogId == soupBlog.BlogId).Text,
+                                        Description = listBlogDescRef.FirstOrDefault(x => x.BlogId == soupBlog.BlogId).Html,
                                         ImageUrl = soupBlog.ImageUrl,
                                         ListSubCateName = listBlogSubCate.Where(x => x.BlogId.Equals(soupBlog.BlogId)).Select(x => x.SubCate.Name).ToList(),
                                         PackagePrice = (decimal)soupBlog.Recipe.PackagePrice,
@@ -1041,7 +1041,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                                     {
                                         BlogId = firstBlog.BlogId,
                                         Title = firstBlog.Title,
-                                        Description = listBlogDescRef.FirstOrDefault(x => x.BlogId == firstBlog.BlogId).Text,
+                                        Description = listBlogDescRef.FirstOrDefault(x => x.BlogId == firstBlog.BlogId).Html,
                                         ImageUrl = firstBlog.ImageUrl,
                                         ListSubCateName = listBlogSubCate.Where(x => x.BlogId.Equals(firstBlog.BlogId)).Select(x => x.SubCate.Name).ToList(),
                                         PackagePrice = (decimal)firstBlog.Recipe.PackagePrice,
@@ -1051,7 +1051,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                                     {
                                         BlogId = secondBlog.BlogId,
                                         Title = secondBlog.Title,
-                                        Description = listBlogDescRef.FirstOrDefault(x => x.BlogId == secondBlog.BlogId).Text,
+                                        Description = listBlogDescRef.FirstOrDefault(x => x.BlogId == secondBlog.BlogId).Html,
                                         ImageUrl = secondBlog.ImageUrl,
                                         ListSubCateName = listBlogSubCate.Where(x => x.BlogId.Equals(secondBlog.BlogId)).Select(x => x.SubCate.Name).ToList(),
                                         PackagePrice = (decimal)secondBlog.Recipe.PackagePrice,
@@ -1061,7 +1061,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                                     {
                                         BlogId = soupBlog.BlogId,
                                         Title = soupBlog.Title,
-                                        Description = listBlogDescRef.FirstOrDefault(x => x.BlogId == soupBlog.BlogId).Text,
+                                        Description = listBlogDescRef.FirstOrDefault(x => x.BlogId == soupBlog.BlogId).Html,
                                         ImageUrl = soupBlog.ImageUrl,
                                         ListSubCateName = listBlogSubCate.Where(x => x.BlogId.Equals(soupBlog.BlogId)).Select(x => x.SubCate.Name).ToList(),
                                         PackagePrice = (decimal)soupBlog.Recipe.PackagePrice,
