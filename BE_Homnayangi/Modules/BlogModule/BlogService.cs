@@ -301,7 +301,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                     View = x.b.View,
                     Reaction = x.b.Reaction,
                     ListSubCateName = x.ListSubCateName,
-                    PackagePrice = y.PackagePrice
+                    PackagePrice = y.PackagePrice,
+                    TotalKcal = y.TotalKcal
                 }).Join(_blogReferenceRepository.GetBlogReferencesBy(x => x.Type == (int)BlogReferenceType.DESCRIPTION).Result, x => x.BlogId, y => y.BlogId, (x, y) => new
                 {
                     x,
@@ -314,6 +315,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     ImageUrl = x.x.ImageUrl,
                     ListSubCateName = x.x.ListSubCateName,
                     PackagePrice = (decimal)x.x.PackagePrice,
+                    TotalKcal = (int)x.x.TotalKcal
                 }).ToList();
 
             return listResponse;
