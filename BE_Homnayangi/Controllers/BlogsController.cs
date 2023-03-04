@@ -77,6 +77,7 @@ namespace BE_Homnayangi.Controllers
         {
             try
             {
+                await _blogService.UpdateView(id);
                 return Ok(await _blogService.GetBlogDetail(id));
             }
             catch (Exception ex)
@@ -263,19 +264,6 @@ namespace BE_Homnayangi.Controllers
             }
 
             return Ok(response);
-        }
-        [HttpPatch("blog/view/{id}")]
-        public async Task<IActionResult> UpdateView(Guid? id)
-        {
-            try
-            {
-                await _blogService.UpdateView(id);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
         }
 
         [HttpGet("suggest-blog/{Age}/{IsMale}/{IsLoseWeight}")]
