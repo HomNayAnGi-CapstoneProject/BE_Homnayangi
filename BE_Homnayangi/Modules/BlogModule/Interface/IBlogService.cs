@@ -30,10 +30,9 @@ namespace BE_Homnayangi.Modules.BlogModule.Interface
         public Task<BlogDetailResponse> GetBlogDetailPreview(Guid blogId);
         #endregion
 
-        public Task<ICollection<GetBlogsForHomePageResponse>> GetBlogsSortByPackagePriceAsc();
+        public Task<ICollection<OverviewBlogResponse>> GetBlogsSortByPackagePriceAsc();
         public Task<ICollection<SearchBlogsResponse>> GetBlogAndRecipeByName(String name);
-        public Task<PagedResponse<PagedList<BlogsByCateAndTagResponse>>> GetBlogsByCategoryAndTag(BlogFilterByCateAndTagRequest blogFilter);
-        public Task<ICollection<GetBlogsForHomePageResponse>> GetBlogsBySubCateForHomePage(Guid? tagId, int numberOfItems = 0);
+        public Task<ICollection<OverviewBlogResponse>> GetBlogsBySubCateForHomePage(Guid? tagId, int numberOfItems = 0);
         public Task<PagedResponse<PagedList<BlogsByCatesResponse>>> GetBlogsBySubCates(BlogsBySubCatesRequest request);
         public Task<ICollection<OverviewBlogResponse>> GetSuggestBlogByCalo(SuggestBlogByCaloRequest request);
     }

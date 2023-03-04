@@ -105,6 +105,11 @@ namespace Repository.Repository
                 draftResult = await query.ToListAsync();
             }
 
+            if (draftResult.Count() < numberItem)
+            {
+                return draftResult;
+            }
+
             var endResult = new List<T>();
             if (numberItem != 0 && numberItem <= draftResult.Count())
             {

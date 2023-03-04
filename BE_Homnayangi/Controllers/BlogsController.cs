@@ -43,10 +43,6 @@ namespace BE_Homnayangi.Controllers
                 {
                     throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
                 }
-                /*       else if (_userService.GetCurrentUser(Request.Headers["Authorization"]).Role.Equals(CommonEnum.RoleEnum.CUSTOMER))
-                       {
-                           throw new Exception(ErrorMessage.UserError.ACTION_FOR_STAFF_AND_MANAGER_ROLE);
-                       }*/
 
                 var blogs = await _blogService.GetBlogsByUser();
                 if (blogs == null || blogs.Count == 0)
@@ -237,20 +233,6 @@ namespace BE_Homnayangi.Controllers
             }
         }
         #endregion
-
-
-        [HttpGet("category/tag")]
-        public async Task<ActionResult<PagedResponse<PagedList<BlogsByCateAndTagResponse>>>> GetBlogsByCateAndTag([FromQuery] BlogFilterByCateAndTagRequest blogFilter)
-        {
-            var response = await _blogService.GetBlogsByCategoryAndTag(blogFilter);
-
-            if (response == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(response);
-        }
 
         [HttpGet("category/sub-categories")]
         public async Task<ActionResult<PagedResponse<PagedList<BlogsByCateAndTagResponse>>>> GetBlogsBySubCates([FromQuery] BlogsBySubCatesRequest request)
