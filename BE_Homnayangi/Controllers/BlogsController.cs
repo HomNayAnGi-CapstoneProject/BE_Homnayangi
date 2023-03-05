@@ -70,6 +70,7 @@ namespace BE_Homnayangi.Controllers
         {
             try
             {
+                await _blogService.UpdateView(id);
                 return Ok(await _blogService.GetBlogDetail(id));
             }
             catch (Exception ex)
