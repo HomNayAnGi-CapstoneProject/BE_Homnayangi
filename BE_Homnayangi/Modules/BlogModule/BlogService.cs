@@ -510,7 +510,6 @@ namespace BE_Homnayangi.Modules.BlogModule
                     throw new Exception(ErrorMessage.BlogError.BLOG_NOT_FOUND);
 
                 removedBlog.BlogStatus = 0;
-                await _blogRepository.UpdateAsync(removedBlog);
                 #endregion
 
                 #region update Recipe status into 0 > throw Error if not existed
@@ -519,6 +518,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     throw new Exception(ErrorMessage.RecipeError.RECIPE_NOT_FOUND);
 
                 removedRecipe.Status = 0;
+                await _blogRepository.UpdateAsync(removedBlog); // update ở đây thì sure là ko có bị throw exception rồi
                 await _recipeRepository.UpdateAsync(removedRecipe);
                 #endregion
 
@@ -611,7 +611,6 @@ namespace BE_Homnayangi.Modules.BlogModule
                     throw new Exception(ErrorMessage.BlogError.BLOG_NOT_FOUND);
 
                 restoredBlog.BlogStatus = 1;
-                await _blogRepository.UpdateAsync(restoredBlog);
                 #endregion 
 
                 #region update Recipe status into 1 > throw Error if not existed
@@ -620,6 +619,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     throw new Exception(ErrorMessage.RecipeError.RECIPE_NOT_FOUND);
 
                 restoredRecipe.Status = 1;
+                await _blogRepository.UpdateAsync(restoredBlog);
                 await _recipeRepository.UpdateAsync(restoredRecipe);
                 #endregion
 

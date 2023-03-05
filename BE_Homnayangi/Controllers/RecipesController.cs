@@ -94,6 +94,10 @@ namespace BE_Homnayangi.Controllers
                 {
                     throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_ALLOWED_TO_DELETE_RECIPE);
                 }
+                else if (_userService.GetCurrentUser(Request.Headers["Authorization"]).Role.Equals("Admin"))
+                {
+                    throw new Exception(ErrorMessage.AdminError.ADMIN_NOT_ALLOWED_TO_DELETE_RECIPE);
+                }
                 #endregion
 
                 await _recipeServices.DeleteRecipe(id);
@@ -122,6 +126,10 @@ namespace BE_Homnayangi.Controllers
                 else if (_userService.GetCurrentUser(Request.Headers["Authorization"]).Role.Equals("Customer"))
                 {
                     throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_ALLOWED_TO_RESTORE_RECIPE);
+                }
+                else if (_userService.GetCurrentUser(Request.Headers["Authorization"]).Role.Equals("Admin"))
+                {
+                    throw new Exception(ErrorMessage.AdminError.ADMIN_NOT_ALLOWED_TO_RESTORE_RECIPE);
                 }
                 #endregion
 
