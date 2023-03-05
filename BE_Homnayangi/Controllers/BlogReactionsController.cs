@@ -43,7 +43,7 @@ namespace BE_Homnayangi.Controllers
         }
 
         [HttpPut("blogs/{blogId}/customers/{customerId}")]
-        [Authorize(Roles = "Staff,Manager,Customer")]
+        [Authorize(Roles = "Customer")]
         public async Task<ActionResult<BlogReactionResponse>> InteractWithBlog([FromRoute] Guid blogId, [FromRoute] Guid customerId)
         {
             try
