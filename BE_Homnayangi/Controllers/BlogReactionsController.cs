@@ -1,4 +1,5 @@
 ﻿using BE_Homnayangi.Modules.BlogReactionModule.Interface;
+using BE_Homnayangi.Modules.BlogReactionModule.Response;
 using Library.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -41,50 +42,33 @@ namespace BE_Homnayangi.Controllers
 
         }
 
-        [HttpPut("blogs/{blogId}/customers/{customerId}")] // thả tym
-        [Authorize(Roles = "Staff,Manager,Customer")]
-        public async Task<IActionResult> GiveReactionForBlog([FromRoute] Guid blogId, [FromRoute] Guid customerId)
+        [HttpPut("blogs/{blogId}/customers/{customerId}")]
+        [Authorize(Roles = "Customer")]
+        public async Task<ActionResult<BlogReactionResponse>> InteractWithBlog([FromRoute] Guid blogId, [FromRoute] Guid customerId)
         {
-            var result = await _blogReactionService.GiveReactionForBlog(blogId, customerId);
-            if (result != null)
+            try
             {
-                return new JsonResult(new
+                var result = await _blogReactionService.InteractWithBlog(blogId, customerId);
+                if (result != null)
                 {
-                    status = "success",
-                    result = result,
-                });
+                    return new JsonResult(new
+                    {
+                        status = "success",
+                        result = result,
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        status = "failed",
+                        result = result,
+                    });
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return new JsonResult(new
-                {
-                    status = "failed",
-                    result = result,
-                });
-            }
-        }
-
-
-        [HttpDelete("blogs/{blogId}/customers/{customerId}")] // xoá tym
-        [Authorize(Roles = "Staff,Manager,Customer")]
-        public async Task<IActionResult> RemoveReactionForBlog([FromRoute] Guid blogId, [FromRoute] Guid customerId)
-        {
-            var result = await _blogReactionService.RemoveReactionForBlog(blogId, customerId);
-            if (result != null)
-            {
-                return new JsonResult(new
-                {
-                    status = "success",
-                    result = result,
-                });
-            }
-            else
-            {
-                return new JsonResult(new
-                {
-                    status = "failed",
-                    result = result,
-                });
+                return BadRequest(ex.Message);
             }
         }
     }
