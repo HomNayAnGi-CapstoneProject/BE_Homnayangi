@@ -50,6 +50,11 @@
     <None Remove="Modules\RewardModule\DTO\Response\" />
     <None Remove="Modules\RewardModule\DTO\Request\" />
     <None Remove="Modules\Utils\" />
+    <None Remove="Modules\TransactionModule\" />
+    <None Remove="Modules\OrderDetailModule\Interface\" />
+    <None Remove="Modules\TransactionModule\Interface\" />
+    <None Remove="Modules\OrderModule\Request\" />
+    <None Remove="Modules\OrderModule\Response\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Modules\RecipeModule\Interface\" />
@@ -64,5 +69,10 @@
     <Folder Include="Modules\RewardModule\DTO\" />
     <Folder Include="Modules\RewardModule\DTO\Response\" />
     <Folder Include="Modules\RewardModule\DTO\Request\" />
+    <Folder Include="Modules\TransactionModule\" />
+    <Folder Include="Modules\OrderCookedDetailModule\Interface\" />
+    <Folder Include="Modules\TransactionModule\Interface\" />
+    <Folder Include="Modules\OrderModule\Request\" />
+    <Folder Include="Modules\OrderModule\Response\" />
   </ItemGroup>
 </Project>
