@@ -248,7 +248,7 @@ namespace BE_Homnayangi.Modules.BlogModule
         {
             var listBlogSubCate = await _blogSubCateRepository.GetBlogSubCatesBy(x => x.SubCateId.Equals(subCateId), includeProperties: "SubCate");
 
-            var listBlogs = await _blogRepository.GetBlogsBy(x => x.BlogStatus == 1, includeProperties : "Recipe");
+            var listBlogs = await _blogRepository.GetBlogsBy(x => x.BlogStatus == 1, includeProperties: "Recipe");
 
             listBlogs = numberOfItems > 0
                 ? listBlogs.Join(listBlogSubCate, x => x.BlogId, y => y.BlogId, (x, y) => x).OrderByDescending(x => x.CreatedDate).Take(numberOfItems).ToList()
@@ -261,9 +261,9 @@ namespace BE_Homnayangi.Modules.BlogModule
                 {
                     b,
                     ListSubCateName = y.Value,
-                    
-                }).Join(_blogReferenceRepository.GetBlogReferencesBy(x => x.Type == (int) BlogReferenceType.DESCRIPTION).Result, x => x.b.BlogId, y => y.BlogId,
-                (x,y) => new OverviewBlogResponse
+
+                }).Join(_blogReferenceRepository.GetBlogReferencesBy(x => x.Type == (int)BlogReferenceType.DESCRIPTION).Result, x => x.b.BlogId, y => y.BlogId,
+                (x, y) => new OverviewBlogResponse
                 {
                     BlogId = x.b.BlogId,
                     Title = x.b.Title,
@@ -740,12 +740,16 @@ namespace BE_Homnayangi.Modules.BlogModule
         public async Task<ICollection<SearchBlogsResponse>> GetBlogAndRecipeByName(String name)
         {
             var Blogs = await _blogRepository.GetBlogsBy(x => x.BlogStatus == 1);
-            var blogResponse = Blogs.Where(x => ConvertToUnSign(x.Title).Contains(name, StringComparison.CurrentCultureIgnoreCase) || x.Title.Contains(name)).ToList().Select(x => new SearchBlogsResponse
-            {
-                Title = x.Title,
-                BlogId = x.BlogId
-            }
-            ).ToList();
+            var blogResponse = Blogs.Where(x => ConvertToUnSign(x.Title)
+                .Contains(ConvertToUnSign(name), StringComparison.CurrentCultureIgnoreCase) || x.Title.Contains(name, StringComparison.CurrentCultureIgnoreCase))
+                .ToList()
+                .Select(x => new SearchBlogsResponse
+                {
+                    Title = x.Title,
+                    BlogId = x.BlogId
+                }
+                )
+                .ToList();
 
             return blogResponse;
         }

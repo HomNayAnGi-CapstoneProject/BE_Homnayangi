@@ -9,6 +9,7 @@ using System.Linq;
 using BE_Homnayangi.Modules.BlogModule.Response;
 using Library.Models.Enum;
 using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
+using System.Text.RegularExpressions;
 
 namespace BE_Homnayangi.Controllers
 {
@@ -56,7 +57,7 @@ namespace BE_Homnayangi.Controllers
         {
             if (title != "" && title != null && title is string)
             {
-                title = title.TrimStart(' ');
+                title = Regex.Replace(title, @"\s+", " ");
                 var result = await _blogService.GetBlogAndRecipeByName(title);
                 if (result.Any())
                 {
