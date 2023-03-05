@@ -1,19 +1,16 @@
 ﻿using BE_Homnayangi.Modules.BlogModule.Interface;
 using BE_Homnayangi.Modules.BlogModule.Request;
 using BE_Homnayangi.Modules.BlogModule.Response;
+using BE_Homnayangi.Modules.SubCateModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Interface;
-using Library.Commons;
 using BE_Homnayangi.Modules.Utils;
-using Library.DataAccess;
 using Library.Models.Constant;
 using Library.PagedList;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Threading.Tasks;
-using BE_Homnayangi.Modules.SubCateModule.Interface;
-using Microsoft.AspNetCore.Authorization;
-using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BE_Homnayangi.Controllers
 {
@@ -43,10 +40,6 @@ namespace BE_Homnayangi.Controllers
                 {
                     throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
                 }
-                /*       else if (_userService.GetCurrentUser(Request.Headers["Authorization"]).Role.Equals(CommonEnum.RoleEnum.CUSTOMER))
-                       {
-                           throw new Exception(ErrorMessage.UserError.ACTION_FOR_STAFF_AND_MANAGER_ROLE);
-                       }*/
 
                 var blogs = await _blogService.GetBlogsByUser();
                 if (blogs == null || blogs.Count == 0)
@@ -155,7 +148,7 @@ namespace BE_Homnayangi.Controllers
 
         // DELETE: api/Blogs/5
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Staff.Manager")]
+        [Authorize(Roles = "Staff,Manager")]
         public async Task<IActionResult> DeleteBlog([FromRoute] Guid id)
         {
             try
@@ -168,6 +161,10 @@ namespace BE_Homnayangi.Controllers
                 else if (_userService.GetCurrentUser(Request.Headers["Authorization"]).Role.Equals("Customer"))
                 {
                     throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_ALLOWED_TO_DELETE_BLOG);
+                }
+                else if (_userService.GetCurrentUser(Request.Headers["Authorization"]).Role.Equals("Admin"))
+                {
+                    throw new Exception(ErrorMessage.AdminError.ADMIN_NOT_ALLOWED_TO_DELETE_BLOG);
                 }
                 #endregion
 
@@ -199,6 +196,10 @@ namespace BE_Homnayangi.Controllers
                 {
                     throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_ALLOWED_TO_RESTORE_BLOG);
                 }
+                else if (_userService.GetCurrentUser(Request.Headers["Authorization"]).Role.Equals("Admin"))
+                {
+                    throw new Exception(ErrorMessage.AdminError.ADMIN_NOT_ALLOWED_TO_RESTORE_BLOG);
+                }
                 #endregion
 
                 await _blogService.RestoreBlog(id);
@@ -220,14 +221,20 @@ namespace BE_Homnayangi.Controllers
         {
             try
             {
+                #region Authorization
                 if (_userService.GetCurrentUser(Request.Headers["Authorization"]) == null)
                 {
                     throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
                 }
                 else if (_userService.GetCurrentUser(Request.Headers["Authorization"]).Role.Equals("Customer"))
                 {
-                    throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_ALLOWED_TO_CREATE_BLOG);
+                    throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_ALLOWED_TO_DELETE_BLOG);
                 }
+                else if (_userService.GetCurrentUser(Request.Headers["Authorization"]).Role.Equals("Admin"))
+                {
+                    throw new Exception(ErrorMessage.AdminError.ADMIN_NOT_ALLOWED_TO_DELETE_BLOG);
+                }
+                #endregion
 
                 await _blogService.RemoveBlogDraft(id);
                 return Ok();
@@ -238,20 +245,6 @@ namespace BE_Homnayangi.Controllers
             }
         }
         #endregion
-
-
-        [HttpGet("category/tag")]
-        public async Task<ActionResult<PagedResponse<PagedList<BlogsByCateAndTagResponse>>>> GetBlogsByCateAndTag([FromQuery] BlogFilterByCateAndTagRequest blogFilter)
-        {
-            var response = await _blogService.GetBlogsByCategoryAndTag(blogFilter);
-
-            if (response == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(response);
-        }
 
         [HttpGet("category/sub-categories")]
         public async Task<ActionResult<PagedResponse<PagedList<BlogsByCateAndTagResponse>>>> GetBlogsBySubCates([FromQuery] BlogsBySubCatesRequest request)

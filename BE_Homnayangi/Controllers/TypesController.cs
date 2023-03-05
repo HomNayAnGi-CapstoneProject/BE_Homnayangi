@@ -2,6 +2,7 @@
 using BE_Homnayangi.Modules.TypeModule.DTO;
 using BE_Homnayangi.Modules.TypeModule.DTO.Request;
 using BE_Homnayangi.Modules.TypeModule.Interface;
+using BE_Homnayangi.Modules.TypeModule.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -133,6 +134,20 @@ namespace BE_Homnayangi.Controllers
             return NoContent();
         }
 
+        [HttpGet("drop-down")]
+        [Authorize(Roles = "Staff,Manager")]
+        public async Task<ActionResult<IEnumerable<TypeDropdownResponse>>> GetUnitsDropdown()
+        {
+            try
+            {
+                var response = await _typeService.GetTypeDropdown();
+                return Ok(response);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
 
         private bool TypeExists(Guid id)
         {

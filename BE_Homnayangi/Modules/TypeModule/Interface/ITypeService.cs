@@ -1,4 +1,5 @@
 ﻿using BE_Homnayangi.Modules.TypeModule.DTO.Request;
+using BE_Homnayangi.Modules.TypeModule.Response;
 using Library.PagedList;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,8 @@ namespace BE_Homnayangi.Modules.TypeModule.Interface
         public Task<Type> GetTypeByID(Guid? id);
 
         public Task<PagedResponse<PagedList<Type>>> GetAllPaged(TypeFilterRequest request);
+
+        public Task<ICollection<TypeDropdownResponse>> GetTypeDropdown();
     }
 }
 

@@ -16,19 +16,15 @@ namespace BE_Homnayangi.Controllers
     [ApiController]
     public class HomeController : ControllerBase
     {
-        private readonly HomnayangiContext _context;
         private readonly IBlogService _blogService;
-        private readonly IRecipeService _recipeService;
 
-        public HomeController(HomnayangiContext context, IBlogService blogService, IRecipeService recipeService)
+        public HomeController(IBlogService blogService)
         {
-            _context = context;
             _blogService = blogService;
-            _recipeService = recipeService;
         }
 
         [HttpGet("subCategory/{subCateId}/blogs")]
-        public async Task<ActionResult<IEnumerable<GetBlogsForHomePageResponse>>> GetBlogsBySubCate([FromRoute] Guid? subCateId)
+        public async Task<ActionResult<IEnumerable<OverviewBlogResponse>>> GetBlogsBySubCate([FromRoute] Guid? subCateId)
         {
             if (subCateId == null)
             {
@@ -45,7 +41,7 @@ namespace BE_Homnayangi.Controllers
         }
 
         [HttpGet("blogs/cheap-price")]
-        public async Task<ActionResult<IEnumerable<GetBlogsForHomePageResponse>>> GetBlogsByCheapPrice()
+        public async Task<ActionResult<IEnumerable<OverviewBlogResponse>>> GetBlogsByCheapPrice()
         {
             var result = await _blogService.GetBlogsSortByPackagePriceAsc();
             return new JsonResult(new

@@ -77,7 +77,6 @@ namespace BE_Homnayangi.Modules.RecipeModule
                     throw new Exception(ErrorMessage.RecipeError.RECIPE_NOT_FOUND);
 
                 removedRecipe.Status = 0;
-                await _recipeRepository.UpdateAsync(removedRecipe);
                 #endregion
 
                 #region update Blog status into 0 > throw Error if not existed
@@ -86,6 +85,7 @@ namespace BE_Homnayangi.Modules.RecipeModule
                     throw new Exception(ErrorMessage.BlogError.BLOG_NOT_FOUND);
 
                 removedBlog.BlogStatus = 0;
+                await _recipeRepository.UpdateAsync(removedRecipe);
                 await _blogRepository.UpdateAsync(removedBlog);
                 #endregion
 

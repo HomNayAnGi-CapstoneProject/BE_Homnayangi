@@ -1,5 +1,6 @@
 ﻿using BE_Homnayangi.Modules.TypeModule.DTO.Request;
 using BE_Homnayangi.Modules.TypeModule.Interface;
+using BE_Homnayangi.Modules.TypeModule.Response;
 using Library.PagedList;
 using System;
 using System.Collections.Generic;
@@ -60,7 +61,14 @@ namespace BE_Homnayangi.Modules.TypeModule
             return response.ToPagedResponse();
 
         }
-
+        public async Task<ICollection<TypeDropdownResponse>> GetTypeDropdown()
+        {
+            return _TypeRepository.GetAll().Result.Where(x => x.Status == true).Select(x => new TypeDropdownResponse
+            {
+                TypeId = x.TypeId,
+                TypeName = x.Name
+            }).ToList();
+        }
 
     }
 }

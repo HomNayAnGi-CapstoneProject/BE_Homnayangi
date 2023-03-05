@@ -10,6 +10,7 @@ using Library.Models;
 using BE_Homnayangi.Modules.UnitModule.Request;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
+using BE_Homnayangi.Modules.UnitModule.Response;
 
 namespace BE_Homnayangi.Controllers
 {
@@ -42,7 +43,7 @@ namespace BE_Homnayangi.Controllers
         }
 
         [HttpGet("drop-down")]
-        public async Task<ActionResult<IEnumerable<Unit>>> GetUnitsDropdown()
+        public async Task<ActionResult<IEnumerable<UnitDropdownResponse>>> GetUnitsDropdown()
         {
             try
             {
