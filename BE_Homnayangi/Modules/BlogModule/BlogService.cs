@@ -740,12 +740,16 @@ namespace BE_Homnayangi.Modules.BlogModule
         public async Task<ICollection<SearchBlogsResponse>> GetBlogAndRecipeByName(String name)
         {
             var Blogs = await _blogRepository.GetBlogsBy(x => x.BlogStatus == 1);
-            var blogResponse = Blogs.Where(x => ConvertToUnSign(x.Title).Contains(name, StringComparison.CurrentCultureIgnoreCase) || x.Title.Contains(name)).ToList().Select(x => new SearchBlogsResponse
-            {
-                Title = x.Title,
-                BlogId = x.BlogId
-            }
-            ).ToList();
+            var blogResponse = Blogs.Where(x => ConvertToUnSign(x.Title).ToLower()
+                .Contains(ConvertToUnSign(name).ToLower(), StringComparison.CurrentCultureIgnoreCase) || x.Title.ToLower().Contains(name.ToLower()))
+                .ToList()
+                .Select(x => new SearchBlogsResponse
+                    {
+                        Title = x.Title,
+                        BlogId = x.BlogId
+                    }
+                )
+                .ToList();
 
             return blogResponse;
         }
