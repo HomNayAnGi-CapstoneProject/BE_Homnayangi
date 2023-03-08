@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using BE_Homnayangi.Modules.CommentModule.Interface;
+﻿using BE_Homnayangi.Modules.CommentModule.Interface;
 using BE_Homnayangi.Modules.CommentModule.Request;
 using BE_Homnayangi.Modules.CommentModule.Response;
 using BE_Homnayangi.Modules.CustomerModule.Interface;
@@ -15,15 +14,13 @@ namespace BE_Homnayangi.Modules.CommentModule
     public class CommentService : ICommentService
     {
         private readonly ICommentRepository _commentRepository;
-        private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
         private readonly ICustomerRepository _customerRepository;
 
-        public CommentService(ICommentRepository commentRepository, IMapper mapper,
+        public CommentService(ICommentRepository commentRepository,
             IUserRepository userRepository, ICustomerRepository customerRepository)
         {
             _commentRepository = commentRepository;
-            _mapper = mapper;
             _userRepository = userRepository;
             _customerRepository = customerRepository;
         }
@@ -73,7 +70,7 @@ namespace BE_Homnayangi.Modules.CommentModule
 
                     // Group by: List of parent comments order by descending created date
                     var parentComments = allComments.Where(x => x.ParentCommentId == null).OrderByDescending(x => x.CreatedDate).ToList();
-                    
+
                     foreach (var parent in parentComments)
                     {
                         ParentComment parentComment = parent;
@@ -98,46 +95,45 @@ namespace BE_Homnayangi.Modules.CommentModule
             return result;
         }
 
-        public async Task<bool> CreateANewComment(CreatedCommentRequest comment)
+        public async Task<ChildComment> CreateANewComment(CreatedCommentRequest comment)
         {
             ChildComment result = null;
             try
             {
                 Comment newComment = new Comment()
                 {
-                    ParentId = comment.ParentCommentId == null ? null : comment.ParentCommentId,
+                    CommentId = Guid.NewGuid(),
                     AuthorId = comment.AuthorId,
+                    CreatedDate = DateTime.Now,
                     Content = comment.Content,
+                    Status = true,
+                    ParentId = comment.ParentCommentId == null ? null : comment.ParentCommentId,
                     BlogId = comment.BlogId,
                     ByStaff = comment.ByStaff,
-                    CommentId = Guid.NewGuid(),
-                    CreatedDate = DateTime.Now,
-                    Status = true,
                 };
-                //await _commentRepository.AddAsync(newComment);
-                //if (comment.ByStaff) // get user info
-                //{
-                //    var authorNavigation = await _userRepository.GetByIdAsync(comment.AuthorId);
-                //    newComment.AuthorNavigation = authorNavigation;
-                //}
-                //else                // get customer info
-                //{
-                //    var author = await _customerRepository.GetByIdAsync(comment.AuthorId);
-                //    newComment.Author = author;
-                //}
-                //result = new ChildComment()
-                //{
-                //    ParentCommentId = newComment.ParentId != null ? newComment.ParentId : null,
-                //    CommentId = newComment.CommentId,
-                //    AuthorId = newComment.AuthorId.Value,
-                //    FullNameAuthor = newComment.Author != null
-                //                        ? newComment.Author.Firstname + " " + newComment.Author.Lastname
-                //                        : newComment.AuthorNavigation.Firstname + " " + newComment.AuthorNavigation.Lastname,
-                //    Avatar = newComment.Author != null ? newComment.Author.Avatar : newComment.AuthorNavigation.Avatar,
-                //    CreatedDate = newComment.CreatedDate.Value,
-                //    Content = newComment.Content,
-                //    Status = newComment.Status.Value,
-                //};
+                await _commentRepository.AddAsync(newComment);
+
+                result = new ChildComment()
+                {
+                    ParentCommentId = newComment.ParentId != null ? newComment.ParentId : null,
+                    CommentId = newComment.CommentId,
+                    AuthorId = newComment.AuthorId.Value,
+                    CreatedDate = newComment.CreatedDate.Value,
+                    Content = newComment.Content,
+                    Status = newComment.Status.Value,
+                };
+                if (comment.ByStaff) // get user info
+                {
+                    var staff = await _userRepository.GetByIdAsync(comment.AuthorId);
+                    result.FullNameAuthor = staff.Firstname + " " + staff.Lastname;
+                    result.Avatar = staff.Avatar;
+                }
+                else                // get customer info
+                {
+                    var customer = await _customerRepository.GetByIdAsync(comment.AuthorId);
+                    result.FullNameAuthor = customer.Firstname + " " + customer.Lastname;
+                    result.Avatar = customer.Avatar;
+                }
             }
             catch (Exception ex)
             {

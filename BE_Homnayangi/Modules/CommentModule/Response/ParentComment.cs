@@ -19,9 +19,5 @@ namespace BE_Homnayangi.Modules.CommentModule.Response
         public bool Status { get; set; }
 
         public bool ByStaff { get; set; }
-
-        public override string ToString() {
-            return $"{CommentId}|{AuthorId}|{FullNameAuthor}|{Avatar}|{CreatedDate}|{Content}|{Status}|{ByStaff}";
-        }
     }
 }
