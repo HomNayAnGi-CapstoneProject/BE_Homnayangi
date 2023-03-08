@@ -28,10 +28,20 @@ namespace BE_Homnayangi.Controllers
         public async Task<ActionResult<List<Tuple<ParentComment, List<ChildComment>>>>> GetCommentsByBlogId([FromRoute] Guid blogId)
         {
             var result = await _commentService.GetCommentsByBlogId(blogId);
-            return new JsonResult(new
+            if (result != null)
             {
-                result = result
-            });
+                return new JsonResult(new
+                {
+                    result = result
+                });
+            }
+            else
+            {
+                return new JsonResult(new
+                {
+                    result = new List<ParentComment>()
+                });
+            }
         }
 
         [HttpPost]
