@@ -10,7 +10,7 @@ namespace BE_Homnayangi.Modules.CommentModule.Interface
     {
         public Task<List<Tuple<ParentComment, List<ChildComment>>>> GetCommentsByBlogId(Guid blogId);
 
-        public Task<bool> CreateANewComment(CreatedCommentRequest comment);
+        public Task<ChildComment> CreateANewComment(CreatedCommentRequest comment);
 
         public Task<bool> DeleteAComment(Guid id);
 
