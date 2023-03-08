@@ -1,6 +1,7 @@
 ﻿using BE_Homnayangi.Modules.CommentModule.Interface;
 using BE_Homnayangi.Modules.CommentModule.Request;
 using BE_Homnayangi.Modules.CommentModule.Response;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -31,21 +32,24 @@ namespace BE_Homnayangi.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Customer,Staff,Manager")]
         public async Task<ActionResult<bool>> CreateANewComment([FromBody] CreatedCommentRequest newComment)
         {
             var result = await _commentService.CreateANewComment(newComment);
-            if (result)
+            if (result != null)
             {
                 return new JsonResult(new
                 {
-                    status = "success"
+                    status = "success",
+                    newComment = result
                 });
             }
             else
             {
                 return new JsonResult(new
                 {
-                    status = "fail"
+                    status = "fail",
+                    newComment = result
                 });
             }
         }

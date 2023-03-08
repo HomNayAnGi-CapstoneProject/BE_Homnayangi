@@ -1,9 +1,11 @@
-﻿using BE_Homnayangi.Modules.CommentModule.Interface;
+﻿using BE_Homnayangi.Modules.BlogModule.Interface;
+using BE_Homnayangi.Modules.CommentModule.Interface;
 using BE_Homnayangi.Modules.CommentModule.Request;
 using BE_Homnayangi.Modules.CommentModule.Response;
 using BE_Homnayangi.Modules.CustomerModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using Library.Models;
+using Library.Models.Constant;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,13 +18,15 @@ namespace BE_Homnayangi.Modules.CommentModule
         private readonly ICommentRepository _commentRepository;
         private readonly IUserRepository _userRepository;
         private readonly ICustomerRepository _customerRepository;
+        private readonly IBlogRepository _blogRepository;
 
-        public CommentService(ICommentRepository commentRepository,
+        public CommentService(ICommentRepository commentRepository, IBlogRepository blogRepository,
             IUserRepository userRepository, ICustomerRepository customerRepository)
         {
             _commentRepository = commentRepository;
             _userRepository = userRepository;
             _customerRepository = customerRepository;
+            _blogRepository = blogRepository;
         }
 
         public async Task<List<Tuple<ParentComment, List<ChildComment>>>> GetCommentsByBlogId(Guid blogId)
@@ -100,6 +104,8 @@ namespace BE_Homnayangi.Modules.CommentModule
             ChildComment result = null;
             try
             {
+                var blog = await _blogRepository.GetByIdAsync(comment.BlogId);
+                if (blog == null) throw new Exception(ErrorMessage.BlogError.BLOG_NOT_FOUND);
                 Comment newComment = new Comment()
                 {
                     CommentId = Guid.NewGuid(),
