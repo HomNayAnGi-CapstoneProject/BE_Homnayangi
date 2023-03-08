@@ -31,14 +31,23 @@ namespace BE_Homnayangi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ChildComment>> CreateANewComment([FromBody] CreatedCommentRequest newComment)
+        public async Task<ActionResult<bool>> CreateANewComment([FromBody] CreatedCommentRequest newComment)
         {
             var result = await _commentService.CreateANewComment(newComment);
-            return new JsonResult(new
+            if (result)
             {
-                status = "success",
-                result = result
-            });
+                return new JsonResult(new
+                {
+                    status = "success"
+                });
+            }
+            else
+            {
+                return new JsonResult(new
+                {
+                    status = "fail"
+                });
+            }
         }
 
         [HttpDelete("{commentId}")]

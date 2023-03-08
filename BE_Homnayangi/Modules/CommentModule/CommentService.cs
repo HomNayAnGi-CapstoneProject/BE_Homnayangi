@@ -42,54 +42,51 @@ namespace BE_Homnayangi.Modules.CommentModule
                     var users = await _userRepository.GetUsersBy(u => u.IsBlocked == null || !u.IsBlocked.Value);
                     var customers = await _customerRepository.GetCustomersBy(c => c.IsBlocked == null || !c.IsBlocked.Value);
 
+                    var userComments = comments.Join(users, c => c.AuthorId, u => u.UserId,
+                        (c, u) => new ChildComment()
+                        {
+                            ParentCommentId = c.ParentId,
+                            CommentId = c.CommentId,
+                            AuthorId = c.AuthorId.Value,
+                            FullNameAuthor = u.Firstname + " " + u.Lastname,
+                            Avatar = u.Avatar,
+                            CreatedDate = c.CreatedDate.Value,
+                            Content = c.Content,
+                            Status = c.Status.Value,
+                        });
+                    var customerComments = comments.Join(customers, com => com.AuthorId, cus => cus.CustomerId, (com, cus)
+                        => new ChildComment()
+                        {
+                            ParentCommentId = com.ParentId,
+                            CommentId = com.CommentId,
+                            AuthorId = com.AuthorId.Value,
+                            FullNameAuthor = cus.Firstname + " " + cus.Lastname,
+                            Avatar = cus.Avatar,
+                            CreatedDate = com.CreatedDate.Value,
+                            Content = com.Content,
+                            Status = com.Status.Value,
+                        });
 
-                    var userComments = comments.Join(users, c => c.AuthorId, u => u.UserId, (c, u) => c);
-                    var customerComments = comments.Join(customers, com => com.AuthorId, cus => cus.CustomerId, (com, cus) => com);
-
-                    var allComments = new List<Comment>();
+                    var allComments = new List<ChildComment>();
                     allComments.AddRange(userComments);
                     allComments.AddRange(customerComments);
 
                     // Group by: List of parent comments order by descending created date
-                    var parentComments = allComments.Where(x => x.ParentId == null).OrderByDescending(x => x.CreatedDate).ToList();
-
+                    var parentComments = allComments.Where(x => x.ParentCommentId == null).OrderByDescending(x => x.CreatedDate).ToList();
+                    
                     foreach (var parent in parentComments)
                     {
-                        //ParentComment parentComment = new ParentComment()
-                        //{
-                        //    CommentId = parent.CommentId,
-                        //    AuthorId = parent.AuthorId.Value,
-                        //    FullNameAuthor = parent.Author != null
-                        //                ? parent.Author.Firstname + " " + parent.Author.Lastname
-                        //                : parent.AuthorNavigation.Firstname + " " + parent.AuthorNavigation.Lastname,
-                        //    Avatar = parent.Author != null ? parent.Author.Avatar : parent.AuthorNavigation.Avatar,
-                        //    CreatedDate = parent.CreatedDate.Value,
-                        //    Content = parent.Content,
-                        //    Status = parent.Status.Value,
-                        //};
-                        //List<ChildComment> childComments = new List<ChildComment>();
-                        //foreach (var child in allComments)
-                        //{
-                        //    if (child.ParentId != null && child.ParentId == parent.CommentId)
-                        //    {
-                        //        ChildComment childComment = new ChildComment()
-                        //        {
-                        //            ParentCommentId = child.ParentId.Value,
-                        //            CommentId = child.CommentId,
-                        //            AuthorId = child.AuthorId.Value,
-                        //            FullNameAuthor = child.Author != null
-                        //                ? child.Author.Firstname + " " + child.Author.Lastname
-                        //                : child.AuthorNavigation.Firstname + " " + child.AuthorNavigation.Lastname,
-                        //            Avatar = child.Author != null ? child.Author.Avatar : child.AuthorNavigation.Avatar,
-                        //            CreatedDate = child.CreatedDate.Value,
-                        //            Content = child.Content,
-                        //            Status = child.Status.Value,
-                        //        };
-                        //        childComments.Add(childComment);
-                        //    }
-                        //}
-                        //var tmp = Tuple.Create(parentComment, childComments);
-                        //result.Add(tmp);
+                        ParentComment parentComment = parent;
+                        List<ChildComment> childComments = new List<ChildComment>();
+                        foreach (var child in allComments)
+                        {
+                            if (child.ParentCommentId != null && child.ParentCommentId == parent.CommentId)
+                            {
+                                childComments.Add(child);
+                            }
+                        }
+                        var tmp = Tuple.Create(parentComment, childComments);
+                        result.Add(tmp);
                     }
                 }
             }
@@ -101,7 +98,7 @@ namespace BE_Homnayangi.Modules.CommentModule
             return result;
         }
 
-        public async Task<ChildComment> CreateANewComment(CreatedCommentRequest comment)
+        public async Task<bool> CreateANewComment(CreatedCommentRequest comment)
         {
             ChildComment result = null;
             try
