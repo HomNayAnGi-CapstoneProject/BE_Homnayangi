@@ -4,6 +4,7 @@ using BE_Homnayangi.Modules.CommentModule.Request;
 using BE_Homnayangi.Modules.CommentModule.Response;
 using BE_Homnayangi.Modules.CustomerModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Interface;
+using BE_Homnayangi.Modules.UserModule.Response;
 using Library.Models;
 using Library.Models.Constant;
 using System;
@@ -99,23 +100,24 @@ namespace BE_Homnayangi.Modules.CommentModule
             return result;
         }
 
-        public async Task<ChildComment> CreateANewComment(CreatedCommentRequest comment)
+        public async Task<ChildComment> CreateANewComment(CreatedCommentRequest comment, CurrentUserResponse user)
         {
             ChildComment result = null;
             try
             {
                 var blog = await _blogRepository.GetByIdAsync(comment.BlogId);
                 if (blog == null) throw new Exception(ErrorMessage.BlogError.BLOG_NOT_FOUND);
+
                 Comment newComment = new Comment()
                 {
                     CommentId = Guid.NewGuid(),
-                    AuthorId = comment.AuthorId,
+                    AuthorId = user.Id,
                     CreatedDate = DateTime.Now,
                     Content = comment.Content,
                     Status = true,
                     ParentId = comment.ParentCommentId == null ? null : comment.ParentCommentId,
                     BlogId = comment.BlogId,
-                    ByStaff = comment.ByStaff,
+                    ByStaff = !user.Role.Equals("Customer"),
                 };
                 await _commentRepository.AddAsync(newComment);
 
@@ -127,19 +129,9 @@ namespace BE_Homnayangi.Modules.CommentModule
                     CreatedDate = newComment.CreatedDate.Value,
                     Content = newComment.Content,
                     Status = newComment.Status.Value,
+                    FullNameAuthor = user.Firstname + " " + user.Lastname,
+                    Avatar = user.Avatar
                 };
-                if (comment.ByStaff) // get user info
-                {
-                    var staff = await _userRepository.GetByIdAsync(comment.AuthorId);
-                    result.FullNameAuthor = staff.Firstname + " " + staff.Lastname;
-                    result.Avatar = staff.Avatar;
-                }
-                else                // get customer info
-                {
-                    var customer = await _customerRepository.GetByIdAsync(comment.AuthorId);
-                    result.FullNameAuthor = customer.Firstname + " " + customer.Lastname;
-                    result.Avatar = customer.Avatar;
-                }
             }
             catch (Exception ex)
             {
@@ -149,38 +141,54 @@ namespace BE_Homnayangi.Modules.CommentModule
             return result;
         }
 
-        public async Task<bool> DeleteAComment(Guid id)
+        public async Task<bool> DeleteAComment(Guid id, Guid userID)
         {
             bool result = false;
             try
             {
-                var comment = await _commentRepository.GetByIdAsync(id);
-                comment.Status = false;
-                await _commentRepository.UpdateAsync(comment);
-                result = true;
+                var comment = await _commentRepository.GetFirstOrDefaultAsync(c => c.CommentId == id && c.Status.Value);
+                if (comment == null) throw new Exception(ErrorMessage.CommentError.COMMENT_NOT_FOUND);
+                if (comment.AuthorId == userID)
+                {
+                    comment.Status = false;
+                    await _commentRepository.UpdateAsync(comment);
+                    result = true;
+                }
+                else
+                {
+                    throw new Exception(ErrorMessage.CommentError.NOT_THE_AUTHOR_COMMENT);
+                }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error at DeleteAComment: " + ex.Message);
-                throw;
+                throw new Exception(ex.Message);
             }
             return result;
         }
 
-        public async Task<bool> UpdateAComment(Guid id, string content)
+        public async Task<bool> UpdateAComment(Guid id, string content, Guid userID)
         {
             bool result = false;
             try
             {
-                var comment = await _commentRepository.GetByIdAsync(id);
-                comment.Content = content.Trim();
-                await _commentRepository.UpdateAsync(comment);
-                result = true;
+                var comment = await _commentRepository.GetFirstOrDefaultAsync(c => c.CommentId == id && c.Status.Value);
+                if (comment == null) throw new Exception(ErrorMessage.CommentError.COMMENT_NOT_FOUND);
+                if (comment.AuthorId == userID)
+                {
+                    comment.Content = content.Trim();
+                    await _commentRepository.UpdateAsync(comment);
+                    result = true;
+                }
+                else
+                {
+                    throw new Exception(ErrorMessage.CommentError.NOT_THE_AUTHOR_COMMENT);
+                }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error at UpdateAComment: " + ex.Message);
-                throw;
+                throw new Exception(ex.Message);
             }
             return result;
         }

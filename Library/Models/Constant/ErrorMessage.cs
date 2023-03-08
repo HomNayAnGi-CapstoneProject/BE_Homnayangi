@@ -85,6 +85,14 @@ namespace Library.Models.Constant
             public readonly static string ADMIN_NOT_ALLOWED_TO_RESTORE_RECIPE = "Staff and Manager role are allowed to restore an old reipce";
         }
         #endregion
+
+        #region Admin error message
+        public static class CommentError
+        {
+            public readonly static string COMMENT_NOT_FOUND = "This comment can not be found";
+            public readonly static string NOT_THE_AUTHOR_COMMENT = "You are not the author of this comment";
+        }
+        #endregion
     }
 }
 

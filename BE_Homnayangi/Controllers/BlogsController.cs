@@ -105,18 +105,18 @@ namespace BE_Homnayangi.Controllers
         {
             try
             {
-
-                if (_userService.GetCurrentUser(Request.Headers["Authorization"]) == null)
+                var currentUser = _userService.GetCurrentUser(Request.Headers["Authorization"]);
+                if (currentUser == null)
                 {
                     throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
                 }
-                else if (_userService.GetCurrentUser(Request.Headers["Authorization"]).Role.Equals("Customer"))
+                else if (currentUser.Role.Equals("Customer"))
                 {
                     throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_ALLOWED_TO_CREATE_BLOG);
                 }
 
                 // Role: User only
-                var id = await _blogService.CreateEmptyBlog(_userService.GetCurrentUser(Request.Headers["Authorization"]).Id);
+                var id = await _blogService.CreateEmptyBlog(currentUser.Id);
                 return new JsonResult(new
                 {
                     status = "success",
@@ -154,15 +154,16 @@ namespace BE_Homnayangi.Controllers
             try
             {
                 #region Authorization
-                if (_userService.GetCurrentUser(Request.Headers["Authorization"]) == null)
+                var currentUser = _userService.GetCurrentUser(Request.Headers["Authorization"]);
+                if (currentUser == null)
                 {
                     throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
                 }
-                else if (_userService.GetCurrentUser(Request.Headers["Authorization"]).Role.Equals("Customer"))
+                else if (currentUser.Role.Equals("Customer"))
                 {
                     throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_ALLOWED_TO_DELETE_BLOG);
                 }
-                else if (_userService.GetCurrentUser(Request.Headers["Authorization"]).Role.Equals("Admin"))
+                else if (currentUser.Role.Equals("Admin"))
                 {
                     throw new Exception(ErrorMessage.AdminError.ADMIN_NOT_ALLOWED_TO_DELETE_BLOG);
                 }
@@ -188,15 +189,16 @@ namespace BE_Homnayangi.Controllers
             try
             {
                 #region Authorization
-                if (_userService.GetCurrentUser(Request.Headers["Authorization"]) == null)
+                var currentUser = _userService.GetCurrentUser(Request.Headers["Authorization"]);
+                if (currentUser == null)
                 {
                     throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
                 }
-                else if (_userService.GetCurrentUser(Request.Headers["Authorization"]).Role.Equals("Customer"))
+                else if (currentUser.Role.Equals("Customer"))
                 {
                     throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_ALLOWED_TO_RESTORE_BLOG);
                 }
-                else if (_userService.GetCurrentUser(Request.Headers["Authorization"]).Role.Equals("Admin"))
+                else if (currentUser.Role.Equals("Admin"))
                 {
                     throw new Exception(ErrorMessage.AdminError.ADMIN_NOT_ALLOWED_TO_RESTORE_BLOG);
                 }
@@ -222,15 +224,16 @@ namespace BE_Homnayangi.Controllers
             try
             {
                 #region Authorization
-                if (_userService.GetCurrentUser(Request.Headers["Authorization"]) == null)
+                var currentUser = _userService.GetCurrentUser(Request.Headers["Authorization"]);
+                if (currentUser == null)
                 {
                     throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
                 }
-                else if (_userService.GetCurrentUser(Request.Headers["Authorization"]).Role.Equals("Customer"))
+                else if (currentUser.Role.Equals("Customer"))
                 {
                     throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_ALLOWED_TO_DELETE_BLOG);
                 }
-                else if (_userService.GetCurrentUser(Request.Headers["Authorization"]).Role.Equals("Admin"))
+                else if (currentUser.Role.Equals("Admin"))
                 {
                     throw new Exception(ErrorMessage.AdminError.ADMIN_NOT_ALLOWED_TO_DELETE_BLOG);
                 }
