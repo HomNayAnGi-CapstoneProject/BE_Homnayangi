@@ -1,5 +1,6 @@
 ﻿using BE_Homnayangi.Modules.BlogReactionModule.Interface;
 using BE_Homnayangi.Modules.BlogReactionModule.Response;
+using BE_Homnayangi.Modules.UserModule.Interface;
 using Library.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,42 +14,52 @@ namespace BE_Homnayangi.Controllers
     public class BlogReactionsController : ControllerBase
     {
         private readonly IBlogReactionService _blogReactionService;
+        private readonly IUserService _userService;
 
-        public BlogReactionsController(IBlogReactionService blogReactionService)
+        public BlogReactionsController(IBlogReactionService blogReactionService, IUserService userService)
         {
             _blogReactionService = blogReactionService;
+            _userService = userService;
         }
 
-        [HttpGet("blogs/{blogId}/customers/{customerId}")]
-        public async Task<ActionResult<BlogReaction>> GetBlogReactionByBlogAndCustomerId([FromRoute] Guid blogId, [FromRoute] Guid customerId)
-        {
-            var result = await _blogReactionService.GetBlogReactionByBlogAndCustomerId(blogId, customerId);
-            if (result != null)
-            {
-                return new JsonResult(new
-                {
-                    status = "success",
-                    result = result,
-                });
-            }
-            else
-            {
-                return new JsonResult(new
-                {
-                    status = "failed",
-                    result = result,
-                });
-            }
-
-        }
-
-        [HttpPut("blogs/{blogId}/customers/{customerId}")]
-        [Authorize(Roles = "Customer")]
-        public async Task<ActionResult<BlogReactionResponse>> InteractWithBlog([FromRoute] Guid blogId, [FromRoute] Guid customerId)
+        [HttpGet("blogs/{blogId}")]
+        public async Task<ActionResult<BlogReaction>> GetBlogReactionByBlogAndCustomerId([FromRoute] Guid blogId)
         {
             try
             {
-                var result = await _blogReactionService.InteractWithBlog(blogId, customerId);
+                var currentUser = _userService.GetCurrentUser(Request.Headers["Authorization"]);
+                var result = await _blogReactionService.GetBlogReactionByBlogAndCustomerId(blogId, currentUser.Id);
+                if (result != null)
+                {
+                    return new JsonResult(new
+                    {
+                        status = "success",
+                        result = result,
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        status = "failed",
+                        result = result,
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("blogs/{blogId}")]
+        [Authorize(Roles = "Customer")]
+        public async Task<ActionResult<BlogReactionResponse>> InteractWithBlog([FromRoute] Guid blogId)
+        {
+            try
+            {
+                var currentUser = _userService.GetCurrentUser(Request.Headers["Authorization"]);
+                var result = await _blogReactionService.InteractWithBlog(blogId, currentUser.Id);
                 if (result != null)
                 {
                     return new JsonResult(new

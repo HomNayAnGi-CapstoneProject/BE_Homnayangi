@@ -717,7 +717,6 @@ C:\Users\Nam\Desktop\New folder\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.dll
 C:\Users\Nam\Desktop\New folder\BE_Homnayangi\obj\Debug\net5.0\ref\BE_Homnayangi.dll
 C:\Users\Nam\Desktop\New folder\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.pdb
 C:\Users\Nam\Desktop\New folder\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.genruntimeconfig.cache
-=======
 >>>>>>> f67d0d9 (tmp code)
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\appsettings.Development.json
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\appsettings.json
@@ -898,8 +897,6 @@ E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.dl
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\ref\BE_Homnayangi.dll
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.pdb
 E:\Download2\Kì 9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.genruntimeconfig.cache
-<<<<<<< HEAD
-=======
 >>>>>>> Stashed changes
 E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.csproj.AssemblyReference.cache
 E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.GeneratedMSBuildEditorConfig.editorconfig
@@ -911,7 +908,6 @@ E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.Mvc
 E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.dll
 E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\refint\BE_Homnayangi.dll
 E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.pdb
-<<<<<<< Updated upstream
 E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\appsettings.Development.json
 E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\appsettings.json
 E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\BE_Homnayangi.exe
@@ -1080,6 +1076,4 @@ E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.Raz
 E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.csproj.CopyComplete
 E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.genruntimeconfig.cache
 E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\ref\BE_Homnayangi.dll
-=======
->>>>>>> Stashed changes
->>>>>>> f67d0d9 (tmp code)
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\UnidecodeSharpFork.dll
