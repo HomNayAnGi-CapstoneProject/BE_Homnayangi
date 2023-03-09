@@ -343,7 +343,9 @@ namespace BE_Homnayangi.Modules.BlogModule
                     RecipeId = recipeId,
                     CreatedDate = DateTime.Now,
                     BlogStatus = 2, // drafted
-                    AuthorId = authorId
+                    AuthorId = authorId,
+                    Reaction = 0,
+                    View = 0
                 };
                 await _blogRepository.AddAsync(blog);
 
