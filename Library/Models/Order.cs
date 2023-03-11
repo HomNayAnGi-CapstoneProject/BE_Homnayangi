@@ -9,9 +9,8 @@ namespace Library.Models
     {
         public Order()
         {
-            OrderCookedDetails = new HashSet<OrderCookedDetail>();
-            OrderIngredientDetails = new HashSet<OrderIngredientDetail>();
-            OrderPackageDetails = new HashSet<OrderPackageDetail>();
+            OrderDetails = new HashSet<OrderDetail>();
+            Transactions = new HashSet<Transaction>();
         }
 
         public Guid OrderId { get; set; }
@@ -22,12 +21,11 @@ namespace Library.Models
         public decimal? TotalPrice { get; set; }
         public int? OrderStatus { get; set; }
         public Guid? CustomerId { get; set; }
+        public bool? IsCooked { get; set; }
         public Guid? VoucherId { get; set; }
 
         public virtual Customer Customer { get; set; }
-        public virtual Transaction OrderNavigation { get; set; }
-        public virtual ICollection<OrderCookedDetail> OrderCookedDetails { get; set; }
-        public virtual ICollection<OrderIngredientDetail> OrderIngredientDetails { get; set; }
-        public virtual ICollection<OrderPackageDetail> OrderPackageDetails { get; set; }
+        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        public virtual ICollection<Transaction> Transactions { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using Library.Models;
+using Library.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Type = Library.Models.Type;
@@ -25,8 +26,6 @@ namespace Library.DataAccess
         public virtual DbSet<BlogReference> BlogReferences { get; set; }
         public virtual DbSet<BlogSubCate> BlogSubCates { get; set; }
         public virtual DbSet<CaloReference> CaloReferences { get; set; }
-        public virtual DbSet<Cart> Carts { get; set; }
-        public virtual DbSet<CartDetail> CartDetails { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
@@ -35,9 +34,7 @@ namespace Library.DataAccess
         public virtual DbSet<Ingredient> Ingredients { get; set; }
         public virtual DbSet<Notification> Notifications { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
-        public virtual DbSet<OrderCookedDetail> OrderCookedDetails { get; set; }
-        public virtual DbSet<OrderIngredientDetail> OrderIngredientDetails { get; set; }
-        public virtual DbSet<OrderPackageDetail> OrderPackageDetails { get; set; }
+        public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<PriceNote> PriceNotes { get; set; }
         public virtual DbSet<Recipe> Recipes { get; set; }
         public virtual DbSet<RecipeDetail> RecipeDetails { get; set; }
@@ -243,50 +240,6 @@ namespace Library.DataAccess
                 entity.Property(e => e.IsMale).HasColumnName("isMale");
 
                 entity.Property(e => e.ToAge).HasColumnName("toAge");
-            });
-
-            modelBuilder.Entity<Cart>(entity =>
-            {
-                entity.ToTable("Cart");
-
-                entity.Property(e => e.CartId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("cartId");
-
-                entity.Property(e => e.CustomerId).HasColumnName("customerId");
-
-                entity.Property(e => e.QuantityOfItem).HasColumnName("quantityOfItem");
-
-                entity.HasOne(d => d.Customer)
-                    .WithMany(p => p.Carts)
-                    .HasForeignKey(d => d.CustomerId)
-                    .HasConstraintName("FK_Cart_Customer1");
-            });
-
-            modelBuilder.Entity<CartDetail>(entity =>
-            {
-                entity.HasKey(e => new { e.CartId, e.ItemId, e.IsCooked })
-                    .HasName("PK_Cart");
-
-                entity.ToTable("CartDetail");
-
-                entity.Property(e => e.CartId).HasColumnName("cartId");
-
-                entity.Property(e => e.ItemId).HasColumnName("itemId");
-
-                entity.Property(e => e.IsCooked).HasColumnName("isCooked");
-
-                entity.Property(e => e.Quantity).HasColumnName("quantity");
-
-                entity.Property(e => e.UnitPrice)
-                    .HasColumnType("money")
-                    .HasColumnName("unitPrice");
-
-                entity.HasOne(d => d.Cart)
-                    .WithMany(p => p.CartDetails)
-                    .HasForeignKey(d => d.CartId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CartDetail_Cart");
             });
 
             modelBuilder.Entity<Category>(entity =>
@@ -528,6 +481,8 @@ namespace Library.DataAccess
                     .HasColumnType("money")
                     .HasColumnName("discount");
 
+                entity.Property(e => e.IsCooked).HasColumnName("isCooked");
+
                 entity.Property(e => e.OrderDate)
                     .HasColumnType("datetime")
                     .HasColumnName("orderDate");
@@ -550,48 +505,14 @@ namespace Library.DataAccess
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.CustomerId)
                     .HasConstraintName("FK_Order_Customer");
-
-                entity.HasOne(d => d.OrderNavigation)
-                    .WithOne(p => p.Order)
-                    .HasForeignKey<Order>(d => d.OrderId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Order_Transaction1");
             });
 
-            modelBuilder.Entity<OrderCookedDetail>(entity =>
+            modelBuilder.Entity<OrderDetail>(entity =>
             {
-                entity.HasKey(e => new { e.OrderId, e.RecipeId });
+                entity.HasKey(e => new { e.OrderId, e.IngredientId })
+                    .HasName("PK_OrderIngredientDetail");
 
-                entity.ToTable("OrderCookedDetail");
-
-                entity.Property(e => e.OrderId).HasColumnName("orderId");
-
-                entity.Property(e => e.RecipeId).HasColumnName("recipeId");
-
-                entity.Property(e => e.Price)
-                    .HasColumnType("money")
-                    .HasColumnName("price");
-
-                entity.Property(e => e.Quantity).HasColumnName("quantity");
-
-                entity.HasOne(d => d.Order)
-                    .WithMany(p => p.OrderCookedDetails)
-                    .HasForeignKey(d => d.OrderId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_OrderCookedDetail_Order");
-
-                entity.HasOne(d => d.Recipe)
-                    .WithMany(p => p.OrderCookedDetails)
-                    .HasForeignKey(d => d.RecipeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_OrderCookedDetail_Recipe");
-            });
-
-            modelBuilder.Entity<OrderIngredientDetail>(entity =>
-            {
-                entity.HasKey(e => new { e.OrderId, e.IngredientId });
-
-                entity.ToTable("OrderIngredientDetail");
+                entity.ToTable("OrderDetail");
 
                 entity.Property(e => e.OrderId).HasColumnName("orderId");
 
@@ -603,46 +524,19 @@ namespace Library.DataAccess
 
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
 
+                entity.Property(e => e.RecipeId).HasColumnName("recipeId");
+
                 entity.HasOne(d => d.Ingredient)
-                    .WithMany(p => p.OrderIngredientDetails)
+                    .WithMany(p => p.OrderDetails)
                     .HasForeignKey(d => d.IngredientId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_OrderIngredientDetail_Ingredient");
 
                 entity.HasOne(d => d.Order)
-                    .WithMany(p => p.OrderIngredientDetails)
+                    .WithMany(p => p.OrderDetails)
                     .HasForeignKey(d => d.OrderId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_OrderIngredientDetail_Order");
-            });
-
-            modelBuilder.Entity<OrderPackageDetail>(entity =>
-            {
-                entity.HasKey(e => new { e.OrderId, e.RecipeId });
-
-                entity.ToTable("OrderPackageDetail");
-
-                entity.Property(e => e.OrderId).HasColumnName("orderId");
-
-                entity.Property(e => e.RecipeId).HasColumnName("recipeId");
-
-                entity.Property(e => e.Price)
-                    .HasColumnType("money")
-                    .HasColumnName("price");
-
-                entity.Property(e => e.Quantity).HasColumnName("quantity");
-
-                entity.HasOne(d => d.Order)
-                    .WithMany(p => p.OrderPackageDetails)
-                    .HasForeignKey(d => d.OrderId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_OrderPackageDetail_Order");
-
-                entity.HasOne(d => d.Recipe)
-                    .WithMany(p => p.OrderPackageDetails)
-                    .HasForeignKey(d => d.RecipeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_OrderPackageDetail_Recipe");
             });
 
             modelBuilder.Entity<PriceNote>(entity =>
@@ -806,11 +700,18 @@ namespace Library.DataAccess
 
                 entity.Property(e => e.CustomerId).HasColumnName("customerId");
 
+                entity.Property(e => e.OrderId).HasColumnName("orderId");
+
                 entity.Property(e => e.TotalAmount)
                     .HasColumnType("money")
                     .HasColumnName("totalAmount");
 
                 entity.Property(e => e.TransactionStatus).HasColumnName("transactionStatus");
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.Transactions)
+                    .HasForeignKey(d => d.OrderId)
+                    .HasConstraintName("FK_Transaction_Order");
             });
 
             modelBuilder.Entity<Type>(entity =>

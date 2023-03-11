@@ -1077,3 +1077,4 @@ E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.csp
 E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.genruntimeconfig.cache
 E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\ref\BE_Homnayangi.dll
 E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\UnidecodeSharpFork.dll
+C:\Users\Nam\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\UnidecodeSharpFork.dll
