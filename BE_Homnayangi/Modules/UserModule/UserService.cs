@@ -76,6 +76,10 @@ namespace BE_Homnayangi.Modules.UserModule
             User user = await _userRepository.GetFirstOrDefaultAsync(x => x.Email == email); ;
             return user;
         }
+        public User GetUserByUsername(string? username)
+        {
+            return _userRepository.GetFirstOrDefaultAsync(x => x.Username == username).Result;
+        }
         public async Task<User> GetUserById(Guid id)
         {
 
@@ -335,6 +339,7 @@ namespace BE_Homnayangi.Modules.UserModule
         public async Task<string> GenerateToken(LoginDTO login)
         {
             var user = await _userRepository.GetFirstOrDefaultAsync(x => x.Username == login.Username && x.Password == EncryptPassword(login.Password));
+            var admin = _admin;
             if (user == null)
             {
                 var customer = await _customerRepository.GetFirstOrDefaultAsync(x => x.Username == login.Username && x.Password == EncryptPassword(login.Password));
@@ -371,10 +376,10 @@ namespace BE_Homnayangi.Modules.UserModule
                     var tokenCustomer = jwtTokenHandlerCustomer.CreateToken(tokenDescriptionCustomer);
                     return jwtTokenHandlerCustomer.WriteToken(tokenCustomer);
                 }
-                else
+                else if (login.Username == admin.Username && EncryptPassword(login.Password) == admin.Password)
                 {
 
-                    var admin = _admin;
+
                     if (admin != null)
                     {
                         var jwtTokenHandlerAdmin = new JwtSecurityTokenHandler();
@@ -544,10 +549,6 @@ namespace BE_Homnayangi.Modules.UserModule
                         var tokenCustomer = jwtTokenHandlerCustomer.CreateToken(tokenDescriptionCustomer);
                         return jwtTokenHandlerCustomer.WriteToken(tokenCustomer);
                     }
-                    else
-                    {
-                        return null;
-                    }
                 }
             }
             else if (user.IsBlocked == false)
@@ -590,7 +591,9 @@ namespace BE_Homnayangi.Modules.UserModule
         public async Task Register(RegisterDTO register)
         {
             var cus = GetCustomerByUsername(register.Username);
-            if (cus != null) throw new Exception(ErrorMessage.UserError.USER_EXISTED);
+            var admin = _admin;
+            var user = GetUserByUsername(register.Username);
+            if (cus != null || admin.Username == register.Username || user != null) throw new Exception(ErrorMessage.UserError.USER_EXISTED);
 
             register.Password = EncryptPassword(register.Password);
             var customer = _mapper.Map<Customer>(register);

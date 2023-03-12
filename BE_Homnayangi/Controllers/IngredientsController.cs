@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace BE_Homnayangi.Controllers
@@ -149,7 +150,7 @@ namespace BE_Homnayangi.Controllers
         {
             if (name is string && !String.IsNullOrEmpty(name))
             {
-                name = name.TrimStart(' ');
+                name = Regex.Replace(name.Trim(), @"\s+", " ");
                 var result = await _ingredientService.GetIngredientByName(name);
                 if (result.Any())
                 {

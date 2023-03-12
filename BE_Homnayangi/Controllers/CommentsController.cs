@@ -1,6 +1,8 @@
 ﻿using BE_Homnayangi.Modules.CommentModule.Interface;
 using BE_Homnayangi.Modules.CommentModule.Request;
 using BE_Homnayangi.Modules.CommentModule.Response;
+using BE_Homnayangi.Modules.UserModule.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -13,10 +15,12 @@ namespace BE_Homnayangi.Controllers
     public class CommentsController : ControllerBase
     {
         private readonly ICommentService _commentService;
+        private readonly IUserService _userService;
 
-        public CommentsController(ICommentService commentService)
+        public CommentsController(ICommentService commentService, IUserService userService)
         {
             _commentService = commentService;
+            _userService = userService;
         }
 
         // GET: api/v1/comments/57448A79-8855-42AD-BD2E-0295D1436037
@@ -24,60 +28,101 @@ namespace BE_Homnayangi.Controllers
         public async Task<ActionResult<List<Tuple<ParentComment, List<ChildComment>>>>> GetCommentsByBlogId([FromRoute] Guid blogId)
         {
             var result = await _commentService.GetCommentsByBlogId(blogId);
-            return new JsonResult(new
-            {
-                result = result
-            });
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<ChildComment>> CreateANewComment([FromBody] CreatedCommentRequest newComment)
-        {
-            var result = await _commentService.CreateANewComment(newComment);
-            return new JsonResult(new
-            {
-                status = "success",
-                result = result
-            });
-        }
-
-        [HttpDelete("{commentId}")]
-        public async Task<ActionResult<ChildComment>> DeleteAComment([FromRoute] Guid commentId)
-        {
-            var result = await _commentService.DeleteAComment(commentId);
-            if (result)
+            if (result != null)
             {
                 return new JsonResult(new
                 {
-                    status = "success"
+                    result = result
                 });
             }
             else
             {
                 return new JsonResult(new
                 {
-                    status = "fail"
+                    result = new List<ParentComment>()
                 });
+            }
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Customer,Staff,Manager")]
+        public async Task<ActionResult<bool>> CreateANewComment([FromBody] CreatedCommentRequest newComment)
+        {
+            var user = _userService.GetCurrentUser(Request.Headers["Authorization"]);
+            var result = await _commentService.CreateANewComment(newComment, user);
+            if (result != null)
+            {
+                return new JsonResult(new
+                {
+                    status = "success",
+                    newComment = result
+                });
+            }
+            else
+            {
+                return new JsonResult(new
+                {
+                    status = "fail",
+                    newComment = result
+                });
+            }
+        }
+
+        [HttpDelete("{commentId}")]
+        [Authorize(Roles = "Customer,Staff,Manager")]
+        public async Task<ActionResult<ChildComment>> DeleteAComment([FromRoute] Guid commentId)
+        {
+            try
+            {
+                var user = _userService.GetCurrentUser(Request.Headers["Authorization"]);
+                var result = await _commentService.DeleteAComment(commentId, user.Id);
+                if (result)
+                {
+                    return new JsonResult(new
+                    {
+                        status = "success"
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        status = "fail"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpPut]
+        [Authorize(Roles = "Customer,Staff,Manager")]
         public async Task<ActionResult<ChildComment>> UpdateAComment([FromBody] UpdatedCommentRequest updatedComment)
         {
-            var result = await _commentService.UpdateAComment(updatedComment.CommentId, updatedComment.Content);
-            if (result)
+            try
             {
-                return new JsonResult(new
+                var user = _userService.GetCurrentUser(Request.Headers["Authorization"]);
+                var result = await _commentService.UpdateAComment(updatedComment.CommentId, updatedComment.Content, user.Id);
+                if (result)
                 {
-                    status = "success"
-                });
+                    return new JsonResult(new
+                    {
+                        status = "success"
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        status = "fail"
+                    });
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return new JsonResult(new
-                {
-                    status = "fail"
-                });
+                return BadRequest(ex.Message);
             }
         }
     }

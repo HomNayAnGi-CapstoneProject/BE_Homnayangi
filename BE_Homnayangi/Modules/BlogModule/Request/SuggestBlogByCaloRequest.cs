@@ -13,8 +13,6 @@ namespace BE_Homnayangi.Modules.BlogModule.Request
         public SuggestBlogByCaloRequestValidator()
         {
             RuleFor(x => x.Age).NotEmpty().NotNull();
-            RuleFor(x => x.IsMale).NotEmpty().NotNull();
-            RuleFor(x => x.IsLoseWeight).NotEmpty().NotNull();
         }
     }
 }

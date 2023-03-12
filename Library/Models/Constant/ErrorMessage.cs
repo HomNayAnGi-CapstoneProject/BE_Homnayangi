@@ -52,11 +52,11 @@ namespace Library.Models.Constant
         public static class CustomerError
         {
             public readonly static string CUSTOMER_NOT_FOUND = "This customer can not be found";
-            public readonly static string CUSTOMER_NOT_ALLOWED_TO_CREATE_BLOG = "User and Manager role are allowed to create a new blog";
-            public readonly static string CUSTOMER_NOT_ALLOWED_TO_DELETE_BLOG = "User and Manager role are allowed to delete a blog";
-            public readonly static string CUSTOMER_NOT_ALLOWED_TO_DELETE_RECIPE = "User and Manager role are allowed to delete a recipe";
-            public readonly static string CUSTOMER_NOT_ALLOWED_TO_RESTORE_BLOG = "User and Manager role are allowed to restore an old blog";
-            public readonly static string CUSTOMER_NOT_ALLOWED_TO_RESTORE_RECIPE = "User and Manager role are allowed to restore an old reipce";
+            public readonly static string CUSTOMER_NOT_ALLOWED_TO_CREATE_BLOG = "Staff and Manager role are allowed to create a new blog";
+            public readonly static string CUSTOMER_NOT_ALLOWED_TO_DELETE_BLOG = "Staff and Manager role are allowed to delete a blog";
+            public readonly static string CUSTOMER_NOT_ALLOWED_TO_DELETE_RECIPE = "Staff and Manager role are allowed to delete a recipe";
+            public readonly static string CUSTOMER_NOT_ALLOWED_TO_RESTORE_BLOG = "Staff and Manager role are allowed to restore an old blog";
+            public readonly static string CUSTOMER_NOT_ALLOWED_TO_RESTORE_RECIPE = "Staff and Manager role are allowed to restore an old reipce";
             public readonly static string ACTION_FOR_CUSTOMER_ROLE_ONLY = "This action is only for Customer role";
         }
         #endregion
@@ -79,6 +79,18 @@ namespace Library.Models.Constant
         public static class AdminError
         {
             public readonly static string ADMIN_ONLY = "Only admin can do this function";
+            public readonly static string ADMIN_NOT_ALLOWED_TO_DELETE_BLOG = "Staff and Manager role are allowed to delete a blog";
+            public readonly static string ADMIN_NOT_ALLOWED_TO_DELETE_RECIPE = "Staff and Manager role are allowed to delete a recipe";
+            public readonly static string ADMIN_NOT_ALLOWED_TO_RESTORE_BLOG = "Staff and Manager role are allowed to restore an old blog";
+            public readonly static string ADMIN_NOT_ALLOWED_TO_RESTORE_RECIPE = "Staff and Manager role are allowed to restore an old reipce";
+        }
+        #endregion
+
+        #region Admin error message
+        public static class CommentError
+        {
+            public readonly static string COMMENT_NOT_FOUND = "This comment can not be found";
+            public readonly static string NOT_THE_AUTHOR_COMMENT = "You are not the author of this comment";
         }
         #endregion
 
