@@ -8,6 +8,7 @@ using BE_Homnayangi.Modules.UserModule.Interface;
 using Library.Models;
 using Library.Models.Constant;
 using Library.Models.Enum;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -28,6 +29,7 @@ namespace BE_Homnayangi.Modules.OrderModule
         private readonly ICustomerRepository _customerRepository;
         private readonly IUserRepository _userRepository;
         private readonly ITransactionRepository _transactionRepository;
+        IConfiguration _configuration;
 
         public OrderService(IOrderRepository OrderRepository,
             IOrderCookedDetailRepository orderCookedDetailRepository,
@@ -35,7 +37,8 @@ namespace BE_Homnayangi.Modules.OrderModule
             IOrderPackageDetailRepository orderPackageDetailRepository,
             ICustomerRepository customerRepository,
             IUserRepository userRepository,
-            ITransactionRepository transactionRepository)
+            ITransactionRepository transactionRepository,
+            IConfiguration configuration)
         {
             _OrderRepository = OrderRepository;
             _orderCookedDetailRepository = orderCookedDetailRepository;
@@ -44,6 +47,7 @@ namespace BE_Homnayangi.Modules.OrderModule
             _customerRepository = customerRepository;
             _userRepository = userRepository;
             _transactionRepository = transactionRepository;
+            _configuration = configuration;
         }
 
         public async Task<ICollection<Order>> GetAll()
@@ -93,7 +97,6 @@ namespace BE_Homnayangi.Modules.OrderModule
                     detail.OrderId = newOrder.OrderId;
                     await _orderCookedDetailRepository.AddAsync(detail);
                 }
-                    
             }
             else 
             {
@@ -255,6 +258,192 @@ namespace BE_Homnayangi.Modules.OrderModule
             {
                 throw new Exception(ErrorMessage.MailError.MAIL_SENDING_ERROR);
             }
+        }
+
+        public string PaymentWithPaypal(
+            Guid orderId,
+            string Cancel = null,
+            string blogId = "",
+            string PayerID = "",
+            string guid = "")
+        {
+            var clientId = _configuration.GetValue<string>("Paypal:Key");
+            var clientSecret = _configuration.GetValue<string>("Paypal:Secret");
+            var mode = _configuration.GetValue<string>("Paypal:mode");
+            PayPal.Api.APIContext apiContext = GetAPIContext(clientId, clientSecret, mode);
+
+            try
+            {
+                //string payerId = PayerID;
+                //if (String.IsNullOrEmpty(payerId))
+                //{
+                //    string baseURI = "localhost://4000/payment/paypal?";
+                //    var guidd = Convert.ToString((new Random()).Next(100000));
+                //    guid = guidd;
+
+                //    var createdPayment = CreatePayment(apiContext, baseURI + "guid=" + guid, blogId);
+
+                //    var links = createdPayment.links.GetEnumerator();
+                //    string paypalRedirectUrl = null;
+
+                //    while (links.MoveNext())
+                //    {
+                //        PayPal.Api.Links lnk = links.Current;
+                //        if (lnk.rel.ToLower().Trim().Equals("approval_url"))
+                //        {
+                //            paypalRedirectUrl = lnk.href;
+                //        }
+                //    }
+
+                //    return;
+                //}
+                //else
+                //{
+                //    var paymentId = "";
+                //    var executedPayment = ExecutePayment(apiContext, payerId, paymentId as string);
+
+                //    if (executedPayment.state.ToLower() != "approved")
+                //    {
+                //        return;
+                //    }
+                //    var blogIds = executedPayment.transactions[0].item_list.items[0].sku;
+
+                //    return;
+                //}
+
+                string returnURI = "https://example.com/returnUrl";
+                var guidd = Convert.ToString((new Random()).Next(100000));
+                guid = guidd;
+
+                Console.WriteLine("Creating payment");
+                var createdPayment = CreatePayment(apiContext, returnURI + "guid=" + guid, blogId, orderId);
+                Console.WriteLine("Created - " + createdPayment.ConvertToJson());
+
+                var links = createdPayment.links.GetEnumerator();
+                string paypalRedirectUrl = null;
+
+                while (links.MoveNext())
+                {
+                    PayPal.Api.Links lnk = links.Current;
+                    if (lnk.rel.ToLower().Trim().Equals("approval_url"))
+                    {
+                        paypalRedirectUrl = lnk.href;
+                    }
+                }
+
+                if (string.IsNullOrEmpty(paypalRedirectUrl))
+                    throw new Exception("PaymentFailed");
+                return paypalRedirectUrl;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Creating payment Failed - " + ex.Message);
+                throw new Exception("PaymentFailed");
+            }
+        }
+
+        private PayPal.Api.Payment payment;
+
+        private PayPal.Api.Payment ExecutePayment(PayPal.Api.APIContext apiContext, string payerId, string paymentId)
+        {
+            var paymentExecution = new PayPal.Api.PaymentExecution()
+            {
+                payer_id = payerId
+            };
+            this.payment = new PayPal.Api.Payment()
+            {
+                id = paymentId
+            };
+            return this.payment.Execute(apiContext, paymentExecution);
+        }
+
+        private PayPal.Api.Payment CreatePayment(
+            PayPal.Api.APIContext apiContext,
+            string redirectUrl,
+            string blogId,
+            Guid orderId)
+        {
+            //var itemList = new PayPal.Api.ItemList()
+            //{
+            //    items = new List<PayPal.Api.Item>()
+            //};
+
+            //itemList.items.Add(new PayPal.Api.Item()
+            //{
+            //    name = "Item Detail",
+            //    currency = "USD",
+            //    price = "1.00",
+            //    quantity = "1",
+            //    sku = "asd"
+            //});
+
+            var payer = new PayPal.Api.Payer()
+            {
+                payment_method = "paypal"
+            };
+
+            var redirUrls = new PayPal.Api.RedirectUrls()
+            {
+                cancel_url = redirectUrl + "&Cancel=true",
+                return_url = redirectUrl
+            };
+
+            //var details = new PayPal.Api.Details()
+            //{
+            //    tax = "1",
+            //    shipping = "1",
+            //    subtotal = "1"
+            //};
+
+            var amount = new PayPal.Api.Amount()
+            {
+                currency = "USD",
+                total = "1.00",
+                //details = details
+            };
+
+            var transactionList = new List<PayPal.Api.Transaction>();
+
+            transactionList.Add(new PayPal.Api.Transaction()
+            {
+                //description = "Transaction description",
+                //invoice_number = Guid.NewGuid().ToString(),
+                amount = amount,
+                //item_list = itemList
+            });
+
+            this.payment = new PayPal.Api.Payment()
+            {
+                intent = "sale",
+                payer = payer,
+                transactions = transactionList,
+                redirect_urls = redirUrls
+            };
+
+            return this.payment.Create(apiContext);
+        }
+
+        private static string GetAccessToken(string clientId, string clientSecret, string mode)
+        {
+            string accessToken = new PayPal.Api.OAuthTokenCredential(
+                clientId,
+                clientSecret,
+                new Dictionary<string, string>()
+            {
+                { "mode", mode }
+            }).GetAccessToken();
+
+            return accessToken;
+        }
+
+        public static PayPal.Api.APIContext GetAPIContext(string clientId, string clientSecret, string mode)
+        {
+            PayPal.Api.APIContext apiContext = new PayPal.Api.APIContext(GetAccessToken(clientId, clientSecret, mode));
+            apiContext.Config = new Dictionary<string, string>()
+            {
+                { "mode", mode }
+            };
+            return apiContext;
         }
     }
 }

@@ -715,3 +715,4 @@ E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.ge
 /Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/ref/BE_Homnayangi.dll
 /Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.pdb
 /Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.genruntimeconfig.cache
+/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/PayPal.dll

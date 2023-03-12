@@ -40,5 +40,12 @@ namespace BE_Homnayangi.Modules.OrderModule.Interface
         public Task PaidOrder(Guid id);
 
         public Task UpdateShippingStatusOrder(Guid id, int status);
+
+        public string PaymentWithPaypal(
+            Guid orderId,
+            string Cancel = null,
+            string blogId = "",
+            string PayerID = "",
+            string guid = "");
     }
 }

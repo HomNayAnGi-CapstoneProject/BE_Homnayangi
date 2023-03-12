@@ -102,5 +102,20 @@ namespace BE_Homnayangi.Controllers
         public void Delete(int id)
         {
         }
+
+        // Create order
+        [HttpPost("payment/paypal")]
+        public ActionResult PaymentWithPaypal(Guid orderId)
+        {
+            try
+            {
+                var url = _orderService.PaymentWithPaypal();
+                return Ok(url);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
