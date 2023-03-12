@@ -505,6 +505,8 @@ namespace Library.DataAccess
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.CustomerId)
                     .HasConstraintName("FK_Order_Customer");
+
+                entity.Property(e => e.PaymentMethod).HasColumnName("paymentMethod");
             });
 
             modelBuilder.Entity<OrderDetail>(entity =>
