@@ -3,27 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using BE_Homnayangi.Modules.OrderIngredientDetailModule.Interface;
+using BE_Homnayangi.Modules.OrderDetailModule.Interface;
 using Library.DataAccess;
 using Library.Models;
 using Microsoft.EntityFrameworkCore;
 using Repository.Repository;
 
-namespace BE_Homnayangi.Modules.OrderIngredientDetailModule
+namespace BE_Homnayangi.Modules.OrderDetailModule
 {
-    public class OrderIngredientDetailRepository : Repository<OrderIngredientDetail>, IOrderIngredientDetailRepository
+    public class OrderDetailRepository : Repository<OrderDetail>, IOrderDetailRepository
 	{
         private readonly HomnayangiContext _db;
 
-        public OrderIngredientDetailRepository(HomnayangiContext db) : base(db)
+        public OrderDetailRepository(HomnayangiContext db) : base(db)
 		{
             _db = db;
 		}
 
-        public async Task<ICollection<OrderIngredientDetail>> GetOrderIngredientDetailsBy(Expression<Func<OrderIngredientDetail, bool>> filter = null, Func<IQueryable<OrderIngredientDetail>, ICollection<OrderIngredientDetail>> options = null, string includeProperties = null)
+        public async Task<ICollection<OrderDetail>> GetOrderDetailsBy(Expression<Func<OrderDetail, bool>> filter = null, Func<IQueryable<OrderDetail>, ICollection<OrderDetail>> options = null, string includeProperties = null)
 
         {
-            IQueryable<OrderIngredientDetail> query = DbSet;
+            IQueryable<OrderDetail> query = DbSet;
 
             if (filter != null)
             {

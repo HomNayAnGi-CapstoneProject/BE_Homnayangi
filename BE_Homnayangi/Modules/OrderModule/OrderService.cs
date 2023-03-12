@@ -1,8 +1,6 @@
 ﻿using BE_Homnayangi.Modules.CustomerModule.Interface;
-using BE_Homnayangi.Modules.OrderCookedDetailModule.Interface;
-using BE_Homnayangi.Modules.OrderIngredientDetailModule.Interface;
+using BE_Homnayangi.Modules.OrderDetailModule.Interface;
 using BE_Homnayangi.Modules.OrderModule.Interface;
-using BE_Homnayangi.Modules.OrderPackageDetailModule.Interface;
 using BE_Homnayangi.Modules.TransactionModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using Library.Models;
@@ -17,27 +15,28 @@ using System.Linq.Expressions;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace BE_Homnayangi.Modules.OrderModule
 {
     public class OrderService : IOrderService
     {
         private readonly IOrderRepository _OrderRepository;
-        private readonly IOrderIngredientDetailRepository _orderIngredientDetailRepository;
+        private readonly IOrderDetailRepository _orderDetailRepository;
         private readonly ICustomerRepository _customerRepository;
         private readonly IUserRepository _userRepository;
         private readonly ITransactionRepository _transactionRepository;
         IConfiguration _configuration;
 
         public OrderService(IOrderRepository OrderRepository,
-            IOrderIngredientDetailRepository orderIngredientDetailRepository,
+            IOrderDetailRepository orderDetailRepository,
             ICustomerRepository customerRepository,
             IUserRepository userRepository,
             ITransactionRepository transactionRepository,
             IConfiguration configuration)
         {
             _OrderRepository = OrderRepository;
-            _orderIngredientDetailRepository = orderIngredientDetailRepository;
+            _orderDetailRepository = orderDetailRepository;
             _customerRepository = customerRepository;
             _userRepository = userRepository;
             _transactionRepository = transactionRepository;
@@ -47,7 +46,7 @@ namespace BE_Homnayangi.Modules.OrderModule
         public async Task<ICollection<Order>> GetAll()
         {
             return await _OrderRepository.GetOrdersBy(
-                includeProperties: "OrderIngredientDetails");
+                includeProperties: "OrderDetails");
         }
 
         public Task<ICollection<Order>> GetOrdersBy(
@@ -71,25 +70,102 @@ namespace BE_Homnayangi.Modules.OrderModule
 
         public async Task AddNewOrder(Order newOrder)
         {
-            //var isCookedOrder = ;
-
-            newOrder.OrderId = new Guid();
-            newOrder.OrderDate = DateTime.Now;
-            newOrder.OrderStatus = (int) Status.OrderStatus.PENDING;
-
-            await _OrderRepository.AddAsync(newOrder);
-
-            foreach (var detail in newOrder.OrderIngredientDetails)
+            try
             {
-                detail.OrderId = newOrder.OrderId;
-                await _orderIngredientDetailRepository.AddAsync(detail);
+                //var isCookedOrder = newOrder.IsCooked;
+
+                newOrder.OrderId = Guid.NewGuid();
+                newOrder.OrderDate = DateTime.Now;
+                newOrder.OrderStatus = (int)Status.OrderStatus.PENDING;
+
+                //await _OrderRepository.AddAsync(newOrder);
+
+                //foreach (var detail in newOrder.OrderDetails)
+                //{
+                //    var d = await _orderDetailRepository.GetOrderDetailsBy(
+                //        dt => dt.OrderId.Equals(newOrder.OrderId)
+                //        && dt.IngredientId.Equals(detail.IngredientId)
+                //        );
+                //    if (d != null) continue;
+                //    detail.OrderId = newOrder.OrderId;
+                //    await _orderDetailRepository.AddAsync(detail);
+                //}
+                
+                #region create transaction
+                var transaction = new Library.Models.Transaction()
+                {
+                    TransactionId = newOrder.OrderId,
+                    TotalAmount = newOrder.TotalPrice.Value,
+                    CreatedDate = DateTime.Now,
+                    TransactionStatus = (int)Status.TransactionStatus.PENDING,
+                    CustomerId = newOrder.CustomerId
+                };
+                //await _transactionRepository.AddAsync(transaction);
+                #endregion
+
+                var transactionScope = _OrderRepository.Transaction();
+                using (transactionScope)
+                {
+                    try
+                    {
+                        await _OrderRepository.AddAsync(newOrder);
+                        foreach (var detail in newOrder.OrderDetails)
+                        {
+                            var d = await _orderDetailRepository.GetOrderDetailsBy(
+                                dt => dt.OrderId.Equals(newOrder.OrderId)
+                                && dt.IngredientId.Equals(detail.IngredientId)
+                                );
+                            if (d != null) continue;
+                            detail.OrderId = newOrder.OrderId;
+                            await _orderDetailRepository.AddAsync(detail);
+                        }
+                        await _transactionRepository.AddAsync(transaction);
+
+                        if (newOrder.PaymentMethod.HasValue)
+                        {
+                            switch (newOrder.PaymentMethod.GetValueOrDefault())
+                            {
+                                case (int)PaymentMethodEnum.PaymentMethods.PAYPAL:
+                                    var redirectUrl = await PaymentWithPaypal(newOrder.OrderId);
+                                    break;
+                                case (int)PaymentMethodEnum.PaymentMethods.COD:
+                                    break;
+                                default:
+                                    throw new Exception("Payment method not valid");
+                            }
+                        }
+                        else
+                            throw new Exception("Payment method not valid");
+
+                        transactionScope.Commit();
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception($"Transaction fail - {e.Message}");
+                    }
+                }
+
+                //if (newOrder.PaymentMethod.HasValue)
+                //{
+                //    switch (newOrder.PaymentMethod.GetValueOrDefault())
+                //    {
+                //        case (int)PaymentMethodEnum.PaymentMethods.PAYPAL:
+                //            var redirectUrl = await PaymentWithPaypal(newOrder.OrderId);
+                //            break;
+                //        case (int)PaymentMethodEnum.PaymentMethods.COD:
+                //            break;
+                //        default:
+                //            throw new Exception("Payment method not valid");
+                //    }
+                //}
+                //else
+                //    throw new Exception("Payment method not valid");
             }
-
-            //if (newOrder.paymentMethod == "paypal")
-            PaymentWithPaypal(newOrder.OrderId);
-
-            //if (newOrder.paymentMethod == "cod")
-            // cod flow
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception("Add new order fail");
+            }
         }
 
         public async Task UpdateOrder(Order OrderUpdate)
@@ -117,44 +193,44 @@ namespace BE_Homnayangi.Modules.OrderModule
         public async Task<ICollection<Order>> GetByCustomer(Guid id)
         {
             return await _OrderRepository.GetOrdersBy(o => o.CustomerId.Equals(id) && o.OrderStatus != (int) Status.OrderStatus.DELETED,
-                includeProperties: "OrderCookedDetails,OrderIngredientDetails,OrderPackageDetails");
+                includeProperties: "OrderDetails");
         }
 
         public async Task AcceptOrder(Guid id)
         {
-            var order = await _OrderRepository.GetByIdAsync(id);
+            //var order = await _OrderRepository.GetByIdAsync(id);
 
-            if (order == null)
-                throw new Exception(ErrorMessage.OrderError.ORDER_NOT_FOUND);
+            //if (order == null)
+            //    throw new Exception(ErrorMessage.OrderError.ORDER_NOT_FOUND);
 
-            var customer = await _customerRepository.GetByIdAsync(order.CustomerId.Value);
+            //var customer = await _customerRepository.GetByIdAsync(order.CustomerId.Value);
 
-            if (order.OrderStatus != (int)Status.OrderStatus.PENDING)
-                throw new Exception(ErrorMessage.OrderError.ORDER_CANNOT_CHANGE_STATUS);
+            //if (order.OrderStatus != (int)Status.OrderStatus.PENDING)
+            //    throw new Exception(ErrorMessage.OrderError.ORDER_CANNOT_CHANGE_STATUS);
 
-            order.OrderStatus = (int) Status.OrderStatus.ACCEPTED;
-            await _OrderRepository.UpdateAsync(order);
+            //order.OrderStatus = (int) Status.OrderStatus.ACCEPTED;
+            //await _OrderRepository.UpdateAsync(order);
 
-            #region tao transaction
-            var transaction = new Transaction()
-            {
-                TransactionId = order.OrderId,
-                TotalAmount = order.TotalPrice,
-                CreatedDate = DateTime.Now,
-                TransactionStatus = (int) Status.TransactionStatus.PENDING,
-                CustomerId = customer.CustomerId
-            };
-            await _transactionRepository.AddAsync(transaction);
-            #endregion
+            //#region tao transaction
+            //var transaction = new Transaction()
+            //{
+            //    TransactionId = order.OrderId,
+            //    TotalAmount = order.TotalPrice,
+            //    CreatedDate = DateTime.Now,
+            //    TransactionStatus = (int) Status.TransactionStatus.PENDING,
+            //    CustomerId = customer.CustomerId
+            //};
+            //await _transactionRepository.AddAsync(transaction);
+            //#endregion
 
-            #region sending mail
-            // gui mail thong tin order
-            var mailSubject = $"[Da duyet] Thong tin don hang #{order.OrderId}";
-            var mailBody = $"Cam on ban da mua hang, don hang #{order.OrderId} da duoc duyet.\n" +
-                $"Don hang cua ban se duoc giao sau khi hoan tat thanh toan";
+            //#region sending mail
+            //// gui mail thong tin order
+            //var mailSubject = $"[Da duyet] Thong tin don hang #{order.OrderId}";
+            //var mailBody = $"Cam on ban da mua hang, don hang #{order.OrderId} da duoc duyet.\n" +
+            //    $"Don hang cua ban se duoc giao sau khi hoan tat thanh toan";
 
-            SendMail(mailSubject, mailBody, customer.Email);
-            #endregion
+            //SendMail(mailSubject, mailBody, customer.Email);
+            //#endregion
         }
 
         public async Task DeniedOrder(Guid id)
@@ -176,7 +252,7 @@ namespace BE_Homnayangi.Modules.OrderModule
 
             SendMail(mailSubject, mailBody, customer.Email);
             #endregion
-            
+
         }
 
         public async Task CancelOrder(Guid id)
@@ -190,7 +266,9 @@ namespace BE_Homnayangi.Modules.OrderModule
             await _OrderRepository.UpdateAsync(order);
         }
 
-        public async Task UpdateShippingStatusOrder(Guid id, [Range(6,8,ErrorMessage="Status must between 6 to 8")] int status)
+        public async Task UpdateShippingStatusOrder(
+            Guid id,
+            [Range(6,8,ErrorMessage="Status must between 6 to 8")] int status)
         {
             var order = await _OrderRepository.GetByIdAsync(id);
 
@@ -203,34 +281,35 @@ namespace BE_Homnayangi.Modules.OrderModule
 
         public async Task PaidOrder(Guid id)
         {
-            var order = await _OrderRepository.GetByIdAsync(id);
+            //var order = await _OrderRepository.GetByIdAsync(id);
 
-            if (order == null)
-                throw new Exception(ErrorMessage.OrderError.ORDER_NOT_FOUND);
+            //if (order == null)
+            //    throw new Exception(ErrorMessage.OrderError.ORDER_NOT_FOUND);
 
-            order.OrderStatus = (int)Status.OrderStatus.PAID;
+            //order.OrderStatus = (int)Status.OrderStatus.PAID;
 
-            // giao hang trong 1h sau khi thanh toan
-            order.ShippedDate = DateTime.Now.AddHours(1);
+            //// giao hang trong 1h sau khi thanh toan
+            //order.ShippedDate = DateTime.Now.AddHours(1);
 
-            await _OrderRepository.UpdateAsync(order);
+            //await _OrderRepository.UpdateAsync(order);
         }
 
         public void SendMail(string mailSubject, string mailBody, string receiver)
         {
-            var sender = "phucvhdse151523@fpt.edu.vn";
-            var password = "19091997p";
+            var address = _configuration.GetValue<string>("MailService:Address");
+            var password = _configuration.GetValue<string>("MailService:Password");
+            var smtpClientConfig = _configuration.GetValue<string>("MailService:SmtpClient");
 
             try
             {
-                var smtpClient = new SmtpClient("smtp.gmail.com")
+                var smtpClient = new SmtpClient(smtpClientConfig)
                 {
                     Port = 587,
-                    Credentials = new NetworkCredential(sender, password),
+                    Credentials = new NetworkCredential(address, password),
                     EnableSsl = true,
                 };
 
-                smtpClient.Send(sender, receiver, mailSubject, mailBody);
+                smtpClient.Send(address, receiver, mailSubject, mailBody);
             }
             catch
             {
@@ -238,7 +317,7 @@ namespace BE_Homnayangi.Modules.OrderModule
             }
         }
 
-        public string PaymentWithPaypal(
+        public async Task<string> PaymentWithPaypal(
             Guid orderId,
             string Cancel = null,
             string blogId = "",
@@ -249,6 +328,7 @@ namespace BE_Homnayangi.Modules.OrderModule
             var clientSecret = _configuration.GetValue<string>("Paypal:Secret");
             var mode = _configuration.GetValue<string>("Paypal:mode");
             PayPal.Api.APIContext apiContext = GetAPIContext(clientId, clientSecret, mode);
+            string returnURI = _configuration.GetValue<string>("Paypal:returnURI");
 
             try
             {
@@ -289,13 +369,11 @@ namespace BE_Homnayangi.Modules.OrderModule
                 //    return;
                 //}
 
-                string returnURI = "https://example.com/returnUrl";
-                var guidd = Convert.ToString((new Random()).Next(100000));
-                guid = guidd;
+                guid = Convert.ToString(orderId);
 
-                Console.WriteLine("Creating payment");
-                var createdPayment = CreatePayment(apiContext, returnURI + "guid=" + guid, blogId, orderId);
-                Console.WriteLine("Created - " + createdPayment.ConvertToJson());
+                Console.WriteLine($"Creating payment for order {guid}");
+                var createdPayment = await CreatePaymentAsync(apiContext, returnURI + "guid=" + guid, blogId, orderId);
+                Console.WriteLine($"Created - {createdPayment.ConvertToJson()}");
 
                 var links = createdPayment.links.GetEnumerator();
                 string paypalRedirectUrl = null;
@@ -320,27 +398,43 @@ namespace BE_Homnayangi.Modules.OrderModule
             }
         }
 
-        private PayPal.Api.Payment payment;
+        //private PayPal.Api.Payment payment;
 
-        private PayPal.Api.Payment ExecutePayment(PayPal.Api.APIContext apiContext, string payerId, string paymentId)
-        {
-            var paymentExecution = new PayPal.Api.PaymentExecution()
-            {
-                payer_id = payerId
-            };
-            this.payment = new PayPal.Api.Payment()
-            {
-                id = paymentId
-            };
-            return this.payment.Execute(apiContext, paymentExecution);
-        }
+        //private PayPal.Api.Payment ExecutePayment(PayPal.Api.APIContext apiContext, string payerId, string paymentId)
+        //{
+            //var paymentExecution = new PayPal.Api.PaymentExecution()
+            //{
+            //    payer_id = payerId
+            //};
+            //this.payment = new PayPal.Api.Payment()
+            //{
+            //    id = paymentId
+            //};
+            //return this.payment.Execute(apiContext, paymentExecution);
+        //}
 
-        private PayPal.Api.Payment CreatePayment(
+        private async Task<PayPal.Api.Payment> CreatePaymentAsync(
             PayPal.Api.APIContext apiContext,
             string redirectUrl,
             string blogId,
             Guid orderId)
         {
+            var transaction = await _transactionRepository.GetByIdAsync(orderId);
+            if (transaction == null)
+                throw new Exception("Transaction not found");
+
+            var payer = new PayPal.Api.Payer()
+            {
+                payment_method = "paypal"
+            };
+
+            var redirUrls = new PayPal.Api.RedirectUrls()
+            {
+                cancel_url = redirectUrl + "&Cancel=true",
+                return_url = redirectUrl
+            };
+
+            #region optional
             //var itemList = new PayPal.Api.ItemList()
             //{
             //    items = new List<PayPal.Api.Item>()
@@ -355,28 +449,18 @@ namespace BE_Homnayangi.Modules.OrderModule
             //    sku = "asd"
             //});
 
-            var payer = new PayPal.Api.Payer()
-            {
-                payment_method = "paypal"
-            };
-
-            var redirUrls = new PayPal.Api.RedirectUrls()
-            {
-                cancel_url = redirectUrl + "&Cancel=true",
-                return_url = redirectUrl
-            };
-
             //var details = new PayPal.Api.Details()
             //{
             //    tax = "1",
             //    shipping = "1",
             //    subtotal = "1"
             //};
+            #endregion
 
             var amount = new PayPal.Api.Amount()
             {
                 currency = "USD",
-                total = "1.00",
+                total = transaction.TotalAmount.ToString(),
                 //details = details
             };
 
@@ -384,13 +468,13 @@ namespace BE_Homnayangi.Modules.OrderModule
 
             transactionList.Add(new PayPal.Api.Transaction()
             {
-                //description = "Transaction description",
-                //invoice_number = Guid.NewGuid().ToString(),
+                invoice_number = transaction.TransactionId.ToString(),
                 amount = amount,
+                //description = "Transaction description",
                 //item_list = itemList
             });
 
-            this.payment = new PayPal.Api.Payment()
+            var payment = new PayPal.Api.Payment()
             {
                 intent = "sale",
                 payer = payer,
@@ -398,7 +482,7 @@ namespace BE_Homnayangi.Modules.OrderModule
                 redirect_urls = redirUrls
             };
 
-            return this.payment.Create(apiContext);
+            return payment.Create(apiContext);
         }
 
         private static string GetAccessToken(string clientId, string clientSecret, string mode)

@@ -71,7 +71,8 @@ namespace BE_Homnayangi.Controllers
             try
             {
                 Order order = _mapper.Map<Order>(request);
-                order.CustomerId = _userService.GetCurrentUser(Request.Headers["Authorization"]).Id;
+                //order.CustomerId = _userService.GetCurrentUser(Request.Headers["Authorization"]).Id;
+                order.CustomerId = new Guid("31A1C0DF-178D-40AA-96F1-BC932E482D22");
 
                 await _orderService.AddNewOrder(order);
                 return Ok();

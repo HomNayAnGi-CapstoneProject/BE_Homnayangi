@@ -40,5 +40,11 @@ namespace BE_Homnayangi.Modules.OrderModule
 
             return options != null ? options(query).ToList() : await query.ToListAsync();
         }
+
+        public Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction Transaction()
+        {
+            var transaction = _db.Database.BeginTransaction();
+            return transaction;
+        }
     }
 }

@@ -72,7 +72,6 @@
     <Folder Include="Modules\RewardModule\DTO\Response\" />
     <Folder Include="Modules\RewardModule\DTO\Request\" />
     <Folder Include="Modules\TransactionModule\" />
-    <Folder Include="Modules\OrderCookedDetailModule\Interface\" />
     <Folder Include="Modules\TransactionModule\Interface\" />
     <Folder Include="Modules\OrderModule\Request\" />
     <Folder Include="Modules\OrderModule\Response\" />

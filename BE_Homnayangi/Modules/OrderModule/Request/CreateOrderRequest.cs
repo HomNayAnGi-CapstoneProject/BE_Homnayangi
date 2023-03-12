@@ -9,15 +9,14 @@ namespace BE_Homnayangi.Modules.OrderModule.Request
     {
         [MaxLength(255, ErrorMessage = "Max length is 255")]
         public string ShippedAddress { get; set; }
-        [Range(0, 100, ErrorMessage = "Discount from 0 to 100")]
+        //[Range(0, 100, ErrorMessage = "Discount from 0 to 100")]
         public decimal? Discount { get; set; }
-        [MinLength(0, ErrorMessage = "Total price must higher than 0")]
+        //[MinLength(1, ErrorMessage = "Total price must higher than 0")]
         public decimal? TotalPrice { get; set; }
         public Guid? VoucherId { get; set; }
+        public int? PaymentMethod { get; set; }
 
-        public ICollection<OrderCookedDetail> OrderCookedDetails { get; set; }
-        public ICollection<OrderIngredientDetail> OrderIngredientDetails { get; set; }
-        public ICollection<OrderPackageDetail> OrderPackageDetails { get; set; }
+        public ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }
 

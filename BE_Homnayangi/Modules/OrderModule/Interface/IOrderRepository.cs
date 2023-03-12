@@ -15,5 +15,7 @@ namespace BE_Homnayangi.Modules.OrderModule.Interface
                Func<IQueryable<Order>, ICollection<Order>> options = null,
                string includeProperties = null
            );
+
+        public Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction Transaction();
     }
 }
