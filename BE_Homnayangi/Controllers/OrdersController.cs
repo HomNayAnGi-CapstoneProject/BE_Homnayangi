@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BE_Homnayangi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class OrdersController : ControllerBase
     {
@@ -72,7 +72,7 @@ namespace BE_Homnayangi.Controllers
             {
                 Order order = _mapper.Map<Order>(request);
                 //order.CustomerId = _userService.GetCurrentUser(Request.Headers["Authorization"]).Id;
-                order.CustomerId = new Guid("31A1C0DF-178D-40AA-96F1-BC932E482D22");
+                order.CustomerId = new Guid("31A1C0DF-178D-40AA-96F1-BC932E482D22"); // test
 
                 await _orderService.AddNewOrder(order);
                 return Ok();
@@ -104,19 +104,19 @@ namespace BE_Homnayangi.Controllers
         {
         }
 
-        // Create order
-        [HttpPost("payment/paypal")]
-        public ActionResult PaymentWithPaypal(Guid orderId)
-        {
-            try
-            {
-                var url = _orderService.PaymentWithPaypal(orderId);
-                return Ok(url);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+        //// Create order
+        //[HttpPost("payment/paypal")]
+        //public ActionResult PaymentWithPaypal(Guid orderId)
+        //{
+        //    try
+        //    {
+        //        var url = _orderService.PaymentWithPaypal(orderId);
+        //        return Ok(url);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
     }
 }
