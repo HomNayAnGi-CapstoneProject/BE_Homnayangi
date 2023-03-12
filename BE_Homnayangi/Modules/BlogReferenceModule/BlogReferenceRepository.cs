@@ -1,5 +1,4 @@
-﻿using BE_Homnayangi.Modules.CartDetailModule.Interface;
-using Library.DataAccess;
+﻿using Library.DataAccess;
 using Library.Models;
 using Microsoft.EntityFrameworkCore;
 using Repository.Repository;

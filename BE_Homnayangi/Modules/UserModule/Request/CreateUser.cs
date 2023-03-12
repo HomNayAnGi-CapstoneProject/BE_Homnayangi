@@ -23,7 +23,7 @@ namespace BE_Homnayangi.Modules.UserModule.Request
         [RegularExpression(@"^(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\b", ErrorMessage = "Entered phone format is not valid.")]
         public string Phonenumber { get; set; }
         [Required(ErrorMessage = "Gender is required")]
-        public bool? Gender { get; set; }
+        public int? Gender { get; set; }
         [Required(ErrorMessage = "Avatar is required")]
         public string Avatar { get; set; }
     }

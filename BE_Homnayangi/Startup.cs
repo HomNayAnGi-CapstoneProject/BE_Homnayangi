@@ -13,10 +13,6 @@ using BE_Homnayangi.Modules.BlogReferenceModule;
 using BE_Homnayangi.Modules.BlogReferenceModule.Interface;
 using BE_Homnayangi.Modules.BlogSubCateModule;
 using BE_Homnayangi.Modules.BlogSubCateModule.Interface;
-using BE_Homnayangi.Modules.CartDetailModule;
-using BE_Homnayangi.Modules.CartDetailModule.Interface;
-using BE_Homnayangi.Modules.CartModule;
-using BE_Homnayangi.Modules.CartModule.Interface;
 using BE_Homnayangi.Modules.CategoryModule;
 using BE_Homnayangi.Modules.CategoryModule.Interface;
 using BE_Homnayangi.Modules.CommentModule;
@@ -224,14 +220,6 @@ namespace BE_Homnayangi
             //Unit Module
             services.AddScoped<IUnitRepository, UnitRepository>();
             services.AddScoped<IUnitService, UnitService>();
-
-            //Cart Module
-            services.AddScoped<ICartRepository, CartRepository>();
-            services.AddScoped<ICartService, CartService>();
-
-            //Cart detail Module
-            services.AddScoped<ICartDetailRepository, CartDetailRepository>();
-            services.AddScoped<ICartDetailService, CartDetailService>();
 
             //Blog reference Module
             services.AddScoped<IBlogReferenceRepository, BlogReferenceRepository>();
