@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Library.Models.DTO.UserDTO
 {
@@ -23,6 +18,6 @@ namespace Library.Models.DTO.UserDTO
         [RegularExpression(@"^(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\b", ErrorMessage = "Entered phone format is not valid.")]
         public string Phonenumber { get; set; }
         [Required(ErrorMessage = "Gender is required")]
-        public bool gender { get; set; }
+        public int gender { get; set; }
     }
 }
