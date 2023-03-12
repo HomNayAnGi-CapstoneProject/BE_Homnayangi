@@ -23,27 +23,21 @@ namespace BE_Homnayangi.Modules.OrderModule
     public class OrderService : IOrderService
     {
         private readonly IOrderRepository _OrderRepository;
-        private readonly IOrderCookedDetailRepository _orderCookedDetailRepository;
         private readonly IOrderIngredientDetailRepository _orderIngredientDetailRepository;
-        private readonly IOrderPackageDetailRepository _orderPackageDetailRepository;
         private readonly ICustomerRepository _customerRepository;
         private readonly IUserRepository _userRepository;
         private readonly ITransactionRepository _transactionRepository;
         IConfiguration _configuration;
 
         public OrderService(IOrderRepository OrderRepository,
-            IOrderCookedDetailRepository orderCookedDetailRepository,
             IOrderIngredientDetailRepository orderIngredientDetailRepository,
-            IOrderPackageDetailRepository orderPackageDetailRepository,
             ICustomerRepository customerRepository,
             IUserRepository userRepository,
             ITransactionRepository transactionRepository,
             IConfiguration configuration)
         {
             _OrderRepository = OrderRepository;
-            _orderCookedDetailRepository = orderCookedDetailRepository;
             _orderIngredientDetailRepository = orderIngredientDetailRepository;
-            _orderPackageDetailRepository = orderPackageDetailRepository;
             _customerRepository = customerRepository;
             _userRepository = userRepository;
             _transactionRepository = transactionRepository;
@@ -53,7 +47,7 @@ namespace BE_Homnayangi.Modules.OrderModule
         public async Task<ICollection<Order>> GetAll()
         {
             return await _OrderRepository.GetOrdersBy(
-                includeProperties: "OrderCookedDetails,OrderIngredientDetails,OrderPackageDetails");
+                includeProperties: "OrderIngredientDetails");
         }
 
         public Task<ICollection<Order>> GetOrdersBy(
@@ -77,12 +71,7 @@ namespace BE_Homnayangi.Modules.OrderModule
 
         public async Task AddNewOrder(Order newOrder)
         {
-            var isCookedOrder = newOrder.OrderCookedDetails.Count > 0;
-
-            // cooked order la don rieng biet
-            if (isCookedOrder
-                && (newOrder.OrderIngredientDetails.Count > 0 || newOrder.OrderPackageDetails.Count > 0))
-                throw new Exception(ErrorMessage.OrderError.COOKED_ORDER_NOT_VALID);
+            //var isCookedOrder = ;
 
             newOrder.OrderId = new Guid();
             newOrder.OrderDate = DateTime.Now;
@@ -90,28 +79,17 @@ namespace BE_Homnayangi.Modules.OrderModule
 
             await _OrderRepository.AddAsync(newOrder);
 
-            if (isCookedOrder)
+            foreach (var detail in newOrder.OrderIngredientDetails)
             {
-                foreach (var detail in newOrder.OrderCookedDetails)
-                {
-                    detail.OrderId = newOrder.OrderId;
-                    await _orderCookedDetailRepository.AddAsync(detail);
-                }
+                detail.OrderId = newOrder.OrderId;
+                await _orderIngredientDetailRepository.AddAsync(detail);
             }
-            else 
-            {
-                foreach (var detail in newOrder.OrderIngredientDetails)
-                {
-                    detail.OrderId = newOrder.OrderId;
-                    await _orderIngredientDetailRepository.AddAsync(detail);
-                }
 
-                foreach (var detail in newOrder.OrderPackageDetails)
-                {
-                    detail.OrderId = newOrder.OrderId;
-                    await _orderPackageDetailRepository.AddAsync(detail);
-                }
-            }
+            //if (newOrder.paymentMethod == "paypal")
+            PaymentWithPaypal(newOrder.OrderId);
+
+            //if (newOrder.paymentMethod == "cod")
+            // cod flow
         }
 
         public async Task UpdateOrder(Order OrderUpdate)

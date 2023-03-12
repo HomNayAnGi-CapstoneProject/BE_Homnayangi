@@ -109,7 +109,7 @@ namespace BE_Homnayangi.Controllers
         {
             try
             {
-                var url = _orderService.PaymentWithPaypal();
+                var url = _orderService.PaymentWithPaypal(orderId);
                 return Ok(url);
             }
             catch (Exception ex)
