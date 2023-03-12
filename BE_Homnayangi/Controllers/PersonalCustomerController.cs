@@ -36,12 +36,13 @@ namespace BE_Homnayangi.Controllers
 
         // GET api/<ValuesController>/5
         [HttpGet]
-
         public async Task<ActionResult<CurrentUserResponse>> GetUserById()
         {
+            var currentUserId = _userService.GetCurrentUser(Request.Headers["Authorization"]).Id;
+            var currentUser = await _userService.GetCustomerById(currentUserId);
             return new JsonResult(new
             {
-                result = _userService.GetCurrentUser(Request.Headers["Authorization"]),
+                result = currentUser
             });
         }
 

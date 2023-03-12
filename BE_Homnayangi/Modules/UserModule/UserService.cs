@@ -23,6 +23,9 @@ using Microsoft.AspNetCore.Http;
 using BE_Homnayangi.Modules.UserModule.Response;
 using BE_Homnayangi.Utils;
 using BE_Homnayangi.Modules.Utils;
+using GSF.Net.Smtp;
+using static Library.Models.Enum.GenderEnum;
+using System.Data;
 
 namespace BE_Homnayangi.Modules.UserModule
 {
