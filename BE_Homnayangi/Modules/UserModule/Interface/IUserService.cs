@@ -4,7 +4,6 @@ using Library.Models;
 using Library.Models.DTO.UserDTO;
 using Library.PagedList;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
