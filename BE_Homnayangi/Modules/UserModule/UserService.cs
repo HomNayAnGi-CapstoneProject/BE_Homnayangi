@@ -166,14 +166,14 @@ namespace BE_Homnayangi.Modules.UserModule
                 {
                     if (customer.Username != user.Username || customer.Email != user.Email)
                     {
-                        updateUser.Username = user.Username == "" ? updateUser.Username = null : user.Username;
-                        updateUser.Displayname = user.Displayname == "" ? updateUser.Displayname = null : user.Displayname;
-                        updateUser.Firstname = user.Firstname == "" ? updateUser.Firstname = null : user.Firstname;
-                        updateUser.Lastname = user.Lastname == "" ? updateUser.Lastname = null : user.Lastname;
-                        updateUser.Email = user.Email == "" ? updateUser.Email = null : user.Email;
-                        updateUser.Phonenumber = user.Phonenumber == "" ? updateUser.Phonenumber = null : user.Phonenumber;
-                        updateUser.Avatar = user.Avatar == "" ? updateUser.Avatar = "NoLink" : user.Avatar;
-                        updateUser.Gender = user.Gender;
+                        updateUser.Username = user.Username == null || user.Username == "" ? updateUser.Username : user.Username;
+                        updateUser.Displayname = user.Displayname == null || user.Displayname == "" ? updateUser.Displayname : user.Displayname;
+                        updateUser.Firstname = user.Firstname == null || user.Firstname  == "" ? updateUser.Firstname : user.Firstname;
+                        updateUser.Lastname = user.Lastname == null || user.Lastname == "" ? updateUser.Lastname : user.Lastname;
+                        updateUser.Email = user.Email == null || user.Email == "" ? updateUser.Email : user.Email;
+                        updateUser.Phonenumber = user.Phonenumber == null || user.Phonenumber == "" ? updateUser.Phonenumber : user.Phonenumber;
+                        updateUser.Avatar = user.Avatar == null || user.Avatar == "" ? updateUser.Avatar : user.Avatar;
+                        updateUser.Gender = user.Gender == null ? updateUser.Gender : user.Gender;
                         updateUser.UpdatedDate = DateTime.Now;
                         await _userRepository.UpdateAsync(updateUser);
                         isUpdated = true;
@@ -183,10 +183,11 @@ namespace BE_Homnayangi.Modules.UserModule
             }
             return isUpdated;
         }
-        public async Task<bool> UpdateUser(User user)
+
+        public async Task<bool> UpdateUser(Guid id, User user)
         {
             bool isUpdated = false;
-            User updateUser = await _userRepository.GetFirstOrDefaultAsync(x => x.UserId == user.UserId);
+            User updateUser = await _userRepository.GetFirstOrDefaultAsync(x => x.UserId == id);
             Customer customer = await _customerRepository.GetFirstOrDefaultAsync(x => x.Username == user.Username);
             if (updateUser != null)
             {
@@ -284,10 +285,10 @@ namespace BE_Homnayangi.Modules.UserModule
 
 
         }
-        public async Task<bool> UpdateCustomer(Customer customer)
+        public async Task<bool> UpdateCustomer(Guid id, Customer customer)
         {
             bool isUpdated = false;
-            Customer updateCustomer = await _customerRepository.GetFirstOrDefaultAsync(x => x.CustomerId == customer.CustomerId);
+            Customer updateCustomer = await _customerRepository.GetFirstOrDefaultAsync(x => x.CustomerId == id);
             User user = await _userRepository.GetFirstOrDefaultAsync(x => x.Username == customer.Username);
             if (updateCustomer != null)
             {
@@ -295,14 +296,14 @@ namespace BE_Homnayangi.Modules.UserModule
                 {
                     if (customer.Username != user.Username || customer.Email != user.Email)
                     {
-                        updateCustomer.Username = customer.Username == "" ? updateCustomer.Username = null : customer.Username;
-                        updateCustomer.Displayname = customer.Displayname == "" ? updateCustomer.Displayname = null : customer.Displayname;
-                        updateCustomer.Firstname = customer.Firstname == "" ? updateCustomer.Firstname = null : customer.Firstname;
-                        updateCustomer.Lastname = customer.Lastname == "" ? updateCustomer.Lastname = null : customer.Lastname;
-                        updateCustomer.Email = customer.Email == "" ? updateCustomer.Email = null : customer.Email;
-                        updateCustomer.Phonenumber = customer.Phonenumber == "" ? updateCustomer.Phonenumber = null : customer.Phonenumber;
-                        updateCustomer.Avatar = customer.Avatar == "" ? updateCustomer.Avatar = "NoLink" : customer.Avatar;
-                        updateCustomer.Gender = customer.Gender;
+                        updateCustomer.Username = customer.Username == null || customer.Username == "" ? updateCustomer.Username : customer.Username;
+                        updateCustomer.Displayname = customer.Displayname == null || customer.Displayname == "" ? updateCustomer.Displayname : customer.Displayname;
+                        updateCustomer.Firstname = customer.Firstname == null || customer.Firstname == "" ? updateCustomer.Firstname : customer.Firstname;
+                        updateCustomer.Lastname = customer.Lastname == null || customer.Lastname == "" ? updateCustomer.Lastname : customer.Lastname;
+                        updateCustomer.Email = customer.Email == null || customer.Email == "" ? updateCustomer.Email : customer.Email;
+                        updateCustomer.Phonenumber = customer.Phonenumber == null || customer.Phonenumber == "" ? updateCustomer.Phonenumber : customer.Phonenumber;
+                        updateCustomer.Avatar = customer.Avatar == null || customer.Avatar == "" ? updateCustomer.Avatar : customer.Avatar;
+                        updateCustomer.Gender =customer.Gender == null ? updateCustomer.Gender : customer.Gender;
                         updateCustomer.UpdatedDate = DateTime.Now;
                         await _customerRepository.UpdateAsync(updateCustomer);
                         isUpdated = true;

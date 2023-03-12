@@ -54,7 +54,8 @@ namespace BE_Homnayangi.Controllers
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] UpdateUser updateUser)
         {
-            if (_userService.GetCurrentUser(Request.Headers["Authorization"]).Id != updateUser.UserId)
+            var currentUser = _userService.GetCurrentUser(Request.Headers["Authorization"]);
+            if (currentUser.Id != updateUser.UserId)
             {
                 return BadRequest();
             }
@@ -62,7 +63,7 @@ namespace BE_Homnayangi.Controllers
             {
 
                 var user = _mapper.Map<User>(updateUser);
-                bool isUpdated = await _userService.UpdateUser(user);
+                bool isUpdated = await _userService.UpdateUser(currentUser.Id, user);
                 if (isUpdated == true)
                 {
                     return Ok("Update Successfully");

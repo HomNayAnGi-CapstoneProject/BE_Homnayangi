@@ -48,15 +48,15 @@ namespace BE_Homnayangi.Controllers
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] UpdateCustomer customerUpdate)
         {
-            if (_userService.GetCurrentUser(Request.Headers["Authorization"]).Id != customerUpdate.CustomerId)
+            var currentUser = _userService.GetCurrentUser(Request.Headers["Authorization"]);
+            if (currentUser.Id != customerUpdate.CustomerId)
             {
                 return BadRequest();
             }
             try
             {
-
                 var user = _mapper.Map<Customer>(customerUpdate);
-                bool isUpdated = await _userService.UpdateCustomer(user);
+                bool isUpdated = await _userService.UpdateCustomer(currentUser.Id, user);
                 if (isUpdated == true)
                 {
                     return Ok("Update Successfully");

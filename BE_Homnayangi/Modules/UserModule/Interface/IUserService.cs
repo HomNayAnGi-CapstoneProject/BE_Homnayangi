@@ -20,7 +20,7 @@ namespace BE_Homnayangi.Modules.UserModule.Interface
         public Task AddNewUser(User newUser);
         public Task<bool?> BlockUserById(Guid id);
         public Task<bool> UpdateStaff(User user);
-        public Task<bool> UpdateUser(User user);
+        public Task<bool> UpdateUser(Guid id, User user);
         public Task UpdateUserPassword(Guid userId, string oldPass, string newPass);
         #endregion
 
@@ -30,7 +30,7 @@ namespace BE_Homnayangi.Modules.UserModule.Interface
         public Customer GetCustomerByUsername(string? username);
         public Task<Customer> GetCustomerById(Guid id);
         public Customer GetCustomerByEmail(string? email);
-        public Task<bool> UpdateCustomer(Customer customer);
+        public Task<bool> UpdateCustomer(Guid id, Customer customer);
         public Task<bool?> BlockCustomerById(Guid id);
         public Task UpdateCustomerPassword(Guid userId, string oldPass, string newPass);
         #endregion
