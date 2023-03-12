@@ -5,6 +5,7 @@ using BE_Homnayangi.Modules.UserModule.Response;
 using BE_Homnayangi.Modules.Utils;
 using BE_Homnayangi.Utils;
 using Library.Models;
+using Library.Models.Constant;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -54,9 +55,10 @@ namespace BE_Homnayangi.Controllers
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] UpdateUser updateUser)
         {
-            if (_userService.GetCurrentUser(Request.Headers["Authorization"]).Id != updateUser.UserId)
+            var currentUser = _userService.GetCurrentUser(Request.Headers["Authorization"]);
+            if (currentUser.Id != updateUser.UserId)
             {
-                return BadRequest();
+                return BadRequest(ErrorMessage.UserError.NOT_OWNER);
             }
             try
             {
@@ -73,9 +75,9 @@ namespace BE_Homnayangi.Controllers
                 }
 
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
 
 
