@@ -15,7 +15,9 @@ namespace Library.Models.Constant
         #region User error message
         public static class UserError
         {
-            public readonly static string USER_EXISTED = "Username is already existed";
+            public readonly static string NOT_OWNER = "You are not the owner";
+            public readonly static string USERNAME_EXISTED = "Username is already existed with another user";
+            public readonly static string EMAIL_EXISTED = "This email is already existed with another user";
             public readonly static string USER_NOT_EXISTED = "This user can not be found";
             public readonly static string USER_NOT_LOGIN = "You did not login. Login and try this action again, please!";
             public readonly static string ACTION_FOR_USER_ROLE_ONLY = "This action is only for User role";
@@ -51,7 +53,10 @@ namespace Library.Models.Constant
         #region Customer error message
         public static class CustomerError
         {
+            public readonly static string NOT_OWNER = "You are not the owner";
             public readonly static string CUSTOMER_NOT_FOUND = "This customer can not be found";
+            public readonly static string USERNAME_EXISTED = "This username has existed with another customer";
+            public readonly static string EMAIL_EXISTED = "This email has existed with another customer";
             public readonly static string CUSTOMER_NOT_ALLOWED_TO_CREATE_BLOG = "Staff and Manager role are allowed to create a new blog";
             public readonly static string CUSTOMER_NOT_ALLOWED_TO_DELETE_BLOG = "Staff and Manager role are allowed to delete a blog";
             public readonly static string CUSTOMER_NOT_ALLOWED_TO_DELETE_RECIPE = "Staff and Manager role are allowed to delete a recipe";

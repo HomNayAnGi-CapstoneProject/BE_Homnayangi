@@ -5,6 +5,7 @@ using BE_Homnayangi.Modules.UserModule.Response;
 using BE_Homnayangi.Modules.Utils;
 using BE_Homnayangi.Utils;
 using Library.Models;
+using Library.Models.Constant;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -35,12 +36,13 @@ namespace BE_Homnayangi.Controllers
 
         // GET api/<ValuesController>/5
         [HttpGet]
-
         public async Task<ActionResult<CurrentUserResponse>> GetUserById()
         {
+            var currentUserId = _userService.GetCurrentUser(Request.Headers["Authorization"]).Id;
+            var currentUser = await _userService.GetCustomerById(currentUserId);
             return new JsonResult(new
             {
-                result = _userService.GetCurrentUser(Request.Headers["Authorization"]),
+                result = currentUser
             });
         }
 
@@ -48,13 +50,13 @@ namespace BE_Homnayangi.Controllers
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] UpdateCustomer customerUpdate)
         {
-            if (_userService.GetCurrentUser(Request.Headers["Authorization"]).Id != customerUpdate.CustomerId)
+            var currentUser = _userService.GetCurrentUser(Request.Headers["Authorization"]);
+            if (currentUser.Id != customerUpdate.CustomerId)
             {
-                return BadRequest();
+                return BadRequest(ErrorMessage.CustomerError.NOT_OWNER);
             }
             try
             {
-
                 var user = _mapper.Map<Customer>(customerUpdate);
                 bool isUpdated = await _userService.UpdateCustomer(user);
                 if (isUpdated == true)
