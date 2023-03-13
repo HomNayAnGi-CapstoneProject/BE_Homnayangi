@@ -23,10 +23,6 @@ using Microsoft.AspNetCore.Http;
 using BE_Homnayangi.Modules.UserModule.Response;
 using BE_Homnayangi.Utils;
 using BE_Homnayangi.Modules.Utils;
-using GSF.Net.Smtp;
-using static Library.Models.Enum.GenderEnum;
-using System.Data;
-using Library.Models.Enum;
 
 namespace BE_Homnayangi.Modules.UserModule
 {
@@ -170,14 +166,14 @@ namespace BE_Homnayangi.Modules.UserModule
                 {
                     if (customer.Username != user.Username || customer.Email != user.Email)
                     {
-                        updateUser.Username = user.Username == null || user.Username == "" ? updateUser.Username : user.Username;
-                        updateUser.Displayname = user.Displayname == null || user.Displayname == "" ? updateUser.Displayname : user.Displayname;
-                        updateUser.Firstname = user.Firstname == null || user.Firstname == "" ? updateUser.Firstname : user.Firstname;
-                        updateUser.Lastname = user.Lastname == null || user.Lastname == "" ? updateUser.Lastname : user.Lastname;
-                        updateUser.Email = user.Email == null || user.Email == "" ? updateUser.Email : user.Email;
-                        updateUser.Phonenumber = user.Phonenumber == null || user.Phonenumber == "" ? updateUser.Phonenumber : user.Phonenumber;
-                        updateUser.Avatar = user.Avatar == null || user.Avatar == "" ? updateUser.Avatar : user.Avatar;
-                        updateUser.Gender = user.Gender == null ? updateUser.Gender : user.Gender;
+                        updateUser.Username = user.Username == "" ? updateUser.Username = null : user.Username;
+                        updateUser.Displayname = user.Displayname == "" ? updateUser.Displayname = null : user.Displayname;
+                        updateUser.Firstname = user.Firstname == "" ? updateUser.Firstname = null : user.Firstname;
+                        updateUser.Lastname = user.Lastname == "" ? updateUser.Lastname = null : user.Lastname;
+                        updateUser.Email = user.Email == "" ? updateUser.Email = null : user.Email;
+                        updateUser.Phonenumber = user.Phonenumber == "" ? updateUser.Phonenumber = null : user.Phonenumber;
+                        updateUser.Avatar = user.Avatar == "" ? updateUser.Avatar = "NoLink" : user.Avatar;
+                        updateUser.Gender = user.Gender;
                         updateUser.UpdatedDate = DateTime.Now;
                         await _userRepository.UpdateAsync(updateUser);
                         isUpdated = true;
@@ -187,31 +183,30 @@ namespace BE_Homnayangi.Modules.UserModule
             }
             return isUpdated;
         }
-
         public async Task<bool> UpdateUser(User user)
         {
             bool isUpdated = false;
             User updateUser = await _userRepository.GetFirstOrDefaultAsync(x => x.UserId == user.UserId);
-
+            Customer customer = await _customerRepository.GetFirstOrDefaultAsync(x => x.Username == user.Username);
             if (updateUser != null)
             {
-                if (user.Username != null)
-                    await CheckExistedUsername(user.UserId, user.Username);
-                if (user.Email != null)
-                    await CheckExistedEmail(user.UserId, user.Email);
-
-                updateUser.Username = user.Username == "" ? updateUser.Username = null : user.Username;
-                updateUser.Displayname = user.Displayname == "" ? updateUser.Displayname = null : user.Displayname;
-                updateUser.Firstname = user.Firstname == "" ? updateUser.Firstname = null : user.Firstname;
-                updateUser.Lastname = user.Lastname == "" ? updateUser.Lastname = null : user.Lastname;
-                updateUser.Email = user.Email == "" ? updateUser.Email = null : user.Email;
-                updateUser.Phonenumber = user.Phonenumber == "" ? updateUser.Phonenumber = null : user.Phonenumber;
-                updateUser.Avatar = user.Avatar == "" ? updateUser.Avatar = "NoLink" : user.Avatar;
-                updateUser.Gender = user.Gender;
-                updateUser.UpdatedDate = DateTime.Now;
-                await _userRepository.UpdateAsync(updateUser);
-                isUpdated = true;
-
+                if (updateUser.Username != user.Username || updateUser.Email != user.Email)
+                {
+                    if (customer.Username != user.Username || customer.Email != user.Email)
+                    {
+                        updateUser.Username = user.Username == "" ? updateUser.Username = null : user.Username;
+                        updateUser.Displayname = user.Displayname == "" ? updateUser.Displayname = null : user.Displayname;
+                        updateUser.Firstname = user.Firstname == "" ? updateUser.Firstname = null : user.Firstname;
+                        updateUser.Lastname = user.Lastname == "" ? updateUser.Lastname = null : user.Lastname;
+                        updateUser.Email = user.Email == "" ? updateUser.Email = null : user.Email;
+                        updateUser.Phonenumber = user.Phonenumber == "" ? updateUser.Phonenumber = null : user.Phonenumber;
+                        updateUser.Avatar = user.Avatar == "" ? updateUser.Avatar = "NoLink" : user.Avatar;
+                        updateUser.Gender = user.Gender;
+                        updateUser.UpdatedDate = DateTime.Now;
+                        await _userRepository.UpdateAsync(updateUser);
+                        isUpdated = true;
+                    }
+                }
             }
             return isUpdated;
         }
@@ -292,35 +287,28 @@ namespace BE_Homnayangi.Modules.UserModule
         public async Task<bool> UpdateCustomer(Customer customer)
         {
             bool isUpdated = false;
-            try
+            Customer updateCustomer = await _customerRepository.GetFirstOrDefaultAsync(x => x.CustomerId == customer.CustomerId);
+            User user = await _userRepository.GetFirstOrDefaultAsync(x => x.Username == customer.Username);
+            if (updateCustomer != null)
             {
-                Customer updateCustomer = await _customerRepository.GetFirstOrDefaultAsync(x => x.CustomerId == customer.CustomerId);
-
-                if (updateCustomer != null)
+                if (updateCustomer.Username != customer.Username || updateCustomer.Email != customer.Email)
                 {
-                    if (customer.Username != null)
-                        await CheckExistedUsername(customer.CustomerId, customer.Username);
-
-                    if (customer.Email != null)
-                        await CheckExistedEmail(customer.CustomerId, customer.Email);
-
-                    updateCustomer.Username = customer.Username == null || customer.Username == "" ? updateCustomer.Username : customer.Username;
-                    updateCustomer.Displayname = customer.Displayname == null || customer.Displayname == "" ? updateCustomer.Displayname : customer.Displayname;
-                    updateCustomer.Firstname = customer.Firstname == null || customer.Firstname == "" ? updateCustomer.Firstname : customer.Firstname;
-                    updateCustomer.Lastname = customer.Lastname == null || customer.Lastname == "" ? updateCustomer.Lastname : customer.Lastname;
-                    updateCustomer.Email = customer.Email == null || customer.Email == "" ? updateCustomer.Email : customer.Email;
-                    updateCustomer.Phonenumber = customer.Phonenumber == null || customer.Phonenumber == "" ? updateCustomer.Phonenumber : customer.Phonenumber;
-                    updateCustomer.Avatar = customer.Avatar == null || customer.Avatar == "" ? updateCustomer.Avatar : customer.Avatar;
-                    updateCustomer.Gender = customer.Gender == null ? updateCustomer.Gender : customer.Gender;
-                    updateCustomer.UpdatedDate = DateTime.Now;
-                    await _customerRepository.UpdateAsync(updateCustomer);
-                    isUpdated = true;
+                    if (customer.Username != user.Username || customer.Email != user.Email)
+                    {
+                        updateCustomer.Username = customer.Username == "" ? updateCustomer.Username = null : customer.Username;
+                        updateCustomer.Displayname = customer.Displayname == "" ? updateCustomer.Displayname = null : customer.Displayname;
+                        updateCustomer.Firstname = customer.Firstname == "" ? updateCustomer.Firstname = null : customer.Firstname;
+                        updateCustomer.Lastname = customer.Lastname == "" ? updateCustomer.Lastname = null : customer.Lastname;
+                        updateCustomer.Email = customer.Email == "" ? updateCustomer.Email = null : customer.Email;
+                        updateCustomer.Phonenumber = customer.Phonenumber == "" ? updateCustomer.Phonenumber = null : customer.Phonenumber;
+                        updateCustomer.Avatar = customer.Avatar == "" ? updateCustomer.Avatar = "NoLink" : customer.Avatar;
+                        updateCustomer.Gender = customer.Gender;
+                        updateCustomer.UpdatedDate = DateTime.Now;
+                        await _customerRepository.UpdateAsync(updateCustomer);
+                        isUpdated = true;
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error at UpdateCustomer: " + ex.Message);
-                throw new Exception(ex.Message);
+
             }
             return isUpdated;
         }
@@ -514,7 +502,6 @@ namespace BE_Homnayangi.Modules.UserModule
                     new Claim("Lastname",customer.Lastname == null ? "": customer.Lastname),
                     new Claim(ClaimTypes.Gender,customer.Gender.ToString() == null ? "": customer.Gender.ToString()),
                     new Claim("Avatar", customer.Avatar  == null ? "" : customer.Avatar),
-                     new Claim("isGoogleAccount", customer.IsGoogle.ToString()),
                     new Claim(ClaimTypes.Role, CommonEnum.RoleEnum.CUSTOMER)
 
                 }),
@@ -551,7 +538,6 @@ namespace BE_Homnayangi.Modules.UserModule
                     new Claim("Lastname",cus.Lastname == null ? "": cus.Lastname),
                     new Claim(ClaimTypes.Gender,cus.Gender.ToString() == null ? "": cus.Gender.ToString()),
                     new Claim("Avatar", cus.Avatar  == null ? "" : cus.Avatar),
-                     new Claim("isGoogleAccount", cus.IsGoogle.ToString()),
                     new Claim(ClaimTypes.Role, CommonEnum.RoleEnum.CUSTOMER)
 
                 }),
@@ -585,7 +571,6 @@ namespace BE_Homnayangi.Modules.UserModule
                     new Claim("Lastname",user.Lastname == null ? "": user.Lastname),
                     new Claim(ClaimTypes.Gender,user.Gender.ToString() == null ? "": user.Gender.ToString()),
                     new Claim("Avatar", user.Avatar  == null ? "" : user.Avatar),
-                     new Claim("isGoogleAccount", user.IsGoogle.ToString()),
                     new Claim(ClaimTypes.Role,user.Role == 1 ? CommonEnum.RoleEnum.MANAGER : CommonEnum.RoleEnum.STAFF)
                 }),
                     Expires = DateTime.UtcNow.AddMinutes(60),
@@ -603,12 +588,13 @@ namespace BE_Homnayangi.Modules.UserModule
             }
             return null;
         }
+
         public async Task Register(RegisterDTO register)
         {
             var cus = GetCustomerByUsername(register.Username);
             var admin = _admin;
             var user = GetUserByUsername(register.Username);
-            if (cus != null || admin.Username == register.Username || user != null) throw new Exception(ErrorMessage.UserError.USERNAME_EXISTED);
+            if (cus != null || admin.Username == register.Username || user != null) throw new Exception(ErrorMessage.UserError.USER_EXISTED);
 
             register.Password = EncryptPassword(register.Password);
             var customer = _mapper.Map<Customer>(register);
@@ -695,9 +681,8 @@ namespace BE_Homnayangi.Modules.UserModule
                     var Email = tokenS.Claims.First(x => x.Type == "email")?.Value;
                     var Avatar = tokenS.Claims.First(x => x.Type == "Avatar")?.Value;
                     var Phonenumber = tokenS.Claims.First(x => x.Type == "Phone Number")?.Value;
-                    var Gender = Int32.Parse(tokenS.Claims.First(x => x.Type == "gender")?.Value == "" ? ((int)GenderEnum.Gender.MALE).ToString() : tokenS.Claims.First(x => x.Type == "gender")?.Value);
+                    var Gender = Int32.Parse(tokenS.Claims.First(x => x.Type == "gender")?.Value);
                     var Role = tokenS.Claims.First(x => x.Type == "role")?.Value;
-
                     CurrentUserResponse currentUser = new CurrentUserResponse()
                     {
                         Id = id,
@@ -720,53 +705,6 @@ namespace BE_Homnayangi.Modules.UserModule
             {
                 Console.WriteLine("Error at GetCurrentLoginUser: " + ex.Message);
                 throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
-            }
-        }
-
-        private async Task CheckExistedUsername(Guid id, string username)
-        {
-            try
-            {
-                var customer = await _customerRepository.GetFirstOrDefaultAsync(c => c.CustomerId != id && c.Username.Equals(username) && !c.IsBlocked.Value);
-                var user = await _userRepository.GetFirstOrDefaultAsync(u => u.UserId != id && u.Username.Equals(username) && !u.IsBlocked.Value);
-                if (customer != null)
-                {
-                    throw new Exception(ErrorMessage.CustomerError.USERNAME_EXISTED);
-                }
-                else if (user != null)
-                {
-                    throw new Exception(ErrorMessage.UserError.USERNAME_EXISTED);
-                }
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Username: " + username);
-                Console.WriteLine("Error at CheckExistedUsername: " + ex.Message);
-                throw new Exception(ex.Message);
-            }
-        }
-
-        private async Task CheckExistedEmail(Guid id, string email)
-        {
-            try
-            {
-                var customer = await _customerRepository.GetFirstOrDefaultAsync(c => c.CustomerId != id && c.Email.Equals(email) && !c.IsBlocked.Value);
-                var user = await _userRepository.GetFirstOrDefaultAsync(u => u.UserId != id && u.Email.Equals(email) && !u.IsBlocked.Value);
-                if (customer != null)
-                {
-                    throw new Exception(ErrorMessage.CustomerError.EMAIL_EXISTED);
-                }
-                else if (user != null)
-                {
-                    throw new Exception(ErrorMessage.UserError.EMAIL_EXISTED);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Email: " + email);
-                Console.WriteLine("Error at CheckExistedEmail: " + ex.Message);
-                throw new Exception(ex.Message);
             }
         }
     }

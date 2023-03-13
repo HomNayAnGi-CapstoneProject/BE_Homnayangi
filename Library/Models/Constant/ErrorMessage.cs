@@ -19,6 +19,7 @@ namespace Library.Models.Constant
             public readonly static string USERNAME_EXISTED = "Username is already existed with another user";
             public readonly static string EMAIL_EXISTED = "This email is already existed with another user";
             public readonly static string USER_NOT_EXISTED = "This user can not be found";
+            public readonly static string USER_EXISTED = "This user is existed";
             public readonly static string USER_NOT_LOGIN = "You did not login. Login and try this action again, please!";
             public readonly static string ACTION_FOR_USER_ROLE_ONLY = "This action is only for User role";
             public readonly static string ACTION_FOR_STAFF_AND_MANAGER_ROLE = "This action is only for Staff and Manager role";
