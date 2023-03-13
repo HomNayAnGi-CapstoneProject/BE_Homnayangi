@@ -26,6 +26,7 @@ using BE_Homnayangi.Modules.Utils;
 using GSF.Net.Smtp;
 using static Library.Models.Enum.GenderEnum;
 using System.Data;
+using Library.Models.Enum;
 
 namespace BE_Homnayangi.Modules.UserModule
 {
@@ -513,6 +514,7 @@ namespace BE_Homnayangi.Modules.UserModule
                     new Claim("Lastname",customer.Lastname == null ? "": customer.Lastname),
                     new Claim(ClaimTypes.Gender,customer.Gender.ToString() == null ? "": customer.Gender.ToString()),
                     new Claim("Avatar", customer.Avatar  == null ? "" : customer.Avatar),
+                     new Claim("isGoogleAccount", customer.IsGoogle.ToString()),
                     new Claim(ClaimTypes.Role, CommonEnum.RoleEnum.CUSTOMER)
 
                 }),
@@ -549,6 +551,7 @@ namespace BE_Homnayangi.Modules.UserModule
                     new Claim("Lastname",cus.Lastname == null ? "": cus.Lastname),
                     new Claim(ClaimTypes.Gender,cus.Gender.ToString() == null ? "": cus.Gender.ToString()),
                     new Claim("Avatar", cus.Avatar  == null ? "" : cus.Avatar),
+                     new Claim("isGoogleAccount", cus.IsGoogle.ToString()),
                     new Claim(ClaimTypes.Role, CommonEnum.RoleEnum.CUSTOMER)
 
                 }),
@@ -582,6 +585,7 @@ namespace BE_Homnayangi.Modules.UserModule
                     new Claim("Lastname",user.Lastname == null ? "": user.Lastname),
                     new Claim(ClaimTypes.Gender,user.Gender.ToString() == null ? "": user.Gender.ToString()),
                     new Claim("Avatar", user.Avatar  == null ? "" : user.Avatar),
+                     new Claim("isGoogleAccount", user.IsGoogle.ToString()),
                     new Claim(ClaimTypes.Role,user.Role == 1 ? CommonEnum.RoleEnum.MANAGER : CommonEnum.RoleEnum.STAFF)
                 }),
                     Expires = DateTime.UtcNow.AddMinutes(60),
@@ -691,8 +695,9 @@ namespace BE_Homnayangi.Modules.UserModule
                     var Email = tokenS.Claims.First(x => x.Type == "email")?.Value;
                     var Avatar = tokenS.Claims.First(x => x.Type == "Avatar")?.Value;
                     var Phonenumber = tokenS.Claims.First(x => x.Type == "Phone Number")?.Value;
-                    var Gender = Int32.Parse(tokenS.Claims.First(x => x.Type == "gender")?.Value);
+                    var Gender = Int32.Parse(tokenS.Claims.First(x => x.Type == "gender")?.Value == "" ? ((int)GenderEnum.Gender.MALE).ToString() : tokenS.Claims.First(x => x.Type == "gender")?.Value);
                     var Role = tokenS.Claims.First(x => x.Type == "role")?.Value;
+
                     CurrentUserResponse currentUser = new CurrentUserResponse()
                     {
                         Id = id,
