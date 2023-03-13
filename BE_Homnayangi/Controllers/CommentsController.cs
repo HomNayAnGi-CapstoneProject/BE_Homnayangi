@@ -32,6 +32,7 @@ namespace BE_Homnayangi.Controllers
             {
                 return new JsonResult(new
                 {
+                    total_comments = CountTotalComments(result),
                     result = result
                 });
             }
@@ -39,6 +40,7 @@ namespace BE_Homnayangi.Controllers
             {
                 return new JsonResult(new
                 {
+                    total_comments = 0,
                     result = new List<ParentComment>()
                 });
             }
@@ -124,6 +126,26 @@ namespace BE_Homnayangi.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        private int CountTotalComments(List<Tuple<ParentComment, List<ChildComment>>> list)
+        {
+            int count = 0;
+            foreach (var item in list)
+            {
+                ++count;
+                if (item.Item2.Count > 0)
+                {
+                    foreach (var childComment in item.Item2)
+                    {
+                        if (childComment != null)
+                        {
+                            ++count;
+                        }
+                    }
+                }
+            }
+            return count;
         }
     }
 }
