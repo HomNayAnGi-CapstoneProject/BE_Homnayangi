@@ -299,7 +299,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     Title = x.b.Title,
                     ImageUrl = x.b.ImageUrl,
                     View = x.b.View,
-                    Reaction = x.b.Reaction,
+                    Reaction = GetTotalReactionOfBlog(x.b.BlogId),
                     ListSubCateName = x.ListSubCateName,
                     PackagePrice = y.PackagePrice,
                     TotalKcal = y.TotalKcal
@@ -1042,7 +1042,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                         ImageUrl = b.ImageUrl,
                         PackagePrice = b.Recipe?.PackagePrice,
                         CreatedDate = b.CreatedDate,
-                        Reaction = b.Reaction,
+                        Reaction = GetTotalReactionOfBlog(b.BlogId),
                         View = b.View
                     }).ToList();
 
