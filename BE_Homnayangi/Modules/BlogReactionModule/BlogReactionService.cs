@@ -80,6 +80,9 @@ namespace BE_Homnayangi.Modules.BlogReactionModule
                     await _blogReactionRepository.UpdateAsync(reaction);
                     result = ConvertDTO(reaction);
                 }
+                Blog currentBlog = await _blogRepository.GetFirstOrDefaultAsync(b => b.BlogId == blogId);
+                currentBlog.Reaction = reaction.Status.Value ? ++currentBlog.Reaction : --currentBlog.Reaction;
+                await _blogRepository.UpdateAsync(currentBlog);
             }
             catch (Exception ex)
             {
