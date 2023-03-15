@@ -12,7 +12,6 @@ using BE_Homnayangi.Modules.RecipeDetailModule.Interface;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
 using BE_Homnayangi.Modules.SubCateModule.Interface;
 using BE_Homnayangi.Modules.SubCateModule.Response;
-using BE_Homnayangi.Modules.TypeModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.Utils;
 using FluentValidation.Results;
@@ -38,7 +37,6 @@ namespace BE_Homnayangi.Modules.BlogModule
         private readonly IBlogRepository _blogRepository;
         private readonly IRecipeRepository _recipeRepository;
         private readonly IBlogSubCateRepository _blogSubCateRepository;
-        private readonly ISubCateRepository _subCateRepository;
         private readonly IRecipeDetailRepository _recipeDetailRepository;
         private readonly IUserRepository _userRepository;
         private readonly IBlogReferenceRepository _blogReferenceRepository;
@@ -57,7 +55,6 @@ namespace BE_Homnayangi.Modules.BlogModule
             _blogRepository = blogRepository;
             _recipeRepository = recipeRepository;
             _blogSubCateRepository = blogSubCateRepository;
-            _subCateRepository = subCateRepository;
             _recipeDetailRepository = recipeDetailRepository;
             _userRepository = userRepository;
             _blogReferenceRepository = blogReferenceRepository;
@@ -299,7 +296,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     Title = x.b.Title,
                     ImageUrl = x.b.ImageUrl,
                     View = x.b.View,
-                    Reaction = GetTotalReactionOfBlog(x.b.BlogId),
+                    Reaction = x.b.BlogReactions,
                     ListSubCateName = x.ListSubCateName,
                     PackagePrice = y.PackagePrice,
                     TotalKcal = y.TotalKcal
@@ -821,8 +818,6 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 var blogReferences = _blogReferenceRepository.GetBlogReferencesBy(x => x.BlogId == blog.BlogId).Result.ToList();
 
-                blog.Reaction = GetTotalReactionOfBlog(blog.BlogId);
-
                 result = new BlogDetailResponse()
                 {
                     // Blog information
@@ -1042,7 +1037,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                         ImageUrl = b.ImageUrl,
                         PackagePrice = b.Recipe?.PackagePrice,
                         CreatedDate = b.CreatedDate,
-                        Reaction = GetTotalReactionOfBlog(b.BlogId),
+                        Reaction = b.Reaction,
                         View = b.View
                     }).ToList();
 
