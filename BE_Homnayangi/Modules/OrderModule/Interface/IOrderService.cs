@@ -47,5 +47,11 @@ namespace BE_Homnayangi.Modules.OrderModule.Interface
             string blogId = "",
             string PayerID = "",
             string guid = "");
+
+        public Task<string> Checkout(Guid orderId);
+
+        public Task<Order> GetCart(Guid customerId);
+
+        public Task UpdateCart(Order OrderUpdate);
     }
 }

@@ -48,7 +48,7 @@ namespace BE_Homnayangi.Controllers
 
         #region Get all orders by customer, without paging
         // GET: api/Orders/5
-        [HttpGet("Customer/{id}")]
+        [HttpGet("/Customer/{id}")]
         public async Task<ActionResult<Order>> GetByCustomer([FromRoute] Guid id)
         {
             try
@@ -56,11 +56,11 @@ namespace BE_Homnayangi.Controllers
                 var res = await _orderService.GetByCustomer(id);
                 return Ok(res);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-            
+
         }
         #endregion
 
@@ -104,19 +104,66 @@ namespace BE_Homnayangi.Controllers
         {
         }
 
-        //// Create order
-        //[HttpPost("payment/paypal")]
-        //public ActionResult PaymentWithPaypal(Guid orderId)
-        //{
-        //    try
-        //    {
-        //        var url = _orderService.PaymentWithPaypal(orderId);
-        //        return Ok(url);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
+        [HttpGet("cart")]
+        public async Task<ActionResult<Order>> GetCart()
+        {
+            try
+            {
+                //var customerID = _userService.GetCurrentUser(Request.Headers["Authorization"]).Id;
+                var customerID = new Guid("31A1C0DF-178D-40AA-96F1-BC932E482D22"); //test
+                var cart = await _orderService.GetCart(customerID);
+                return Ok(cart);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("cart")]
+        public async Task<ActionResult> UpdateCart([FromBody] Order order)
+        {
+            try
+            {
+                var customerId = order.CustomerId;
+                if (!customerId.HasValue)
+                    throw new Exception("Order not binded to any customer");
+
+                await _orderService.UpdateCart(order);
+                return Ok("Update cart successfully");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("checkout/{id}")]
+        public async Task<ActionResult> Checkout([FromRoute] Guid id)
+        {
+            try
+            {
+                var url = await _orderService.Checkout(id);
+                return Ok(url);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("accept/{id}")]
+        public async Task<ActionResult> AcceptOrder([FromRoute] Guid id)
+        {
+            try
+            {
+                await _orderService.AcceptOrder(id);
+                return Ok("Order accepted");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

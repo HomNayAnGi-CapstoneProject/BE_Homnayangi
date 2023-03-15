@@ -23,7 +23,7 @@ namespace BE_Homnayangi.Modules.OrderModule
         public async Task<ICollection<Order>> GetOrdersBy(Expression<Func<Order, bool>> filter = null, Func<IQueryable<Order>, ICollection<Order>> options = null, string includeProperties = null)
 
         {
-            IQueryable<Order> query = DbSet;
+            IQueryable<Order> query = DbSet.AsNoTracking();
 
             if (filter != null)
             {

@@ -14,14 +14,14 @@ namespace Library.Models.Enum
         public enum OrderStatus
         {
             DELETED = 0,
-            PENDING = 1,
-            ACCEPTED = 2,
-            CANCEL = 3, // by user
-            DENIED = 4, // by staff
-            PAID = 5,
+            CART = 1,
+            PENDING = 2,
+            ACCEPTED = 3,
+            CANCEL = 4, // by user
+            DENIED = 5, // by staff
             SHIPPING = 6,
             DELIVERED = 7,
-            DELIVERED_FAIL = 8
+            DELIVERED_FAIL = 8,
         }
 
         public enum TransactionStatus
