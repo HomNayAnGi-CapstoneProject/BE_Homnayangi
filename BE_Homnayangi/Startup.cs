@@ -61,6 +61,8 @@ using Newtonsoft.Json.Serialization;
 using System;
 using System.Linq;
 using System.Text;
+using BE_Homnayangi.Modules.AdminModules.BadgeConditionModule.Interface;
+using BE_Homnayangi.Modules.AdminModules.BadgeConditionModule;
 
 namespace BE_Homnayangi
 {
@@ -224,6 +226,10 @@ namespace BE_Homnayangi
             //Calo reference Module
             services.AddScoped<ISeasonReferenceRepository, SeasonReferenceRepository>();
             services.AddScoped<ISeasonReferenceService, SeasonReferenceService>();
+
+            //Badge Condition Module
+            services.AddScoped<IBadgeConditionRepository, BadgeConditionRepository>();
+            services.AddScoped<IBadgeConditionService, BadgeConditionService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

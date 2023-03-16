@@ -17,9 +17,9 @@ namespace BE_Homnayangi.Modules.AdminModules.CaloReferenceModule.Request
     {
         public CreateNewCaloRefRequestValidator()
         {
-            RuleFor(x => x.FromAge).NotEmpty().NotNull();
-            RuleFor(x => x.ToAge).NotEmpty().NotNull();
-            RuleFor(x => x.Calo).NotEmpty().NotNull();
+            RuleFor(x => x.FromAge).NotEmpty().NotNull().GreaterThanOrEqualTo(0);
+            RuleFor(x => x.ToAge).NotEmpty().NotNull().GreaterThanOrEqualTo(0);
+            RuleFor(x => x.Calo).NotEmpty().NotNull().GreaterThanOrEqualTo(0);
             RuleFor(x => x.IsMale).NotEmpty().NotNull();
         }
     }

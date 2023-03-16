@@ -74,6 +74,13 @@ namespace Library.Models.Constant
         }
         #endregion
 
+        #region Badge Condition error message
+        public static class BadgeConditionError
+        {
+            public readonly static string BADGE_CONDITION_NOT_FOUND = "This badge condition can not be found";
+        }
+        #endregion
+
         #region Season Reference error message
         public static class SeasonRefError
         {
