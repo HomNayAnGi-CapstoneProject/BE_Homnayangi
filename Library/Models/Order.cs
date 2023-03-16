@@ -23,7 +23,6 @@ namespace Library.Models
         public Guid? CustomerId { get; set; }
         public bool? IsCooked { get; set; }
         public Guid? VoucherId { get; set; }
-        public int? PaymentMethod { get; set; }
 
         public virtual Customer Customer { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }

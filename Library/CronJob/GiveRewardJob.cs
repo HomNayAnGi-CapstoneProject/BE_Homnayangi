@@ -2,9 +2,9 @@
 //using System.Collections.Generic;
 //using System.Threading;
 //using System.Threading.Tasks;
-//using FPTBlog.Src.RewardModule;
-//using FPTBlog.Src.RewardModule.Entity;
-//using FPTBlog.Src.RewardModule.Interface;
+//using FPTBlog.Src.BadgeModule;
+//using FPTBlog.Src.BadgeModule.Entity;
+//using FPTBlog.Src.BadgeModule.Interface;
 //using FPTBlog.Src.UserModule;
 //using FPTBlog.Src.UserModule.Entity;
 //using FPTBlog.Src.UserModule.Interface;
@@ -12,16 +12,16 @@
 
 //namespace Library.CronJob
 //{
-//    public class GiveRewardJob : CronJobService
+//    public class GiveBadgeJob : CronJobService
 //    {
 //        private readonly IServiceScopeFactory ServiceScopeFactory;
-//        private readonly IRewardService RewardService;
+//        private readonly IBadgeService BadgeService;
 //        private readonly IUserService UserService;
-//        public GiveRewardJob(IScheduleConfig<GiveRewardJob> config, IServiceScopeFactory serviceScopeFactory)
+//        public GiveBadgeJob(IScheduleConfig<GiveBadgeJob> config, IServiceScopeFactory serviceScopeFactory)
 //        : base(config.CronExpression, config.TimeZoneInfo)
 //        {
 //            ServiceScopeFactory = serviceScopeFactory;
-//            RewardService = (RewardService)ServiceScopeFactory.CreateScope().ServiceProvider.GetService<IRewardService>();
+//            BadgeService = (BadgeService)ServiceScopeFactory.CreateScope().ServiceProvider.GetService<IBadgeService>();
 //            UserService = (UserService)ServiceScopeFactory.CreateScope().ServiceProvider.GetService<IUserService>();
 //        }
 
@@ -33,7 +33,7 @@
 
 //        public override Task DoWork(CancellationToken cancellationToken)
 //        {
-//            RewardService.GiveRewardJob();
+//            BadgeService.GiveBadgeJob();
 
 //            Console.WriteLine($"{DateTime.Now:hh:mm:ss} Give reward cron job is working.");
 //            return Task.CompletedTask;

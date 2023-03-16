@@ -1,5 +1,5 @@
 ﻿using System;
-using BE_Homnayangi.Modules.RewardModule.Interface;
+using BE_Homnayangi.Modules.BadgeModule.Interface;
 using Library.DataAccess;
 using Library.Models;
 using Microsoft.EntityFrameworkCore;
@@ -9,21 +9,21 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace BE_Homnayangi.Modules.RewardModule
+namespace BE_Homnayangi.Modules.BadgeModule
 {
-    public class RewardRepository : Repository<Reward>, IRewardRepository
+    public class BadgeRepository : Repository<Badge>, IBadgeRepository
     {
         private readonly HomnayangiContext _db;
 
-        public RewardRepository(HomnayangiContext db) : base(db)
+        public BadgeRepository(HomnayangiContext db) : base(db)
         {
             _db = db;
         }
 
-        public async Task<ICollection<Reward>> GetRewardsBy(Expression<Func<Reward, bool>> filter = null, Func<IQueryable<Reward>, ICollection<Reward>> options = null, string includeProperties = null)
+        public async Task<ICollection<Badge>> GetBadgesBy(Expression<Func<Badge, bool>> filter = null, Func<IQueryable<Badge>, ICollection<Badge>> options = null, string includeProperties = null)
 
         {
-            IQueryable<Reward> query = DbSet;
+            IQueryable<Badge> query = DbSet;
 
             if (filter != null)
             {

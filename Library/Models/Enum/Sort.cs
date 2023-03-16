@@ -9,7 +9,7 @@ namespace Library.Models.Enum
             REACTION = 2,
             VIEW = 3
         }
-        public enum RewardsSortBy
+        public enum BadgesSortBy
         {
             CREATEDDATE = 1,
             NAME = 2,
