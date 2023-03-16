@@ -9,6 +9,7 @@ namespace Library.Models.Constant
             public readonly static string ID_IS_NULL = "ID request is null";
             public readonly static string LIST_IS_NULL = "List have no data";
             public readonly static string INVALID_REQUEST = "Request data is invalid";
+            public readonly static string NOT_LOGIN = "Customer did not login";
         }
         #endregion
 

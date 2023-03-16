@@ -1,7 +1,6 @@
 using AutoMapper;
 using BE_Homnayangi.Modules.DTO.RecipeDetailsDTO;
 using BE_Homnayangi.Modules.DTO.RecipeDTO;
-using BE_Homnayangi.Modules.IngredientModule.Interface;
 using BE_Homnayangi.Modules.RecipeDetailModule.Interface;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Interface;
@@ -23,16 +22,14 @@ namespace BE_Homnayangi.Controllers
         private readonly IMapper _mapper;
         private readonly IRecipeService _recipeServices;
         private readonly IRecipeDetailService _recipeDetailService;
-        private readonly IIngredientService _ingredientService;
         private readonly IUserService _userService;
 
-        public RecipesController(IRecipeService recipeServices, IRecipeDetailService recipeDetailService, IIngredientService ingredientService,
+        public RecipesController(IRecipeService recipeServices, IRecipeDetailService recipeDetailService,
             IMapper mapper, IUserService userService)
         {
             _mapper = mapper;
             _recipeServices = recipeServices;
             _recipeDetailService = recipeDetailService;
-            _ingredientService = ingredientService;
             _userService = userService;
         }
 
@@ -40,12 +37,6 @@ namespace BE_Homnayangi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipes()
         {
-            var recipeDetails = _recipeDetailService
-                .GetRecipeDetailsBy(includeProperties: "Ingredient")
-                .Result
-                .Select(_mapper.Map<RecipeDetail, RecipeDetailsResponse>)
-                .ToList();
-
             var recipes = await _recipeServices.GetRecipesBy(includeProperties: "RecipeDetails");
             recipes.ToList();
 
