@@ -15,6 +15,7 @@ using BE_Homnayangi.Modules.SubCateModule.Response;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.Utils;
 using FluentValidation.Results;
+using GSF;
 using Library.Models;
 using Library.Models.Constant;
 using Library.Models.Enum;
@@ -985,10 +986,11 @@ namespace BE_Homnayangi.Modules.BlogModule
             List<BlogsByCatesResponse> list = new List<BlogsByCatesResponse>();
             try
             {
-                var currentBlog = await _blogRepository.GetFirstOrDefaultAsync(b => b.BlogId == blogId && b.BlogStatus.Value == 1, includeProperties: "BlogSubCates");
+                var currentBlog = await _blogRepository.GetFirstOrDefaultAsync(b => b.BlogId == blogId
+                                                                             && b.BlogStatus.Value == (int)Status.BlogStatus.ACTIVE,
+                                                                             includeProperties: "BlogSubCates");
                 if (currentBlog == null)
                     throw new Exception(ErrorMessage.BlogError.BLOG_NOT_FOUND);
-                Console.WriteLine("Subcate: " + currentBlog.BlogSubCates.ElementAt(0).SubCateId);
                 var relatedBlogs = await _blogRepository.GetBlogsBy(b => b.BlogStatus == 1 && b.BlogId != currentBlog.BlogId);
                 var listBlogSubCates = await _blogSubCateRepository.GetAll(includeProperties: "SubCate");
 
@@ -1004,24 +1006,24 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 Random random = new Random();
                 list = relatedBlogs
-                    .Join(listBlogSubCates, blog => blog.BlogId, bsc => bsc.BlogId, 
-                    (blog, bsc) => new
-                    {
-                        blog,
-                        bsc
-                    })
-                    .Where(x => x.bsc.SubCateId == currentBlog.BlogSubCates.ElementAt(0).SubCateId && x.bsc.Status.Value).ToList()
-                    .Join(listBlogDescRef, b => b.blog.BlogId, y => y.BlogId,
-                    (b, y) => new BlogsByCatesResponse
-                    {
-                        BlogId = b.blog.BlogId,
-                        CreatedDate = b.blog.CreatedDate,
-                        Title = b.blog.Title,
-                        ImageUrl = b.blog.ImageUrl,
-                        Reaction = b.blog.Reaction,
-                        View = b.blog.View,
-                        Description = y.Text
-                    }).OrderBy(b => random.Next()).Take(2).ToList();
+                            .Join(listBlogSubCates, blog => blog.BlogId, bsc => bsc.BlogId,
+                            (blog, bsc) => new
+                            {
+                                blog,
+                                bsc
+                            })
+                            .Where(x => x.bsc.SubCateId == currentBlog.BlogSubCates.ElementAt(0).SubCateId && x.bsc.Status.Value).ToList()
+                            .Join(listBlogDescRef, b => b.blog.BlogId, y => y.BlogId,
+                            (b, y) => new BlogsByCatesResponse
+                            {
+                                BlogId = b.blog.BlogId,
+                                CreatedDate = b.blog.CreatedDate,
+                                Title = b.blog.Title,
+                                ImageUrl = b.blog.ImageUrl,
+                                Reaction = b.blog.Reaction,
+                                View = b.blog.View,
+                                Description = y.Text
+                            }).OrderBy(b => random.Next()).Take(3).ToList();
             }
             catch (Exception ex)
             {

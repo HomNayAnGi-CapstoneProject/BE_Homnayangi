@@ -2,6 +2,7 @@
 using BE_Homnayangi.Modules.BlogReactionModule.Response;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using Library.Models;
+using Library.Models.Constant;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -28,6 +29,7 @@ namespace BE_Homnayangi.Controllers
             try
             {
                 var currentUser = _userService.GetCurrentUser(Request.Headers["Authorization"]);
+                if (currentUser == null) throw new Exception(ErrorMessage.CommonError.NOT_LOGIN); 
                 var result = await _blogReactionService.GetBlogReactionByBlogAndCustomerId(blogId, currentUser.Id);
                 if (result != null)
                 {
@@ -48,7 +50,12 @@ namespace BE_Homnayangi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                //return BadRequest(ex.Message);
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
             }
         }
 
