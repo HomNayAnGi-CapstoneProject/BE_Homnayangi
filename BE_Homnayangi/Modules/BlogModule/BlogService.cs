@@ -1012,7 +1012,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                                 blog,
                                 bsc
                             })
-                            .Where(x => x.bsc.SubCateId == currentBlog.BlogSubCates.ElementAt(0).SubCateId && x.bsc.Status.Value).ToList()
+                            .Where(x => x.bsc.SubCateId == currentBlog.BlogSubCates.ElementAt(0).SubCateId && x.bsc.Status != false).ToList()
                             .Join(listBlogDescRef, b => b.blog.BlogId, y => y.BlogId,
                             (b, y) => new BlogsByCatesResponse
                             {
