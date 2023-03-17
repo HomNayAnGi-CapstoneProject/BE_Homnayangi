@@ -735,29 +735,6 @@ namespace BE_Homnayangi.Modules.BlogModule
                 throw new Exception(ex.Message);
             }
         }
-        public async Task UpdateView(Guid? id)
-        {
-            try
-            {
-
-                if (id == null)
-                {
-                    throw new Exception(ErrorMessage.CommonError.ID_IS_NULL);
-                }
-                Blog blog = _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId == id && x.BlogStatus == 1).Result;
-                if (blog == null)
-                    throw new Exception(ErrorMessage.BlogError.BLOG_NOT_FOUND);
-
-                blog.View = blog.View + 1;
-                await _blogRepository.UpdateAsync(blog);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error at Update view: " + ex.Message);
-                throw new Exception(ex.Message);
-            }
-        }
-
         #endregion
 
         public async Task<ICollection<SearchBlogsResponse>> GetBlogAndRecipeByName(String name)
@@ -886,6 +863,10 @@ namespace BE_Homnayangi.Modules.BlogModule
                     }).ToList();
 
                 result.RelatedBlogs = await GetRelatedBlogs(result.BlogId);
+
+                blog.View = blog.View + 1;
+
+                await _blogRepository.UpdateAsync(blog);
             }
             catch (Exception ex)
             {
