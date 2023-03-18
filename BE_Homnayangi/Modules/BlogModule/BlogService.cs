@@ -934,7 +934,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                         Description = x.Description,
                         Quantity = x.Quantity,
                         Kcal = x.Ingredient.Kcal,
-                        Price = x.Ingredient.Price
+                        Price = x.Ingredient.Price,
+                        Image = x.Ingredient.Picture
                     }).ToList();
                 result.RelatedBlogs = await GetRelatedBlogs(result.BlogId);
                 await _blogRepository.UpdateAsync(blog);

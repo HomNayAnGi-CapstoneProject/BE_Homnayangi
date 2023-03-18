@@ -33,7 +33,7 @@ namespace BE_Homnayangi.Controllers
             _userService = userService;
         }
 
-        // GET: api/Recipes
+        // GET: api/v1/Recipes
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipes()
         {
@@ -45,7 +45,7 @@ namespace BE_Homnayangi.Controllers
             return Ok(recipesResponse);
         }
 
-        // GET: api/Recipes/5
+        // GET: api/v1/Recipes/5
         [HttpGet("{id}")]
         public async Task<ActionResult<RecipeResponse>> GetRecipe(Guid id)
         {

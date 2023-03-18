@@ -58,5 +58,6 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
         public int? Quantity { get; set; }
         public int? Kcal { get; set; }
         public decimal? Price { get; set; }
+        public string Image { get; set; }
     }
 }
