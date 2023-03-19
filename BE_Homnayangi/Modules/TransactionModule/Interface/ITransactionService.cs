@@ -28,9 +28,5 @@ namespace BE_Homnayangi.Modules.TransactionModule.Interface
         public Transaction GetTransactionByID(Guid? id);
 
         public Task DeleteTransaction(Guid id);
-
-        public Task CompleteTransaction(Guid id);
-
-        public Task DenyTransaction(Guid id);
     }
 }

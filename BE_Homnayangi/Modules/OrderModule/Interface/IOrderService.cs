@@ -9,7 +9,7 @@ namespace BE_Homnayangi.Modules.OrderModule.Interface
 {
     public interface IOrderService
     {
-        public Task AddNewOrder(Order newOrder);
+        public Task<string> AddNewOrder(Order newOrder);
 
         public Task UpdateOrder(Order OrderUpdate);
 
@@ -33,13 +33,15 @@ namespace BE_Homnayangi.Modules.OrderModule.Interface
 
         public Task AcceptOrder(Guid id);
 
-        public Task DeniedOrder(Guid id);
+        public Task DenyOrder(Guid id);
 
         public Task CancelOrder(Guid id);
 
-        public Task PaidOrder(Guid id);
+        public Task Shipping(Guid id);
 
-        public Task UpdateShippingStatusOrder(Guid id, int status);
+        public Task Delivered(Guid id);
+
+        public Task DeliveredFail(Guid id);
 
         public Task<string> PaymentWithPaypal(
             Guid orderId,
@@ -48,10 +50,5 @@ namespace BE_Homnayangi.Modules.OrderModule.Interface
             string PayerID = "",
             string guid = "");
 
-        public Task<string> Checkout(Guid orderId);
-
-        public Task<Order> GetCart(Guid customerId);
-
-        public Task UpdateCart(Order OrderUpdate);
     }
 }

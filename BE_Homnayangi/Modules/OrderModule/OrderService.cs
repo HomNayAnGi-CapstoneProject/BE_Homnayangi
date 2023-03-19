@@ -69,33 +69,83 @@ namespace BE_Homnayangi.Modules.OrderModule
             return _OrderRepository.GetNItemRandom(filter, numberItem: numberItem);
         }
 
-        public async Task AddNewOrder(Order newOrder)
+        public async Task<string> AddNewOrder(Order newOrder)
         {
-            //try
-            //{
-            //    newOrder.OrderId = Guid.NewGuid();
-            //    newOrder.OrderDate = DateTime.Now;
-            //    newOrder.OrderStatus = (int)Status.OrderStatus.CART;
+            var redirectUrl = "";
+            try
+            {
+                newOrder.OrderId = Guid.NewGuid();
+                newOrder.OrderDate = DateTime.Now;
+                newOrder.OrderStatus = (int)Status.OrderStatus.PENDING;
 
-            //    foreach (var detail in newOrder.OrderDetails)
-            //    {
-            //        detail.OrderId = newOrder.OrderId;
-            //    }
+                if (string.IsNullOrEmpty(newOrder.ShippedAddress))
+                    throw new Exception(ErrorMessage.OrderError.ORDER_SHIPPING_ADDRESS_REQUIRED);
+                if (newOrder.TotalPrice < 10000)
+                    throw new Exception(ErrorMessage.OrderError.ORDER_TOTAL_PRICE_NOT_VALID);
 
-            //    var transactionScope = _OrderRepository.Transaction();
-            //    using (transactionScope)
-            //    {
-            //        await _OrderRepository.AddAsync(newOrder);
-            //        await _orderDetailRepository.AddRangeAsync(newOrder.OrderDetails);
+                foreach(var detail in newOrder.OrderDetails)
+                {
+                    detail.OrderId = newOrder.OrderId;
+                }
 
-            //        transactionScope.Commit();
-            //    }
-            //}
-            //catch(Exception ex)
-            //{
-            //    Console.WriteLine(ex.Message);
-            //    throw new Exception($"Add new order fail - {ex.Message}");
-            //}
+                #region create transaction
+                var transaction = new Library.Models.Transaction()
+                {
+                    TransactionId = newOrder.OrderId,
+                    TotalAmount = newOrder.TotalPrice.Value,
+                    CreatedDate = DateTime.Now,
+                    TransactionStatus = (int)Status.TransactionStatus.PENDING,
+                    CustomerId = newOrder.CustomerId
+                };
+                #endregion
+
+                var transactionScope = _OrderRepository.Transaction();
+                using (transactionScope)
+                {
+                    try
+                    {
+                        await _OrderRepository.AddAsync(newOrder);
+                        foreach (var detail in newOrder.OrderDetails)
+                        {
+                            detail.OrderId = newOrder.OrderId;
+                            var detailExisted = await _orderDetailRepository
+                                .GetOrderDetailsBy(od => od.OrderId.Equals(newOrder.OrderId)
+                                    && od.IngredientId.Equals(detail.IngredientId));
+                            if (detailExisted == null)
+                                await _orderDetailRepository.AddAsync(detail);
+                        }
+                        await _transactionRepository.AddAsync(transaction);
+
+                        if (newOrder.PaymentMethod.HasValue)
+                        {
+                            switch (newOrder.PaymentMethod.GetValueOrDefault())
+                            {
+                                case (int)PaymentMethodEnum.PaymentMethods.PAYPAL:
+                                    redirectUrl = await PaymentWithPaypal(newOrder.OrderId);
+                                    break;
+                                case (int)PaymentMethodEnum.PaymentMethods.COD:
+                                    break;
+                                default:
+                                    throw new Exception(ErrorMessage.OrderError.ORDER_PAYMENT_METHOD_NOT_VALID);
+                            }
+                        }
+                        else
+                            throw new Exception(ErrorMessage.OrderError.ORDER_PAYMENT_METHOD_NOT_VALID);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception($"Transaction fail - {e.Message}");
+                    }
+                    
+                    transactionScope.Commit();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Add new order fail - {ex.Message}");
+            }
+
+            return redirectUrl;
         }
 
         public async Task UpdateOrder(Order OrderUpdate)
@@ -108,7 +158,6 @@ namespace BE_Homnayangi.Modules.OrderModule
             return _OrderRepository.GetFirstOrDefaultAsync(x => x.OrderId.Equals(id)).Result;
         }
 
-        // OFF: Order, OrderDetails
         public async Task DeleteOrder(Guid id)
         {
             var order = await _OrderRepository.GetByIdAsync(id);
@@ -130,7 +179,7 @@ namespace BE_Homnayangi.Modules.OrderModule
         {
             var order = await _OrderRepository.GetByIdAsync(orderId);
 
-            if (order == null)
+            if (order == null || order.OrderStatus == (int)Status.OrderStatus.DELETED)
                 throw new Exception(ErrorMessage.OrderError.ORDER_NOT_FOUND);
 
             var customer = await _customerRepository.GetByIdAsync(order.CustomerId.Value);
@@ -139,85 +188,192 @@ namespace BE_Homnayangi.Modules.OrderModule
                 throw new Exception(ErrorMessage.OrderError.ORDER_CANNOT_CHANGE_STATUS);
 
             order.OrderStatus = (int)Status.OrderStatus.ACCEPTED;
-            await _OrderRepository.UpdateAsync(order);
 
-            if (order.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL)
+            #region update order status, create transaction if COD, update status if Paypal
+            var transactionScope = _OrderRepository.Transaction();
+            using (transactionScope)
             {
-                var transaction = await _transactionRepository.GetByIdAsync(orderId);
-                if (transaction == null)
-                    throw new Exception("Transaction not found");
-                transaction.TransactionStatus = (int)Status.TransactionStatus.SUCCESS;
+                await _OrderRepository.UpdateAsync(order);
+
+                if (order.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL)
+                {
+                    var transaction = await _transactionRepository.GetByIdAsync(orderId);
+                    if (transaction == null)
+                        throw new Exception(ErrorMessage.TransactionError.TRANSACTION_NOT_FOUND);
+                    transaction.TransactionStatus = (int)Status.TransactionStatus.SUCCESS;
+                    await _transactionRepository.UpdateAsync(transaction);
+                }
+                else
+                {
+                    #region create transaction
+                    var transaction = new Library.Models.Transaction()
+                    {
+                        TransactionId = order.OrderId,
+                        TotalAmount = order.TotalPrice.Value,
+                        CreatedDate = DateTime.Now,
+                        TransactionStatus = (int)Status.TransactionStatus.PENDING,
+                        CustomerId = order.CustomerId
+                    };
+                    #endregion
+                    await _transactionRepository.AddAsync(transaction);
+                }
+
+                #region sending mail
+                // gui mail thong tin order
+                var mailSubject = $"[Da duyet] Thong tin don hang #{order.OrderId}";
+                var mailBody = $"Cam on ban da mua hang, don hang #{order.OrderId} da duoc duyet.\n" +
+                    $"Don hang cua ban dang duoc giao";
+
+                SendMail(mailSubject, mailBody, customer.Email);
+                #endregion
+
+                transactionScope.Commit();
             }
-
-            #region sending mail
-            // gui mail thong tin order
-            var mailSubject = $"[Da duyet] Thong tin don hang #{order.OrderId}";
-            var mailBody = $"Cam on ban da mua hang, don hang #{order.OrderId} da duoc duyet.\n" +
-                $"Don hang cua ban dang duoc giao";
-
-            SendMail(mailSubject, mailBody, customer.Email);
             #endregion
+
         }
 
-        public async Task DeniedOrder(Guid id)
+        public async Task DenyOrder(Guid id)
         {
             var order = await _OrderRepository.GetByIdAsync(id);
 
-            if (order == null)
+            if (order == null || order.OrderStatus == (int)Status.OrderStatus.DELETED)
                 throw new Exception(ErrorMessage.OrderError.ORDER_NOT_FOUND);
 
             var customer = await _customerRepository.GetByIdAsync(order.CustomerId.Value);
 
             order.OrderStatus = (int)Status.OrderStatus.DENIED;
-            await _OrderRepository.UpdateAsync(order);
 
-            #region sending mail
-            // gui mail thong bao don hang bi tu choi
-            var mailSubject = $"[That bai] Thong tin don hang #{order.OrderId}";
-            var mailBody = $"Don hang #{order.OrderId} da bi tu choi.";
+            var transactionScope = _OrderRepository.Transaction();
+            using (transactionScope)
+            {
+                await _OrderRepository.UpdateAsync(order);
 
-            SendMail(mailSubject, mailBody, customer.Email);
-            #endregion
+                if (order.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL)
+                {
+                    var transaction = await _transactionRepository.GetByIdAsync(order.OrderId);
+                    if (transaction == null)
+                        throw new Exception(ErrorMessage.TransactionError.TRANSACTION_NOT_FOUND);
+                    transaction.TransactionStatus = (int)Status.TransactionStatus.FAIL;
+                    await _transactionRepository.UpdateAsync(transaction);
+                }
 
+                #region sending mail
+                // gui mail thong bao don hang bi tu choi
+                var mailSubject = $"[Tu choi don hang] Thong tin don hang #{order.OrderId}";
+                var mailBody = $"Don hang #{order.OrderId} da bi tu choi.";
+
+                SendMail(mailSubject, mailBody, customer.Email);
+                #endregion
+
+                transactionScope.Commit();
+            }
         }
 
         public async Task CancelOrder(Guid id)
         {
             var order = await _OrderRepository.GetByIdAsync(id);
 
-            if (order == null)
+            if (order == null || order.OrderStatus == (int)Status.OrderStatus.DELETED)
                 throw new Exception(ErrorMessage.OrderError.ORDER_NOT_FOUND);
+
+            var customer = await _customerRepository.GetByIdAsync(order.CustomerId.Value);
 
             order.OrderStatus = (int)Status.OrderStatus.CANCEL;
-            await _OrderRepository.UpdateAsync(order);
+
+            var transactionScope = _OrderRepository.Transaction();
+            using (transactionScope)
+            {
+                await _OrderRepository.UpdateAsync(order);
+
+                if (order.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL)
+                {
+                    var transaction = await _transactionRepository.GetByIdAsync(order.OrderId);
+                    if (transaction == null)
+                        throw new Exception(ErrorMessage.TransactionError.TRANSACTION_NOT_FOUND);
+                    transaction.TransactionStatus = (int)Status.TransactionStatus.FAIL;
+                    await _transactionRepository.UpdateAsync(transaction);
+                }
+
+                #region sending mail
+                // gui mail thong bao don hang bi huy
+                var mailSubject = $"[Huy don hang] Thong tin don hang #{order.OrderId}";
+                var mailBody = $"Don hang #{order.OrderId} da bi huy.";
+
+                SendMail(mailSubject, mailBody, customer.Email);
+                #endregion
+
+                transactionScope.Commit();
+            }
         }
 
-        public async Task UpdateShippingStatusOrder(
-            Guid id,
-            [Range(6,8,ErrorMessage="Status must between 6 to 8")] int status)
+        public async Task Shipping(Guid id)
         {
-            var order = await _OrderRepository.GetByIdAsync(id);
+            try
+            {
+                var order = await _OrderRepository.GetByIdAsync(id);
 
-            if (order == null)
-                throw new Exception(ErrorMessage.OrderError.ORDER_NOT_FOUND);
+                if (order == null || order.OrderStatus == (int)Status.OrderStatus.DELETED)
+                    throw new Exception(ErrorMessage.OrderError.ORDER_NOT_FOUND);
 
-            order.OrderStatus = status;
-            await _OrderRepository.UpdateAsync(order);
+                if (order.OrderStatus != (int)Status.OrderStatus.ACCEPTED)
+                    throw new Exception(ErrorMessage.OrderError.ORDER_CANNOT_CHANGE_STATUS);
+
+                order.OrderStatus = (int)Status.OrderStatus.SHIPPING;
+                await _OrderRepository.UpdateAsync(order);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Update Shipping Status fail - {ex.Message}");
+                throw new Exception($"Update Shipping Status fail");
+            }
+            
         }
 
-        public async Task PaidOrder(Guid id)
+        public async Task Delivered(Guid id)
         {
-            //var order = await _OrderRepository.GetByIdAsync(id);
+            try
+            {
+                var order = await _OrderRepository.GetByIdAsync(id);
 
-            //if (order == null)
-            //    throw new Exception(ErrorMessage.OrderError.ORDER_NOT_FOUND);
+                if (order == null || order.OrderStatus == (int)Status.OrderStatus.DELETED)
+                    throw new Exception(ErrorMessage.OrderError.ORDER_NOT_FOUND);
 
-            //order.OrderStatus = (int)Status.OrderStatus.PAID;
+                if (order.OrderStatus != (int)Status.OrderStatus.SHIPPING)
+                    throw new Exception(ErrorMessage.OrderError.ORDER_CANNOT_CHANGE_STATUS);
 
-            //// giao hang trong 1h sau khi thanh toan
-            //order.ShippedDate = DateTime.Now.AddHours(1);
+                order.OrderStatus = (int)Status.OrderStatus.DELIVERED;
+                await _OrderRepository.UpdateAsync(order);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Update Delivered Status fail - {ex.Message}");
+                throw new Exception($"Update Delivered Status fail");
+            }
 
-            //await _OrderRepository.UpdateAsync(order);
+        }
+
+        public async Task DeliveredFail(Guid id)
+        {
+            try
+            {
+                var order = await _OrderRepository.GetByIdAsync(id);
+
+                if (order == null || order.OrderStatus == (int)Status.OrderStatus.DELETED)
+                    throw new Exception(ErrorMessage.OrderError.ORDER_NOT_FOUND);
+
+                if (order.OrderStatus != (int)Status.OrderStatus.SHIPPING)
+                    throw new Exception(ErrorMessage.OrderError.ORDER_CANNOT_CHANGE_STATUS);
+
+                order.OrderStatus = (int)Status.OrderStatus.DELIVERED_FAIL;
+                await _OrderRepository.UpdateAsync(order);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Update Delivered Status fail - {ex.Message}");
+                throw new Exception($"Update Delivered Status fail");
+            }
+
         }
 
         public void SendMail(string mailSubject, string mailBody, string receiver)
@@ -237,8 +393,9 @@ namespace BE_Homnayangi.Modules.OrderModule
 
                 smtpClient.Send(address, receiver, mailSubject, mailBody);
             }
-            catch
+            catch(Exception ex)
             {
+                Console.WriteLine($"{ErrorMessage.MailError.MAIL_SENDING_ERROR} - {ex.Message}");
                 throw new Exception(ErrorMessage.MailError.MAIL_SENDING_ERROR);
             }
         }
@@ -297,7 +454,7 @@ namespace BE_Homnayangi.Modules.OrderModule
 
             var transaction = await _transactionRepository.GetByIdAsync(orderId);
             if (transaction == null)
-                throw new Exception("Transaction not found");
+                throw new Exception(ErrorMessage.TransactionError.TRANSACTION_NOT_FOUND);
 
             var payer = new PayPal.Api.Payer()
             {
@@ -366,7 +523,7 @@ namespace BE_Homnayangi.Modules.OrderModule
 
             if (order == null)
                 throw new Exception(ErrorMessage.OrderError.ORDER_NOT_FOUND);
-            if (!order.OrderStatus.Equals((int)Status.OrderStatus.CART))
+            if (!order.OrderStatus.Equals((int)Status.OrderStatus.PENDING))
                 throw new Exception("Order not available for checkout");
             if (string.IsNullOrEmpty(order.ShippedAddress))
                 throw new Exception("Shipping address required");
@@ -424,56 +581,6 @@ namespace BE_Homnayangi.Modules.OrderModule
             return redirectUrl;
         }
 
-        public async Task<Order> GetCart(Guid customerId)
-        {
-            var cart = _OrderRepository
-                .GetOrdersBy(o =>
-                        o.OrderStatus.Equals((int)Status.OrderStatus.CART)
-                        && o.CustomerId.Equals(customerId),
-                    includeProperties:"OrderDetails")
-                .Result
-                .FirstOrDefault();
-
-            if (cart == null)
-            {
-                cart = new Order();
-                cart.OrderId = Guid.NewGuid();
-                cart.OrderStatus = (int) Status.OrderStatus.CART;
-                cart.CustomerId = customerId;
-
-                await _OrderRepository.AddAsync(cart);
-            }
-
-            return cart;
-        }
-
-        public async Task UpdateCart(Order order)
-        {
-            try
-            {
-                if (!order.OrderStatus.Equals((int)Status.OrderStatus.CART))
-                    throw new Exception("Cannot update");
-
-                var newOrderDetails = order.OrderDetails;
-                order.OrderDetails = null;
-
-                var transactionScope = _OrderRepository.Transaction();
-                using (transactionScope)
-                {
-                    await _OrderRepository.UpdateAsync(order);
-                    var oldDetails =
-                        await _orderDetailRepository
-                        .GetOrderDetailsBy(od => od.OrderId.Equals(order.OrderId));
-                    if (oldDetails.Count > 0) await _orderDetailRepository.RemoveRangeAsync(oldDetails);
-                    await _orderDetailRepository.AddRangeAsync(newOrderDetails);
-
-                    transactionScope.Commit();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Update cart fail - {ex.Message}");
-            }
-        }
+        
     }
 }

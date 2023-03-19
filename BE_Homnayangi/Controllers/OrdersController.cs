@@ -71,80 +71,10 @@ namespace BE_Homnayangi.Controllers
             try
             {
                 Order order = _mapper.Map<Order>(request);
-                //order.CustomerId = _userService.GetCurrentUser(Request.Headers["Authorization"]).Id;
-                order.CustomerId = new Guid("31A1C0DF-178D-40AA-96F1-BC932E482D22"); // test
+                order.CustomerId = _userService.GetCurrentUser(Request.Headers["Authorization"]).Id;
 
-                await _orderService.AddNewOrder(order);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        // PUT: api/Orders/5
-        //[HttpPut("payment/{id}")]
-        //public async Task<ActionResult> Put([FromBody] PaymentRequest request)
-        //{
-        //    try
-        //    {
-        //        _orderService.UpdateOrderPaymentStatus(request);
-        //        return Ok();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
-
-        // DELETE: api/Orders/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
-
-        [HttpGet("cart")]
-        public async Task<ActionResult<Order>> GetCart()
-        {
-            try
-            {
-                //var customerID = _userService.GetCurrentUser(Request.Headers["Authorization"]).Id;
-                var customerID = new Guid("31A1C0DF-178D-40AA-96F1-BC932E482D22"); //test
-                var cart = await _orderService.GetCart(customerID);
-                return Ok(cart);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPut("cart")]
-        public async Task<ActionResult> UpdateCart([FromBody] Order order)
-        {
-            try
-            {
-                var customerId = order.CustomerId;
-                if (!customerId.HasValue)
-                    throw new Exception("Order not binded to any customer");
-
-                await _orderService.UpdateCart(order);
-                return Ok("Update cart successfully");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPut("checkout/{id}")]
-        public async Task<ActionResult> Checkout([FromRoute] Guid id)
-        {
-            try
-            {
-                var url = await _orderService.Checkout(id);
-                return Ok(url);
+                var redirectUrl = await _orderService.AddNewOrder(order);
+                return Ok(redirectUrl);
             }
             catch (Exception ex)
             {
@@ -159,6 +89,66 @@ namespace BE_Homnayangi.Controllers
             {
                 await _orderService.AcceptOrder(id);
                 return Ok("Order accepted");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("deny/{id}")]
+        public async Task<ActionResult> DenyAsync([FromRoute] Guid id)
+        {
+            try
+            {
+                await _orderService.DenyOrder(id);
+                return Ok("Order denied");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("cancel/{id}")]
+        public async Task<ActionResult> Cancel([FromRoute] Guid id)
+        {
+            try
+            {
+                await _orderService.CancelOrder(id);
+                return Ok("Order cancelled");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("shipping/{id}")]
+        public async Task<ActionResult> Shipping([FromRoute] Guid id)
+        {
+            try
+            {
+                await _orderService.Shipping(id);
+                return Ok("Shipping");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("delivered/{id}")]
+        public async Task<ActionResult> Delivered([FromRoute] Guid id, [FromQuery] bool fail)
+        {
+            try
+            {
+                if (fail)
+                    await _orderService.DeliveredFail(id);
+                else
+                    await _orderService.Delivered(id);
+
+                return Ok();
             }
             catch (Exception ex)
             {

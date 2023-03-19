@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using BE_Homnayangi.Modules.TransactionModule.Interface;
-//using BE_Homnayangi.Modules.TransactionModule.Request;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.Utils;
 using BE_Homnayangi.Modules.VoucherModule.Response;
@@ -14,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BE_Homnayangi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class TransactionsController : ControllerBase
     {
@@ -46,57 +45,5 @@ namespace BE_Homnayangi.Controllers
         }
         #endregion
 
-        // POST: api/Transactions
-        //[HttpPost]
-        //public async Task<ActionResult> Post([FromBody] CreateTransactionRequest request)
-        //{
-        //    try
-        //    {
-        //        Transaction Transaction = _mapper.Map<Transaction>(request);
-        //        Transaction.CustomerId = _userService.GetCurrentUser(Request.Headers["Authorization"]).Id;
-
-        //        await _TransactionService.AddNewTransaction(Transaction);
-        //        return Ok();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
-
-
-        [HttpPut("complete/{id}")]
-        public async Task<ActionResult> CompleteTransaction([FromRoute] Guid id)
-        {
-            try
-            {
-                await _TransactionService.CompleteTransaction(id);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPut("deny/{id}")]
-        public async Task<ActionResult> DenyTransaction([FromRoute] Guid id)
-        {
-            try
-            {
-                await _TransactionService.DenyTransaction(id);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        // DELETE: api/Transactions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }

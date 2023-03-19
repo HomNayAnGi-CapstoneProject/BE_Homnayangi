@@ -83,39 +83,5 @@ namespace BE_Homnayangi.Modules.TransactionModule
             transaction.TransactionStatus = (int)Status.TransactionStatus.DELETED;
             await _TransactionRepository.UpdateAsync(transaction);
         }
-
-        public async Task CompleteTransaction(Guid id)
-        {
-            var transaction = await _TransactionRepository.GetByIdAsync(id);
-
-            if (transaction == null)
-                throw new Exception(ErrorMessage.TransactionError.TRANSACTION_NOT_FOUND);
-
-            if (transaction.TransactionStatus != (int)Status.TransactionStatus.PENDING)
-                throw new Exception(ErrorMessage.TransactionError.TRANSACTION_NOT_ON_PENDING);
-
-            transaction.TransactionStatus = (int)Status.TransactionStatus.SUCCESS;
-            await _TransactionRepository.UpdateAsync(transaction);
-
-            // complete payment
-            await _orderService.PaidOrder(id);
-        }
-
-        public async Task DenyTransaction(Guid id)
-        {
-            var transaction = await _TransactionRepository.GetByIdAsync(id);
-
-            if (transaction == null)
-                throw new Exception(ErrorMessage.TransactionError.TRANSACTION_NOT_FOUND);
-
-            if (transaction.TransactionStatus != (int)Status.TransactionStatus.PENDING)
-                throw new Exception(ErrorMessage.TransactionError.TRANSACTION_NOT_ON_PENDING);
-
-            transaction.TransactionStatus = (int)Status.TransactionStatus.FAIL;
-            await _TransactionRepository.UpdateAsync(transaction);
-
-            // deny payment
-            await _orderService.DeniedOrder(id);
-        }
     }
 }

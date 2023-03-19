@@ -108,6 +108,9 @@ namespace Library.Models.Constant
             public readonly static string ORDER_NOT_FOUND = "Order not found";
             public readonly static string COOKED_ORDER_NOT_VALID = "Cooked order cannot have ingredient or package";
             public readonly static string ORDER_CANNOT_CHANGE_STATUS = "Order status cannot be change";
+            public readonly static string ORDER_SHIPPING_ADDRESS_REQUIRED = "Shipping address is required";
+            public readonly static string ORDER_TOTAL_PRICE_NOT_VALID = "Total price must higher than 1";
+            public readonly static string ORDER_PAYMENT_METHOD_NOT_VALID = "Payment method not valid";
         }
         #endregion
 
