@@ -1,902 +1,358 @@
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/appsettings.Development.json
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/appsettings.json
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/BE_Homnayangi.exe
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/BE_Homnayangi.deps.json
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/BE_Homnayangi.runtimeconfig.json
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/BE_Homnayangi.runtimeconfig.dev.json
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/BE_Homnayangi.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/BE_Homnayangi.pdb
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Antlr3.Runtime.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/AutoMapper.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/ExpressionEvaluator.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/FluentValidation.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Google.Apis.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Google.Apis.Auth.PlatformServices.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Google.Apis.Auth.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Google.Apis.Core.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/GSF.Core.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Humanizer.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.AspNetCore.Authentication.Google.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.AspNetCore.JsonPatch.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.AspNetCore.Razor.Language.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Bcl.AsyncInterfaces.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.CodeAnalysis.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.CodeAnalysis.CSharp.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.CodeAnalysis.CSharp.Workspaces.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.CodeAnalysis.Razor.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.CodeAnalysis.Workspaces.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Data.SqlClient.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Data.Sqlite.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.DotNet.PlatformAbstractions.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.EntityFrameworkCore.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.EntityFrameworkCore.Abstractions.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.EntityFrameworkCore.Design.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.EntityFrameworkCore.Relational.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.EntityFrameworkCore.Sqlite.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.EntityFrameworkCore.SqlServer.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Extensions.DependencyInjection.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Extensions.DependencyModel.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Extensions.Options.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Extensions.Primitives.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Identity.Client.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.IdentityModel.JsonWebTokens.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.IdentityModel.Logging.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.IdentityModel.Protocols.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.IdentityModel.Tokens.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.OpenApi.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGeneration.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGeneration.Contracts.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGeneration.Core.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/dotnet-aspnet-codegenerator-design.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGeneration.Templating.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGeneration.Utils.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGenerators.Mvc.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Newtonsoft.Json.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Newtonsoft.Json.Bson.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/SQLitePCLRaw.batteries_v2.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/SQLitePCLRaw.nativelibrary.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/SQLitePCLRaw.core.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/SQLitePCLRaw.provider.dynamic_cdecl.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Swashbuckle.AspNetCore.Swagger.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Swashbuckle.AspNetCore.SwaggerGen.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Swashbuckle.AspNetCore.SwaggerUI.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/System.Composition.AttributedModel.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/System.Composition.Convention.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/System.Composition.Hosting.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/System.Composition.Runtime.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/System.Composition.TypedParts.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/System.Configuration.ConfigurationManager.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/System.Diagnostics.DiagnosticSource.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/System.IdentityModel.Tokens.Jwt.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/System.Runtime.Caching.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/System.Runtime.CompilerServices.Unsafe.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/System.Security.Cryptography.ProtectedData.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/UnidecodeSharpFork.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/cs/Microsoft.CodeAnalysis.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/de/Microsoft.CodeAnalysis.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/es/Microsoft.CodeAnalysis.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/fr/Microsoft.CodeAnalysis.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/it/Microsoft.CodeAnalysis.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/ja/Microsoft.CodeAnalysis.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/ko/Microsoft.CodeAnalysis.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/pl/Microsoft.CodeAnalysis.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/pt-BR/Microsoft.CodeAnalysis.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/ru/Microsoft.CodeAnalysis.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/tr/Microsoft.CodeAnalysis.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/zh-Hans/Microsoft.CodeAnalysis.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/zh-Hant/Microsoft.CodeAnalysis.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/cs/Microsoft.CodeAnalysis.CSharp.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/de/Microsoft.CodeAnalysis.CSharp.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/es/Microsoft.CodeAnalysis.CSharp.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/fr/Microsoft.CodeAnalysis.CSharp.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/it/Microsoft.CodeAnalysis.CSharp.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/ja/Microsoft.CodeAnalysis.CSharp.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/ko/Microsoft.CodeAnalysis.CSharp.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/pl/Microsoft.CodeAnalysis.CSharp.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/pt-BR/Microsoft.CodeAnalysis.CSharp.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/ru/Microsoft.CodeAnalysis.CSharp.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/tr/Microsoft.CodeAnalysis.CSharp.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/zh-Hans/Microsoft.CodeAnalysis.CSharp.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/zh-Hant/Microsoft.CodeAnalysis.CSharp.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/cs/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/de/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/es/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/fr/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/it/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/ja/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/ko/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/pl/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/pt-BR/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/ru/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/tr/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/zh-Hans/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/zh-Hant/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/cs/Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/de/Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/es/Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/fr/Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/it/Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/ja/Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/ko/Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/pl/Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/pt-BR/Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/ru/Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/tr/Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/zh-Hans/Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/zh-Hant/Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/unix/lib/netcoreapp3.1/Microsoft.Data.SqlClient.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win/lib/netcoreapp3.1/Microsoft.Data.SqlClient.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm/native/Microsoft.Data.SqlClient.SNI.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm/native/Microsoft.Data.SqlClient.SNI.pdb
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm64/native/Microsoft.Data.SqlClient.SNI.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm64/native/Microsoft.Data.SqlClient.SNI.pdb
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-x64/native/Microsoft.Data.SqlClient.SNI.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-x64/native/Microsoft.Data.SqlClient.SNI.pdb
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-x86/native/Microsoft.Data.SqlClient.SNI.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-x86/native/Microsoft.Data.SqlClient.SNI.pdb
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm/lib/net5.0/dotnet-aspnet-codegenerator-design.exe
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm64/lib/net5.0/dotnet-aspnet-codegenerator-design.exe
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/alpine-x64/native/libe_sqlite3.so
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-arm/native/libe_sqlite3.so
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-arm64/native/libe_sqlite3.so
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-armel/native/libe_sqlite3.so
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-mips64/native/libe_sqlite3.so
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-musl-x64/native/libe_sqlite3.so
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-x64/native/libe_sqlite3.so
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-x86/native/libe_sqlite3.so
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/osx-x64/native/libe_sqlite3.dylib
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm/native/e_sqlite3.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm64/native/e_sqlite3.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-x64/native/e_sqlite3.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-x86/native/e_sqlite3.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win/lib/netstandard2.0/System.Runtime.Caching.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win/lib/netstandard2.0/System.Security.Cryptography.ProtectedData.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Library.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Repository.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Library.pdb
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Repository.pdb
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.csproj.AssemblyReference.cache
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.GeneratedMSBuildEditorConfig.editorconfig
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.AssemblyInfoInputs.cache
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.AssemblyInfo.cs
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.csproj.CoreCompileInputs.cache
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.MvcApplicationPartsAssemblyInfo.cs
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.MvcApplicationPartsAssemblyInfo.cache
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/scopedcss/bundle/BE_Homnayangi.styles.css
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/staticwebassets/BE_Homnayangi.StaticWebAssets.Manifest.cache
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.RazorTargetAssemblyInfo.cache
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.csproj.CopyComplete
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/refint/BE_Homnayangi.dll
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.pdb
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.genruntimeconfig.cache
-C:/Users/USER/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/ref/BE_Homnayangi.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/appsettings.Development.json
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/appsettings.json
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/BE_Homnayangi.exe
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/BE_Homnayangi.deps.json
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/BE_Homnayangi.runtimeconfig.json
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/BE_Homnayangi.runtimeconfig.dev.json
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/BE_Homnayangi.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/ref/BE_Homnayangi.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/BE_Homnayangi.pdb
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Antlr3.Runtime.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/AutoMapper.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/ExpressionEvaluator.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/FluentValidation.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Google.Apis.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Google.Apis.Auth.PlatformServices.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Google.Apis.Auth.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Google.Apis.Core.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/GSF.Core.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Humanizer.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.AspNetCore.Authentication.Google.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.AspNetCore.JsonPatch.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.AspNetCore.Razor.Language.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Bcl.AsyncInterfaces.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.CodeAnalysis.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.CodeAnalysis.CSharp.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.CodeAnalysis.CSharp.Workspaces.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.CodeAnalysis.Razor.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.CodeAnalysis.Workspaces.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Data.SqlClient.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Data.Sqlite.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.DotNet.PlatformAbstractions.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.EntityFrameworkCore.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.EntityFrameworkCore.Abstractions.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.EntityFrameworkCore.Design.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.EntityFrameworkCore.Relational.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.EntityFrameworkCore.Sqlite.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.EntityFrameworkCore.SqlServer.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Extensions.DependencyInjection.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Extensions.DependencyModel.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Extensions.Options.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Extensions.Primitives.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Identity.Client.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.IdentityModel.JsonWebTokens.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.IdentityModel.Logging.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.IdentityModel.Protocols.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.IdentityModel.Tokens.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.OpenApi.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGeneration.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGeneration.Contracts.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGeneration.Core.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/dotnet-aspnet-codegenerator-design.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGeneration.Templating.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGeneration.Utils.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGenerators.Mvc.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Newtonsoft.Json.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Newtonsoft.Json.Bson.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/SQLitePCLRaw.batteries_v2.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/SQLitePCLRaw.nativelibrary.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/SQLitePCLRaw.core.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/SQLitePCLRaw.provider.dynamic_cdecl.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Swashbuckle.AspNetCore.Swagger.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Swashbuckle.AspNetCore.SwaggerGen.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Swashbuckle.AspNetCore.SwaggerUI.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/System.Composition.AttributedModel.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/System.Composition.Convention.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/System.Composition.Hosting.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/System.Composition.Runtime.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/System.Composition.TypedParts.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/System.Configuration.ConfigurationManager.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/System.Diagnostics.DiagnosticSource.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/System.IdentityModel.Tokens.Jwt.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/System.Runtime.Caching.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/System.Runtime.CompilerServices.Unsafe.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/System.Security.Cryptography.ProtectedData.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/UnidecodeSharpFork.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/cs/Microsoft.CodeAnalysis.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/de/Microsoft.CodeAnalysis.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/es/Microsoft.CodeAnalysis.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/fr/Microsoft.CodeAnalysis.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/it/Microsoft.CodeAnalysis.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/ja/Microsoft.CodeAnalysis.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/ko/Microsoft.CodeAnalysis.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/pl/Microsoft.CodeAnalysis.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/pt-BR/Microsoft.CodeAnalysis.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/ru/Microsoft.CodeAnalysis.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/tr/Microsoft.CodeAnalysis.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/zh-Hans/Microsoft.CodeAnalysis.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/zh-Hant/Microsoft.CodeAnalysis.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/cs/Microsoft.CodeAnalysis.CSharp.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/de/Microsoft.CodeAnalysis.CSharp.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/es/Microsoft.CodeAnalysis.CSharp.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/fr/Microsoft.CodeAnalysis.CSharp.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/it/Microsoft.CodeAnalysis.CSharp.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/ja/Microsoft.CodeAnalysis.CSharp.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/ko/Microsoft.CodeAnalysis.CSharp.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/pl/Microsoft.CodeAnalysis.CSharp.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/pt-BR/Microsoft.CodeAnalysis.CSharp.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/ru/Microsoft.CodeAnalysis.CSharp.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/tr/Microsoft.CodeAnalysis.CSharp.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/zh-Hans/Microsoft.CodeAnalysis.CSharp.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/zh-Hant/Microsoft.CodeAnalysis.CSharp.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/cs/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/de/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/es/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/fr/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/it/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/ja/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/ko/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/pl/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/pt-BR/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/ru/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/tr/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/zh-Hans/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/zh-Hant/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/cs/Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/de/Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/es/Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/fr/Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/it/Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/ja/Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/ko/Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/pl/Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/pt-BR/Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/ru/Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/tr/Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/zh-Hans/Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/zh-Hant/Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/unix/lib/netcoreapp3.1/Microsoft.Data.SqlClient.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win/lib/netcoreapp3.1/Microsoft.Data.SqlClient.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm/native/Microsoft.Data.SqlClient.SNI.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm/native/Microsoft.Data.SqlClient.SNI.pdb
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm64/native/Microsoft.Data.SqlClient.SNI.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm64/native/Microsoft.Data.SqlClient.SNI.pdb
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-x64/native/Microsoft.Data.SqlClient.SNI.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-x64/native/Microsoft.Data.SqlClient.SNI.pdb
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-x86/native/Microsoft.Data.SqlClient.SNI.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-x86/native/Microsoft.Data.SqlClient.SNI.pdb
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm/lib/net5.0/dotnet-aspnet-codegenerator-design.exe
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm64/lib/net5.0/dotnet-aspnet-codegenerator-design.exe
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/alpine-x64/native/libe_sqlite3.so
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-arm/native/libe_sqlite3.so
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-arm64/native/libe_sqlite3.so
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-armel/native/libe_sqlite3.so
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-mips64/native/libe_sqlite3.so
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-musl-x64/native/libe_sqlite3.so
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-x64/native/libe_sqlite3.so
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-x86/native/libe_sqlite3.so
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/osx-x64/native/libe_sqlite3.dylib
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm/native/e_sqlite3.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm64/native/e_sqlite3.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-x64/native/e_sqlite3.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-x86/native/e_sqlite3.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win/lib/netstandard2.0/System.Runtime.Caching.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/runtimes/win/lib/netstandard2.0/System.Security.Cryptography.ProtectedData.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Library.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Repository.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Library.pdb
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/bin/Debug/net5.0/Repository.pdb
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.csproj.AssemblyReference.cache
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.GeneratedMSBuildEditorConfig.editorconfig
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.AssemblyInfoInputs.cache
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.AssemblyInfo.cs
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.csproj.CoreCompileInputs.cache
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.MvcApplicationPartsAssemblyInfo.cs
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.MvcApplicationPartsAssemblyInfo.cache
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/staticwebassets/BE_Homnayangi.StaticWebAssets.Manifest.cache
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/staticwebassets/BE_Homnayangi.StaticWebAssets.xml
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/scopedcss/bundle/BE_Homnayangi.styles.css
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.RazorTargetAssemblyInfo.cache
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/ref/BE_Homnayangi.dll
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.pdb
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.genruntimeconfig.cache
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/appsettings.Development.json
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/appsettings.json
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/BE_Homnayangi.deps.json
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/BE_Homnayangi.runtimeconfig.json
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/BE_Homnayangi.runtimeconfig.dev.json
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/BE_Homnayangi.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ref/BE_Homnayangi.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/BE_Homnayangi.pdb
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Antlr3.Runtime.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/AutoMapper.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ExpressionEvaluator.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/FluentValidation.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Google.Apis.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Google.Apis.Auth.PlatformServices.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Google.Apis.Auth.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Google.Apis.Core.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/GSF.Core.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Humanizer.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.AspNetCore.Authentication.Google.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.AspNetCore.JsonPatch.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.AspNetCore.Razor.Language.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Bcl.AsyncInterfaces.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.CodeAnalysis.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.CodeAnalysis.CSharp.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.CodeAnalysis.CSharp.Workspaces.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.CodeAnalysis.Razor.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.CodeAnalysis.Workspaces.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Data.SqlClient.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Data.Sqlite.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.DotNet.PlatformAbstractions.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.EntityFrameworkCore.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.EntityFrameworkCore.Abstractions.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.EntityFrameworkCore.Design.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.EntityFrameworkCore.Relational.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.EntityFrameworkCore.Sqlite.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.EntityFrameworkCore.SqlServer.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Extensions.DependencyInjection.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Extensions.DependencyModel.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Extensions.Options.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Extensions.Primitives.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Identity.Client.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.IdentityModel.JsonWebTokens.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.IdentityModel.Logging.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.IdentityModel.Protocols.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.IdentityModel.Tokens.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.OpenApi.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGeneration.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGeneration.Contracts.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGeneration.Core.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/dotnet-aspnet-codegenerator-design.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGeneration.Templating.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGeneration.Utils.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGenerators.Mvc.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Newtonsoft.Json.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Newtonsoft.Json.Bson.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/SQLitePCLRaw.batteries_v2.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/SQLitePCLRaw.nativelibrary.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/SQLitePCLRaw.core.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/SQLitePCLRaw.provider.dynamic_cdecl.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Swashbuckle.AspNetCore.Swagger.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Swashbuckle.AspNetCore.SwaggerGen.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Swashbuckle.AspNetCore.SwaggerUI.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.Composition.AttributedModel.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.Composition.Convention.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.Composition.Hosting.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.Composition.Runtime.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.Composition.TypedParts.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.Configuration.ConfigurationManager.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.Diagnostics.DiagnosticSource.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.IdentityModel.Tokens.Jwt.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.Runtime.Caching.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.Runtime.CompilerServices.Unsafe.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.Security.Cryptography.ProtectedData.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/UnidecodeSharpFork.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/cs/Microsoft.CodeAnalysis.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/de/Microsoft.CodeAnalysis.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/es/Microsoft.CodeAnalysis.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/fr/Microsoft.CodeAnalysis.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/it/Microsoft.CodeAnalysis.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ja/Microsoft.CodeAnalysis.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ko/Microsoft.CodeAnalysis.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/pl/Microsoft.CodeAnalysis.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/pt-BR/Microsoft.CodeAnalysis.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ru/Microsoft.CodeAnalysis.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/tr/Microsoft.CodeAnalysis.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/zh-Hans/Microsoft.CodeAnalysis.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/zh-Hant/Microsoft.CodeAnalysis.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/cs/Microsoft.CodeAnalysis.CSharp.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/de/Microsoft.CodeAnalysis.CSharp.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/es/Microsoft.CodeAnalysis.CSharp.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/fr/Microsoft.CodeAnalysis.CSharp.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/it/Microsoft.CodeAnalysis.CSharp.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ja/Microsoft.CodeAnalysis.CSharp.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ko/Microsoft.CodeAnalysis.CSharp.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/pl/Microsoft.CodeAnalysis.CSharp.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/pt-BR/Microsoft.CodeAnalysis.CSharp.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ru/Microsoft.CodeAnalysis.CSharp.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/tr/Microsoft.CodeAnalysis.CSharp.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/zh-Hans/Microsoft.CodeAnalysis.CSharp.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/zh-Hant/Microsoft.CodeAnalysis.CSharp.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/cs/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/de/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/es/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/fr/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/it/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ja/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ko/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/pl/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/pt-BR/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ru/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/tr/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/zh-Hans/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/zh-Hant/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/cs/Microsoft.CodeAnalysis.Workspaces.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/de/Microsoft.CodeAnalysis.Workspaces.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/es/Microsoft.CodeAnalysis.Workspaces.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/fr/Microsoft.CodeAnalysis.Workspaces.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/it/Microsoft.CodeAnalysis.Workspaces.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ja/Microsoft.CodeAnalysis.Workspaces.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ko/Microsoft.CodeAnalysis.Workspaces.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/pl/Microsoft.CodeAnalysis.Workspaces.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/pt-BR/Microsoft.CodeAnalysis.Workspaces.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ru/Microsoft.CodeAnalysis.Workspaces.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/tr/Microsoft.CodeAnalysis.Workspaces.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/zh-Hans/Microsoft.CodeAnalysis.Workspaces.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/zh-Hant/Microsoft.CodeAnalysis.Workspaces.resources.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/unix/lib/netcoreapp3.1/Microsoft.Data.SqlClient.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win/lib/netcoreapp3.1/Microsoft.Data.SqlClient.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm/native/Microsoft.Data.SqlClient.SNI.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm/native/Microsoft.Data.SqlClient.SNI.pdb
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm64/native/Microsoft.Data.SqlClient.SNI.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm64/native/Microsoft.Data.SqlClient.SNI.pdb
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-x64/native/Microsoft.Data.SqlClient.SNI.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-x64/native/Microsoft.Data.SqlClient.SNI.pdb
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-x86/native/Microsoft.Data.SqlClient.SNI.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-x86/native/Microsoft.Data.SqlClient.SNI.pdb
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm/lib/net5.0/dotnet-aspnet-codegenerator-design.exe
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm64/lib/net5.0/dotnet-aspnet-codegenerator-design.exe
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/alpine-x64/native/libe_sqlite3.so
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-arm/native/libe_sqlite3.so
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-arm64/native/libe_sqlite3.so
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-armel/native/libe_sqlite3.so
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-mips64/native/libe_sqlite3.so
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-musl-x64/native/libe_sqlite3.so
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-x64/native/libe_sqlite3.so
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-x86/native/libe_sqlite3.so
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/osx-x64/native/libe_sqlite3.dylib
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm/native/e_sqlite3.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm64/native/e_sqlite3.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-x64/native/e_sqlite3.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-x86/native/e_sqlite3.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win/lib/netstandard2.0/System.Runtime.Caching.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win/lib/netstandard2.0/System.Security.Cryptography.ProtectedData.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Library.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Repository.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Library.pdb
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Repository.pdb
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.csproj.AssemblyReference.cache
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.GeneratedMSBuildEditorConfig.editorconfig
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.AssemblyInfoInputs.cache
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.AssemblyInfo.cs
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.csproj.CoreCompileInputs.cache
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.MvcApplicationPartsAssemblyInfo.cs
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.MvcApplicationPartsAssemblyInfo.cache
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/staticwebassets/BE_Homnayangi.StaticWebAssets.Manifest.cache
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/staticwebassets/BE_Homnayangi.StaticWebAssets.xml
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/scopedcss/bundle/BE_Homnayangi.styles.css
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.RazorTargetAssemblyInfo.cache
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.csproj.CopyComplete
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/ref/BE_Homnayangi.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.pdb
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.genruntimeconfig.cache
-<<<<<<< HEAD
-=======
-<<<<<<< Updated upstream
-C:/Users/Nam/Desktop/New folder/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.csproj.CopyComplete
->>>>>>> f67d0d9 (tmp code)
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/appsettings.Development.json
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/appsettings.json
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/BE_Homnayangi.exe
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/BE_Homnayangi.deps.json
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/BE_Homnayangi.runtimeconfig.json
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/BE_Homnayangi.runtimeconfig.dev.json
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/BE_Homnayangi.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ref/BE_Homnayangi.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/BE_Homnayangi.pdb
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Antlr3.Runtime.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/AutoMapper.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ExpressionEvaluator.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/FluentValidation.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Google.Apis.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Google.Apis.Auth.PlatformServices.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Google.Apis.Auth.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Google.Apis.Core.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/GSF.Core.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Humanizer.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.AspNetCore.Authentication.Google.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.AspNetCore.JsonPatch.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.AspNetCore.Razor.Language.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Bcl.AsyncInterfaces.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.CodeAnalysis.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.CodeAnalysis.CSharp.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.CodeAnalysis.CSharp.Workspaces.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.CodeAnalysis.Razor.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.CodeAnalysis.Workspaces.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Data.SqlClient.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Data.Sqlite.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.DotNet.PlatformAbstractions.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.EntityFrameworkCore.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.EntityFrameworkCore.Abstractions.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.EntityFrameworkCore.Design.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.EntityFrameworkCore.Relational.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.EntityFrameworkCore.Sqlite.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.EntityFrameworkCore.SqlServer.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Extensions.DependencyInjection.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Extensions.DependencyModel.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Extensions.Options.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Extensions.Primitives.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Identity.Client.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.IdentityModel.JsonWebTokens.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.IdentityModel.Logging.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.IdentityModel.Protocols.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.IdentityModel.Tokens.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.OpenApi.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGeneration.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGeneration.Contracts.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGeneration.Core.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/dotnet-aspnet-codegenerator-design.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGeneration.Templating.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGeneration.Utils.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGenerators.Mvc.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Newtonsoft.Json.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Newtonsoft.Json.Bson.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/SQLitePCLRaw.batteries_v2.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/SQLitePCLRaw.nativelibrary.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/SQLitePCLRaw.core.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/SQLitePCLRaw.provider.dynamic_cdecl.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Swashbuckle.AspNetCore.Swagger.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Swashbuckle.AspNetCore.SwaggerGen.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Swashbuckle.AspNetCore.SwaggerUI.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.Composition.AttributedModel.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.Composition.Convention.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.Composition.Hosting.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.Composition.Runtime.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.Composition.TypedParts.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.Configuration.ConfigurationManager.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.Diagnostics.DiagnosticSource.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.IdentityModel.Tokens.Jwt.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.Runtime.Caching.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.Runtime.CompilerServices.Unsafe.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.Security.Cryptography.ProtectedData.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/UnidecodeSharpFork.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/cs/Microsoft.CodeAnalysis.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/de/Microsoft.CodeAnalysis.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/es/Microsoft.CodeAnalysis.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/fr/Microsoft.CodeAnalysis.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/it/Microsoft.CodeAnalysis.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ja/Microsoft.CodeAnalysis.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ko/Microsoft.CodeAnalysis.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/pl/Microsoft.CodeAnalysis.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/pt-BR/Microsoft.CodeAnalysis.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ru/Microsoft.CodeAnalysis.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/tr/Microsoft.CodeAnalysis.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/zh-Hans/Microsoft.CodeAnalysis.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/zh-Hant/Microsoft.CodeAnalysis.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/cs/Microsoft.CodeAnalysis.CSharp.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/de/Microsoft.CodeAnalysis.CSharp.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/es/Microsoft.CodeAnalysis.CSharp.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/fr/Microsoft.CodeAnalysis.CSharp.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/it/Microsoft.CodeAnalysis.CSharp.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ja/Microsoft.CodeAnalysis.CSharp.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ko/Microsoft.CodeAnalysis.CSharp.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/pl/Microsoft.CodeAnalysis.CSharp.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/pt-BR/Microsoft.CodeAnalysis.CSharp.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ru/Microsoft.CodeAnalysis.CSharp.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/tr/Microsoft.CodeAnalysis.CSharp.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/zh-Hans/Microsoft.CodeAnalysis.CSharp.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/zh-Hant/Microsoft.CodeAnalysis.CSharp.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/cs/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/de/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/es/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/fr/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/it/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ja/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ko/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/pl/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/pt-BR/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ru/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/tr/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/zh-Hans/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/zh-Hant/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/cs/Microsoft.CodeAnalysis.Workspaces.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/de/Microsoft.CodeAnalysis.Workspaces.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/es/Microsoft.CodeAnalysis.Workspaces.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/fr/Microsoft.CodeAnalysis.Workspaces.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/it/Microsoft.CodeAnalysis.Workspaces.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ja/Microsoft.CodeAnalysis.Workspaces.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ko/Microsoft.CodeAnalysis.Workspaces.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/pl/Microsoft.CodeAnalysis.Workspaces.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/pt-BR/Microsoft.CodeAnalysis.Workspaces.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ru/Microsoft.CodeAnalysis.Workspaces.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/tr/Microsoft.CodeAnalysis.Workspaces.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/zh-Hans/Microsoft.CodeAnalysis.Workspaces.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/zh-Hant/Microsoft.CodeAnalysis.Workspaces.resources.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/unix/lib/netcoreapp3.1/Microsoft.Data.SqlClient.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win/lib/netcoreapp3.1/Microsoft.Data.SqlClient.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm/native/Microsoft.Data.SqlClient.SNI.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm/native/Microsoft.Data.SqlClient.SNI.pdb
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm64/native/Microsoft.Data.SqlClient.SNI.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm64/native/Microsoft.Data.SqlClient.SNI.pdb
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-x64/native/Microsoft.Data.SqlClient.SNI.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-x64/native/Microsoft.Data.SqlClient.SNI.pdb
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-x86/native/Microsoft.Data.SqlClient.SNI.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-x86/native/Microsoft.Data.SqlClient.SNI.pdb
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm/lib/net5.0/dotnet-aspnet-codegenerator-design.exe
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm64/lib/net5.0/dotnet-aspnet-codegenerator-design.exe
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/alpine-x64/native/libe_sqlite3.so
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-arm/native/libe_sqlite3.so
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-arm64/native/libe_sqlite3.so
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-armel/native/libe_sqlite3.so
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-mips64/native/libe_sqlite3.so
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-musl-x64/native/libe_sqlite3.so
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-x64/native/libe_sqlite3.so
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-x86/native/libe_sqlite3.so
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/osx-x64/native/libe_sqlite3.dylib
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm/native/e_sqlite3.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm64/native/e_sqlite3.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-x64/native/e_sqlite3.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-x86/native/e_sqlite3.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win/lib/netstandard2.0/System.Runtime.Caching.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win/lib/netstandard2.0/System.Security.Cryptography.ProtectedData.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Library.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Repository.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Library.pdb
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Repository.pdb
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.GeneratedMSBuildEditorConfig.editorconfig
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.AssemblyInfoInputs.cache
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.AssemblyInfo.cs
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.csproj.CoreCompileInputs.cache
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.MvcApplicationPartsAssemblyInfo.cs
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.MvcApplicationPartsAssemblyInfo.cache
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/staticwebassets/BE_Homnayangi.StaticWebAssets.Manifest.cache
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/staticwebassets/BE_Homnayangi.StaticWebAssets.xml
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/scopedcss/bundle/BE_Homnayangi.styles.css
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.RazorTargetAssemblyInfo.cache
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.csproj.CopyComplete
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/ref/BE_Homnayangi.dll
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.pdb
-E:/Download2/Kì 9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.genruntimeconfig.cache
->>>>>>> Stashed changes
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.csproj.AssemblyReference.cache
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.GeneratedMSBuildEditorConfig.editorconfig
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.AssemblyInfoInputs.cache
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.AssemblyInfo.cs
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.csproj.CoreCompileInputs.cache
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.MvcApplicationPartsAssemblyInfo.cs
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.MvcApplicationPartsAssemblyInfo.cache
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/refint/BE_Homnayangi.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.pdb
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/appsettings.Development.json
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/appsettings.json
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/BE_Homnayangi.exe
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/BE_Homnayangi.deps.json
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/BE_Homnayangi.runtimeconfig.json
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/BE_Homnayangi.runtimeconfig.dev.json
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/BE_Homnayangi.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/BE_Homnayangi.pdb
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Antlr3.Runtime.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/AutoMapper.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ExpressionEvaluator.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/FluentValidation.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Google.Apis.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Google.Apis.Auth.PlatformServices.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Google.Apis.Auth.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Google.Apis.Core.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/GSF.Core.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Humanizer.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.AspNetCore.Authentication.Google.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.AspNetCore.JsonPatch.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.AspNetCore.Razor.Language.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Bcl.AsyncInterfaces.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.CodeAnalysis.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.CodeAnalysis.CSharp.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.CodeAnalysis.CSharp.Workspaces.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.CodeAnalysis.Razor.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.CodeAnalysis.Workspaces.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Data.SqlClient.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Data.Sqlite.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.DotNet.PlatformAbstractions.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.EntityFrameworkCore.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.EntityFrameworkCore.Abstractions.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.EntityFrameworkCore.Design.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.EntityFrameworkCore.Relational.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.EntityFrameworkCore.Sqlite.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.EntityFrameworkCore.SqlServer.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Extensions.DependencyInjection.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Extensions.DependencyModel.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Extensions.Options.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Extensions.Primitives.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.Identity.Client.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.IdentityModel.JsonWebTokens.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.IdentityModel.Logging.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.IdentityModel.Protocols.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.IdentityModel.Tokens.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.OpenApi.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGeneration.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGeneration.Contracts.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGeneration.Core.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/dotnet-aspnet-codegenerator-design.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGeneration.Templating.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGeneration.Utils.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Microsoft.VisualStudio.Web.CodeGenerators.Mvc.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Newtonsoft.Json.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Newtonsoft.Json.Bson.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/SQLitePCLRaw.batteries_v2.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/SQLitePCLRaw.nativelibrary.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/SQLitePCLRaw.core.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/SQLitePCLRaw.provider.dynamic_cdecl.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Swashbuckle.AspNetCore.Swagger.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Swashbuckle.AspNetCore.SwaggerGen.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Swashbuckle.AspNetCore.SwaggerUI.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.Composition.AttributedModel.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.Composition.Convention.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.Composition.Hosting.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.Composition.Runtime.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.Composition.TypedParts.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.Configuration.ConfigurationManager.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.Diagnostics.DiagnosticSource.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.IdentityModel.Tokens.Jwt.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.Runtime.Caching.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.Runtime.CompilerServices.Unsafe.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/System.Security.Cryptography.ProtectedData.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/cs/Microsoft.CodeAnalysis.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/de/Microsoft.CodeAnalysis.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/es/Microsoft.CodeAnalysis.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/fr/Microsoft.CodeAnalysis.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/it/Microsoft.CodeAnalysis.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ja/Microsoft.CodeAnalysis.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ko/Microsoft.CodeAnalysis.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/pl/Microsoft.CodeAnalysis.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/pt-BR/Microsoft.CodeAnalysis.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ru/Microsoft.CodeAnalysis.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/tr/Microsoft.CodeAnalysis.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/zh-Hans/Microsoft.CodeAnalysis.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/zh-Hant/Microsoft.CodeAnalysis.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/cs/Microsoft.CodeAnalysis.CSharp.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/de/Microsoft.CodeAnalysis.CSharp.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/es/Microsoft.CodeAnalysis.CSharp.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/fr/Microsoft.CodeAnalysis.CSharp.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/it/Microsoft.CodeAnalysis.CSharp.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ja/Microsoft.CodeAnalysis.CSharp.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ko/Microsoft.CodeAnalysis.CSharp.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/pl/Microsoft.CodeAnalysis.CSharp.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/pt-BR/Microsoft.CodeAnalysis.CSharp.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ru/Microsoft.CodeAnalysis.CSharp.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/tr/Microsoft.CodeAnalysis.CSharp.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/zh-Hans/Microsoft.CodeAnalysis.CSharp.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/zh-Hant/Microsoft.CodeAnalysis.CSharp.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/cs/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/de/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/es/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/fr/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/it/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ja/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ko/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/pl/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/pt-BR/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ru/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/tr/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/zh-Hans/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/zh-Hant/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/cs/Microsoft.CodeAnalysis.Workspaces.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/de/Microsoft.CodeAnalysis.Workspaces.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/es/Microsoft.CodeAnalysis.Workspaces.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/fr/Microsoft.CodeAnalysis.Workspaces.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/it/Microsoft.CodeAnalysis.Workspaces.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ja/Microsoft.CodeAnalysis.Workspaces.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ko/Microsoft.CodeAnalysis.Workspaces.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/pl/Microsoft.CodeAnalysis.Workspaces.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/pt-BR/Microsoft.CodeAnalysis.Workspaces.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/ru/Microsoft.CodeAnalysis.Workspaces.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/tr/Microsoft.CodeAnalysis.Workspaces.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/zh-Hans/Microsoft.CodeAnalysis.Workspaces.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/zh-Hant/Microsoft.CodeAnalysis.Workspaces.resources.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/unix/lib/netcoreapp3.1/Microsoft.Data.SqlClient.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win/lib/netcoreapp3.1/Microsoft.Data.SqlClient.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm/native/Microsoft.Data.SqlClient.SNI.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm/native/Microsoft.Data.SqlClient.SNI.pdb
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm64/native/Microsoft.Data.SqlClient.SNI.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm64/native/Microsoft.Data.SqlClient.SNI.pdb
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-x64/native/Microsoft.Data.SqlClient.SNI.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-x64/native/Microsoft.Data.SqlClient.SNI.pdb
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-x86/native/Microsoft.Data.SqlClient.SNI.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-x86/native/Microsoft.Data.SqlClient.SNI.pdb
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm/lib/net5.0/dotnet-aspnet-codegenerator-design.exe
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm64/lib/net5.0/dotnet-aspnet-codegenerator-design.exe
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/alpine-x64/native/libe_sqlite3.so
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-arm/native/libe_sqlite3.so
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-arm64/native/libe_sqlite3.so
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-armel/native/libe_sqlite3.so
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-mips64/native/libe_sqlite3.so
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-musl-x64/native/libe_sqlite3.so
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-x64/native/libe_sqlite3.so
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/linux-x86/native/libe_sqlite3.so
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/osx-x64/native/libe_sqlite3.dylib
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm/native/e_sqlite3.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-arm64/native/e_sqlite3.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-x64/native/e_sqlite3.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win-x86/native/e_sqlite3.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win/lib/netstandard2.0/System.Runtime.Caching.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/runtimes/win/lib/netstandard2.0/System.Security.Cryptography.ProtectedData.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Library.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Repository.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Library.pdb
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/Repository.pdb
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/scopedcss/bundle/BE_Homnayangi.styles.css
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/staticwebassets/BE_Homnayangi.StaticWebAssets.Manifest.cache
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.RazorTargetAssemblyInfo.cache
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.csproj.CopyComplete
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/BE_Homnayangi.genruntimeconfig.cache
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/obj/Debug/net5.0/ref/BE_Homnayangi.dll
-E:/Chuyen_nganh_9/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/UnidecodeSharpFork.dll
-/Users/vuhoangdinhphuc/Documents/GitHub/BE_Homnayangi/BE_Homnayangi/bin/Debug/net5.0/PayPal.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\appsettings.Development.json
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\appsettings.json
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\BE_Homnayangi.exe
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\BE_Homnayangi.deps.json
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\BE_Homnayangi.runtimeconfig.json
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\BE_Homnayangi.runtimeconfig.dev.json
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\BE_Homnayangi.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\BE_Homnayangi.pdb
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Antlr3.Runtime.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\AutoMapper.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\ExpressionEvaluator.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\FluentValidation.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Google.Apis.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Google.Apis.Auth.PlatformServices.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Google.Apis.Auth.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Google.Apis.Core.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\GSF.Core.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Humanizer.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.Google.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.AspNetCore.JsonPatch.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.AspNetCore.Razor.Language.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.Bcl.AsyncInterfaces.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.CodeAnalysis.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.CodeAnalysis.CSharp.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.CodeAnalysis.CSharp.Workspaces.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.CodeAnalysis.Razor.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.CodeAnalysis.Workspaces.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.Data.SqlClient.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.Data.Sqlite.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.DotNet.PlatformAbstractions.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Design.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Relational.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Sqlite.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.SqlServer.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.Extensions.DependencyInjection.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.Extensions.DependencyModel.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.Extensions.Options.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.Extensions.Primitives.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.Identity.Client.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.IdentityModel.Logging.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.IdentityModel.Tokens.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.OpenApi.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.VisualStudio.Web.CodeGeneration.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.VisualStudio.Web.CodeGeneration.Contracts.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.VisualStudio.Web.CodeGeneration.Core.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\dotnet-aspnet-codegenerator-design.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.VisualStudio.Web.CodeGeneration.Templating.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.VisualStudio.Web.CodeGeneration.Utils.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Microsoft.VisualStudio.Web.CodeGenerators.Mvc.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Newtonsoft.Json.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Newtonsoft.Json.Bson.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\SQLitePCLRaw.batteries_v2.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\SQLitePCLRaw.nativelibrary.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\SQLitePCLRaw.core.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\SQLitePCLRaw.provider.dynamic_cdecl.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Swashbuckle.AspNetCore.Swagger.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\System.Composition.AttributedModel.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\System.Composition.Convention.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\System.Composition.Hosting.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\System.Composition.Runtime.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\System.Composition.TypedParts.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\System.Configuration.ConfigurationManager.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\System.Diagnostics.DiagnosticSource.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\System.IdentityModel.Tokens.Jwt.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\System.Runtime.Caching.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\System.Runtime.CompilerServices.Unsafe.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\System.Security.Cryptography.ProtectedData.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\UnidecodeSharpFork.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\cs\Microsoft.CodeAnalysis.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\de\Microsoft.CodeAnalysis.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\es\Microsoft.CodeAnalysis.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\fr\Microsoft.CodeAnalysis.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\it\Microsoft.CodeAnalysis.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\ja\Microsoft.CodeAnalysis.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\ko\Microsoft.CodeAnalysis.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\pl\Microsoft.CodeAnalysis.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\pt-BR\Microsoft.CodeAnalysis.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\ru\Microsoft.CodeAnalysis.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\tr\Microsoft.CodeAnalysis.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\zh-Hans\Microsoft.CodeAnalysis.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\zh-Hant\Microsoft.CodeAnalysis.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\cs\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\de\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\es\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\fr\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\it\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\ja\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\ko\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\pl\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\pt-BR\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\ru\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\tr\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\zh-Hans\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\zh-Hant\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\cs\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\de\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\es\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\fr\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\it\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\ja\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\ko\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\pl\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\pt-BR\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\ru\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\tr\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\zh-Hans\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\zh-Hant\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\cs\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\de\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\es\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\fr\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\it\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\ja\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\ko\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\pl\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\pt-BR\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\ru\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\runtimes\unix\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\runtimes\win\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.pdb
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.pdb
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.pdb
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.pdb
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\runtimes\win-arm\lib\net5.0\dotnet-aspnet-codegenerator-design.exe
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\runtimes\win-arm64\lib\net5.0\dotnet-aspnet-codegenerator-design.exe
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\runtimes\alpine-x64\native\libe_sqlite3.so
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\runtimes\linux-arm\native\libe_sqlite3.so
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\runtimes\linux-arm64\native\libe_sqlite3.so
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\runtimes\linux-armel\native\libe_sqlite3.so
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\runtimes\linux-mips64\native\libe_sqlite3.so
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\runtimes\linux-musl-x64\native\libe_sqlite3.so
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\runtimes\linux-x64\native\libe_sqlite3.so
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\runtimes\linux-x86\native\libe_sqlite3.so
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\runtimes\osx-x64\native\libe_sqlite3.dylib
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\runtimes\win-arm\native\e_sqlite3.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\runtimes\win-arm64\native\e_sqlite3.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\runtimes\win-x64\native\e_sqlite3.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\runtimes\win-x86\native\e_sqlite3.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Library.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Repository.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Library.pdb
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\bin\Debug\net5.0\Repository.pdb
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.csproj.AssemblyReference.cache
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.GeneratedMSBuildEditorConfig.editorconfig
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.AssemblyInfoInputs.cache
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.AssemblyInfo.cs
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.csproj.CoreCompileInputs.cache
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.MvcApplicationPartsAssemblyInfo.cs
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.MvcApplicationPartsAssemblyInfo.cache
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\scopedcss\bundle\BE_Homnayangi.styles.css
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\staticwebassets\BE_Homnayangi.StaticWebAssets.Manifest.cache
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.RazorTargetAssemblyInfo.cache
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.csproj.CopyComplete
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\refint\BE_Homnayangi.dll
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.pdb
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.genruntimeconfig.cache
+E:\Chuyen_nganh_9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\ref\BE_Homnayangi.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\appsettings.json
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\appsettings.Development.json
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\BE_Homnayangi.exe
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\BE_Homnayangi.deps.json
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\BE_Homnayangi.runtimeconfig.json
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\BE_Homnayangi.runtimeconfig.dev.json
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\BE_Homnayangi.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\BE_Homnayangi.pdb
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Antlr3.Runtime.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\AutoMapper.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\ExpressionEvaluator.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\FluentValidation.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Google.Apis.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Google.Apis.Auth.PlatformServices.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Google.Apis.Auth.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Google.Apis.Core.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\GSF.Core.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Humanizer.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.Google.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.AspNetCore.Razor.Language.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.CodeAnalysis.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.CodeAnalysis.CSharp.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.CodeAnalysis.CSharp.Workspaces.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.CodeAnalysis.Razor.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.CodeAnalysis.Workspaces.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.Data.SqlClient.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.Data.Sqlite.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.DotNet.PlatformAbstractions.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Design.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Sqlite.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.SqlServer.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.Extensions.Options.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.Extensions.Primitives.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.Identity.Client.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.OpenApi.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.VisualStudio.Web.CodeGeneration.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.VisualStudio.Web.CodeGeneration.Contracts.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.VisualStudio.Web.CodeGeneration.Core.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\dotnet-aspnet-codegenerator-design.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.VisualStudio.Web.CodeGeneration.Templating.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.VisualStudio.Web.CodeGeneration.Utils.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Microsoft.VisualStudio.Web.CodeGenerators.Mvc.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Newtonsoft.Json.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Newtonsoft.Json.Bson.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\SQLitePCLRaw.batteries_v2.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\SQLitePCLRaw.nativelibrary.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\SQLitePCLRaw.core.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\SQLitePCLRaw.provider.dynamic_cdecl.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\System.Composition.AttributedModel.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\System.Composition.Convention.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\System.Composition.Hosting.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\System.Composition.Runtime.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\System.Composition.TypedParts.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\System.Configuration.ConfigurationManager.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\System.Diagnostics.DiagnosticSource.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\System.Runtime.Caching.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\UnidecodeSharpFork.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\cs\Microsoft.CodeAnalysis.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\de\Microsoft.CodeAnalysis.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\es\Microsoft.CodeAnalysis.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\fr\Microsoft.CodeAnalysis.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\it\Microsoft.CodeAnalysis.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\ja\Microsoft.CodeAnalysis.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\ko\Microsoft.CodeAnalysis.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\pl\Microsoft.CodeAnalysis.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\pt-BR\Microsoft.CodeAnalysis.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\ru\Microsoft.CodeAnalysis.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\tr\Microsoft.CodeAnalysis.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\zh-Hans\Microsoft.CodeAnalysis.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\zh-Hant\Microsoft.CodeAnalysis.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\cs\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\de\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\es\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\fr\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\it\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\ja\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\ko\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\pl\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\pt-BR\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\ru\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\tr\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\zh-Hans\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\zh-Hant\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\cs\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\de\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\es\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\fr\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\it\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\ja\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\ko\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\pl\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\pt-BR\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\ru\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\tr\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\zh-Hans\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\zh-Hant\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\cs\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\de\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\es\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\fr\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\it\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\ja\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\ko\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\pl\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\pt-BR\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\ru\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\unix\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\win\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.pdb
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.pdb
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.pdb
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.pdb
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\win-arm\lib\net5.0\dotnet-aspnet-codegenerator-design.exe
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\win-arm64\lib\net5.0\dotnet-aspnet-codegenerator-design.exe
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\alpine-x64\native\libe_sqlite3.so
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\linux-arm\native\libe_sqlite3.so
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\linux-arm64\native\libe_sqlite3.so
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\linux-armel\native\libe_sqlite3.so
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\linux-mips64\native\libe_sqlite3.so
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\linux-musl-x64\native\libe_sqlite3.so
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\linux-x64\native\libe_sqlite3.so
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\linux-x86\native\libe_sqlite3.so
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\osx-x64\native\libe_sqlite3.dylib
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\win-arm\native\e_sqlite3.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\win-arm64\native\e_sqlite3.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\win-x64\native\e_sqlite3.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\win-x86\native\e_sqlite3.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Library.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Repository.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Library.pdb
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Repository.pdb
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.csproj.AssemblyReference.cache
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.AssemblyInfoInputs.cache
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.AssemblyInfo.cs
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.csproj.CoreCompileInputs.cache
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\obj\Debug\net5.0\scopedcss\bundle\BE_Homnayangi.styles.css
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\obj\Debug\net5.0\staticwebassets\BE_Homnayangi.StaticWebAssets.Manifest.cache
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.RazorTargetAssemblyInfo.cache
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.csproj.CopyComplete
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\obj\Debug\net5.0\refint\BE_Homnayangi.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.pdb
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.genruntimeconfig.cache
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\obj\Debug\net5.0\ref\BE_Homnayangi.dll

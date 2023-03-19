@@ -1,29 +1,31 @@
-﻿using System;
-using BE_Homnayangi.Modules.RewardModule.Interface;
-using Library.DataAccess;
+﻿using Library.DataAccess;
 using Library.Models;
 using Microsoft.EntityFrameworkCore;
 using Repository.Repository;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
+using System.Linq;
 using System.Threading.Tasks;
+using System;
+using BE_Homnayangi.Modules.AdminModules.BadgeConditionModule.Interface;
 
-namespace BE_Homnayangi.Modules.RewardModule
+namespace BE_Homnayangi.Modules.AdminModules.BadgeConditionModule
 {
-    public class RewardRepository : Repository<Reward>, IRewardRepository
+    public class BadgeConditionRepository : Repository<BadgeCondition>, IBadgeConditionRepository
     {
         private readonly HomnayangiContext _db;
 
-        public RewardRepository(HomnayangiContext db) : base(db)
+        public BadgeConditionRepository(HomnayangiContext db) : base(db)
         {
             _db = db;
         }
-
-        public async Task<ICollection<Reward>> GetRewardsBy(Expression<Func<Reward, bool>> filter = null, Func<IQueryable<Reward>, ICollection<Reward>> options = null, string includeProperties = null)
-
+        public async Task<ICollection<BadgeCondition>> GetBadgeConditionsBy(
+            Expression<Func<BadgeCondition, bool>> filter = null,
+            Func<IQueryable<BadgeCondition>, ICollection<BadgeCondition>> options = null,
+            string includeProperties = null
+        )
         {
-            IQueryable<Reward> query = DbSet;
+            IQueryable<BadgeCondition> query = DbSet;
 
             if (filter != null)
             {
@@ -42,4 +44,3 @@ namespace BE_Homnayangi.Modules.RewardModule
         }
     }
 }
-

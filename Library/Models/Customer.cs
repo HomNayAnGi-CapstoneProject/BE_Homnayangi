@@ -12,7 +12,7 @@ namespace Library.Models
         {
             Accomplishments = new HashSet<Accomplishment>();
             BlogReactions = new HashSet<BlogReaction>();
-            CustomerRewards = new HashSet<CustomerReward>();
+            CustomerBadges = new HashSet<CustomerBadge>();
             CustomerVouchers = new HashSet<CustomerVoucher>();
             Orders = new HashSet<Order>();
         }
@@ -34,7 +34,7 @@ namespace Library.Models
 
         public virtual ICollection<Accomplishment> Accomplishments { get; set; }
         public virtual ICollection<BlogReaction> BlogReactions { get; set; }
-        public virtual ICollection<CustomerReward> CustomerRewards { get; set; }
+        public virtual ICollection<CustomerBadge> CustomerBadges { get; set; }
         public virtual ICollection<CustomerVoucher> CustomerVouchers { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
     }

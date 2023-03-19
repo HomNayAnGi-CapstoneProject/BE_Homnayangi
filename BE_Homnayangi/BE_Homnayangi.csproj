@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Modules\BadgeModule\DTO\Response\**" />
+    <Content Remove="Modules\BadgeModule\DTO\Response\**" />
+    <EmbeddedResource Remove="Modules\BadgeModule\DTO\Response\**" />
+    <None Remove="Modules\BadgeModule\DTO\Response\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.0.1" />
     <PackageReference Include="Google.Apis.Auth" Version="1.58.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="5.0.17" />
@@ -45,11 +52,11 @@
     <None Remove="Modules\RecipeDetailModule\RecipeDetailsDTO\" />
     <None Remove="Modules\RecipeModule\RecipeDTO\" />
     <None Remove="Modules\AutoMapper\" />
-    <None Remove="Modules\RewardModule\" />
-    <None Remove="Modules\RewardModule\Interface\" />
-    <None Remove="Modules\RewardModule\DTO\" />
-    <None Remove="Modules\RewardModule\DTO\Response\" />
-    <None Remove="Modules\RewardModule\DTO\Request\" />
+    <None Remove="Modules\BadgeModule\" />
+    <None Remove="Modules\BadgeModule\Interface\" />
+    <None Remove="Modules\BadgeModule\DTO\" />
+    <None Remove="Modules\BadgeModule\DTO\Response\" />
+    <None Remove="Modules\BadgeModule\DTO\Request\" />
     <None Remove="Modules\Utils\" />
     <None Remove="Modules\TransactionModule\" />
     <None Remove="Modules\OrderDetailModule\Interface\" />

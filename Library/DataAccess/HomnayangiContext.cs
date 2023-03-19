@@ -21,6 +21,8 @@ namespace Library.DataAccess
         }
 
         public virtual DbSet<Accomplishment> Accomplishments { get; set; }
+        public virtual DbSet<Badge> Badges { get; set; }
+        public virtual DbSet<BadgeCondition> BadgeConditions { get; set; }
         public virtual DbSet<Blog> Blogs { get; set; }
         public virtual DbSet<BlogReaction> BlogReactions { get; set; }
         public virtual DbSet<BlogReference> BlogReferences { get; set; }
@@ -29,7 +31,7 @@ namespace Library.DataAccess
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
-        public virtual DbSet<CustomerReward> CustomerRewards { get; set; }
+        public virtual DbSet<CustomerBadge> CustomerBadges { get; set; }
         public virtual DbSet<CustomerVoucher> CustomerVouchers { get; set; }
         public virtual DbSet<Ingredient> Ingredients { get; set; }
         public virtual DbSet<Notification> Notifications { get; set; }
@@ -38,7 +40,6 @@ namespace Library.DataAccess
         public virtual DbSet<PriceNote> PriceNotes { get; set; }
         public virtual DbSet<Recipe> Recipes { get; set; }
         public virtual DbSet<RecipeDetail> RecipeDetails { get; set; }
-        public virtual DbSet<Reward> Rewards { get; set; }
         public virtual DbSet<SeasonReference> SeasonReferences { get; set; }
         public virtual DbSet<SubCategory> SubCategories { get; set; }
         public virtual DbSet<Transaction> Transactions { get; set; }
@@ -98,6 +99,55 @@ namespace Library.DataAccess
                     .WithMany(p => p.Accomplishments)
                     .HasForeignKey(d => d.ConfirmBy)
                     .HasConstraintName("FK_Accomplishment_User");
+            });
+
+            modelBuilder.Entity<Badge>(entity =>
+            {
+                entity.ToTable("Badge");
+
+                entity.Property(e => e.BadgeId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("badgeId");
+
+                entity.Property(e => e.CreateDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("createDate");
+
+                entity.Property(e => e.Description).HasColumnName("description");
+
+                entity.Property(e => e.ImageUrl).HasColumnName("imageURL");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(50)
+                    .HasColumnName("name");
+
+                entity.Property(e => e.Status).HasColumnName("status");
+            });
+
+            modelBuilder.Entity<BadgeCondition>(entity =>
+            {
+                entity.ToTable("BadgeCondition");
+
+                entity.Property(e => e.BadgeConditionId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("badgeConditionId");
+
+                entity.Property(e => e.Accomplishments).HasColumnName("accomplishments");
+
+                entity.Property(e => e.BadgeId).HasColumnName("badgeId");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("createdDate");
+
+                entity.Property(e => e.Orders).HasColumnName("orders");
+
+                entity.Property(e => e.Status).HasColumnName("status");
+
+                entity.HasOne(d => d.Badge)
+                    .WithMany(p => p.BadgeConditions)
+                    .HasForeignKey(d => d.BadgeId)
+                    .HasConstraintName("FK_BadgeCondition_Badge");
             });
 
             modelBuilder.Entity<Blog>(entity =>
@@ -341,31 +391,32 @@ namespace Library.DataAccess
                     .HasColumnName("username");
             });
 
-            modelBuilder.Entity<CustomerReward>(entity =>
+            modelBuilder.Entity<CustomerBadge>(entity =>
             {
-                entity.HasKey(e => new { e.CustomerId, e.RewardId });
+                entity.HasKey(e => new { e.CustomerId, e.BadgeId })
+                    .HasName("PK_CustomerBadge");
 
-                entity.ToTable("CustomerReward");
+                entity.ToTable("CustomerBadge");
 
                 entity.Property(e => e.CustomerId).HasColumnName("customerId");
 
-                entity.Property(e => e.RewardId).HasColumnName("rewardId");
+                entity.Property(e => e.BadgeId).HasColumnName("badgeId");
 
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
                     .HasColumnName("createdDate");
 
+                entity.HasOne(d => d.Badge)
+                    .WithMany(p => p.CustomerBadges)
+                    .HasForeignKey(d => d.BadgeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CustomerBadge_Badge");
+
                 entity.HasOne(d => d.Customer)
-                    .WithMany(p => p.CustomerRewards)
+                    .WithMany(p => p.CustomerBadges)
                     .HasForeignKey(d => d.CustomerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CustomerReward_Customer");
-
-                entity.HasOne(d => d.Reward)
-                    .WithMany(p => p.CustomerRewards)
-                    .HasForeignKey(d => d.RewardId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CustomerReward_Reward");
+                    .HasConstraintName("FK_CustomerBadge_Customer");
             });
 
             modelBuilder.Entity<CustomerVoucher>(entity =>
@@ -505,8 +556,6 @@ namespace Library.DataAccess
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.CustomerId)
                     .HasConstraintName("FK_Order_Customer");
-
-                entity.Property(e => e.PaymentMethod).HasColumnName("paymentMethod");
             });
 
             modelBuilder.Entity<OrderDetail>(entity =>
@@ -618,33 +667,6 @@ namespace Library.DataAccess
                     .HasForeignKey(d => d.RecipeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_RecipeDetail_Recipe");
-            });
-
-            modelBuilder.Entity<Reward>(entity =>
-            {
-                entity.ToTable("Reward");
-
-                entity.Property(e => e.RewardId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("rewardId");
-
-                entity.Property(e => e.ConditionType).HasColumnName("conditionType");
-
-                entity.Property(e => e.ConditionValue).HasColumnName("conditionValue");
-
-                entity.Property(e => e.CreateDate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("createDate");
-
-                entity.Property(e => e.Description).HasColumnName("description");
-
-                entity.Property(e => e.ImageUrl).HasColumnName("imageURL");
-
-                entity.Property(e => e.Name)
-                    .HasMaxLength(50)
-                    .HasColumnName("name");
-
-                entity.Property(e => e.Status).HasColumnName("status");
             });
 
             modelBuilder.Entity<SeasonReference>(entity =>

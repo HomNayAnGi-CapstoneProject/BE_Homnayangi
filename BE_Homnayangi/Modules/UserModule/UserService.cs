@@ -588,6 +588,7 @@ namespace BE_Homnayangi.Modules.UserModule
             }
             return null;
         }
+
         public async Task Register(RegisterDTO register)
         {
             var cus = GetCustomerByUsername(register.Username);

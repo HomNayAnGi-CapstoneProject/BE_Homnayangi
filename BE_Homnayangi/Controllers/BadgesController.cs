@@ -8,30 +8,30 @@ using Microsoft.EntityFrameworkCore;
 using Library.DataAccess;
 using Library.Models;
 using AutoMapper;
-using BE_Homnayangi.Modules.RewardModule.Interface;
+using BE_Homnayangi.Modules.BadgeModule.Interface;
 using Library.PagedList;
 using BE_Homnayangi.Modules.Utils;
-using BE_Homnayangi.Modules.RewardModule.DTO.Request;
+using BE_Homnayangi.Modules.BadgeModule.DTO.Request;
 using Microsoft.AspNetCore.Authorization;
 
 namespace BE_Homnayangi.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class RewardsController : ControllerBase
+    public class BadgesController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly IRewardService _rewardService;
+        private readonly IBadgeService _rewardService;
 
-        public RewardsController(IRewardService rewardService, IMapper mapper)
+        public BadgesController(IBadgeService rewardService, IMapper mapper)
         {
             _mapper = mapper;
             _rewardService = rewardService;
         }
 
-        // GET: api/Rewards
+        // GET: api/Badges
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Reward>>> GetRewards([FromQuery] RewardFilterRequest request)
+        public async Task<ActionResult<IEnumerable<Badge>>> GetBadges([FromQuery] BadgeFilterRequest request)
         {
             try
             {
@@ -64,11 +64,11 @@ namespace BE_Homnayangi.Controllers
             }
         }
 
-        // GET: api/Rewards/5
+        // GET: api/Badges/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Reward>> GetReward([FromRoute] Guid id)
+        public async Task<ActionResult<Badge>> GetBadge([FromRoute] Guid id)
         {
-            var reward = await _rewardService.GetRewardByID(id);
+            var reward = await _rewardService.GetBadgeByID(id);
 
             if (reward == null)
             {
@@ -78,24 +78,24 @@ namespace BE_Homnayangi.Controllers
             return reward;
         }
 
-        // PUT: api/Rewards/5
+        // PUT: api/Badges/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         [Authorize(Roles = "Staff,Manager")]
-        public async Task<IActionResult> PutReward([FromRoute] Guid id, [FromBody] Reward reward)
+        public async Task<IActionResult> PutBadge([FromRoute] Guid id, [FromBody] Badge reward)
         {
-            if (id != reward.RewardId)
+            if (id != reward.BadgeId)
             {
                 return BadRequest();
             }
 
             try
             {
-                await _rewardService.UpdateReward(rewardUpdate: reward);
+                await _rewardService.UpdateBadge(rewardUpdate: reward);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!RewardExists(id))
+                if (!BadgeExists(id))
                 {
                     return NotFound();
                 }
@@ -108,19 +108,19 @@ namespace BE_Homnayangi.Controllers
             return NoContent();
         }
 
-        // POST: api/Rewards
+        // POST: api/Badges
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         [Authorize(Roles = "Staff,Manager")]
-        public async Task<ActionResult<Reward>> PostReward([FromBody] Reward reward)
+        public async Task<ActionResult<Badge>> PostBadge([FromBody] Badge reward)
         {
             try
             {
-                await _rewardService.AddNewReward(reward);
+                await _rewardService.AddNewBadge(reward);
             }
             catch (DbUpdateException)
             {
-                if (RewardExists(reward.RewardId))
+                if (BadgeExists(reward.BadgeId))
                 {
                     return Conflict();
                 }
@@ -130,28 +130,28 @@ namespace BE_Homnayangi.Controllers
                 }
             }
 
-            return CreatedAtAction("GetReward", new { id = reward.RewardId }, reward);
+            return CreatedAtAction("GetBadge", new { id = reward.BadgeId }, reward);
         }
 
-        // DELETE: api/Rewards/5
+        // DELETE: api/Badges/5
         [HttpDelete("{id}")]
         [Authorize(Roles = "Staff,Manager")]
-        public async Task<IActionResult> DeleteReward([FromRoute] Guid id)
+        public async Task<IActionResult> DeleteBadge([FromRoute] Guid id)
         {
-            var reward = await _rewardService.GetRewardByID(id);
+            var reward = await _rewardService.GetBadgeByID(id);
             if (reward == null)
             {
                 return NotFound();
             }
             reward.Status = false;
-            await _rewardService.UpdateReward(reward);
+            await _rewardService.UpdateBadge(reward);
 
             return NoContent();
         }
 
-        private bool RewardExists(Guid id)
+        private bool BadgeExists(Guid id)
         {
-            return _rewardService.GetRewardByID(id).Result != null;
+            return _rewardService.GetBadgeByID(id).Result != null;
         }
     }
 }

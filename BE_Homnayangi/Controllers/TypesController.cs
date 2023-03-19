@@ -33,7 +33,7 @@ namespace BE_Homnayangi.Controllers
 
         // GET: api/<ValuesController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Type>>> GetRewards([FromQuery] TypeFilterRequest request)
+        public async Task<ActionResult<IEnumerable<Type>>> GetBadges([FromQuery] TypeFilterRequest request)
         {
             try
             {

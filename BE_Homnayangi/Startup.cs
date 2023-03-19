@@ -31,8 +31,8 @@ using BE_Homnayangi.Modules.RecipeDetailModule;
 using BE_Homnayangi.Modules.RecipeDetailModule.Interface;
 using BE_Homnayangi.Modules.RecipeModule;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
-using BE_Homnayangi.Modules.RewardModule;
-using BE_Homnayangi.Modules.RewardModule.Interface;
+using BE_Homnayangi.Modules.BadgeModule;
+using BE_Homnayangi.Modules.BadgeModule.Interface;
 using BE_Homnayangi.Modules.SubCateModule;
 using BE_Homnayangi.Modules.SubCateModule.Interface;
 using BE_Homnayangi.Modules.TransactionModule;
@@ -67,6 +67,8 @@ using Newtonsoft.Json.Serialization;
 using System;
 using System.Linq;
 using System.Text;
+using BE_Homnayangi.Modules.AdminModules.BadgeConditionModule.Interface;
+using BE_Homnayangi.Modules.AdminModules.BadgeConditionModule;
 
 namespace BE_Homnayangi
 {
@@ -197,9 +199,9 @@ namespace BE_Homnayangi
             services.AddScoped<ICustomerVoucherRepository, CustomerVoucherRepository>();
             services.AddScoped<ICustomerVoucherService, CustomerVoucherService>();
 
-            //Reward Module
-            services.AddScoped<IRewardRepository, RewardRepository>();
-            services.AddScoped<IRewardService, RewardService>();
+            //Badge Module
+            services.AddScoped<IBadgeRepository, BadgeRepository>();
+            services.AddScoped<IBadgeService, BadgeService>();
 
             //Type Module
             services.AddScoped<ITypeRepository, TypeRepository>();
@@ -240,6 +242,9 @@ namespace BE_Homnayangi
             //Transaction Module
             services.AddScoped<ITransactionRepository, TransactionRepository>();
             services.AddScoped<ITransactionService, TransactionService>();
+            //Badge Condition Module
+            services.AddScoped<IBadgeConditionRepository, BadgeConditionRepository>();
+            services.AddScoped<IBadgeConditionService, BadgeConditionService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

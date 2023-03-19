@@ -1,7 +1,7 @@
 ﻿using System;
 namespace Library.Models.Enum
 {
-    public static class RewardEnum
+    public static class BadgeEnum
     {
         public enum ConditionType
         {
