@@ -9,6 +9,7 @@ using BE_Homnayangi.Modules.BlogReferenceModule.Interface;
 using BE_Homnayangi.Modules.BlogSubCateModule.Interface;
 using BE_Homnayangi.Modules.CommentModule.Interface;
 using BE_Homnayangi.Modules.RecipeDetailModule.Interface;
+using BE_Homnayangi.Modules.RecipeDetailModule.RecipeDetailsDTO;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
 using BE_Homnayangi.Modules.SubCateModule.Interface;
 using BE_Homnayangi.Modules.SubCateModule.Response;
@@ -100,45 +101,61 @@ namespace BE_Homnayangi.Modules.BlogModule
         // [6] giá nguyên liệu: 50k-100k
         public async Task<ICollection<OverviewBlogResponse>> GetBlogsSortByPackagePriceAsc()
         {
-            List<OverviewBlogResponse> result = new List<OverviewBlogResponse>();
-
-            var listBlog = await _blogRepository.GetBlogsBy(x => x.BlogStatus == 1);
-            var listBlogSubCate = await _blogSubCateRepository.GetAll(includeProperties: "SubCate");
-
-            var listTagName = GetListSubCateName(listBlog, listBlogSubCate);
-
-            var listResponse = listBlog.Join(listTagName, b => b.BlogId, y => y.Key, (b, y) => new
+            try
             {
-                b,
-                ListSubCateName = y.Value
-            }).Join(await _recipeRepository.GetNItemRandom(x => x.PackagePrice >= ((decimal)Price.PriceEnum.MIN)
-            && x.PackagePrice <= ((decimal)Price.PriceEnum.MAX), numberItem: (int)NumberItem.NumberItemRandomEnum.CHEAP_PRICE),
-                x => x.b.RecipeId, y => y.RecipeId, (x, y) => new
-                {
-                    BlogId = x.b.BlogId,
-                    Title = x.b.Title,
-                    ImageUrl = x.b.ImageUrl,
-                    View = x.b.View,
-                    Reaction = x.b.BlogReactions,
-                    ListSubCateName = x.ListSubCateName,
-                    PackagePrice = y.PackagePrice,
-                    TotalKcal = y.TotalKcal
-                }).Join(_blogReferenceRepository.GetBlogReferencesBy(x => x.Type == (int)BlogReferenceType.DESCRIPTION).Result, x => x.BlogId, y => y.BlogId, (x, y) => new
-                {
-                    x,
-                    Description = y.Html
-                }).OrderByDescending(x => x.x.View).Take((int)NumberItem.NumberItemShowEnum.CHEAP_PRICE).Select(x => new OverviewBlogResponse
-                {
-                    BlogId = x.x.BlogId,
-                    Title = x.x.Title,
-                    Description = x.Description,
-                    ImageUrl = x.x.ImageUrl,
-                    ListSubCateName = x.x.ListSubCateName,
-                    PackagePrice = (decimal)x.x.PackagePrice,
-                    TotalKcal = (int)x.x.TotalKcal
-                }).ToList();
+                List<OverviewBlogResponse> result = new List<OverviewBlogResponse>();
 
-            return listResponse;
+                var listBlog = await _blogRepository.GetBlogsBy(x => x.BlogStatus == 1);
+                var listBlogSubCate = await _blogSubCateRepository.GetAll(includeProperties: "SubCate");
+
+                var listTagName = GetListSubCateName(listBlog, listBlogSubCate);
+
+                var listResponse = listBlog.Join(listTagName, b => b.BlogId, y => y.Key, (b, y) => new
+                {
+                    b,
+                    ListSubCateName = y.Value
+                }).Join(await _recipeRepository.GetNItemRandom(x => x.PackagePrice >= ((decimal)Price.PriceEnum.MIN)
+                && x.PackagePrice <= ((decimal)Price.PriceEnum.MAX), numberItem: (int)NumberItem.NumberItemRandomEnum.CHEAP_PRICE),
+                    x => x.b.RecipeId, y => y.RecipeId, (x, y) => new
+                    {
+                        BlogId = x.b.BlogId,
+                        Title = x.b.Title,
+                        ImageUrl = x.b.ImageUrl,
+                        View = x.b.View,
+                        Reaction = x.b.BlogReactions,
+                        ListSubCateName = x.ListSubCateName,
+                        PackagePrice = y.PackagePrice,
+                        CookedPrice = y.CookedPrice,
+                        TotalKcal = y.TotalKcal
+                    }).Join(_blogReferenceRepository.GetBlogReferencesBy(x => x.Type == (int)BlogReferenceType.DESCRIPTION).Result, x => x.BlogId, y => y.BlogId, (x, y) => new
+                    {
+                        x,
+                        Description = y.Html
+                    }).OrderByDescending(x => x.x.View).Take((int)NumberItem.NumberItemShowEnum.CHEAP_PRICE).Select(x => new OverviewBlogResponse
+                    {
+                        BlogId = x.x.BlogId,
+                        Title = x.x.Title,
+                        Description = x.Description,
+                        ImageUrl = x.x.ImageUrl,
+                        ListSubCateName = x.x.ListSubCateName,
+                        PackagePrice = (decimal)x.x.PackagePrice,
+                        CookedPrice = (decimal)x.x.CookedPrice,
+                        TotalKcal = (int)x.x.TotalKcal
+                    }).ToList();
+                var listRecipeDetails = await _recipeDetailRepository.GetRecipeDetailsBy(rd
+                                    => rd.Status == (int)Status.BlogStatus.ACTIVE);
+                foreach (var blog in listResponse)
+                {
+                    blog.RecipeDetails = ConvertToRecipeDetailsOverview(blog.BlogId, listRecipeDetails.ToList());
+                }
+
+                return listResponse;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at GetBlogsSortByPackagePriceAsc: " + ex.Message);
+                throw new Exception(ex.Message);
+            }
         }
 
         public async Task<ICollection<SearchBlogsResponse>> GetBlogAndRecipeByName(String name)
@@ -160,35 +177,52 @@ namespace BE_Homnayangi.Modules.BlogModule
 
         public async Task<ICollection<OverviewBlogResponse>> GetBlogsBySubCateForHomePage(Guid? subCateId, int numberOfItems = 0)
         {
-            var listBlogSubCate = await _blogSubCateRepository.GetBlogSubCatesBy(x => x.SubCateId.Equals(subCateId), includeProperties: "SubCate");
+            try
+            {
+                var listBlogSubCate = await _blogSubCateRepository.GetBlogSubCatesBy(x => x.SubCateId.Equals(subCateId), includeProperties: "SubCate");
 
-            var listBlogs = await _blogRepository.GetBlogsBy(x => x.BlogStatus == 1, includeProperties: "Recipe");
+                var listBlogs = await _blogRepository.GetBlogsBy(x => x.BlogStatus == 1, includeProperties: "Recipe");
 
-            listBlogs = numberOfItems > 0
-                ? listBlogs.Join(listBlogSubCate, x => x.BlogId, y => y.BlogId, (x, y) => x).OrderByDescending(x => x.CreatedDate).Take(numberOfItems).ToList()
-                : listBlogs.Join(listBlogSubCate, x => x.BlogId, y => y.BlogId, (x, y) => x).OrderByDescending(x => x.CreatedDate).ToList();
+                listBlogs = numberOfItems > 0
+                    ? listBlogs.Join(listBlogSubCate, x => x.BlogId, y => y.BlogId, (x, y) => x).OrderByDescending(x => x.CreatedDate).Take(numberOfItems).ToList()
+                    : listBlogs.Join(listBlogSubCate, x => x.BlogId, y => y.BlogId, (x, y) => x).OrderByDescending(x => x.CreatedDate).ToList();
 
-            var listSubCateName = GetListSubCateName(listBlogs, listBlogSubCate);
+                var listSubCateName = GetListSubCateName(listBlogs, listBlogSubCate);
+                var listRecipeDetails = await _recipeDetailRepository.GetRecipeDetailsBy(rd
+                                    => rd.Status == (int)Status.BlogStatus.ACTIVE);
 
-            var listResponse = listBlogs
-                .Join(listSubCateName, b => b.BlogId, y => y.Key, (b, y) => new
+
+                var listResponse = listBlogs
+                    .Join(listSubCateName, b => b.BlogId, y => y.Key, (b, y) => new
+                    {
+                        b,
+                        ListSubCateName = y.Value,
+
+                    })
+                    .Join(_blogReferenceRepository.GetBlogReferencesBy(x => x.Type == (int)BlogReferenceType.DESCRIPTION).Result, x => x.b.BlogId, y => y.BlogId,
+                    (x, y) => new OverviewBlogResponse
+                    {
+                        BlogId = x.b.BlogId,
+                        Title = x.b.Title,
+                        ImageUrl = x.b.ImageUrl,
+                        ListSubCateName = x.ListSubCateName,
+                        Description = y.Html,
+                        RecipeTitle = x.b.Recipe.Title,
+                        PackagePrice = (decimal)x.b.Recipe.PackagePrice,
+                        CookedPrice = (decimal)x.b.Recipe.CookedPrice,
+                        TotalKcal = (int)x.b.Recipe.TotalKcal,
+                    }).ToList();
+                foreach (var blog in listResponse)
                 {
-                    b,
-                    ListSubCateName = y.Value,
-
-                }).Join(_blogReferenceRepository.GetBlogReferencesBy(x => x.Type == (int)BlogReferenceType.DESCRIPTION).Result, x => x.b.BlogId, y => y.BlogId,
-                (x, y) => new OverviewBlogResponse
-                {
-                    BlogId = x.b.BlogId,
-                    Title = x.b.Title,
-                    ImageUrl = x.b.ImageUrl,
-                    ListSubCateName = x.ListSubCateName,
-                    Description = y.Html,
-                    PackagePrice = (decimal)x.b.Recipe.PackagePrice,
-                    TotalKcal = (int)x.b.Recipe.TotalKcal
-                }).ToList();
-
-            return listResponse;
+                    blog.RecipeDetails = ConvertToRecipeDetailsOverview(blog.BlogId, listRecipeDetails.ToList());
+                }
+                return listResponse;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at GetBlogsBySubCateForHomePage: " + ex.Message);
+                throw new Exception(ex.Message);
+            }
         }
 
         public async Task<PagedResponse<PagedList<BlogsByCatesResponse>>> GetBlogsBySubCates(BlogsBySubCatesRequest request)
@@ -830,6 +864,7 @@ namespace BE_Homnayangi.Modules.BlogModule
         #endregion
 
         #region Supported functions
+
         private string ConvertToUnSign(string input)
         {
             input = input.Trim();
@@ -846,6 +881,7 @@ namespace BE_Homnayangi.Modules.BlogModule
             }
             return str2;
         }
+
         internal IDictionary<Guid, List<string>> GetListSubCateName(ICollection<Blog> blogs, ICollection<BlogSubCate> blogSubCates)
         {
 
@@ -857,6 +893,28 @@ namespace BE_Homnayangi.Modules.BlogModule
             }
             return listSubCateName;
         }
+
+        private List<RecipeDetailsOverview> ConvertToRecipeDetailsOverview(Guid blogId, List<RecipeDetail> recipeDetails)
+        {
+            List<RecipeDetailsOverview> list = new List<RecipeDetailsOverview>();
+
+            foreach (var recipeDetail in recipeDetails)
+            {
+                if (recipeDetail.RecipeId == blogId)
+                {
+                    RecipeDetailsOverview tmp = new RecipeDetailsOverview()
+                    {
+                        RecipeId = blogId,
+                        Description = recipeDetail.Description,
+                        Quantity = recipeDetail.Quantity.Value,
+                        Status = recipeDetail.Status.Value
+                    };
+                    list.Add(tmp);
+                }
+            }
+            return list;
+        }
+
         #endregion
 
         #region Blog Detail
