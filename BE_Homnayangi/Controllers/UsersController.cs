@@ -82,9 +82,13 @@ namespace BE_Homnayangi.Controllers
                 }
 
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest();
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
             }
             return Ok("Create staff succcessfully");
         }
@@ -107,11 +111,19 @@ namespace BE_Homnayangi.Controllers
                 {
                     return Ok("Update Staff Successfully");
                 }
-                return BadRequest("Update Staff Fail");
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = "Update Staff Fail"
+                });
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest();
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
             }
 
         }

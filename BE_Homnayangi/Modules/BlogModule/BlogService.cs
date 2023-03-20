@@ -142,8 +142,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                         CookedPrice = (decimal)x.x.CookedPrice,
                         TotalKcal = (int)x.x.TotalKcal
                     }).ToList();
-                var listRecipeDetails = await _recipeDetailRepository.GetRecipeDetailsBy(rd
-                                    => rd.Status == (int)Status.BlogStatus.ACTIVE);
+                var listRecipeDetails = await _recipeDetailRepository.GetAll();
                 foreach (var blog in listResponse)
                 {
                     blog.RecipeDetails = ConvertToRecipeDetailsOverview(blog.BlogId, listRecipeDetails.ToList());
@@ -188,8 +187,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     : listBlogs.Join(listBlogSubCate, x => x.BlogId, y => y.BlogId, (x, y) => x).OrderByDescending(x => x.CreatedDate).ToList();
 
                 var listSubCateName = GetListSubCateName(listBlogs, listBlogSubCate);
-                var listRecipeDetails = await _recipeDetailRepository.GetRecipeDetailsBy(rd
-                                    => rd.Status == (int)Status.BlogStatus.ACTIVE);
+                var listRecipeDetails = await _recipeDetailRepository.GetAll();
 
 
                 var listResponse = listBlogs
@@ -906,8 +904,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     {
                         RecipeId = blogId,
                         Description = recipeDetail.Description,
-                        Quantity = recipeDetail.Quantity.Value,
-                        Status = recipeDetail.Status.Value
+                        Quantity = recipeDetail.Quantity.Value
                     };
                     list.Add(tmp);
                 }

@@ -58,7 +58,11 @@ namespace BE_Homnayangi.Controllers
             var currentUser = _userService.GetCurrentUser(Request.Headers["Authorization"]);
             if (currentUser.Id != updateUser.UserId)
             {
-                return BadRequest(ErrorMessage.UserError.NOT_OWNER);
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    message = ErrorMessage.UserError.NOT_OWNER
+                });
             }
             try
             {
@@ -77,7 +81,11 @@ namespace BE_Homnayangi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    message = ex.Message
+                });
             }
 
 
@@ -95,7 +103,11 @@ namespace BE_Homnayangi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    message = ex.Message
+                });
             }
             return Ok("Update Successfully");
 

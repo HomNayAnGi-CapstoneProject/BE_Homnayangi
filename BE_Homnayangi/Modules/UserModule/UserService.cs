@@ -356,7 +356,7 @@ namespace BE_Homnayangi.Modules.UserModule
                     new Claim("Id", customer.CustomerId.ToString()),
                     new Claim(ClaimTypes.Name, customer.Username),
                     new Claim(ClaimTypes.Email, customer.Email == null ? "" : customer.Email),
-                    new Claim("Phone Number", customer.Phonenumber),
+                    new Claim("PhoneNumber", customer.Phonenumber),
                     new Claim("Displayname", customer.Displayname == null ? "" : customer.Displayname),
                     new Claim("Firstname", customer.Firstname),
                     new Claim("Lastname",customer.Lastname),
@@ -422,7 +422,7 @@ namespace BE_Homnayangi.Modules.UserModule
                     new Claim("Id", user.UserId.ToString()),
                     new Claim(ClaimTypes.Name, user.Username),
                     new Claim(ClaimTypes.Email, user.Email == null ? "" : user.Email),
-                    new Claim("Phone Number", user.Phonenumber),
+                    new Claim("PhoneNumber", user.Phonenumber),
                     new Claim("Displayname", user.Displayname == null ? "" : user.Displayname),
                     new Claim("Firstname", user.Firstname),
                     new Claim("Lastname",user.Lastname),
@@ -496,7 +496,7 @@ namespace BE_Homnayangi.Modules.UserModule
                     new Claim("Id", customer.CustomerId.ToString()),
                     new Claim(ClaimTypes.Name, customer.Username == null ? "": customer.Username),
                     new Claim(ClaimTypes.Email, customer.Email),
-                    new Claim("Phone Number", customer.Phonenumber == null ? "": customer.Phonenumber),
+                    new Claim("PhoneNumber", customer.Phonenumber == null ? "": customer.Phonenumber),
                     new Claim("Displayname", customer.Displayname),
                     new Claim("Firstname", customer.Firstname == null ? "": customer.Firstname),
                     new Claim("Lastname",customer.Lastname == null ? "": customer.Lastname),
@@ -532,7 +532,7 @@ namespace BE_Homnayangi.Modules.UserModule
                     new Claim("Id", cus.CustomerId.ToString()),
                     new Claim(ClaimTypes.Name, cus.Username == null ? "": cus.Username),
                     new Claim(ClaimTypes.Email, cus.Email),
-                    new Claim("Phone Number", cus.Phonenumber == null ? "": cus.Phonenumber),
+                    new Claim("PhoneNumber", cus.Phonenumber == null ? "": cus.Phonenumber),
                     new Claim("Displayname", cus.Displayname),
                     new Claim("Firstname", cus.Firstname == null ? "": cus.Firstname),
                     new Claim("Lastname",cus.Lastname == null ? "": cus.Lastname),
@@ -565,7 +565,7 @@ namespace BE_Homnayangi.Modules.UserModule
                     new Claim("Id", user.UserId.ToString()),
                     new Claim(ClaimTypes.Name, user.Username == null ? "": user.Username),
                     new Claim(ClaimTypes.Email, user.Email),
-                    new Claim("Phone Number", user.Phonenumber == null ? "": user.Phonenumber),
+                    new Claim("PhoneNumber", user.Phonenumber == null ? "": user.Phonenumber),
                     new Claim("Displayname", user.Displayname),
                     new Claim("Firstname", user.Firstname == null ? "": user.Firstname),
                     new Claim("Lastname",user.Lastname == null ? "": user.Lastname),
@@ -680,7 +680,7 @@ namespace BE_Homnayangi.Modules.UserModule
                     var Lastname = tokenS.Claims.First(x => x.Type == "Lastname")?.Value;
                     var Email = tokenS.Claims.First(x => x.Type == "email")?.Value;
                     var Avatar = tokenS.Claims.First(x => x.Type == "Avatar")?.Value;
-                    var Phonenumber = tokenS.Claims.First(x => x.Type == "Phone Number")?.Value;
+                    var Phonenumber = tokenS.Claims.First(x => x.Type == "PhoneNumber")?.Value;
                     var Gender = Int32.Parse(tokenS.Claims.First(x => x.Type == "gender")?.Value);
                     var Role = tokenS.Claims.First(x => x.Type == "role")?.Value;
                     CurrentUserResponse currentUser = new CurrentUserResponse()

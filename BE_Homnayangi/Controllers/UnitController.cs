@@ -1,16 +1,13 @@
-﻿using BE_Homnayangi.Modules.TypeModule.DTO;
-using BE_Homnayangi.Modules.TypeModule.Interface;
-using Microsoft.AspNetCore.Http;
+﻿using BE_Homnayangi.Modules.UnitModule.Interface;
+using BE_Homnayangi.Modules.UnitModule.Request;
+using BE_Homnayangi.Modules.UnitModule.Response;
+using FluentValidation.Results;
+using Library.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System;
-using BE_Homnayangi.Modules.UnitModule.Interface;
-using Library.Models;
-using BE_Homnayangi.Modules.UnitModule.Request;
-using FluentValidation.Results;
-using Microsoft.AspNetCore.Authorization;
-using BE_Homnayangi.Modules.UnitModule.Response;
 
 namespace BE_Homnayangi.Controllers
 {
@@ -36,9 +33,13 @@ namespace BE_Homnayangi.Controllers
                 var response = await _unitService.GetAll();
                 return Ok(response);
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest();
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
             }
         }
 
@@ -50,9 +51,13 @@ namespace BE_Homnayangi.Controllers
                 var response = await _unitService.GetUnitDropdowns();
                 return Ok(response);
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest();
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
             }
         }
 

@@ -3,14 +3,11 @@ using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Request;
 using BE_Homnayangi.Modules.UserModule.Response;
 using BE_Homnayangi.Modules.Utils;
-using BE_Homnayangi.Utils;
 using Library.Models;
 using Library.Models.Constant;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -71,7 +68,11 @@ namespace BE_Homnayangi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    message = ex.Message
+                });
             }
         }
         //PUT api/<ValuesController>/5
@@ -81,15 +82,15 @@ namespace BE_Homnayangi.Controllers
 
             try
             {
-
-
                 await _userService.UpdateCustomerPassword(_userService.GetCurrentUser(Request.Headers["Authorization"]).Id, request.oldPassword, request.newPassword);
-
-
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    message = ex.Message
+                });
             }
             return Ok("Update Successfully");
 
