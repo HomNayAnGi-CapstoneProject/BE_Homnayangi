@@ -26,7 +26,10 @@ namespace BE_Homnayangi.Controllers
         {
             if (subCateId == null)
             {
-                return BadRequest();
+                return new JsonResult(new
+                {
+                    msg = "SubCateId must not be null"
+                });
             }
 
             var blogs = await _blogService.GetBlogsBySubCateForHomePage(subCateId, numberOfItems: (int)NumberItem.NumberItemShowEnum.EATING_STYLE);
@@ -73,7 +76,10 @@ namespace BE_Homnayangi.Controllers
             }
             else
             {
-                return BadRequest();
+                return new JsonResult(new
+                {
+                    status = "failed"
+                });
             }
         }
     }

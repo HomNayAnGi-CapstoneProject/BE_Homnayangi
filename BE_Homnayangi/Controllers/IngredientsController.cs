@@ -101,7 +101,10 @@ namespace BE_Homnayangi.Controllers
             }
             else
             {
-                return BadRequest();
+                return new JsonResult(new
+                {
+                    status = "failed"
+                });
             }
         }
 
@@ -120,7 +123,10 @@ namespace BE_Homnayangi.Controllers
             }
             else
             {
-                return BadRequest();
+                return new JsonResult(new
+                {
+                    status = "failed"
+                });
             }
         }
 
@@ -142,7 +148,10 @@ namespace BE_Homnayangi.Controllers
             }
             else
             {
-                return BadRequest();
+                return new JsonResult(new
+                {
+                    status = "failed"
+                });
             }
         }
         [HttpGet("ingredient-searching")]
@@ -169,7 +178,10 @@ namespace BE_Homnayangi.Controllers
             }
             else
             {
-                return BadRequest();
+                return new JsonResult(new
+                {
+                    status = "failed"
+                });
             }
         }
 

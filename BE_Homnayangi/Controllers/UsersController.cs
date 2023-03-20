@@ -1,14 +1,11 @@
 ﻿using AutoMapper;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Request;
-using Library.DataAccess;
 using Library.Models;
 using Library.PagedList;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 
@@ -74,7 +71,11 @@ namespace BE_Homnayangi.Controllers
             {
                 if (await UserExists(user.UserId))
                 {
-                    return BadRequest("User is existed");
+                    return new JsonResult(new
+                    {
+                        status = "failed",
+                        msg = "User is existed"
+                    });
                 }
                 else
                 {
@@ -95,16 +96,11 @@ namespace BE_Homnayangi.Controllers
 
 
         //PUT api/<ValuesController>/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put([FromRoute] Guid id, [FromBody] UpdateUser updateUser)
+        [HttpPut]
+        public async Task<IActionResult> Put([FromBody] UpdateUser updateUser)
         {
-            if (id != updateUser.UserId)
-            {
-                return BadRequest();
-            }
             try
             {
-
                 var user = _mapper.Map<User>(updateUser);
                 bool isUpdated = await _userService.UpdateStaff(user);
                 if (isUpdated == true)

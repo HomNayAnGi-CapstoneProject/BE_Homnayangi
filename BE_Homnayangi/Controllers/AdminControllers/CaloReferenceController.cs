@@ -1,5 +1,4 @@
-﻿using BE_Homnayangi.Modules.AdminModules.BadgeConditionModule.Request;
-using BE_Homnayangi.Modules.AdminModules.CaloReferenceModule.Interface;
+﻿using BE_Homnayangi.Modules.AdminModules.CaloReferenceModule.Interface;
 using BE_Homnayangi.Modules.AdminModules.CaloReferenceModule.Request;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using Library.Models;
@@ -7,7 +6,6 @@ using Library.Models.Constant;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace BE_Homnayangi.Controllers.AdminControllers
@@ -40,7 +38,11 @@ namespace BE_Homnayangi.Controllers.AdminControllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
             }
         }
 
@@ -59,7 +61,11 @@ namespace BE_Homnayangi.Controllers.AdminControllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
             }
         }
 
@@ -80,7 +86,11 @@ namespace BE_Homnayangi.Controllers.AdminControllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
             }
         }
 
@@ -100,7 +110,11 @@ namespace BE_Homnayangi.Controllers.AdminControllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
             }
         }
 
@@ -120,7 +134,11 @@ namespace BE_Homnayangi.Controllers.AdminControllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
             }
         }
     }

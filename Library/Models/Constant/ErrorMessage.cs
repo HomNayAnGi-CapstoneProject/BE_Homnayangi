@@ -100,11 +100,18 @@ namespace Library.Models.Constant
         }
         #endregion
 
-        #region Admin error message
+        #region Comment error message
         public static class CommentError
         {
             public readonly static string COMMENT_NOT_FOUND = "This comment can not be found";
             public readonly static string NOT_THE_AUTHOR_COMMENT = "You are not the author of this comment";
+        }
+        #endregion
+
+        #region Staff error message
+        public static class StaffError
+        {
+            public readonly static string STAFF_NOT_EXIST = "This staff does not exist";
         }
         #endregion
     }

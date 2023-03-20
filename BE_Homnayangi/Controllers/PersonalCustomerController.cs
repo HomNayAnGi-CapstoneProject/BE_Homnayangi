@@ -50,7 +50,11 @@ namespace BE_Homnayangi.Controllers
             var currentUser = _userService.GetCurrentUser(Request.Headers["Authorization"]);
             if (currentUser.Id != customerUpdate.CustomerId)
             {
-                return BadRequest(ErrorMessage.CustomerError.NOT_OWNER);
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    message = ErrorMessage.CustomerError.NOT_OWNER
+                });
             }
             try
             {
@@ -62,9 +66,12 @@ namespace BE_Homnayangi.Controllers
                 }
                 else
                 {
-                    return BadRequest("Update Fail");
+                    return new JsonResult(new
+                    {
+                        status = "failed",
+                        message = "Update Fail"
+                    });
                 }
-
             }
             catch (Exception ex)
             {
@@ -79,7 +86,6 @@ namespace BE_Homnayangi.Controllers
         [HttpPut("password")]
         public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordRequest request)
         {
-
             try
             {
                 await _userService.UpdateCustomerPassword(_userService.GetCurrentUser(Request.Headers["Authorization"]).Id, request.oldPassword, request.newPassword);
@@ -93,7 +99,6 @@ namespace BE_Homnayangi.Controllers
                 });
             }
             return Ok("Update Successfully");
-
         }
     }
 }

@@ -83,7 +83,10 @@ namespace BE_Homnayangi.Controllers
             ValidationResult result = new CreateUnitRequestValidator().Validate(createUnitRequest);
             if (!result.IsValid)
             {
-                return BadRequest();
+                return new JsonResult(new
+                {
+                    msg = "Not valid data"
+                });
             }
 
             await _unitService.AddNewUnit(createUnitRequest);
