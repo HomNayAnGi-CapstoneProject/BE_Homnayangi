@@ -17,6 +17,6 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
         public string RecipeTitle { get; set; }
         public decimal PackagePrice { get; set; }
         public decimal CookedPrice { get; set; }
-        public List<RecipeDetailsOverview> RecipeDetails { get; set; }
+        public List<RecipeDetailResponse> RecipeDetails { get; set; }
     }
 }

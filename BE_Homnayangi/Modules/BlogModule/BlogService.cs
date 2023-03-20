@@ -142,7 +142,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                         CookedPrice = (decimal)x.x.CookedPrice,
                         TotalKcal = (int)x.x.TotalKcal
                     }).ToList();
-                var listRecipeDetails = await _recipeDetailRepository.GetAll();
+                var listRecipeDetails = await _recipeDetailRepository.GetAll(includeProperties: "Ingredient");
                 foreach (var blog in listResponse)
                 {
                     blog.RecipeDetails = ConvertToRecipeDetailsOverview(blog.BlogId, listRecipeDetails.ToList());
@@ -187,7 +187,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     : listBlogs.Join(listBlogSubCate, x => x.BlogId, y => y.BlogId, (x, y) => x).OrderByDescending(x => x.CreatedDate).ToList();
 
                 var listSubCateName = GetListSubCateName(listBlogs, listBlogSubCate);
-                var listRecipeDetails = await _recipeDetailRepository.GetAll();
+                var listRecipeDetails = await _recipeDetailRepository.GetAll(includeProperties: "Ingredient");
 
 
                 var listResponse = listBlogs
@@ -892,19 +892,23 @@ namespace BE_Homnayangi.Modules.BlogModule
             return listSubCateName;
         }
 
-        private List<RecipeDetailsOverview> ConvertToRecipeDetailsOverview(Guid blogId, List<RecipeDetail> recipeDetails)
+        private List<RecipeDetailResponse> ConvertToRecipeDetailsOverview(Guid blogId, List<RecipeDetail> recipeDetails)
         {
-            List<RecipeDetailsOverview> list = new List<RecipeDetailsOverview>();
+            List<RecipeDetailResponse> list = new List<RecipeDetailResponse>();
 
             foreach (var recipeDetail in recipeDetails)
             {
                 if (recipeDetail.RecipeId == blogId)
                 {
-                    RecipeDetailsOverview tmp = new RecipeDetailsOverview()
+                    RecipeDetailResponse tmp = new RecipeDetailResponse()
                     {
-                        RecipeId = blogId,
+                        IngredientId = recipeDetail.IngredientId,
+                        IngredientName = recipeDetail.Ingredient.Name,
                         Description = recipeDetail.Description,
-                        Quantity = recipeDetail.Quantity.Value
+                        Quantity = recipeDetail.Ingredient.Quantity,
+                        Kcal = recipeDetail.Ingredient.Kcal,
+                        Price = recipeDetail.Ingredient.Price,
+                        Image = recipeDetail.Ingredient.Picture
                     };
                     list.Add(tmp);
                 }
