@@ -145,7 +145,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                 var listRecipeDetails = await _recipeDetailRepository.GetAll(includeProperties: "Ingredient");
                 foreach (var blog in listResponse)
                 {
-                    blog.RecipeDetails = ConvertToRecipeDetailsOverview(blog.BlogId, listRecipeDetails.ToList());
+                    blog.RecipeDetails = ConvertToRecipeDetailResponse(blog.BlogId, listRecipeDetails.ToList());
                 }
 
                 return listResponse;
@@ -212,7 +212,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     }).ToList();
                 foreach (var blog in listResponse)
                 {
-                    blog.RecipeDetails = ConvertToRecipeDetailsOverview(blog.BlogId, listRecipeDetails.ToList());
+                    blog.RecipeDetails = ConvertToRecipeDetailResponse(blog.BlogId, listRecipeDetails.ToList());
                 }
                 return listResponse;
             }
@@ -892,7 +892,7 @@ namespace BE_Homnayangi.Modules.BlogModule
             return listSubCateName;
         }
 
-        private List<RecipeDetailResponse> ConvertToRecipeDetailsOverview(Guid blogId, List<RecipeDetail> recipeDetails)
+        private List<RecipeDetailResponse> ConvertToRecipeDetailResponse(Guid blogId, List<RecipeDetail> recipeDetails)
         {
             List<RecipeDetailResponse> list = new List<RecipeDetailResponse>();
 
@@ -905,7 +905,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                         IngredientId = recipeDetail.IngredientId,
                         IngredientName = recipeDetail.Ingredient.Name,
                         Description = recipeDetail.Description,
-                        Quantity = recipeDetail.Ingredient.Quantity,
+                        Quantity = recipeDetail.Quantity,
                         Kcal = recipeDetail.Ingredient.Kcal,
                         Price = recipeDetail.Ingredient.Price,
                         Image = recipeDetail.Ingredient.Picture
