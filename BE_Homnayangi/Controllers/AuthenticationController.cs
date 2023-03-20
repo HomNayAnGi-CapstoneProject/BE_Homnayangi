@@ -56,7 +56,10 @@ namespace BE_Homnayangi.Controllers
             }
             catch
             {
-                return BadRequest();
+                return new JsonResult(new
+                {
+                    status = "failed",
+                });
             }
 
         }
@@ -65,7 +68,11 @@ namespace BE_Homnayangi.Controllers
         {
             try
             {
-                if (authorization == null) return BadRequest();
+                if (authorization == null)
+                    return new JsonResult(new
+                    {
+                        status = "failed",
+                    });
 
                 string token = authorization.Split(" ")[1];
                 if (!String.IsNullOrEmpty(token))
@@ -97,11 +104,18 @@ namespace BE_Homnayangi.Controllers
                         result = accessToken,
                     });
                 }
-                return BadRequest();
+                return new JsonResult(new
+                {
+                    status = "failed",
+                });
             }
             catch (Exception e)
             {
-                return BadRequest();
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = e.Message
+                });
             }
         }
         [HttpPost("Register")]
@@ -114,7 +128,11 @@ namespace BE_Homnayangi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
             }
 
             return Ok("Register successful");

@@ -100,7 +100,7 @@ namespace Library.Models.Constant
         }
         #endregion
 
-        #region Admin error message
+        #region Comment error message
         public static class CommentError
         {
             public readonly static string COMMENT_NOT_FOUND = "This comment can not be found";
@@ -140,6 +140,12 @@ namespace Library.Models.Constant
         {
             public readonly static string TRANSACTION_NOT_FOUND = "Transaction not found";
             public readonly static string TRANSACTION_NOT_ON_PENDING = "Transaction status cannot be change";
+        }
+
+        #region Staff error message
+        public static class StaffError
+        {
+            public readonly static string STAFF_NOT_EXIST = "This staff does not exist";
         }
         #endregion
     }

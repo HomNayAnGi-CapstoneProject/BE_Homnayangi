@@ -40,9 +40,13 @@ namespace BE_Homnayangi.Controllers
                 var response = await _typeService.GetAllPaged(request);
                 return Ok(response);
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest();
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    message = ex.Message
+                });
             }
         }
 
@@ -96,14 +100,17 @@ namespace BE_Homnayangi.Controllers
             var type = _mapper.Map<Type>(typeRequest);
             if (id != type.TypeId)
             {
-                return BadRequest();
+                return new JsonResult(new
+                {
+                    msg = "Type is not valid"
+                });
             }
 
             try
             {
                 await _typeService.UpdateType(type);
             }
-            catch
+            catch (Exception ex)
             {
                 if (!TypeExists(id))
                 {
@@ -111,7 +118,11 @@ namespace BE_Homnayangi.Controllers
                 }
                 else
                 {
-                    throw;
+                    return new JsonResult(new
+                    {
+                        status = "failed",
+                        message = ex.Message
+                    });
                 }
             }
 
@@ -143,9 +154,13 @@ namespace BE_Homnayangi.Controllers
                 var response = await _typeService.GetTypeDropdown();
                 return Ok(response);
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest();
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    message = ex.Message
+                });
             }
         }
 

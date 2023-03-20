@@ -1,7 +1,6 @@
-﻿using System;
+﻿using BE_Homnayangi.Modules.RecipeDetailModule.RecipeDetailsDTO;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BE_Homnayangi.Modules.BlogModule.Response
 {
@@ -13,6 +12,11 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
         public List<string> ListSubCateName { get; set; }
         public string ImageUrl { get; set; }
         public int TotalKcal { get; set; }
+
+        // Recipe information
+        public string RecipeTitle { get; set; }
         public decimal PackagePrice { get; set; }
+        public decimal CookedPrice { get; set; }
+        public List<RecipeDetailsOverview> RecipeDetails { get; set; }
     }
 }
