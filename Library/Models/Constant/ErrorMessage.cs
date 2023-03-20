@@ -108,6 +108,41 @@ namespace Library.Models.Constant
         }
         #endregion
 
+        #region General error message
+        public static class GeneralError
+        {
+            public readonly static string SOMETHING_WENT_WRONG = "Something went wrong";
+        }
+        #endregion
+
+        #region Order error message
+        public static class OrderError
+        {
+            public readonly static string SHIPPING_DATE_NOT_VALID = "Shipping date not valid";
+            public readonly static string ORDER_NOT_FOUND = "Order not found";
+            public readonly static string COOKED_ORDER_NOT_VALID = "Cooked order cannot have ingredient or package";
+            public readonly static string ORDER_CANNOT_CHANGE_STATUS = "Order status cannot be change";
+            public readonly static string ORDER_SHIPPING_ADDRESS_REQUIRED = "Shipping address is required";
+            public readonly static string ORDER_TOTAL_PRICE_NOT_VALID = "Total price must higher than 1";
+            public readonly static string ORDER_PAYMENT_METHOD_NOT_VALID = "Payment method not valid";
+        }
+        #endregion
+
+        #region Mail service error message
+        public static class MailError
+        {
+            public readonly static string MAIL_SENDING_ERROR = "Mail cannot be send";
+        }
+        #endregion
+
+        #region Transaction error message
+        public static class TransactionError
+        {
+            public readonly static string TRANSACTION_NOT_FOUND = "Transaction not found";
+            public readonly static string TRANSACTION_NOT_ON_PENDING = "Transaction status cannot be change";
+        }
+        #endregion
+
         #region Staff error message
         public static class StaffError
         {
