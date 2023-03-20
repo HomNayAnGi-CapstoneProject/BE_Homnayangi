@@ -141,6 +141,7 @@ namespace Library.Models.Constant
             public readonly static string TRANSACTION_NOT_FOUND = "Transaction not found";
             public readonly static string TRANSACTION_NOT_ON_PENDING = "Transaction status cannot be change";
         }
+        #endregion
 
         #region Staff error message
         public static class StaffError

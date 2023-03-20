@@ -219,12 +219,15 @@ namespace BE_Homnayangi.Modules.OrderModule
                 }
 
                 #region sending mail
-                // gui mail thong tin order
-                var mailSubject = $"[Da duyet] Thong tin don hang #{order.OrderId}";
-                var mailBody = $"Cam on ban da mua hang, don hang #{order.OrderId} da duoc duyet.\n" +
-                    $"Don hang cua ban dang duoc giao";
+                if (customer.Email != null)
+                {
+                    // gui mail thong tin order
+                    var mailSubject = $"[Da duyet] Thong tin don hang #{order.OrderId}";
+                    var mailBody = $"Cam on ban da mua hang, don hang #{order.OrderId} da duoc duyet.\n" +
+                        $"Don hang cua ban dang duoc giao";
 
-                SendMail(mailSubject, mailBody, customer.Email);
+                    SendMail(mailSubject, mailBody, customer.Email);
+                }
                 #endregion
 
                 transactionScope.Commit();
@@ -259,11 +262,14 @@ namespace BE_Homnayangi.Modules.OrderModule
                 }
 
                 #region sending mail
-                // gui mail thong bao don hang bi tu choi
-                var mailSubject = $"[Tu choi don hang] Thong tin don hang #{order.OrderId}";
-                var mailBody = $"Don hang #{order.OrderId} da bi tu choi.";
+                if (customer.Email != null)
+                {
+                    // gui mail thong bao don hang bi tu choi
+                    var mailSubject = $"[Tu choi don hang] Thong tin don hang #{order.OrderId}";
+                    var mailBody = $"Don hang #{order.OrderId} da bi tu choi.";
 
-                SendMail(mailSubject, mailBody, customer.Email);
+                    SendMail(mailSubject, mailBody, customer.Email);
+                }
                 #endregion
 
                 transactionScope.Commit();
@@ -296,11 +302,14 @@ namespace BE_Homnayangi.Modules.OrderModule
                 }
 
                 #region sending mail
-                // gui mail thong bao don hang bi huy
-                var mailSubject = $"[Huy don hang] Thong tin don hang #{order.OrderId}";
-                var mailBody = $"Don hang #{order.OrderId} da bi huy.";
+                if (customer.Email != null)
+                {
+                    // gui mail thong bao don hang bi huy
+                    var mailSubject = $"[Huy don hang] Thong tin don hang #{order.OrderId}";
+                    var mailBody = $"Don hang #{order.OrderId} da bi huy.";
 
-                SendMail(mailSubject, mailBody, customer.Email);
+                    SendMail(mailSubject, mailBody, customer.Email);
+                }
                 #endregion
 
                 transactionScope.Commit();
@@ -514,73 +523,5 @@ namespace BE_Homnayangi.Modules.OrderModule
             };
             return apiContext;
         }
-
-        public async Task<string> Checkout(Guid orderId)
-        {
-            var redirectUrl = "";
-
-            var order = await _OrderRepository.GetByIdAsync(orderId);
-
-            if (order == null)
-                throw new Exception(ErrorMessage.OrderError.ORDER_NOT_FOUND);
-            if (!order.OrderStatus.Equals((int)Status.OrderStatus.PENDING))
-                throw new Exception("Order not available for checkout");
-            if (string.IsNullOrEmpty(order.ShippedAddress))
-                throw new Exception("Shipping address required");
-            if(order.TotalPrice < 1)
-                throw new Exception("Total price must higher than 1");
-
-            #region create transaction
-            var transaction = new Library.Models.Transaction()
-            {
-                TransactionId = order.OrderId,
-                TotalAmount = order.TotalPrice.Value,
-                CreatedDate = DateTime.Now,
-                TransactionStatus = (int)Status.TransactionStatus.PENDING,
-                CustomerId = order.CustomerId
-            };
-            #endregion
-
-            var transactionScope = _OrderRepository.Transaction();
-            using (transactionScope)
-            {
-                await _transactionRepository.AddAsync(transaction);
-
-                try
-                {
-                    if (order.PaymentMethod.HasValue)
-                    {
-                        switch (order.PaymentMethod.GetValueOrDefault())
-                        {
-                            case (int)PaymentMethodEnum.PaymentMethods.PAYPAL:
-                                order.OrderDate = DateTime.Now;
-                                order.OrderStatus = (int)Status.OrderStatus.PENDING;
-                                await _OrderRepository.UpdateAsync(order);
-                                redirectUrl = await PaymentWithPaypal(order.OrderId);
-                                break;
-                            case (int)PaymentMethodEnum.PaymentMethods.COD:
-                                order.OrderStatus = (int)Status.OrderStatus.ACCEPTED;
-                                await _OrderRepository.UpdateAsync(order);
-                                break;
-                            default:
-                                throw new Exception("Payment method not valid");
-                        }
-                    }
-                    else
-                        throw new Exception("Payment method must not null");
-                }
-                catch (Exception e)
-                {
-                    throw new Exception($"Transaction fail - {e.Message}");
-                }
-
-                transactionScope.Commit();
-            }
-            
-
-            return redirectUrl;
-        }
-
-        
     }
 }
