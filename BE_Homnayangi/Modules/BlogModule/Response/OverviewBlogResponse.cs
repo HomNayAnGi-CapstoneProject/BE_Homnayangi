@@ -15,6 +15,7 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
 
         // Recipe information
         public string RecipeTitle { get; set; }
+        public Guid? RecipeId { get; set; }
         public decimal PackagePrice { get; set; }
         public decimal CookedPrice { get; set; }
         public List<RecipeDetailResponse> RecipeDetails { get; set; }

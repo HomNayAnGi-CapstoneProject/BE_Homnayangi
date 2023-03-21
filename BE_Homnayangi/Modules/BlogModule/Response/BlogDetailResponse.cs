@@ -45,7 +45,7 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
         public List<RecipeDetailResponse> RecipeDetails { get; set; }
 
         // Related blogs
-        public List<BlogsByCatesResponse> RelatedBlogs{ get; set; }
+        public List<BlogsByCatesResponse> RelatedBlogs { get; set; }
 
         // Note: về sau sẽ lấy blogreaction lên để xem user đó react hay chưa => on | off nút react
     }

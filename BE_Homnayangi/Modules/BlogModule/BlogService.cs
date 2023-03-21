@@ -124,6 +124,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                         View = x.b.View,
                         Reaction = x.b.BlogReactions,
                         ListSubCateName = x.ListSubCateName,
+                        RecipeTitle = x.b.Recipe.Title,
+                        RecipeId = x.b.RecipeId,
                         PackagePrice = y.PackagePrice,
                         CookedPrice = y.CookedPrice,
                         TotalKcal = y.TotalKcal
@@ -131,6 +133,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                     {
                         x,
                         Description = y.Html
+
+
                     }).OrderByDescending(x => x.x.View).Take((int)NumberItem.NumberItemShowEnum.CHEAP_PRICE).Select(x => new OverviewBlogResponse
                     {
                         BlogId = x.x.BlogId,
@@ -138,6 +142,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                         Description = x.Description,
                         ImageUrl = x.x.ImageUrl,
                         ListSubCateName = x.x.ListSubCateName,
+                        RecipeTitle = x.x.RecipeTitle,
+                        RecipeId = x.x.RecipeId,
                         PackagePrice = (decimal)x.x.PackagePrice,
                         CookedPrice = (decimal)x.x.CookedPrice,
                         TotalKcal = (int)x.x.TotalKcal
@@ -206,6 +212,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                         ListSubCateName = x.ListSubCateName,
                         Description = y.Html,
                         RecipeTitle = x.b.Recipe.Title,
+                        RecipeId = x.b.RecipeId,
                         PackagePrice = (decimal)x.b.Recipe.PackagePrice,
                         CookedPrice = (decimal)x.b.Recipe.CookedPrice,
                         TotalKcal = (int)x.b.Recipe.TotalKcal,
@@ -353,6 +360,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     var firstBlog = listNormalBlog.ElementAt(rnd.Next(0, listNormalBlog.Count() - 1));
                     var secondBlog = listNormalBlog.ElementAt(rnd.Next(0, listNormalBlog.Count() - 1));
                     var soupBlog = listSoupBlog.ElementAt(rnd.Next(0, listSoupBlog.Count() - 1));
+                    var listRecipeDetails = await _recipeDetailRepository.GetAll(includeProperties: "Ingredient");
                     if (firstBlog.BlogId != secondBlog.BlogId)
                     {
                         if (!listSoupBlogIdSubCate.Contains(firstBlog.BlogId) && !listSoupBlogIdSubCate.Contains(secondBlog.BlogId))
@@ -369,17 +377,28 @@ namespace BE_Homnayangi.Modules.BlogModule
                                         ImageUrl = firstBlog.ImageUrl,
                                         ListSubCateName = listBlogSubCate.Where(x => x.BlogId.Equals(firstBlog.BlogId)).Select(x => x.SubCate.Name).ToList(),
                                         PackagePrice = (decimal)firstBlog.Recipe.PackagePrice,
+                                        CookedPrice = (decimal)firstBlog.Recipe.CookedPrice,
+                                        RecipeTitle = firstBlog.Recipe.Title,
+                                        RecipeId = firstBlog.Recipe.RecipeId,
+                                        RecipeDetails = ConvertToRecipeDetailResponse(firstBlog.BlogId, listRecipeDetails.ToList()),
                                         TotalKcal = (int)firstBlog.Recipe.TotalKcal
                                     });
                                     result.Add(new OverviewBlogResponse
                                     {
+
                                         BlogId = secondBlog.BlogId,
                                         Title = secondBlog.Title,
                                         Description = listBlogDescRef.FirstOrDefault(x => x.BlogId == secondBlog.BlogId).Html,
                                         ImageUrl = secondBlog.ImageUrl,
                                         ListSubCateName = listBlogSubCate.Where(x => x.BlogId.Equals(secondBlog.BlogId)).Select(x => x.SubCate.Name).ToList(),
                                         PackagePrice = (decimal)secondBlog.Recipe.PackagePrice,
-                                        TotalKcal = (int)secondBlog.Recipe.TotalKcal
+                                        CookedPrice = (decimal)secondBlog.Recipe.CookedPrice,
+                                        TotalKcal = (int)secondBlog.Recipe.TotalKcal,
+                                        RecipeTitle = secondBlog.Recipe.Title,
+                                        RecipeId = secondBlog.Recipe.RecipeId,
+                                        RecipeDetails = ConvertToRecipeDetailResponse(secondBlog.BlogId, listRecipeDetails.ToList()),
+
+
                                     });
                                     result.Add(new OverviewBlogResponse
                                     {
@@ -389,7 +408,13 @@ namespace BE_Homnayangi.Modules.BlogModule
                                         ImageUrl = soupBlog.ImageUrl,
                                         ListSubCateName = listBlogSubCate.Where(x => x.BlogId.Equals(soupBlog.BlogId)).Select(x => x.SubCate.Name).ToList(),
                                         PackagePrice = (decimal)soupBlog.Recipe.PackagePrice,
-                                        TotalKcal = (int)soupBlog.Recipe.TotalKcal
+                                        CookedPrice = (decimal)soupBlog.Recipe.CookedPrice,
+                                        TotalKcal = (int)soupBlog.Recipe.TotalKcal,
+                                        RecipeTitle = soupBlog.Recipe.Title,
+                                        RecipeId = soupBlog.Recipe.RecipeId,
+                                        RecipeDetails = ConvertToRecipeDetailResponse(soupBlog.BlogId, listRecipeDetails.ToList()),
+
+
                                     });
                                 }
                             }
@@ -405,6 +430,10 @@ namespace BE_Homnayangi.Modules.BlogModule
                                         ImageUrl = firstBlog.ImageUrl,
                                         ListSubCateName = listBlogSubCate.Where(x => x.BlogId.Equals(firstBlog.BlogId)).Select(x => x.SubCate.Name).ToList(),
                                         PackagePrice = (decimal)firstBlog.Recipe.PackagePrice,
+                                        CookedPrice = (decimal)firstBlog.Recipe.CookedPrice,
+                                        RecipeTitle = firstBlog.Recipe.Title,
+                                        RecipeId = firstBlog.Recipe.RecipeId,
+                                        RecipeDetails = ConvertToRecipeDetailResponse(firstBlog.BlogId, listRecipeDetails.ToList()),
                                         TotalKcal = (int)firstBlog.Recipe.TotalKcal
                                     });
                                     result.Add(new OverviewBlogResponse
@@ -415,7 +444,13 @@ namespace BE_Homnayangi.Modules.BlogModule
                                         ImageUrl = secondBlog.ImageUrl,
                                         ListSubCateName = listBlogSubCate.Where(x => x.BlogId.Equals(secondBlog.BlogId)).Select(x => x.SubCate.Name).ToList(),
                                         PackagePrice = (decimal)secondBlog.Recipe.PackagePrice,
-                                        TotalKcal = (int)secondBlog.Recipe.TotalKcal
+                                        CookedPrice = (decimal)secondBlog.Recipe.CookedPrice,
+                                        TotalKcal = (int)secondBlog.Recipe.TotalKcal,
+                                        RecipeTitle = secondBlog.Recipe.Title,
+                                        RecipeId = secondBlog.Recipe.RecipeId,
+                                        RecipeDetails = ConvertToRecipeDetailResponse(secondBlog.BlogId, listRecipeDetails.ToList()),
+
+
                                     });
                                     result.Add(new OverviewBlogResponse
                                     {
@@ -425,7 +460,13 @@ namespace BE_Homnayangi.Modules.BlogModule
                                         ImageUrl = soupBlog.ImageUrl,
                                         ListSubCateName = listBlogSubCate.Where(x => x.BlogId.Equals(soupBlog.BlogId)).Select(x => x.SubCate.Name).ToList(),
                                         PackagePrice = (decimal)soupBlog.Recipe.PackagePrice,
-                                        TotalKcal = (int)soupBlog.Recipe.TotalKcal
+                                        CookedPrice = (decimal)soupBlog.Recipe.CookedPrice,
+                                        TotalKcal = (int)soupBlog.Recipe.TotalKcal,
+                                        RecipeTitle = soupBlog.Recipe.Title,
+                                        RecipeId = soupBlog.Recipe.RecipeId,
+                                        RecipeDetails = ConvertToRecipeDetailResponse(soupBlog.BlogId, listRecipeDetails.ToList()),
+
+
                                     });
                                 }
                             }
