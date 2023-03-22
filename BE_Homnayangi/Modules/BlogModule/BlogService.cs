@@ -243,7 +243,7 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 if (subCateIds == null)
                 {
-                    blogs = _blogRepository.GetBlogsBy(b => b.BlogStatus > 0).Result.ToList();
+                    blogs = _blogRepository.GetBlogsBy(b => b.BlogStatus == ((int)Status.BlogStatus.ACTIVE)).Result.ToList();
                 }
                 else
                 {
