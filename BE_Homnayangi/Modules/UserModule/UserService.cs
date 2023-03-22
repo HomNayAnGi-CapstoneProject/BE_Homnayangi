@@ -207,7 +207,7 @@ namespace BE_Homnayangi.Modules.UserModule
                         await CheckExistedEmail(user.UserId, user.Email);
 
                     updateUser.Username = user.Username == null || user.Username == "" ? updateUser.Username : user.Username;
-                    updateUser.Displayname = user.Displayname == null || user.Displayname == "" ? updateUser.Displayname  : user.Displayname;
+                    updateUser.Displayname = user.Displayname == null || user.Displayname == "" ? updateUser.Displayname : user.Displayname;
                     updateUser.Firstname = user.Firstname == null || user.Firstname == "" ? updateUser.Firstname : user.Firstname;
                     updateUser.Lastname = user.Lastname == null || user.Lastname == "" ? updateUser.Lastname : user.Lastname;
                     updateUser.Email = user.Email == null || user.Email == "" ? updateUser.Email : user.Email;
@@ -706,7 +706,7 @@ namespace BE_Homnayangi.Modules.UserModule
                     var Email = tokenS.Claims.First(x => x.Type == "email")?.Value;
                     var Avatar = tokenS.Claims.First(x => x.Type == "Avatar")?.Value;
                     var Phonenumber = tokenS.Claims.First(x => x.Type == "PhoneNumber")?.Value;
-                    var Gender = Int32.Parse(tokenS.Claims.First(x => x.Type == "gender")?.Value);
+                    var Gender = Int32.Parse(tokenS.Claims.First(x => x.Type == "gender")?.Value == null ? "0" : tokenS.Claims.First(x => x.Type == "gender")?.Value);
                     var Role = tokenS.Claims.First(x => x.Type == "role")?.Value;
                     CurrentUserResponse currentUser = new CurrentUserResponse()
                     {
