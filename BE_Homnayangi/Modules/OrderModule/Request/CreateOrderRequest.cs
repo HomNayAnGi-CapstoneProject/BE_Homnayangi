@@ -12,6 +12,7 @@ namespace BE_Homnayangi.Modules.OrderModule.Request
         public decimal? Discount { get; set; }
         public decimal? TotalPrice { get; set; }
         public Guid? VoucherId { get; set; }
+        public bool? IsCooked { get; set; }
         public int? PaymentMethod { get; set; }
 
         public ICollection<OrderDetail> OrderDetails { get; set; }
