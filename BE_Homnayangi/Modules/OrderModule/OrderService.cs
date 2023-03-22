@@ -83,11 +83,6 @@ namespace BE_Homnayangi.Modules.OrderModule
                 if (newOrder.TotalPrice < 10000)
                     throw new Exception(ErrorMessage.OrderError.ORDER_TOTAL_PRICE_NOT_VALID);
 
-                foreach(var detail in newOrder.OrderDetails)
-                {
-                    detail.OrderId = newOrder.OrderId;
-                }
-
                 #region create transaction
                 var transaction = new Library.Models.Transaction()
                 {
@@ -104,16 +99,15 @@ namespace BE_Homnayangi.Modules.OrderModule
                 {
                     try
                     {
-                        await _OrderRepository.AddAsync(newOrder);
-                        foreach (var detail in newOrder.OrderDetails)
+                        newOrder.OrderDetails.ToList().ForEach(detail =>
                         {
+                            detail.OrderDetailId = Guid.NewGuid();
                             detail.OrderId = newOrder.OrderId;
-                            var detailExisted = await _orderDetailRepository
-                                .GetOrderDetailsBy(od => od.OrderId.Equals(newOrder.OrderId)
-                                    && od.IngredientId.Equals(detail.IngredientId));
-                            if (detailExisted == null)
-                                await _orderDetailRepository.AddAsync(detail);
-                        }
+                            if (detail.RecipeId == null)
+                                throw new Exception("Recipe id is required");
+                        });
+                        await _OrderRepository.AddAsync(newOrder);
+
                         await _transactionRepository.AddAsync(transaction);
 
                         if (newOrder.PaymentMethod.HasValue)
