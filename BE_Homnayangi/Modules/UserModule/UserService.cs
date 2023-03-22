@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Http;
 using BE_Homnayangi.Modules.UserModule.Response;
 using BE_Homnayangi.Utils;
 using BE_Homnayangi.Modules.Utils;
+using Library.Models.Enum;
 
 namespace BE_Homnayangi.Modules.UserModule
 {
@@ -706,7 +707,7 @@ namespace BE_Homnayangi.Modules.UserModule
                     var Email = tokenS.Claims.First(x => x.Type == "email")?.Value;
                     var Avatar = tokenS.Claims.First(x => x.Type == "Avatar")?.Value;
                     var Phonenumber = tokenS.Claims.First(x => x.Type == "PhoneNumber")?.Value;
-                    var Gender = Int32.Parse(tokenS.Claims.First(x => x.Type == "gender")?.Value == null ? "0" : tokenS.Claims.First(x => x.Type == "gender")?.Value);
+                    var Gender = Int32.Parse(tokenS.Claims.First(x => x.Type == "gender")?.Value == "" ? ((int)GenderEnum.Gender.MALE).ToString() : tokenS.Claims.First(x => x.Type == "gender")?.Value);
                     var Role = tokenS.Claims.First(x => x.Type == "role")?.Value;
                     CurrentUserResponse currentUser = new CurrentUserResponse()
                     {
