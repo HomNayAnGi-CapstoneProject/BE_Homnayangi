@@ -526,6 +526,7 @@ namespace BE_Homnayangi.Modules.UserModule
                     new Claim("Firstname", customer.Firstname == null ? "": customer.Firstname),
                     new Claim("Lastname",customer.Lastname == null ? "": customer.Lastname),
                     new Claim(ClaimTypes.Gender,customer.Gender.ToString() == null ? "": customer.Gender.ToString()),
+                    new Claim("isGoogleAccount", customer.IsGoogle.ToString()  == null ? "" : customer.IsGoogle.ToString()),
                     new Claim("Avatar", customer.Avatar  == null ? "" : customer.Avatar),
                     new Claim(ClaimTypes.Role, CommonEnum.RoleEnum.CUSTOMER)
 
@@ -562,6 +563,7 @@ namespace BE_Homnayangi.Modules.UserModule
                     new Claim("Firstname", cus.Firstname == null ? "": cus.Firstname),
                     new Claim("Lastname",cus.Lastname == null ? "": cus.Lastname),
                     new Claim(ClaimTypes.Gender,cus.Gender.ToString() == null ? "": cus.Gender.ToString()),
+                    new Claim("isGoogleAccount", cus.IsGoogle.ToString()  == null ? "" : cus.IsGoogle.ToString()),
                     new Claim("Avatar", cus.Avatar  == null ? "" : cus.Avatar),
                     new Claim(ClaimTypes.Role, CommonEnum.RoleEnum.CUSTOMER)
 
@@ -595,6 +597,7 @@ namespace BE_Homnayangi.Modules.UserModule
                     new Claim("Firstname", user.Firstname == null ? "": user.Firstname),
                     new Claim("Lastname",user.Lastname == null ? "": user.Lastname),
                     new Claim(ClaimTypes.Gender,user.Gender.ToString() == null ? "": user.Gender.ToString()),
+                    new Claim("isGoogleAccount", user.IsGoogle.ToString()  == null ? "" : user.IsGoogle.ToString()),
                     new Claim("Avatar", user.Avatar  == null ? "" : user.Avatar),
                     new Claim(ClaimTypes.Role,user.Role == 1 ? CommonEnum.RoleEnum.MANAGER : CommonEnum.RoleEnum.STAFF)
                 }),
