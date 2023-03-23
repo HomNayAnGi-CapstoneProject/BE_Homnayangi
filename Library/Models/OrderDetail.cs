@@ -7,6 +7,7 @@ namespace Library.Models
 {
     public partial class OrderDetail
     {
+        public Guid OrderDetailId { get; set; }
         public Guid OrderId { get; set; }
         public Guid IngredientId { get; set; }
         public int? Quantity { get; set; }

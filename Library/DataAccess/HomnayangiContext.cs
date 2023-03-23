@@ -560,10 +560,11 @@ namespace Library.DataAccess
 
             modelBuilder.Entity<OrderDetail>(entity =>
             {
-                entity.HasKey(e => new { e.OrderId, e.IngredientId })
-                    .HasName("PK_OrderIngredientDetail");
-
                 entity.ToTable("OrderDetail");
+
+                entity.Property(e => e.OrderDetailId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("orderDetailId");
 
                 entity.Property(e => e.OrderId).HasColumnName("orderId");
 

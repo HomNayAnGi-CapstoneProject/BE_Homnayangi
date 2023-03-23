@@ -23,6 +23,10 @@ using BE_Homnayangi.Modules.CustomerVoucherModule;
 using BE_Homnayangi.Modules.CustomerVoucherModule.Interface;
 using BE_Homnayangi.Modules.IngredientModule;
 using BE_Homnayangi.Modules.IngredientModule.Interface;
+using BE_Homnayangi.Modules.OrderDetailModule;
+using BE_Homnayangi.Modules.OrderDetailModule.Interface;
+using BE_Homnayangi.Modules.OrderModule;
+using BE_Homnayangi.Modules.OrderModule.Interface;
 using BE_Homnayangi.Modules.RecipeDetailModule;
 using BE_Homnayangi.Modules.RecipeDetailModule.Interface;
 using BE_Homnayangi.Modules.RecipeModule;
@@ -31,6 +35,8 @@ using BE_Homnayangi.Modules.BadgeModule;
 using BE_Homnayangi.Modules.BadgeModule.Interface;
 using BE_Homnayangi.Modules.SubCateModule;
 using BE_Homnayangi.Modules.SubCateModule.Interface;
+using BE_Homnayangi.Modules.TransactionModule;
+using BE_Homnayangi.Modules.TransactionModule.Interface;
 using BE_Homnayangi.Modules.TypeModule;
 using BE_Homnayangi.Modules.TypeModule.Interface;
 using BE_Homnayangi.Modules.UnitModule;
@@ -250,10 +256,19 @@ namespace BE_Homnayangi
             services.AddScoped<ICaloReferenceRepository, CaloReferenceRepository>();
             services.AddScoped<ICaloReferenceService, CaloReferenceService>();
 
-            //Calo reference Module
+            //Season reference Module
             services.AddScoped<ISeasonReferenceRepository, SeasonReferenceRepository>();
             services.AddScoped<ISeasonReferenceService, SeasonReferenceService>();
 
+            //Order Module
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
+            services.AddScoped<IOrderDetailService, OrderDetailService>();
+
+            //Transaction Module
+            services.AddScoped<ITransactionRepository, TransactionRepository>();
+            services.AddScoped<ITransactionService, TransactionService>();
             //Badge Condition Module
             services.AddScoped<IBadgeConditionRepository, BadgeConditionRepository>();
             services.AddScoped<IBadgeConditionService, BadgeConditionService>();

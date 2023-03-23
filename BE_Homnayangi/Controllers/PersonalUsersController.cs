@@ -3,14 +3,11 @@ using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Request;
 using BE_Homnayangi.Modules.UserModule.Response;
 using BE_Homnayangi.Modules.Utils;
-using BE_Homnayangi.Utils;
 using Library.Models;
 using Library.Models.Constant;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -40,16 +37,13 @@ namespace BE_Homnayangi.Controllers
         [HttpGet]
         public async Task<ActionResult<CurrentUserResponse>> GetUserById()
         {
-
+            var currentUserId = _userService.GetCurrentUser(Request.Headers["Authorization"]).Id;
+            var currentUser = await _userService.GetUserById(currentUserId);
             return new JsonResult(new
             {
-                result = _userService.GetCurrentUser(Request.Headers["Authorization"]),
+                result = currentUser
             });
         }
-
-
-
-
 
         //PUT api/<ValuesController>/5
         [HttpPut]
@@ -58,7 +52,11 @@ namespace BE_Homnayangi.Controllers
             var currentUser = _userService.GetCurrentUser(Request.Headers["Authorization"]);
             if (currentUser.Id != updateUser.UserId)
             {
-                return BadRequest(ErrorMessage.UserError.NOT_OWNER);
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    message = ErrorMessage.UserError.NOT_OWNER
+                });
             }
             try
             {
@@ -71,16 +69,21 @@ namespace BE_Homnayangi.Controllers
                 }
                 else
                 {
-                    return BadRequest("Update Fail");
+                    return new JsonResult(new
+                    {
+                        status = "failed",
+                        message = "Update Fail"
+                    });
                 }
-
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    message = ex.Message
+                });
             }
-
-
         }
         //PUT api/<ValuesController>/5
         [HttpPut("password")]
@@ -88,17 +91,17 @@ namespace BE_Homnayangi.Controllers
         {
             try
             {
-
-
                 await _userService.UpdateUserPassword(_userService.GetCurrentUser(Request.Headers["Authorization"]).Id, request.oldPassword, request.newPassword);
-
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    message = ex.Message
+                });
             }
             return Ok("Update Successfully");
-
         }
     }
 }

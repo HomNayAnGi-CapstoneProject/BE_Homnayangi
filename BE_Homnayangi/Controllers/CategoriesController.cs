@@ -75,7 +75,10 @@ namespace BE_Homnayangi.Controllers
             ValidationResult result = new UpdateCategoryRequestValidator().Validate(category);
             if (!result.IsValid)
             {
-                return BadRequest();
+                return new JsonResult(new
+                {
+                    status = "failed"
+                });
             }
 
             if (await _categoryService.UpdateCategory(category) == false) return NotFound();
@@ -92,7 +95,10 @@ namespace BE_Homnayangi.Controllers
             ValidationResult result = new CreateCategoryRequestValidator().Validate(reqCategory);
             if (!result.IsValid)
             {
-                return BadRequest();
+                return new JsonResult(new
+                {
+                    status = "failed",
+                });
             }
 
             return Ok(await _categoryService.AddNewCategory(reqCategory));

@@ -23,18 +23,16 @@ namespace BE_Homnayangi.Modules.BlogModule.Interface
 
         #region GET
         public Task<ICollection<OverviewBlog>> GetBlogsByUser();
+        public Task<ICollection<OverviewBlogResponse>> GetBlogsSortByPackagePriceAsc();
+        public Task<ICollection<SearchBlogsResponse>> GetBlogAndRecipeByName(String name);
+        public Task<ICollection<OverviewBlogResponse>> GetBlogsBySubCateForHomePage(Guid? tagId, int numberOfItems = 0);
+        public Task<PagedResponse<PagedList<BlogsByCatesResponse>>> GetBlogsBySubCates(BlogsBySubCatesRequest request);
+        public Task<ICollection<OverviewBlogResponse>> GetSuggestBlogByCalo(SuggestBlogByCaloRequest request);
         #endregion
 
         #region Blog detail
         public Task<BlogDetailResponse> GetBlogDetail(Guid blogId);
         public Task<BlogDetailResponse> GetBlogDetailPreview(Guid blogId);
         #endregion
-
-        public Task<ICollection<OverviewBlogResponse>> GetBlogsSortByPackagePriceAsc();
-        public Task<ICollection<SearchBlogsResponse>> GetBlogAndRecipeByName(String name);
-        public Task<ICollection<OverviewBlogResponse>> GetBlogsBySubCateForHomePage(Guid? tagId, int numberOfItems = 0);
-        public Task<PagedResponse<PagedList<BlogsByCatesResponse>>> GetBlogsBySubCates(BlogsBySubCatesRequest request);
-        public Task<ICollection<OverviewBlogResponse>> GetSuggestBlogByCalo(SuggestBlogByCaloRequest request);
-        public Task UpdateView(Guid? id);
     }
 }

@@ -60,7 +60,11 @@ namespace BE_Homnayangi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
             }
         }
 
@@ -70,12 +74,15 @@ namespace BE_Homnayangi.Controllers
         {
             try
             {
-                await _blogService.UpdateView(id);
                 return Ok(await _blogService.GetBlogDetail(id));
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
             }
         }
 
@@ -91,7 +98,11 @@ namespace BE_Homnayangi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
             }
         }
         #endregion
@@ -125,7 +136,11 @@ namespace BE_Homnayangi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
             }
         }
 
@@ -142,7 +157,11 @@ namespace BE_Homnayangi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
             }
         }
 
@@ -177,7 +196,11 @@ namespace BE_Homnayangi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
             }
         }
 
@@ -212,7 +235,11 @@ namespace BE_Homnayangi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
             }
         }
 
@@ -244,7 +271,11 @@ namespace BE_Homnayangi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
             }
         }
         #endregion
@@ -271,7 +302,11 @@ namespace BE_Homnayangi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
             }
         }
     }

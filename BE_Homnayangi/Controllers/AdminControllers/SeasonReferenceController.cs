@@ -38,7 +38,11 @@ namespace BE_Homnayangi.Controllers.AdminControllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    message = ex.Message
+                });
             }
         }
 
@@ -57,7 +61,11 @@ namespace BE_Homnayangi.Controllers.AdminControllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    message = ex.Message
+                });
             }
         }
 
@@ -78,7 +86,11 @@ namespace BE_Homnayangi.Controllers.AdminControllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    message = ex.Message
+                });
             }
         }
 
@@ -98,7 +110,11 @@ namespace BE_Homnayangi.Controllers.AdminControllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    message = ex.Message
+                });
             }
         }
 
@@ -118,7 +134,11 @@ namespace BE_Homnayangi.Controllers.AdminControllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    message = ex.Message
+                });
             }
         }
     }

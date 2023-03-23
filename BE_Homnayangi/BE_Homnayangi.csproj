@@ -35,6 +35,7 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.17" />
     <PackageReference Include="UnidecodeSharpFork" Version="1.0.0" />
+    <PackageReference Include="PayPal" Version="1.9.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -60,14 +61,27 @@
     <None Remove="Modules\BadgeModule\DTO\Response\" />
     <None Remove="Modules\BadgeModule\DTO\Request\" />
     <None Remove="Modules\Utils\" />
+    <None Remove="Modules\TransactionModule\" />
+    <None Remove="Modules\OrderDetailModule\Interface\" />
+    <None Remove="Modules\TransactionModule\Interface\" />
+    <None Remove="Modules\OrderModule\Request\" />
+    <None Remove="Modules\OrderModule\Response\" />
+    <None Remove="PayPal" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Modules\RecipeModule\Interface\" />
-    <Folder Include="Modules\RecipeDetailModule\" />
     <Folder Include="Modules\RecipeDetailModule\Interface\" />
     <Folder Include="Modules\IngredientModule\Interface\" />
     <Folder Include="Modules\IngredientModule\IngredientDTO\" />
-    <Folder Include="Modules\RecipeDetailModule\RecipeDetailsDTO\" />
     <Folder Include="Modules\AutoMapper\" />
+    <Folder Include="Modules\RewardModule\" />
+    <Folder Include="Modules\RewardModule\Interface\" />
+    <Folder Include="Modules\RewardModule\DTO\" />
+    <Folder Include="Modules\RewardModule\DTO\Response\" />
+    <Folder Include="Modules\RewardModule\DTO\Request\" />
+    <Folder Include="Modules\TransactionModule\" />
+    <Folder Include="Modules\TransactionModule\Interface\" />
+    <Folder Include="Modules\OrderModule\Request\" />
+    <Folder Include="Modules\OrderModule\Response\" />
   </ItemGroup>
 </Project>

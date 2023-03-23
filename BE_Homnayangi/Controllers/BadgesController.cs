@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using BE_Homnayangi.Modules.BadgeModule.DTO.Request;
+using BE_Homnayangi.Modules.BadgeModule.Interface;
+using BE_Homnayangi.Modules.Utils;
+using Library.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Library.DataAccess;
-using Library.Models;
-using AutoMapper;
-using BE_Homnayangi.Modules.BadgeModule.Interface;
-using Library.PagedList;
-using BE_Homnayangi.Modules.Utils;
-using BE_Homnayangi.Modules.BadgeModule.DTO.Request;
-using Microsoft.AspNetCore.Authorization;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BE_Homnayangi.Controllers
 {
@@ -38,7 +34,10 @@ namespace BE_Homnayangi.Controllers
                 if (request.fromDate.HasValue && request.toDate.HasValue
                     && !DateTimeUtils.CheckValidFromAndToDate(request.fromDate.Value, request.toDate.Value))
                 {
-                    return BadRequest();
+                    return new JsonResult(new
+                    {
+                        status = "failed"
+                    });
                 }
 
                 var response = await _rewardService.GetAllPaged(request);
@@ -86,7 +85,11 @@ namespace BE_Homnayangi.Controllers
         {
             if (id != reward.BadgeId)
             {
-                return BadRequest();
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = "Badge is not valid"
+                });
             }
 
             try

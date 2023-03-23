@@ -99,7 +99,10 @@ namespace BE_Homnayangi.Controllers
             ValidationResult result = new UpdateSubCategoryRequestValidator().Validate(subCategoryUpdate);
             if (!result.IsValid)
             {
-                return BadRequest();
+                return new JsonResult(new
+                {
+                    status = "failed",
+                });
             }
 
             if (await _subCateService.UpdateSubCate(subCategoryUpdate) == false)
@@ -119,7 +122,10 @@ namespace BE_Homnayangi.Controllers
             ValidationResult result = new CreateSubCategoryRequestValidator().Validate(reqSubCategory);
             if (!result.IsValid)
             {
-                return BadRequest();
+                return new JsonResult(new
+                {
+                    status = "failed",
+                });
             }
 
             if (await _subCateService.AddNewSubCate(reqSubCategory) == false)

@@ -1,8 +1,4 @@
-﻿using BE_Homnayangi.Modules.DTO.IngredientDTO;
-using BE_Homnayangi.Modules.DTO.RecipeDetailsDTO;
-using BE_Homnayangi.Modules.RecipeModule.RecipeDTO;
-using BE_Homnayangi.Modules.SubCateModule.Response;
-using Library.Models;
+﻿using BE_Homnayangi.Modules.SubCateModule.Response;
 using System;
 using System.Collections.Generic;
 
@@ -48,6 +44,9 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
         // List Ingredients
         public List<RecipeDetailResponse> RecipeDetails { get; set; }
 
+        // Related blogs
+        public List<BlogsByCatesResponse> RelatedBlogs { get; set; }
+
         // Note: về sau sẽ lấy blogreaction lên để xem user đó react hay chưa => on | off nút react
     }
 
@@ -59,5 +58,6 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
         public int? Quantity { get; set; }
         public int? Kcal { get; set; }
         public decimal? Price { get; set; }
+        public string Image { get; set; }
     }
 }
