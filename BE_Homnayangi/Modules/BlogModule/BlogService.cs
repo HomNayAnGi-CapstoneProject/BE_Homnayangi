@@ -1185,7 +1185,31 @@ namespace BE_Homnayangi.Modules.BlogModule
             }
             return list;
         }
+        #endregion
 
+        #region Approve - Reject blog
+        public async Task<bool> ApproveRejectBlog(string type, Guid blogId)
+        {
+            bool isChecked = false;
+            try
+            {
+                var blog = await _blogRepository.GetFirstOrDefaultAsync(b => b.BlogId == blogId);
+                if (blog != null)
+                {
+                    blog.BlogStatus = type.Equals("APPROVE") ?
+                                        (int)Status.BlogStatus.ACTIVE :
+                                        (int)Status.BlogStatus.DELETED;
+                    await _blogRepository.UpdateAsync(blog);
+                    isChecked = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at ApproveRejectBlog: " + ex.Message);
+                throw new Exception(ex.Message);
+            }
+            return isChecked;
+        }
         #endregion
     }
 }
