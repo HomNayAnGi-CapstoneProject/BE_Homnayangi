@@ -69,6 +69,14 @@ using System.Linq;
 using System.Text;
 using BE_Homnayangi.Modules.AdminModules.BadgeConditionModule.Interface;
 using BE_Homnayangi.Modules.AdminModules.BadgeConditionModule;
+using BE_Homnayangi.Ultils.Quartz;
+using System.Threading;
+using Quartz.Spi;
+using Quartz;
+using Quartz.Impl;
+using Quartz.AspNetCore;
+using BE_Homnayangi.Modules.CustomerBadgeModule.Interface;
+using BE_Homnayangi.Modules.CustomerBadgeModule;
 
 namespace BE_Homnayangi
 {
@@ -84,6 +92,15 @@ namespace BE_Homnayangi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            /*   services.AddSingleton<IJobFactory, JobFactory>();
+               services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
+               services.AddSingleton<BadgeJob>();
+               services.AddSingleton(new BadgeJobScheduler
+               (
+                   jobType: typeof(BadgeJob),
+                   cronExpression: "0/5 * * * * ?"
+               ));
+               services.AddHostedService<QuartzHostedService>();*/
 
             services
                  .AddControllers()
@@ -92,7 +109,17 @@ namespace BE_Homnayangi
 
             services.AddDbContext<HomnayangiContext>(
                  options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
+            services.AddQuartz(opt =>
+            {
+                opt.UseMicrosoftDependencyInjectionJobFactory();
+                var jobKey = new JobKey("BadgeJob");
+                opt.AddJob<BadgeJob>(option => option.WithIdentity(jobKey));
+                opt.AddTrigger(opts => opts
+               .ForJob(jobKey)
+               .WithIdentity($"{jobKey}-trigger")
+               .WithCronSchedule(Configuration.GetSection("BadgeJob:CronSchedule").Value ?? "0/5 * * * * ?"));
+            });
+            services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
             services.AddMvcCore().ConfigureApiBehaviorOptions(options =>
             {
                 options.InvalidModelStateResponseFactory = (errorContext) =>
@@ -245,6 +272,10 @@ namespace BE_Homnayangi
             //Badge Condition Module
             services.AddScoped<IBadgeConditionRepository, BadgeConditionRepository>();
             services.AddScoped<IBadgeConditionService, BadgeConditionService>();
+
+            //CustomerBadge Module
+            services.AddScoped<ICustomerBadgeRepository, CustomerBadgeRepository>();
+            /*     services.AddScoped<ICustomerBadgeService, CustomerBadgeService>();*/
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -256,6 +287,7 @@ namespace BE_Homnayangi
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BE_Homnayangi v1"));
             }
+
             app.UseSession();
             app.UseCors("CorsPolicy");
             var httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
@@ -271,6 +303,8 @@ namespace BE_Homnayangi
             {
                 endpoints.MapControllers();
             });
+
+
         }
     }
 }

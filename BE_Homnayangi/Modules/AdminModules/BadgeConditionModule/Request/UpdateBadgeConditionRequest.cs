@@ -11,7 +11,7 @@ namespace BE_Homnayangi.Modules.AdminModules.CaloReferenceModule.Request
         public Guid BadgeConditionId { get; set; }
         public int? Accomplishments { get; set; }
         public int? Orders { get; set; }
-        public Guid? BadgeId { get; set; }
+        public Guid BadgeId { get; set; }
         public bool? Status { get; set; }
     }
     public class UpdateBadgeConditionRequestValidator : AbstractValidator<UpdateBadgeConditionRequest>

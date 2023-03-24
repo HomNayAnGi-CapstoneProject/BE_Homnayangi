@@ -10,7 +10,7 @@ namespace BE_Homnayangi.Modules.AdminModules.BadgeConditionModule.Request
     {
         public int Accomplishments { get; set; }
         public int Orders { get; set; }
-        public Guid? BadgeId { get; set; }
+        public Guid BadgeId { get; set; }
     }
     public class CreateNeBadgeConditionRequestValidator : AbstractValidator<CreateNewBadgeConditionRequest>
     {

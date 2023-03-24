@@ -86,7 +86,7 @@ namespace BE_Homnayangi.Modules.AdminModules.BadgeConditionModule
                 newBadgeCondition.Orders = newBadgeConditionRequest.Orders;
                 newBadgeCondition.CreatedDate = DateTime.Now;
                 newBadgeCondition.Status = true;
-                newBadgeCondition.BadgeId = newBadgeConditionRequest.BadgeId ?? null;
+                newBadgeCondition.BadgeId = newBadgeConditionRequest.BadgeId;
 
                 await _badgeConditionRepository.AddAsync(newBadgeCondition);
 
@@ -119,16 +119,16 @@ namespace BE_Homnayangi.Modules.AdminModules.BadgeConditionModule
                 badgeConditionUpdate.Accomplishments = updateBadgeConditionRequest.Accomplishments ?? badgeConditionUpdate.Accomplishments;
                 badgeConditionUpdate.Orders = updateBadgeConditionRequest.Orders ?? badgeConditionUpdate.Orders;
                 badgeConditionUpdate.Status = updateBadgeConditionRequest.Status ?? badgeConditionUpdate.Status;
-                badgeConditionUpdate.BadgeId = updateBadgeConditionRequest.BadgeId ?? null;
+                badgeConditionUpdate.BadgeId = updateBadgeConditionRequest.BadgeId;
                 listBadgeConditionUpdate.Add(badgeConditionUpdate);
 
-                if (badgeConditionUpdate.BadgeId != null) 
+                if (badgeConditionUpdate.BadgeId != null)
                 {
                     var badgeConditionCheck = await _badgeConditionRepository.GetFirstOrDefaultAsync(x => x.BadgeId == badgeConditionUpdate.BadgeId && badgeConditionUpdate.Status == true);
-                    if (badgeConditionCheck != null)
-                    {
-                        badgeConditionCheck.BadgeId = null;
-                    }
+                    /*   if (badgeConditionCheck != null)
+                       {
+                           badgeConditionCheck.BadgeId = null;
+                       }*/
                     listBadgeConditionUpdate.Add(badgeConditionCheck);
                 }
                 await _badgeConditionRepository.UpdateRangeAsync(listBadgeConditionUpdate);
