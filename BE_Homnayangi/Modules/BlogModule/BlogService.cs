@@ -24,6 +24,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -1193,7 +1194,8 @@ namespace BE_Homnayangi.Modules.BlogModule
             bool isChecked = false;
             try
             {
-                var blog = await _blogRepository.GetFirstOrDefaultAsync(b => b.BlogId == blogId);
+                var blog = await _blogRepository.GetFirstOrDefaultAsync(b => b.BlogId == blogId, includeProperties: "Author,Recipe,BlogReferences");
+                var properties = blog.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
                 if (blog != null)
                 {
                     blog.BlogStatus = type.Equals("APPROVE") ?
@@ -1201,7 +1203,15 @@ namespace BE_Homnayangi.Modules.BlogModule
                                         (int)Status.BlogStatus.DELETED;
                     await _blogRepository.UpdateAsync(blog);
                     isChecked = true;
+                    foreach (var property in properties)
+                    {
+                        if (property.Name != "VideoUrl" && property.GetValue(blog) == null)
+                        {
+                            isChecked = false;
+                        }
+                    }
                 }
+
             }
             catch (Exception ex)
             {
