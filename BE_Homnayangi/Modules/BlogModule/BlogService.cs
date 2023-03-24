@@ -1198,18 +1198,20 @@ namespace BE_Homnayangi.Modules.BlogModule
                 var properties = blog.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
                 if (blog != null)
                 {
-                    blog.BlogStatus = type.Equals("APPROVE") ?
-                                        (int)Status.BlogStatus.ACTIVE :
-                                        (int)Status.BlogStatus.DELETED;
-                    await _blogRepository.UpdateAsync(blog);
-                    isChecked = true;
+
                     foreach (var property in properties)
                     {
                         if (property.Name != "VideoUrl" && property.GetValue(blog) == null)
                         {
-                            isChecked = false;
+                            return isChecked = false;
                         }
+
                     }
+                    blog.BlogStatus = type.Equals("APPROVE") ?
+                                  (int)Status.BlogStatus.ACTIVE :
+                                  (int)Status.BlogStatus.DELETED;
+                    await _blogRepository.UpdateAsync(blog);
+                    isChecked = true;
                 }
 
             }
