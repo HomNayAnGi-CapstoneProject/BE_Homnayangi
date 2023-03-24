@@ -309,5 +309,42 @@ namespace BE_Homnayangi.Controllers
                 });
             }
         }
+
+        [Authorize(Roles ="Manager")]
+        [HttpPut("{type}/{blogId}")]
+        public async Task<ActionResult> ApproveRejectBlog([FromRoute] string type, [FromRoute] Guid blogId)
+        {
+            try
+            {
+                if (!(type.Equals("APPROVE") || type.Equals("REJECT")))
+                {
+                    throw new Exception(ErrorMessage.BlogError.BLOG_MNG_NOT_SUPPORT);
+                }
+
+                bool isChecked = await _blogService.ApproveRejectBlog(type, blogId);
+                if (isChecked)
+                {
+                    return new JsonResult(new
+                    {
+                        status = "success"
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        status = "failed"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
+            }
+        }
     }
 }

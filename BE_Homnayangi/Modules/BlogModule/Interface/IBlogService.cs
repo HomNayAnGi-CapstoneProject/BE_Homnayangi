@@ -1,11 +1,8 @@
 ﻿using BE_Homnayangi.Modules.BlogModule.Request;
 using BE_Homnayangi.Modules.BlogModule.Response;
-using Library.Models;
 using Library.PagedList;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace BE_Homnayangi.Modules.BlogModule.Interface
@@ -33,6 +30,10 @@ namespace BE_Homnayangi.Modules.BlogModule.Interface
         #region Blog detail
         public Task<BlogDetailResponse> GetBlogDetail(Guid blogId);
         public Task<BlogDetailResponse> GetBlogDetailPreview(Guid blogId);
+        #endregion
+
+        #region
+        public Task<bool> ApproveRejectBlog(string type, Guid blogId);
         #endregion
     }
 }

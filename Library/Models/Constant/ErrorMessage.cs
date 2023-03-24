@@ -33,6 +33,7 @@ namespace Library.Models.Constant
             public readonly static string BLOG_NOT_FOUND = "Blog is not found";
             public readonly static string BLOG_NOT_BINDING_TO_RECIPE = "This Blog was not binding to any Recipe";
             public readonly static string BLOG_SUBCATES_LIMIT = "Max Sub categories for blog is 5";
+            public readonly static string BLOG_MNG_NOT_SUPPORT = "We just support type APPROVE and REJECT";
         }
         #endregion
 
