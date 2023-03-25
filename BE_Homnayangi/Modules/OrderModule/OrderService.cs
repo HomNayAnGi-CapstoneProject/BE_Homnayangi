@@ -467,7 +467,7 @@ namespace BE_Homnayangi.Modules.OrderModule
             var redirUrls = new PayPal.Api.RedirectUrls()
             {
                 cancel_url = redirectUrl + "&Cancel=true",
-                return_url = redirectUrl
+                return_url = redirectUrl + "&Cancel=false"
             };
 
             var amount = new PayPal.Api.Amount()
