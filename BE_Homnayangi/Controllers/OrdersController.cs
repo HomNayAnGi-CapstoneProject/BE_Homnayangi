@@ -158,7 +158,7 @@ namespace BE_Homnayangi.Controllers
 
 
         [HttpGet("local")]
-        public ActionResult<IEnumerable<string>> GetLocalDistrict()
+        public ActionResult GetLocalDistrict()
         {
             try
             {
