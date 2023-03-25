@@ -517,5 +517,10 @@ namespace BE_Homnayangi.Modules.OrderModule
             };
             return apiContext;
         }
+
+        public List<string> GetLocalDistrict()
+        {
+            return Constants.LOCAL_DISTRICT;
+        }
     }
 }

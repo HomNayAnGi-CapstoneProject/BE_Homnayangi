@@ -155,5 +155,20 @@ namespace BE_Homnayangi.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+
+        [HttpGet("local")]
+        public ActionResult<IEnumerable<string>> GetLocalDistrict()
+        {
+            try
+            {
+                var res = _orderService.GetLocalDistrict();
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
