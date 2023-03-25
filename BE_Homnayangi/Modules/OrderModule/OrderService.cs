@@ -1,6 +1,11 @@
-﻿using BE_Homnayangi.Modules.CustomerModule.Interface;
+﻿using AutoMapper;
+using BE_Homnayangi.Modules.CustomerModule.Interface;
+using BE_Homnayangi.Modules.IngredientModule.Interface;
 using BE_Homnayangi.Modules.OrderDetailModule.Interface;
 using BE_Homnayangi.Modules.OrderModule.Interface;
+using BE_Homnayangi.Modules.OrderModule.Response;
+using BE_Homnayangi.Modules.RecipeModule;
+using BE_Homnayangi.Modules.RecipeModule.Interface;
 using BE_Homnayangi.Modules.TransactionModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using Library.Models;
@@ -27,13 +32,19 @@ namespace BE_Homnayangi.Modules.OrderModule
         private readonly ICustomerRepository _customerRepository;
         private readonly IUserRepository _userRepository;
         private readonly ITransactionRepository _transactionRepository;
+        private readonly IIngredientRepository _ingredientRepository;
+        private readonly IRecipeRepository _recipeRepository;
         IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
         public OrderService(IOrderRepository OrderRepository,
             IOrderDetailRepository orderDetailRepository,
             ICustomerRepository customerRepository,
             IUserRepository userRepository,
             ITransactionRepository transactionRepository,
+            IIngredientRepository ingredientRepository,
+            IRecipeRepository recipeRepository,
+            IMapper mapper,
             IConfiguration configuration)
         {
             _OrderRepository = OrderRepository;
@@ -41,13 +52,32 @@ namespace BE_Homnayangi.Modules.OrderModule
             _customerRepository = customerRepository;
             _userRepository = userRepository;
             _transactionRepository = transactionRepository;
+            _ingredientRepository = ingredientRepository;
+            _recipeRepository = recipeRepository;
             _configuration = configuration;
+            _mapper = mapper;
         }
 
-        public async Task<ICollection<Order>> GetAll()
+        public async Task<ICollection<OrderResponse>> GetOrderResponse(int status = -1)
         {
-            return await _OrderRepository.GetOrdersBy(
+            var orders = status > -1
+                ? await _OrderRepository.GetOrdersBy(
+                includeProperties: "OrderDetails")
+                : await _OrderRepository.GetOrdersBy(o => o.OrderStatus == status,
                 includeProperties: "OrderDetails");
+
+            var orderResponses = orders.Select(o => _mapper.Map<OrderResponse>(o)).ToList();
+            var ingredients = await _ingredientRepository.GetAll();
+            var recipes = await _recipeRepository.GetAll();
+
+            foreach (var order in orderResponses)
+            {
+                order.OrderDetails = order.OrderDetails
+                    .Join(ingredients, x => x.IngredientId, y => y.IngredientId, (x, y) => { x.IngredientImage = y.Picture; return x; })
+                    .Join(recipes, x => x.RecipeId, y => y.RecipeId, (x, y) => { x.RecipeImage = y.ImageUrl??""; return x; })
+                    .ToList();
+            }
+            return orderResponses;
         }
 
         public Task<ICollection<Order>> GetOrdersBy(
@@ -521,6 +551,11 @@ namespace BE_Homnayangi.Modules.OrderModule
         public List<string> GetLocalDistrict()
         {
             return Constants.LOCAL_DISTRICT;
+        }
+
+        public async Task<ICollection<Order>> GetAll()
+        {
+            return await _OrderRepository.GetAll();
         }
     }
 }

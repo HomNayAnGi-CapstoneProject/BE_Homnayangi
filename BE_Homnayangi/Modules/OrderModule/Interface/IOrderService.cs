@@ -1,4 +1,5 @@
-﻿using Library.Models;
+﻿using BE_Homnayangi.Modules.OrderModule.Response;
+using Library.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,8 @@ namespace BE_Homnayangi.Modules.OrderModule.Interface
         public Task UpdateOrder(Order OrderUpdate);
 
         public Task<ICollection<Order>> GetAll();
+
+        public Task<ICollection<OrderResponse>> GetOrderResponse(int status = -1);
 
         public Task<ICollection<Order>> GetByCustomer(Guid id);
 
