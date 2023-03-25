@@ -32,7 +32,7 @@ namespace BE_Homnayangi.Controllers
         #region Get all orders for staff include deleted, without paging
         // GET: api/Orders
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Order>>> GetAll()
+        public async Task<ActionResult> GetAll()
         {
             try
             {
@@ -163,6 +163,20 @@ namespace BE_Homnayangi.Controllers
             try
             {
                 var res = _orderService.GetLocalDistrict();
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("status")]
+        public async Task<ActionResult> GetOrderResponse([FromQuery] int status)
+        {
+            try
+            {
+                var res = await _orderService.GetOrderResponse(status);
                 return Ok(res);
             }
             catch (Exception ex)
