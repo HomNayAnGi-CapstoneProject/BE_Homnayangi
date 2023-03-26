@@ -6,19 +6,31 @@ namespace BE_Homnayangi.Modules.OrderModule.Response
 {
     public class OrderResponse
     {
-        public class OrderDetailResponse
+        public class RecipeDetailResponse
         {
             public Guid OrderDetailId { get; set; }
-            public Guid OrderId { get; set; }
             public Guid IngredientId { get; set; }
             public int? Quantity { get; set; }
-            public Guid? RecipeId { get; set; }
             public decimal? Price { get; set; }
 
             public string IngredientImage { get; set; }
             public string IngredientName { get; set; }
+
+        }
+        public class OrderDetailResponse
+        {
+            public OrderDetailResponse()
+            {
+                RecipeDetails = new HashSet<RecipeDetailResponse>();
+            }
+
+            public Guid OrderId { get; set; }
+
+            public Guid? RecipeId { get; set; }
             public string RecipeImage { get; set; }
             public string RecipeName { get; set; }
+
+            public ICollection<RecipeDetailResponse> RecipeDetails { get; set; }
         }
 
         public OrderResponse()

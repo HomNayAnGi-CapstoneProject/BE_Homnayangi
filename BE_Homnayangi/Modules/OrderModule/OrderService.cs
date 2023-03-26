@@ -66,20 +66,38 @@ namespace BE_Homnayangi.Modules.OrderModule
                 : await _OrderRepository.GetOrdersBy(
                 includeProperties: "OrderDetails");
 
-            var orderResponses = orders.Select(o => _mapper.Map<OrderResponse>(o)).ToList();
             var ingredients = await _ingredientRepository.GetAll();
             var recipes = await _recipeRepository.GetAll();
 
-            foreach (var order in orderResponses)
+            var res = new List<OrderResponse>();
+            foreach(var order in orders)
             {
-                order.OrderDetails = order.OrderDetails
-                    .Join(ingredients, x => x.IngredientId, y => y.IngredientId,
-                        (x, y) => { x.IngredientImage = y.Picture ?? ""; x.IngredientName = y.Name ?? ""; return x; })
-                    .Join(recipes, x => x.RecipeId, y => y.RecipeId,
-                        (x, y) => { x.RecipeImage = y.ImageUrl ?? ""; x.RecipeName = y.Title ?? ""; return x; })
-                    .ToList();
+                var orderDetailResponses = recipes.Where(r => order.OrderDetails.Where(od => od.RecipeId == r.RecipeId).Any())
+                    .GroupJoin(order.OrderDetails, x => x.RecipeId, y => y.RecipeId,
+                        (recipe, ingredientGroup) => new OrderResponse.OrderDetailResponse
+                        {
+                            OrderId = order.OrderId,
+                            RecipeId = recipe.RecipeId,
+                            RecipeImage = recipe.ImageUrl ?? "",
+                            RecipeName = recipe.Title ?? "",
+                            RecipeDetails = ingredientGroup.Select(ig => {
+                                var i = ingredients.Where(i => i.IngredientId == ig.IngredientId).FirstOrDefault();
+                                return new OrderResponse.RecipeDetailResponse
+                                {
+                                    OrderDetailId = ig.OrderDetailId,
+                                    IngredientId = ig.IngredientId,
+                                    IngredientImage = i.Picture ?? "",
+                                    IngredientName = i.Name ?? "",
+                                    Price = ig.Price,
+                                    Quantity = ig.Quantity
+                                };
+                            }).ToList()
+                        }).ToList();
+                var orderResponse = _mapper.Map<OrderResponse>(order);
+                orderResponse.OrderDetails = orderDetailResponses;
+                res.Add(orderResponse);
             }
-            return orderResponses;
+            return res;
         }
 
         public Task<ICollection<Order>> GetOrdersBy(
