@@ -61,9 +61,9 @@ namespace BE_Homnayangi.Modules.OrderModule
         public async Task<ICollection<OrderResponse>> GetOrderResponse(int status = -1)
         {
             var orders = status > -1
-                ? await _OrderRepository.GetOrdersBy(
+                ? await _OrderRepository.GetOrdersBy(o => o.OrderStatus.GetValueOrDefault() == status,
                 includeProperties: "OrderDetails")
-                : await _OrderRepository.GetOrdersBy(o => o.OrderStatus == status,
+                : await _OrderRepository.GetOrdersBy(
                 includeProperties: "OrderDetails");
 
             var orderResponses = orders.Select(o => _mapper.Map<OrderResponse>(o)).ToList();
