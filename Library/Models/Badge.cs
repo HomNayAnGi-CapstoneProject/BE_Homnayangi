@@ -18,7 +18,7 @@ namespace Library.Models
         public string Description { get; set; }
         public DateTime? CreateDate { get; set; }
         public string ImageUrl { get; set; }
-        public bool? Status { get; set; }
+        public int? Status { get; set; }
 
         public virtual ICollection<BadgeCondition> BadgeConditions { get; set; }
         public virtual ICollection<CustomerBadge> CustomerBadges { get; set; }

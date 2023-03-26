@@ -71,7 +71,7 @@ namespace BE_Homnayangi.Modules.BadgeModule
                 var fromDate = request.fromDate;
                 var toDate = request.toDate;
 
-                var rewards = await _rewardRepository.GetBadgesBy(r => r.Status.Value);
+                var rewards = await _rewardRepository.GetBadgesBy(r => r.Status == 1);
 
                 if (fromDate.HasValue && toDate.HasValue)
                 {

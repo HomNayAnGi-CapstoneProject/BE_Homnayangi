@@ -146,7 +146,7 @@ namespace BE_Homnayangi.Controllers
             {
                 return NotFound();
             }
-            reward.Status = false;
+            reward.Status = 2;
             await _rewardService.UpdateBadge(reward);
 
             return NoContent();
