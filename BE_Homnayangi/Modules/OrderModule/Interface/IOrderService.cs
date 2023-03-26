@@ -53,7 +53,8 @@ namespace BE_Homnayangi.Modules.OrderModule.Interface
             string PayerID = "",
             string guid = "");
 
-        public Dictionary<string, List<string>> GetLocalDistrict();
+        public List<string> GetLocalDistrict();
+        public List<string> GetLocalWard(string district);
 
     }
 }

@@ -548,9 +548,14 @@ namespace BE_Homnayangi.Modules.OrderModule
             return apiContext;
         }
 
-        public Dictionary<string, List<string>> GetLocalDistrict()
+        public List<string> GetLocalDistrict()
         {
-            return Constants.LOCAL_DISTRICT;
+            return Constants.LOCAL_DISTRICT.Keys.ToList();
+        }
+
+        public List<string> GetLocalWard(string district)
+        {
+            return Constants.LOCAL_DISTRICT.GetValueOrDefault(district);
         }
 
         public async Task<ICollection<Order>> GetAll()

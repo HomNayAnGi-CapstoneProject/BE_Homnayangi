@@ -171,6 +171,20 @@ namespace BE_Homnayangi.Controllers
             }
         }
 
+        [HttpGet("local/{district}")]
+        public ActionResult GetLocalWard([FromRoute] string district)
+        {
+            try
+            {
+                var res = _orderService.GetLocalWard(district);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("status")]
         public async Task<ActionResult> GetOrderResponse([FromQuery] int status)
         {
