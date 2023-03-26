@@ -16,7 +16,9 @@ namespace BE_Homnayangi.Modules.OrderModule.Response
             public decimal? Price { get; set; }
 
             public string IngredientImage { get; set; }
+            public string IngredientName { get; set; }
             public string RecipeImage { get; set; }
+            public string RecipeName { get; set; }
         }
 
         public OrderResponse()

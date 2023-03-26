@@ -73,8 +73,10 @@ namespace BE_Homnayangi.Modules.OrderModule
             foreach (var order in orderResponses)
             {
                 order.OrderDetails = order.OrderDetails
-                    .Join(ingredients, x => x.IngredientId, y => y.IngredientId, (x, y) => { x.IngredientImage = y.Picture; return x; })
-                    .Join(recipes, x => x.RecipeId, y => y.RecipeId, (x, y) => { x.RecipeImage = y.ImageUrl??""; return x; })
+                    .Join(ingredients, x => x.IngredientId, y => y.IngredientId,
+                        (x, y) => { x.IngredientImage = y.Picture ?? ""; x.IngredientName = y.Name ?? ""; return x; })
+                    .Join(recipes, x => x.RecipeId, y => y.RecipeId,
+                        (x, y) => { x.RecipeImage = y.ImageUrl ?? ""; x.RecipeName = y.Title ?? ""; return x; })
                     .ToList();
             }
             return orderResponses;
@@ -486,6 +488,7 @@ namespace BE_Homnayangi.Modules.OrderModule
             var currencyRate = _configuration.GetValue<string>("Paypal:currencyRate");
 
             var transaction = await _transactionRepository.GetByIdAsync(orderId);
+            var order = await _OrderRepository.GetByIdAsync(orderId);
             if (transaction == null)
                 throw new Exception(ErrorMessage.TransactionError.TRANSACTION_NOT_FOUND);
 
@@ -496,8 +499,8 @@ namespace BE_Homnayangi.Modules.OrderModule
 
             var redirUrls = new PayPal.Api.RedirectUrls()
             {
-                cancel_url = redirectUrl + "&Cancel=true",
-                return_url = redirectUrl + "&Cancel=false"
+                cancel_url = redirectUrl + $"&Cancel=true&IsCooked={order.IsCooked ?? false}",
+                return_url = redirectUrl + $"&Cancel=false&IsCooked={order.IsCooked ?? false}"
             };
 
             var amount = new PayPal.Api.Amount()
