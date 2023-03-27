@@ -8,9 +8,13 @@
 
   <ItemGroup>
     <Compile Remove="Modules\BadgeModule\DTO\Response\**" />
+    <Compile Remove="Modules\RewardModule\DTO\Response\**" />
     <Content Remove="Modules\BadgeModule\DTO\Response\**" />
+    <Content Remove="Modules\RewardModule\DTO\Response\**" />
     <EmbeddedResource Remove="Modules\BadgeModule\DTO\Response\**" />
+    <EmbeddedResource Remove="Modules\RewardModule\DTO\Response\**" />
     <None Remove="Modules\BadgeModule\DTO\Response\**" />
+    <None Remove="Modules\RewardModule\DTO\Response\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -77,7 +81,6 @@
     <Folder Include="Modules\RewardModule\" />
     <Folder Include="Modules\RewardModule\Interface\" />
     <Folder Include="Modules\RewardModule\DTO\" />
-    <Folder Include="Modules\RewardModule\DTO\Response\" />
     <Folder Include="Modules\RewardModule\DTO\Request\" />
     <Folder Include="Modules\TransactionModule\" />
     <Folder Include="Modules\TransactionModule\Interface\" />
