@@ -92,10 +92,14 @@ namespace BE_Homnayangi.Modules.BlogModule
                         blog => new OverviewBlog()
                         {
                             BlogId = blog.BlogId,
-                            CreatedDate = blog.CreatedDate.Value,
-                            Title = blog.Title,
-                            ImageUrl = blog.ImageUrl,
                             AuthorName = blog.Author.Firstname + " " + blog.Author.Lastname,
+                            ImageUrl = blog.ImageUrl,
+                            Title = blog.Title,
+                            CreatedDate = blog.CreatedDate.Value,
+                            View = blog.View,
+                            Reaction = blog.Reaction,
+                            Status = blog.BlogStatus,
+                            TotalKcal = blog.Recipe?.TotalKcal,
                         }).OrderByDescending(b => b.CreatedDate).ToList();
                 }
                 else if (isPending != null && !isPending.Value) // get !pending blogs
@@ -642,7 +646,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                 request.Recipe.RecipeId = blog.RecipeId == null
                     ? throw new Exception(ErrorMessage.BlogError.BLOG_NOT_BINDING_TO_RECIPE)
                     : blog.RecipeId.GetValueOrDefault();
-                request.Recipe.Status = blog.Recipe.Status;
+                request.Recipe.Status = request.Blog.BlogStatus;
                 request.Recipe.Title = blog.Title;
                 await _recipeRepository.UpdateAsync(request.Recipe);
                 #endregion
@@ -1006,24 +1010,6 @@ namespace BE_Homnayangi.Modules.BlogModule
             return list;
         }
 
-        private List<PendingBlog> ConvertToPendingBlog(ICollection<Blog> blogs)
-        {
-            List<PendingBlog> list = new List<PendingBlog>();
-            foreach (var blog in blogs)
-            {
-                PendingBlog tmp = new PendingBlog()
-                {
-                    BlogId = blog.BlogId,
-                    CreatedDate = blog.CreatedDate.Value,
-                    Title = blog.Title,
-                    ImageUrl = blog.ImageUrl,
-                    AuthorName = blog.Author.Firstname + " " + blog.Author.Lastname,
-                };
-                list.Add(tmp);
-            }
-            return list;
-        }
-
         #endregion
 
         #region Blog Detail
@@ -1171,7 +1157,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                     }
                 }
 
-                result.AuthorName = _userRepository.GetFirstOrDefaultAsync(x => x.UserId == blog.AuthorId).Result.Displayname;
+                var author = await _userRepository.GetFirstOrDefaultAsync(x => x.UserId == blog.AuthorId);
+                result.AuthorName = author.Firstname + " " + author.Lastname;
 
                 // List SubCates
                 result.SubCates = _blogSubCateRepository.GetBlogSubCatesBy(x => x.BlogId == blog.BlogId, includeProperties: "SubCate").Result.Select(x => new SubCateResponse
