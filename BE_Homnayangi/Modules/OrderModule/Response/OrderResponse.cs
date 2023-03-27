@@ -10,7 +10,7 @@ namespace BE_Homnayangi.Modules.OrderModule.Response
         {
             public Guid OrderDetailId { get; set; }
             public Guid IngredientId { get; set; }
-            public int? IngredientQuantity { get; set; }
+            public int? Quantity { get; set; }
             public decimal? Price { get; set; }
 
             public string IngredientImage { get; set; }
@@ -29,9 +29,6 @@ namespace BE_Homnayangi.Modules.OrderModule.Response
             public Guid? RecipeId { get; set; }
             public string RecipeImage { get; set; }
             public string RecipeName { get; set; }
-            public int? RecipeQuantity { get; set; }
-            public decimal? PackagePrice { get; set; }
-            public decimal? CookedPrice { get; set; }
 
             public ICollection<RecipeDetailResponse> RecipeDetails { get; set; }
         }
