@@ -574,11 +574,9 @@ namespace Library.DataAccess
                     .HasColumnType("money")
                     .HasColumnName("price");
 
-                entity.Property(e => e.IngredientQuantity).HasColumnName("ingredientQuantity");
+                entity.Property(e => e.Quantity).HasColumnName("quantity");
 
                 entity.Property(e => e.RecipeId).HasColumnName("recipeId");
-
-                entity.Property(e => e.RecipeQuantity).HasColumnName("recipeQuantity");
 
                 entity.HasOne(d => d.Ingredient)
                     .WithMany(p => p.OrderDetails)
