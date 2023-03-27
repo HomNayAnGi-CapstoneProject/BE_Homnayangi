@@ -80,6 +80,9 @@ namespace BE_Homnayangi.Modules.OrderModule
                             RecipeId = recipe.RecipeId,
                             RecipeImage = recipe.ImageUrl ?? "",
                             RecipeName = recipe.Title ?? "",
+                            PackagePrice = recipe.PackagePrice,
+                            CookedPrice = recipe.CookedPrice,
+                            RecipeQuantity = ingredientGroup.FirstOrDefault().RecipeQuantity,
                             RecipeDetails = ingredientGroup.Select(ig => {
                                 var i = ingredients.Where(i => i.IngredientId == ig.IngredientId).FirstOrDefault();
                                 return new OrderResponse.RecipeDetailResponse
@@ -89,7 +92,7 @@ namespace BE_Homnayangi.Modules.OrderModule
                                     IngredientImage = i.Picture ?? "",
                                     IngredientName = i.Name ?? "",
                                     Price = ig.Price,
-                                    Quantity = ig.Quantity
+                                    IngredientQuantity = ig.IngredientQuantity.GetValueOrDefault(),
                                 };
                             }).ToList()
                         }).ToList();
@@ -153,8 +156,6 @@ namespace BE_Homnayangi.Modules.OrderModule
                         {
                             detail.OrderDetailId = Guid.NewGuid();
                             detail.OrderId = newOrder.OrderId;
-                            if (detail.RecipeId == null)
-                                throw new Exception("Recipe id is required");
                         });
                         await _OrderRepository.AddAsync(newOrder);
 
