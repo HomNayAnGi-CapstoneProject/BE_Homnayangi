@@ -688,7 +688,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     BlogReferenceId = x.BlogReferenceId,
                     Text = y.Text,
                     Html = y.HTML,
-                    Status = x.Status
+                    Status = request.Blog.BlogStatus
                 });
 
                 await _blogReferenceRepository.UpdateRangeAsync(listBlogRefUpdate);
