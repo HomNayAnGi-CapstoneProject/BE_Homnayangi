@@ -1260,17 +1260,16 @@ namespace BE_Homnayangi.Modules.BlogModule
                         }
 
                     }
-                    blog.BlogStatus = type.Equals("APPROVE") ?
-                                        (int)Status.BlogStatus.ACTIVE :
-                                        (int)Status.BlogStatus.DELETED;
 
                     if (type.Equals("APPROVE"))
                     {
-                        await UpdateStatusWhenApproveRejectBlog(blog.BlogId, blog.RecipeId.Value, (int)Status.BlogStatus.PENDING, (int)Status.BlogStatus.ACTIVE);
+                        blog.BlogStatus = (int)Status.BlogStatus.ACTIVE;
+                        await UpdateStatusWhenApproveRejectBlog(blog.BlogId, blog.RecipeId.Value, (int)Status.BlogStatus.PENDING, (int)Status.BlogStatus.DRAFTED);
                     }
                     else
                     {
-                        await UpdateStatusWhenApproveRejectBlog(blog.BlogId, blog.RecipeId.Value, (int)Status.BlogStatus.PENDING, (int)Status.BlogStatus.DELETED);
+                        blog.BlogStatus = (int)Status.BlogStatus.DRAFTED;
+                        await UpdateStatusWhenApproveRejectBlog(blog.BlogId, blog.RecipeId.Value, (int)Status.BlogStatus.PENDING, (int)Status.BlogStatus.DRAFTED);
                     }
                     await _blogRepository.UpdateAsync(blog);
                     isChecked = true;
