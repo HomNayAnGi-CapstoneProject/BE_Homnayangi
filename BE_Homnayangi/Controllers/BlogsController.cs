@@ -330,7 +330,7 @@ namespace BE_Homnayangi.Controllers
                 {
                     return new JsonResult(new
                     {
-                        status = "failed"
+                        status = "Some of fields can not be null"
                     });
                 }
             }
