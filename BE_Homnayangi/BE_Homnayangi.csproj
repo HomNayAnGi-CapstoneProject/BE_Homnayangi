@@ -8,9 +8,13 @@
 
   <ItemGroup>
     <Compile Remove="Modules\BadgeModule\DTO\Response\**" />
+    <Compile Remove="Modules\RewardModule\**" />
     <Content Remove="Modules\BadgeModule\DTO\Response\**" />
+    <Content Remove="Modules\RewardModule\**" />
     <EmbeddedResource Remove="Modules\BadgeModule\DTO\Response\**" />
+    <EmbeddedResource Remove="Modules\RewardModule\**" />
     <None Remove="Modules\BadgeModule\DTO\Response\**" />
+    <None Remove="Modules\RewardModule\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -74,11 +78,6 @@
     <Folder Include="Modules\IngredientModule\Interface\" />
     <Folder Include="Modules\IngredientModule\IngredientDTO\" />
     <Folder Include="Modules\AutoMapper\" />
-    <Folder Include="Modules\RewardModule\" />
-    <Folder Include="Modules\RewardModule\Interface\" />
-    <Folder Include="Modules\RewardModule\DTO\" />
-    <Folder Include="Modules\RewardModule\DTO\Response\" />
-    <Folder Include="Modules\RewardModule\DTO\Request\" />
     <Folder Include="Modules\TransactionModule\" />
     <Folder Include="Modules\TransactionModule\Interface\" />
     <Folder Include="Modules\OrderModule\Request\" />

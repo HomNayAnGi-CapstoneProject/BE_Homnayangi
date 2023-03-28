@@ -10,7 +10,7 @@ namespace BE_Homnayangi.Modules.CustomerBadgeModule.Interface
 {
     public interface ICustomerBadgeRepository : IRepository<CustomerBadge>
     {
-        public Task<ICollection<CustomerBadge>> GetCustomersBy(
+        public Task<ICollection<CustomerBadge>> GetCustomerBadgeBy(
          Expression<Func<CustomerBadge, bool>> filter = null,
          Func<IQueryable<CustomerBadge>, ICollection<CustomerBadge>> options = null,
          string includeProperties = null);

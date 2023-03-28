@@ -117,7 +117,7 @@ namespace BE_Homnayangi
                 opt.AddTrigger(opts => opts
                .ForJob(jobKey)
                .WithIdentity($"{jobKey}-trigger")
-               .WithCronSchedule(Configuration.GetSection("BadgeJob:CronSchedule").Value ?? "0/5 * * * * ?"));
+               .WithCronSchedule(Configuration.GetSection("BadgeJob:CronSchedule").Value ?? "0 0/5 0 ? * * *"));
             });
             services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
             services.AddMvcCore().ConfigureApiBehaviorOptions(options =>
@@ -275,7 +275,7 @@ namespace BE_Homnayangi
 
             //CustomerBadge Module
             services.AddScoped<ICustomerBadgeRepository, CustomerBadgeRepository>();
-            /*     services.AddScoped<ICustomerBadgeService, CustomerBadgeService>();*/
+            services.AddScoped<ICustomerBadgeService, CustomerBadgeService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

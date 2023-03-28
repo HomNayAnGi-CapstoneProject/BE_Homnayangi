@@ -8,21 +8,25 @@ using System.Threading.Tasks;
 using Library.PagedList;
 using Library.Models.Enum;
 using BE_Homnayangi.Modules.BadgeModule.DTO.Request;
+using BE_Homnayangi.Modules.RewardModule.DTO.Request;
+using AutoMapper;
 
 namespace BE_Homnayangi.Modules.BadgeModule
 {
     public class BadgeService : IBadgeService
     {
-        private readonly IBadgeRepository _rewardRepository;
+        private readonly IBadgeRepository _badgeRepository;
+        private readonly IMapper _mapper;
 
-        public BadgeService(IBadgeRepository rewardRepository)
+        public BadgeService(IBadgeRepository badgeRepository, IMapper mapper)
         {
-            _rewardRepository = rewardRepository;
+            _badgeRepository = badgeRepository;
+            _mapper = mapper;
         }
 
         public async Task<ICollection<Badge>> GetAll()
         {
-            return await _rewardRepository.GetAll();
+            return await _badgeRepository.GetAll();
         }
 
         public Task<ICollection<Badge>> GetBadgesBy(
@@ -32,7 +36,7 @@ namespace BE_Homnayangi.Modules.BadgeModule
                 ICollection<Badge>> options = null,
                 string includeProperties = null)
         {
-            return _rewardRepository.GetBadgesBy(filter);
+            return _badgeRepository.GetBadgesBy(filter);
         }
 
         public Task<ICollection<Badge>> GetRandomBadgesBy(
@@ -41,23 +45,25 @@ namespace BE_Homnayangi.Modules.BadgeModule
                 string includeProperties = null,
                 int numberItem = 0)
         {
-            return _rewardRepository.GetNItemRandom(filter, numberItem: numberItem);
+            return _badgeRepository.GetNItemRandom(filter, numberItem: numberItem);
         }
 
         public async Task AddNewBadge(Badge newBadge)
         {
+
             newBadge.BadgeId = Guid.NewGuid();
-            await _rewardRepository.AddAsync(newBadge);
+            newBadge.CreateDate = DateTime.Now;
+            await _badgeRepository.AddAsync(newBadge);
         }
 
         public async Task UpdateBadge(Badge BadgeUpdate)
         {
-            await _rewardRepository.UpdateAsync(BadgeUpdate);
+            await _badgeRepository.UpdateAsync(BadgeUpdate);
         }
 
         public async Task<Badge> GetBadgeByID(Guid? id)
         {
-            return await _rewardRepository.GetFirstOrDefaultAsync(x => x.BadgeId.Equals(id));
+            return await _badgeRepository.GetFirstOrDefaultAsync(x => x.BadgeId.Equals(id));
         }
 
         public async Task<PagedResponse<PagedList<Badge>>> GetAllPaged(BadgeFilterRequest request)
@@ -68,50 +74,43 @@ namespace BE_Homnayangi.Modules.BadgeModule
                 var pageNumber = request.PageNumber;
                 var sort = request.sort;
                 var sortDesc = request.sortDesc;
-                var fromDate = request.fromDate;
-                var toDate = request.toDate;
 
-                var rewards = await _rewardRepository.GetBadgesBy(r => r.Status == 1);
-
-                if (fromDate.HasValue && toDate.HasValue)
-                {
-                    rewards = rewards.Where(r => r.CreateDate.Value >= fromDate.Value && r.CreateDate.Value <= toDate.Value).ToList();
-                }
+                var badges = await _badgeRepository.GetBadgesBy(r => r.Status == (int)Status.BadgeStatus.ACTIVE);
 
                 switch (sort)
                 {
-                    case (int) Sort.BadgesSortBy.CREATEDDATE:
-                        rewards = sortDesc == true
-                            ? rewards.OrderByDescending(r => r.CreateDate).ToList()
-                            : rewards.OrderBy(r => r.CreateDate).ToList();
+                    case (int)Sort.BadgesSortBy.CREATEDDATE:
+                        badges = sortDesc == true
+                            ? badges.OrderByDescending(r => r.CreateDate).ToList()
+                            : badges.OrderBy(r => r.CreateDate).ToList();
                         break;
-                    case (int) Sort.BadgesSortBy.NAME:
-                        rewards = sortDesc == true
-                            ? rewards.OrderByDescending(r => r.Name).ToList()
-                            : rewards.OrderBy(r => r.Name).ToList();
+                    case (int)Sort.BadgesSortBy.NAME:
+                        badges = sortDesc == true
+                            ? badges.OrderByDescending(r => r.Name).ToList()
+                            : badges.OrderBy(r => r.Name).ToList();
                         break;
                     default:
-                        rewards = sortDesc == true
-                            ? rewards.OrderByDescending(r => r.CreateDate).ToList()
-                            : rewards.OrderBy(r => r.CreateDate).ToList();
+                        badges = sortDesc == true
+                            ? badges.OrderByDescending(r => r.CreateDate).ToList()
+                            : badges.OrderBy(r => r.CreateDate).ToList();
                         break;
                 }
 
-                var res = PagedList<Badge>.ToPagedList(source: rewards, pageSize: pageSize, pageNumber: pageNumber);
+                var res = PagedList<Badge>.ToPagedList(source: badges, pageSize: pageSize, pageNumber: pageNumber);
                 return res.ToPagedResponse();
             }
             catch (Exception e)
             {
                 throw new Exception(e.Message);
             }
-            
+
         }
 
         public async Task<bool> CheckExistedName(string name)
         {
             try
             {
-                var res = await _rewardRepository.GetBadgesBy(r => r.Name.Trim().ToUpper().Equals(name.Trim().ToUpper()));
+                var res = await _badgeRepository.GetBadgesBy(r => r.Name.Trim().ToUpper().Equals(name.Trim().ToUpper()));
                 return res.Count > 0;
             }
             catch

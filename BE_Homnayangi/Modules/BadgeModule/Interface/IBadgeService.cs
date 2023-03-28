@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Library.PagedList;
 using BE_Homnayangi.Modules.BadgeModule.DTO.Request;
+using BE_Homnayangi.Modules.RewardModule.DTO.Request;
 
 namespace BE_Homnayangi.Modules.BadgeModule.Interface
 {
@@ -13,7 +14,7 @@ namespace BE_Homnayangi.Modules.BadgeModule.Interface
     {
         public Task AddNewBadge(Badge newBadge);
 
-        public Task UpdateBadge(Badge rewardUpdate);
+        public Task UpdateBadge(Badge badgeUpdate);
 
         public Task<ICollection<Badge>> GetAll();
 
