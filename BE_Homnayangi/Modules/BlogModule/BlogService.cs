@@ -648,6 +648,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     : blog.RecipeId.GetValueOrDefault();
                 request.Recipe.Status = request.Blog.BlogStatus;
                 request.Recipe.Title = blog.Title;
+                request.Recipe.ImageUrl = blog.ImageUrl;
                 await _recipeRepository.UpdateAsync(request.Recipe);
                 #endregion
 
