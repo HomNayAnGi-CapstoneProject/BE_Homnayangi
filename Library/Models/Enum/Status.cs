@@ -33,8 +33,8 @@ namespace Library.Models.Enum
         public enum BadgeStatus
         {
             DELETED = 0,
-            PENDING = 1,
-            ACTIVE = 2,
+            ACTIVE = 1,
+            PENDING = 2
         }
     }
 }
