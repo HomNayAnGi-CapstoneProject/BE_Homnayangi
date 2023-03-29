@@ -5,11 +5,14 @@ using BE_Homnayangi.Modules.BlogModule.Interface;
 using BE_Homnayangi.Modules.BlogModule.Request;
 using BE_Homnayangi.Modules.BlogModule.Response;
 using BE_Homnayangi.Modules.BlogReactionModule.Interface;
+using BE_Homnayangi.Modules.BlogReferenceModule;
 using BE_Homnayangi.Modules.BlogReferenceModule.Interface;
 using BE_Homnayangi.Modules.BlogSubCateModule.Interface;
 using BE_Homnayangi.Modules.CommentModule.Interface;
+using BE_Homnayangi.Modules.RecipeDetailModule;
 using BE_Homnayangi.Modules.RecipeDetailModule.Interface;
 using BE_Homnayangi.Modules.RecipeDetailModule.RecipeDetailsDTO;
+using BE_Homnayangi.Modules.RecipeModule;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
 using BE_Homnayangi.Modules.SubCateModule.Interface;
 using BE_Homnayangi.Modules.SubCateModule.Response;
@@ -20,11 +23,13 @@ using Library.Models;
 using Library.Models.Constant;
 using Library.Models.Enum;
 using Library.PagedList;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -70,30 +75,77 @@ namespace BE_Homnayangi.Modules.BlogModule
 
         #region Get Blog
 
-        public async Task<ICollection<OverviewBlog>> GetBlogsByUser()
+        public async Task<ICollection<OverviewBlog>> GetBlogsByUser(string role, bool? isPending)
         {
             List<OverviewBlog> list = null;
             try
             {
-                var blogs = await _blogRepository.GetBlogsBy(includeProperties: "Recipe");
-                if (blogs != null && blogs.Count > 0)
+                if (isPending != null && isPending.Value) // get pending blogs
                 {
-                    list = blogs.Join(_userRepository.GetAll().Result, x => x.AuthorId, y => y.UserId, (x, y) => new OverviewBlog()
+                    var pendingBlogs = await _blogRepository.GetBlogsBy(b => b.BlogStatus == (int)Status.BlogStatus.PENDING,
+                                                                                            includeProperties: "Author");
+                    if (pendingBlogs.Count == 0)
                     {
-                        BlogId = x.BlogId,
-                        AuthorName = y.Displayname,
-                        ImageUrl = x?.ImageUrl,
-                        Title = x?.Title,
-                        CreatedDate = x.CreatedDate.Value,
-                        View = x?.View,
-                        Reaction = x?.Reaction,
-                        Status = x.BlogStatus,
-                        TotalKcal = x.Recipe?.TotalKcal,
-                    }).OrderByDescending(x => x.CreatedDate).ToList();
+                        return null;
+                    }
+                    list = pendingBlogs.Select(
+                        blog => new OverviewBlog()
+                        {
+                            BlogId = blog.BlogId,
+                            AuthorName = blog.Author.Firstname + " " + blog.Author.Lastname,
+                            ImageUrl = blog.ImageUrl,
+                            Title = blog.Title,
+                            CreatedDate = blog.CreatedDate.Value,
+                            View = blog.View,
+                            Reaction = blog.Reaction,
+                            Status = blog.BlogStatus,
+                            TotalKcal = blog.Recipe?.TotalKcal,
+                        }).OrderByDescending(b => b.CreatedDate).ToList();
+                }
+                else if (isPending != null && !isPending.Value) // get !pending blogs
+                {
+                    var blogs = await _blogRepository.GetBlogsBy(b => b.BlogStatus != (int)Status.BlogStatus.PENDING, includeProperties: "Recipe,Author");
+                    if (blogs != null && blogs.Count > 0)
+                    {
+                        list = blogs.Select(
+                            blog => new OverviewBlog()
+                            {
+                                BlogId = blog.BlogId,
+                                AuthorName = blog.Author.Firstname + " " + blog.Author.Lastname,
+                                ImageUrl = blog.ImageUrl,
+                                Title = blog.Title,
+                                CreatedDate = blog.CreatedDate.Value,
+                                View = blog.View,
+                                Reaction = blog.Reaction,
+                                Status = blog.BlogStatus,
+                                TotalKcal = blog.Recipe?.TotalKcal,
+                            }).OrderByDescending(b => b.CreatedDate).ToList();
+                    }
+                }
+                else // isPending: null > get all
+                {
+                    var blogs = await _blogRepository.GetBlogsBy(includeProperties: "Recipe,Author");
+                    if (blogs != null && blogs.Count > 0)
+                    {
+                        list = blogs.Select(
+                            blog => new OverviewBlog()
+                            {
+                                BlogId = blog.BlogId,
+                                AuthorName = blog.Author.Firstname + " " + blog.Author.Lastname,
+                                ImageUrl = blog.ImageUrl,
+                                Title = blog.Title,
+                                CreatedDate = blog.CreatedDate.Value,
+                                View = blog.View,
+                                Reaction = blog.Reaction,
+                                Status = blog.BlogStatus,
+                                TotalKcal = blog.Recipe?.TotalKcal,
+                            }).OrderByDescending(b => b.CreatedDate).ToList();
+                    }
                 }
             }
             catch (Exception ex)
             {
+                Console.WriteLine("Error at GetBlogsByUser:" + ex.Message);
                 throw new Exception(ex.Message);
             }
             return list;
@@ -594,8 +646,9 @@ namespace BE_Homnayangi.Modules.BlogModule
                 request.Recipe.RecipeId = blog.RecipeId == null
                     ? throw new Exception(ErrorMessage.BlogError.BLOG_NOT_BINDING_TO_RECIPE)
                     : blog.RecipeId.GetValueOrDefault();
-                request.Recipe.Status = blog.Recipe.Status;
+                request.Recipe.Status = request.Blog.BlogStatus;
                 request.Recipe.Title = blog.Title;
+                request.Recipe.ImageUrl = blog.ImageUrl;
                 await _recipeRepository.UpdateAsync(request.Recipe);
                 #endregion
 
@@ -636,7 +689,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     BlogReferenceId = x.BlogReferenceId,
                     Text = y.Text,
                     Html = y.HTML,
-                    Status = x.Status
+                    Status = request.Blog.BlogStatus
                 });
 
                 await _blogReferenceRepository.UpdateRangeAsync(listBlogRefUpdate);
@@ -1105,7 +1158,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                     }
                 }
 
-                result.AuthorName = _userRepository.GetFirstOrDefaultAsync(x => x.UserId == blog.AuthorId).Result.Displayname;
+                var author = await _userRepository.GetFirstOrDefaultAsync(x => x.UserId == blog.AuthorId);
+                result.AuthorName = author.Firstname + " " + author.Lastname;
 
                 // List SubCates
                 result.SubCates = _blogSubCateRepository.GetBlogSubCatesBy(x => x.BlogId == blog.BlogId, includeProperties: "SubCate").Result.Select(x => new SubCateResponse
@@ -1194,7 +1248,7 @@ namespace BE_Homnayangi.Modules.BlogModule
             bool isChecked = false;
             try
             {
-                var blog = await _blogRepository.GetFirstOrDefaultAsync(b => b.BlogId == blogId, includeProperties: "Author,Recipe,BlogReferences");
+                var blog = await _blogRepository.GetFirstOrDefaultAsync(b => b.BlogId == blogId && b.BlogStatus == (int)Status.BlogStatus.PENDING, includeProperties: "Author,Recipe,BlogReferences");
                 var properties = blog.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
                 if (blog != null)
                 {
@@ -1207,9 +1261,17 @@ namespace BE_Homnayangi.Modules.BlogModule
                         }
 
                     }
-                    blog.BlogStatus = type.Equals("APPROVE") ?
-                                  (int)Status.BlogStatus.ACTIVE :
-                                  (int)Status.BlogStatus.DELETED;
+
+                    if (type.Equals("APPROVE"))
+                    {
+                        blog.BlogStatus = (int)Status.BlogStatus.ACTIVE;
+                        await UpdateStatusWhenApproveRejectBlog(blog.BlogId, blog.RecipeId.Value, (int)Status.BlogStatus.PENDING, (int)Status.BlogStatus.DRAFTED);
+                    }
+                    else
+                    {
+                        blog.BlogStatus = (int)Status.BlogStatus.DRAFTED;
+                        await UpdateStatusWhenApproveRejectBlog(blog.BlogId, blog.RecipeId.Value, (int)Status.BlogStatus.PENDING, (int)Status.BlogStatus.DRAFTED);
+                    }
                     await _blogRepository.UpdateAsync(blog);
                     isChecked = true;
                 }
@@ -1222,6 +1284,56 @@ namespace BE_Homnayangi.Modules.BlogModule
             }
             return isChecked;
         }
+
         #endregion
+
+        private async Task UpdateStatusWhenApproveRejectBlog(Guid blogId, Guid recipeId, int oldStatus, int newStatus)
+        {
+            try
+            {
+                #region update Recipe status old into new > throw Error if not existed
+                Recipe approvedRecipe = await _recipeRepository.GetFirstOrDefaultAsync(recipe => recipe.RecipeId == blogId
+                                                                                        && recipe.Status == oldStatus);
+                if (approvedRecipe == null)
+                    throw new Exception(ErrorMessage.RecipeError.RECIPE_NOT_FOUND);
+
+                approvedRecipe.Status = newStatus;
+                await _recipeRepository.UpdateAsync(approvedRecipe);
+                #endregion
+
+                #region update RecipeDetails status old into new
+                ICollection<RecipeDetail> recipeDetails = await _recipeDetailRepository.GetRecipeDetailsBy(
+                                                                                            item => item.RecipeId == recipeId
+                                                                                                && item.Status == oldStatus);
+                if (recipeDetails != null)
+                {
+                    foreach (var item in recipeDetails.ToList())
+                    {
+                        item.Status = newStatus;
+                    }
+                    await _recipeDetailRepository.UpdateRangeAsync(recipeDetails);
+                }
+                #endregion
+
+                #region update BlogReferences status old into new
+                ICollection<BlogReference> blogReferences = await _blogReferenceRepository.GetBlogReferencesBy(br => br.BlogId == blogId
+                                                                                                                && br.Status == oldStatus);
+                if (blogReferences != null)
+                {
+                    foreach (var item in blogReferences.ToList())
+                    {
+                        item.Status = newStatus;
+                    }
+                    await _blogReferenceRepository.UpdateRangeAsync(blogReferences);
+                }
+                #endregion
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at UpdateStatusWhenApproveRejectBlog: " + ex.Message);
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

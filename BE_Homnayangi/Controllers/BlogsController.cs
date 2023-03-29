@@ -31,17 +31,14 @@ namespace BE_Homnayangi.Controllers
         #region Get
         // Get all blogs: staff and manager manage all blogs of system
         [HttpGet("user")] // blogid, authorName, img, title, created_date, views, reactions, status
-        [Authorize(Roles = "Staff")]
-        public async Task<ActionResult> GetBlogsForStaff()
+        [Authorize(Roles = "Manager,Staff")]
+        public async Task<ActionResult> GetBlogsForStaff([FromQuery] bool? isPending)
         {
             try
             {
-                if (_userService.GetCurrentUser(Request.Headers["Authorization"]) == null)
-                {
-                    throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
-                }
-
-                var blogs = await _blogService.GetBlogsByUser();
+                var currentAccount = _userService.GetCurrentUser(Request.Headers["Authorization"]);
+                var blogs = await _blogService.GetBlogsByUser(currentAccount.Role, isPending);
+                
                 if (blogs == null || blogs.Count == 0)
                 {
                     return new JsonResult(new
@@ -89,7 +86,7 @@ namespace BE_Homnayangi.Controllers
         // GET: api/v1/blogs/57448A79-8855-42AD-BD2E-0295D1436037
 
         [HttpGet("staff-preview/{id}")]
-        [Authorize(Roles = "Staff")]
+        [Authorize(Roles = "Manager,Staff")]
         public async Task<ActionResult<BlogDetailResponse>> GetBlogForPreview([FromRoute] Guid id)
         {
             try
@@ -310,7 +307,7 @@ namespace BE_Homnayangi.Controllers
             }
         }
 
-        [Authorize(Roles ="Manager")]
+        [Authorize(Roles = "Manager")]
         [HttpPut("{type}/{blogId}")]
         public async Task<ActionResult> ApproveRejectBlog([FromRoute] string type, [FromRoute] Guid blogId)
         {
@@ -333,7 +330,7 @@ namespace BE_Homnayangi.Controllers
                 {
                     return new JsonResult(new
                     {
-                        status = "failed"
+                        status = "Some of fields can not be null"
                     });
                 }
             }

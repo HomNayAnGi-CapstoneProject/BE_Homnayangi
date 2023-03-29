@@ -186,7 +186,7 @@ namespace BE_Homnayangi.Controllers
         }
 
         [HttpGet("status")]
-        public async Task<ActionResult> GetOrderResponse([FromQuery] int status)
+        public async Task<ActionResult> GetOrderResponse([FromQuery] int status = -1)
         {
             try
             {

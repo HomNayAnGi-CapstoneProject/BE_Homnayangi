@@ -10,6 +10,7 @@ namespace Library.Models.Constant
             public readonly static string LIST_IS_NULL = "List have no data";
             public readonly static string INVALID_REQUEST = "Request data is invalid";
             public readonly static string NOT_LOGIN = "Customer did not login";
+            public readonly static string ROLE_NOT_SUPPORTED = "This role is not valid for this action";
         }
         #endregion
 
@@ -148,6 +149,7 @@ namespace Library.Models.Constant
         public static class StaffError
         {
             public readonly static string STAFF_NOT_EXIST = "This staff does not exist";
+            public readonly static string NOT_FOR_STAFF = "Staff can not be here";
         }
         #endregion
     }
