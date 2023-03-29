@@ -53,6 +53,7 @@ namespace BE_Homnayangi.Modules.BadgeModule
 
             newBadge.BadgeId = Guid.NewGuid();
             newBadge.CreateDate = DateTime.Now;
+            newBadge.Status = (int)Status.BadgeStatus.ACTIVE;
             await _badgeRepository.AddAsync(newBadge);
         }
 
