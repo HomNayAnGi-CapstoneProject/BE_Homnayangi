@@ -578,12 +578,6 @@ namespace Library.DataAccess
 
                 entity.Property(e => e.RecipeId).HasColumnName("recipeId");
 
-                entity.HasOne(d => d.Ingredient)
-                    .WithMany(p => p.OrderDetails)
-                    .HasForeignKey(d => d.IngredientId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_OrderIngredientDetail_Ingredient");
-
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.OrderDetails)
                     .HasForeignKey(d => d.OrderId)

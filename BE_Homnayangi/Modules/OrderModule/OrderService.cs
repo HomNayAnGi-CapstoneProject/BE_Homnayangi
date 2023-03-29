@@ -22,6 +22,8 @@ using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Transactions;
+using static Library.Models.Enum.PaymentMethodEnum;
+using static Library.Models.Enum.Status;
 
 namespace BE_Homnayangi.Modules.OrderModule
 {
@@ -67,34 +69,65 @@ namespace BE_Homnayangi.Modules.OrderModule
                 includeProperties: "OrderDetails");
 
             var ingredients = await _ingredientRepository.GetAll();
-            var recipes = await _recipeRepository.GetAll();
+            var recipes = await _recipeRepository.GetRecipesBy(includeProperties: "RecipeDetails");
 
             var res = new List<OrderResponse>();
             foreach(var order in orders)
             {
-                var orderDetailResponses = recipes.Where(r => order.OrderDetails.Where(od => od.RecipeId == r.RecipeId).Any())
-                    .GroupJoin(order.OrderDetails, x => x.RecipeId, y => y.RecipeId,
-                        (recipe, ingredientGroup) => new OrderResponse.OrderDetailResponse
+                var ingOrderDetails = order.OrderDetails.Where(detail => detail.RecipeId == null)
+                    .Join(ingredients, x => x.IngredientId, y => y.IngredientId, (x,y) => {
+                        return new OrderResponse.IngredientResponse
+                        {
+                            IngredientId = x.IngredientId,
+                            Quantity = x.Quantity,
+                            Price = x.Price,
+                            IngredientImage = y.Picture,
+                            IngredientName = y.Name
+                        };
+                    })
+                    .ToList();
+
+                var recipeOrderDetails = order.OrderDetails.Where(detail => detail.RecipeId != null)
+                    .Join(recipes, x => x.RecipeId, y => y.RecipeId, (x, y) => {
+                        return new OrderResponse.OrderDetailResponse
                         {
                             OrderId = order.OrderId,
-                            RecipeId = recipe.RecipeId,
-                            RecipeImage = recipe.ImageUrl ?? "",
-                            RecipeName = recipe.Title ?? "",
-                            RecipeDetails = ingredientGroup.Select(ig => {
-                                var i = ingredients.Where(i => i.IngredientId == ig.IngredientId).FirstOrDefault();
-                                return new OrderResponse.RecipeDetailResponse
+                            RecipeId = y.RecipeId,
+                            RecipeImage = y.ImageUrl ?? "",
+                            RecipeName = y.Title ?? "",
+                            RecipeQuantity = x.Quantity.Value,
+                            PackagePrice = y.PackagePrice,
+                            CookedPrice = y.CookedPrice,
+                            RecipeDetails = y.RecipeDetails.Join(ingredients, x => x.IngredientId, y => y.IngredientId, (x, y) => {
+                                return new OrderResponse.IngredientResponse
                                 {
-                                    OrderDetailId = ig.OrderDetailId,
-                                    IngredientId = ig.IngredientId,
-                                    IngredientImage = i.Picture ?? "",
-                                    IngredientName = i.Name ?? "",
-                                    Price = ig.Price,
-                                    Quantity = ig.Quantity
+                                    IngredientId = y.IngredientId,
+                                    Quantity = x.Quantity,
+                                    Price = y.Price,
+                                    IngredientImage = y.Picture,
+                                    IngredientName = y.Name
                                 };
                             }).ToList()
-                        }).ToList();
-                var orderResponse = _mapper.Map<OrderResponse>(order);
-                orderResponse.OrderDetails = orderDetailResponses;
+                        };
+                    })
+                    .ToList();
+
+                var orderResponse = new OrderResponse
+                {
+                    OrderId = order.OrderId,
+                    OrderDate = order.OrderDate,
+                    ShippedDate = order.ShippedDate,
+                    ShippedAddress = order.ShippedAddress,
+                    Discount = order.Discount,
+                    TotalPrice = order.TotalPrice,
+                    OrderStatus = order.OrderStatus,
+                    CustomerId = order.CustomerId,
+                    IsCooked = order.IsCooked,
+                    VoucherId = order.VoucherId,
+                    PaymentMethod = order.PaymentMethod,
+                    OrderDetailRecipes = recipeOrderDetails,
+                    OrderDetailIngredients = ingOrderDetails
+                };
                 res.Add(orderResponse);
             }
             return res;
@@ -153,8 +186,6 @@ namespace BE_Homnayangi.Modules.OrderModule
                         {
                             detail.OrderDetailId = Guid.NewGuid();
                             detail.OrderId = newOrder.OrderId;
-                            if (detail.RecipeId == null)
-                                throw new Exception("Recipe id is required");
                         });
                         await _OrderRepository.AddAsync(newOrder);
 
