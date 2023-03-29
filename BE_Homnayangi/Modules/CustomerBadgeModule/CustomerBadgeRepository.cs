@@ -21,7 +21,7 @@ namespace BE_Homnayangi.Modules.CustomerBadgeModule
             _db = db;
         }
 
-        public async Task<ICollection<CustomerBadge>> GetCustomersBy(
+        public async Task<ICollection<CustomerBadge>> GetCustomerBadgeBy(
             Expression<Func<CustomerBadge, bool>> filter = null,
             Func<IQueryable<CustomerBadge>, ICollection<CustomerBadge>> options = null,
             string includeProperties = null)

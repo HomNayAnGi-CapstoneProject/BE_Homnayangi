@@ -30,6 +30,12 @@ namespace Library.Models.Enum
             SUCCESS = 2,
             FAIL = 3
         }
+        public enum BadgeStatus
+        {
+            DELETED = 0,
+            PENDING = 1,
+            ACTIVE = 2,
+        }
     }
 }
 

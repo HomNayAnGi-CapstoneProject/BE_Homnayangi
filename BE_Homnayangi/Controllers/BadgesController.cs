@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using BE_Homnayangi.Modules.BadgeModule.DTO.Request;
 using BE_Homnayangi.Modules.BadgeModule.Interface;
+using BE_Homnayangi.Modules.RewardModule.DTO.Request;
 using BE_Homnayangi.Modules.Utils;
 using Library.Models;
+using Library.Models.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,12 +19,12 @@ namespace BE_Homnayangi.Controllers
     public class BadgesController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly IBadgeService _rewardService;
+        private readonly IBadgeService _badgeService;
 
-        public BadgesController(IBadgeService rewardService, IMapper mapper)
+        public BadgesController(IBadgeService badgeService, IMapper mapper)
         {
             _mapper = mapper;
-            _rewardService = rewardService;
+            _badgeService = badgeService;
         }
 
         // GET: api/Badges
@@ -30,7 +32,7 @@ namespace BE_Homnayangi.Controllers
         public async Task<ActionResult<IEnumerable<Badge>>> GetBadges([FromQuery] BadgeFilterRequest request)
         {
             try
-            {
+            {/*
                 if (request.fromDate.HasValue && request.toDate.HasValue
                     && !DateTimeUtils.CheckValidFromAndToDate(request.fromDate.Value, request.toDate.Value))
                 {
@@ -39,8 +41,8 @@ namespace BE_Homnayangi.Controllers
                         status = "failed"
                     });
                 }
-
-                var response = await _rewardService.GetAllPaged(request);
+*/
+                var response = await _badgeService.GetAllPaged(request);
                 return Ok(response);
             }
             catch
@@ -54,7 +56,7 @@ namespace BE_Homnayangi.Controllers
         {
             try
             {
-                var response = await _rewardService.CheckExistedName(name);
+                var response = await _badgeService.CheckExistedName(name);
                 return Ok(response);
             }
             catch
@@ -67,7 +69,7 @@ namespace BE_Homnayangi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Badge>> GetBadge([FromRoute] Guid id)
         {
-            var reward = await _rewardService.GetBadgeByID(id);
+            var reward = await _badgeService.GetBadgeByID(id);
 
             if (reward == null)
             {
@@ -79,51 +81,41 @@ namespace BE_Homnayangi.Controllers
 
         // PUT: api/Badges/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut]
         [Authorize(Roles = "Staff,Manager")]
-        public async Task<IActionResult> PutBadge([FromRoute] Guid id, [FromBody] Badge reward)
+        public async Task<IActionResult> PutBadge([FromBody] UpdateBadgeRequest updateBadge)
         {
-            if (id != reward.BadgeId)
-            {
-                return new JsonResult(new
-                {
-                    status = "failed",
-                    msg = "Badge is not valid"
-                });
-            }
-
+            var badge = _mapper.Map<Badge>(updateBadge);
             try
             {
-                await _rewardService.UpdateBadge(rewardUpdate: reward);
+                await _badgeService.UpdateBadge(badgeUpdate: badge);
+                return Ok("Update success");
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!BadgeExists(id))
+                if (!BadgeExists(updateBadge.BadgeId))
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
+
+                return NoContent();
             }
-
-            return NoContent();
         }
-
         // POST: api/Badges
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         [Authorize(Roles = "Staff,Manager")]
-        public async Task<ActionResult<Badge>> PostBadge([FromBody] Badge reward)
+        public async Task<ActionResult<Badge>> PostBadge([FromBody] CreateNewBadgeRequest newBadge)
         {
+            var badge = _mapper.Map<Badge>(newBadge);
             try
             {
-                await _rewardService.AddNewBadge(reward);
+
+                await _badgeService.AddNewBadge(badge);
             }
             catch (DbUpdateException)
             {
-                if (BadgeExists(reward.BadgeId))
+                if (BadgeExists(badge.BadgeId))
                 {
                     return Conflict();
                 }
@@ -133,7 +125,7 @@ namespace BE_Homnayangi.Controllers
                 }
             }
 
-            return CreatedAtAction("GetBadge", new { id = reward.BadgeId }, reward);
+            return CreatedAtAction("GetBadge", new { id = badge.BadgeId }, badge);
         }
 
         // DELETE: api/Badges/5
@@ -141,20 +133,20 @@ namespace BE_Homnayangi.Controllers
         [Authorize(Roles = "Staff,Manager")]
         public async Task<IActionResult> DeleteBadge([FromRoute] Guid id)
         {
-            var reward = await _rewardService.GetBadgeByID(id);
-            if (reward == null)
+            var badge = await _badgeService.GetBadgeByID(id);
+            if (badge == null)
             {
                 return NotFound();
             }
-            reward.Status = 2;
-            await _rewardService.UpdateBadge(reward);
+            badge.Status = (int)Status.BadgeStatus.DELETED;
+            await _badgeService.UpdateBadge(badge);
 
             return NoContent();
         }
 
         private bool BadgeExists(Guid id)
         {
-            return _rewardService.GetBadgeByID(id).Result != null;
+            return _badgeService.GetBadgeByID(id).Result != null;
         }
     }
 }
