@@ -59,6 +59,7 @@ namespace BE_Homnayangi.Modules.BadgeModule
 
         public async Task UpdateBadge(Badge BadgeUpdate)
         {
+
             await _badgeRepository.UpdateAsync(BadgeUpdate);
         }
 
@@ -76,7 +77,7 @@ namespace BE_Homnayangi.Modules.BadgeModule
                 var sort = request.sort;
                 var sortDesc = request.sortDesc;
 
-                var badges = await _badgeRepository.GetBadgesBy(r => r.Status == (int)Status.BadgeStatus.ACTIVE);
+                var badges = await _badgeRepository.GetAll();
 
                 switch (sort)
                 {
