@@ -1,12 +1,13 @@
-﻿using System;
+﻿using BE_Homnayangi.Modules.DTO.IngredientDTO;
+using BE_Homnayangi.Modules.IngredientModule.IngredientDTO;
+using BE_Homnayangi.Modules.IngredientModule.Response;
 using Library.Models;
+using Library.PagedList;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using BE_Homnayangi.Modules.DTO.IngredientDTO;
-using BE_Homnayangi.Modules.IngredientModule.IngredientDTO;
-using BE_Homnayangi.Modules.IngredientModule.Response;
 
 namespace BE_Homnayangi.Modules.IngredientModule.Interface
 {
@@ -20,6 +21,7 @@ namespace BE_Homnayangi.Modules.IngredientModule.Interface
         public IngredientResponse GetIngredientByID(Guid? IngredientId);
 
         public Task<ICollection<IngredientResponse>> GetAllIngredients();
+        public Task<PagedResponse<PagedList<IngredientResponse>>> GetAllIngredientsWithPagination(PagedRequest request);
 
         public Task<ICollection<IngredientResponse>> GetIngredientsByTypeId(Guid typeId);
 
@@ -29,6 +31,8 @@ namespace BE_Homnayangi.Modules.IngredientModule.Interface
 
         public Task<Guid> CreateIngredient(IngredientRequest newIg);
         public Task<ICollection<SearchIngredientsResponse>> GetIngredientByName(string name);
+
+        public Task<ICollection<IngredientResponse>> GetIngredientsByTypeId(Guid typeId, Guid currentIngredientId);
     }
 
 }

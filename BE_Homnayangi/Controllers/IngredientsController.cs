@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using BE_Homnayangi.Modules.DTO.IngredientDTO;
 using BE_Homnayangi.Modules.IngredientModule.IngredientDTO;
 using BE_Homnayangi.Modules.IngredientModule.Interface;
 using BE_Homnayangi.Modules.IngredientModule.Request;
 using BE_Homnayangi.Modules.IngredientModule.Response;
 using Library.Models;
+using Library.PagedList;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -27,7 +29,7 @@ namespace BE_Homnayangi.Controllers
             _ingredientService = ingredientService;
         }
 
-        // GET: api/Ingredients
+        // GET: api/v1/Ingredients
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Ingredient>>> GetIngredients()
         {
@@ -36,6 +38,18 @@ namespace BE_Homnayangi.Controllers
             return new JsonResult(new
             {
                 total_results = result.Count(),
+                result = result,
+            });
+        }
+
+        // GET: api/v1/Ingredients
+        [HttpGet("customer")]
+        public async Task<ActionResult<PagedResponse<PagedList<IngredientResponse>>>> GetIngredientsWithPagination([FromQuery] PagedRequest request)
+        {
+            var result = await _ingredientService.GetAllIngredientsWithPagination(request);
+
+            return new JsonResult(new
+            {
                 result = result,
             });
         }
@@ -52,6 +66,39 @@ namespace BE_Homnayangi.Controllers
                 total_results = result.Count(),
                 result = result,
             });
+        }
+
+        // GET: api/v1/Ingredients
+        [HttpGet("types/{typeId}/ingredients/{currentIngredientId}")]
+        public async Task<ActionResult> GetIngredientsWithPagination([FromRoute] Guid typeId, [FromRoute] Guid currentIngredientId)
+        {
+            try
+            {
+                var result = await _ingredientService.GetIngredientsByTypeId(typeId, currentIngredientId);
+
+                if (result.Count == 0)
+                {
+                    return new JsonResult(new
+                    {
+                        status = "failed",
+                        msg = "Do not have any ingredient"
+                    });
+                }
+
+                return new JsonResult(new
+                {
+                    status = "success",
+                    result = result
+                });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
+            }
         }
 
         // GET: api/Ingredients/5
@@ -86,7 +133,7 @@ namespace BE_Homnayangi.Controllers
 
         // PUT: api/Ingredients/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut()]
+        [HttpPut]
         [Authorize(Roles = "Staff,Manager")]
         public async Task<IActionResult> PutIngredient([FromBody] UpdatedIngredientRequest ingredient)
         {
@@ -184,6 +231,5 @@ namespace BE_Homnayangi.Controllers
                 });
             }
         }
-
     }
 }

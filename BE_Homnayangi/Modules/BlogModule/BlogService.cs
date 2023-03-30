@@ -5,14 +5,10 @@ using BE_Homnayangi.Modules.BlogModule.Interface;
 using BE_Homnayangi.Modules.BlogModule.Request;
 using BE_Homnayangi.Modules.BlogModule.Response;
 using BE_Homnayangi.Modules.BlogReactionModule.Interface;
-using BE_Homnayangi.Modules.BlogReferenceModule;
 using BE_Homnayangi.Modules.BlogReferenceModule.Interface;
 using BE_Homnayangi.Modules.BlogSubCateModule.Interface;
 using BE_Homnayangi.Modules.CommentModule.Interface;
-using BE_Homnayangi.Modules.RecipeDetailModule;
 using BE_Homnayangi.Modules.RecipeDetailModule.Interface;
-using BE_Homnayangi.Modules.RecipeDetailModule.RecipeDetailsDTO;
-using BE_Homnayangi.Modules.RecipeModule;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
 using BE_Homnayangi.Modules.SubCateModule.Interface;
 using BE_Homnayangi.Modules.SubCateModule.Response;
@@ -23,13 +19,11 @@ using Library.Models;
 using Library.Models.Constant;
 using Library.Models.Enum;
 using Library.PagedList;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.Metadata;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -528,6 +522,57 @@ namespace BE_Homnayangi.Modules.BlogModule
                 } while (result.Count() < 3);
 
                 return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<ICollection<BlogsByCatesResponse>> GetBlogsByIngredientId(Guid ingredientId)
+        {
+            try
+            {
+                List<Blog> blogs = new();
+
+
+                blogs = _blogRepository.GetNItemRandom(b => b.BlogStatus == ((int)Status.BlogStatus.ACTIVE),
+                                                            includeProperties: "Recipe",
+                                                            numberItem: 8).Result.ToList();
+
+                var recipeDetails = await _recipeDetailRepository.GetRecipeDetailsBy(rd => rd.IngredientId == ingredientId
+                                                                                    && rd.Status.Value == (int)Status.BlogStatus.ACTIVE);
+
+                var filteredBlogs = blogs.Join(recipeDetails, b => b.RecipeId, rd => rd.RecipeId, (b, rd) => new BlogsByCatesResponse()
+                {
+                    BlogId = b.BlogId,
+                    RecipeName = b.Recipe.Title,
+                    Title = b.Title,
+                    // Description is below
+                    ImageUrl = b.ImageUrl,
+                    PackagePrice = b.Recipe.PackagePrice,
+                    Reaction = b.Reaction,
+                    View = b.View,
+                    CreatedDate = b.CreatedDate,
+                });
+
+                var result = filteredBlogs.Join(_blogReferenceRepository.GetBlogReferencesBy(x => x.Type == (int)BlogReferenceType.DESCRIPTION).Result,
+                    b => b.BlogId, y => y.BlogId, (b, y) => new BlogsByCatesResponse
+                    {
+                        BlogId = b.BlogId,
+                        RecipeName = b.RecipeName,
+                        Title = b.Title,
+                        Description = y.Html,
+                        ImageUrl = b.ImageUrl,
+                        PackagePrice = b.PackagePrice,
+                        CreatedDate = b.CreatedDate,
+                        Reaction = b.Reaction,
+                        View = b.View
+                    }).OrderByDescending(b => b.CreatedDate).ToList();
+
+                return result;
+
+
             }
             catch (Exception ex)
             {
