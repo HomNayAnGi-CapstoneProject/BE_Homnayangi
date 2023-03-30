@@ -38,7 +38,7 @@ namespace BE_Homnayangi.Controllers
             {
                 var currentAccount = _userService.GetCurrentUser(Request.Headers["Authorization"]);
                 var blogs = await _blogService.GetBlogsByUser(currentAccount.Role, isPending);
-                
+
                 if (blogs == null || blogs.Count == 0)
                 {
                     return new JsonResult(new
@@ -102,6 +102,39 @@ namespace BE_Homnayangi.Controllers
                 });
             }
         }
+
+        [HttpGet("ingredients/{ingredientId}")]
+        public async Task<ActionResult<ICollection<BlogsByCateAndTagResponse>>> GetBlogsByIngredientId([FromRoute] Guid ingredientId)
+        {
+            try
+            {
+                var result = await _blogService.GetBlogsByIngredientId(ingredientId);
+
+                if (result.Count == 0)
+                {
+                    return new JsonResult(new
+                    {
+                        status = "failed",
+                        msg = "Do not have any blog use this ingredient"
+                    });
+                }
+
+                return new JsonResult(new
+                {
+                    status = "success",
+                    result = result
+                });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
+            }
+        }
+
         #endregion
 
         #region CUD Blog
@@ -343,5 +376,7 @@ namespace BE_Homnayangi.Controllers
                 });
             }
         }
+
+
     }
 }
