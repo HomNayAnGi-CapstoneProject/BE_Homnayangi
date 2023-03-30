@@ -82,8 +82,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
             var sortDesc = request.sortDesc;
             try
             {
-                var ingredients = await _ingredientRepository.GetNItemRandom(i => i.Status.Value,
-                                                                            includeProperties: "Type,Unit", numberItem: 10);
+                var ingredients = await _ingredientRepository.GetIngredientsBy(i => i.Status.Value, includeProperties: "Type,Unit");
                 var result = ingredients.Select(i => new IngredientResponse()
                      {
                          IngredientId = i.IngredientId,
