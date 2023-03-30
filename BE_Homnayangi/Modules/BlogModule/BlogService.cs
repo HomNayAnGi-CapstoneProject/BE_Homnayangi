@@ -15,6 +15,7 @@ using BE_Homnayangi.Modules.SubCateModule.Response;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.Utils;
 using FluentValidation.Results;
+using GSF.Collections;
 using Library.Models;
 using Library.Models.Constant;
 using Library.Models.Enum;
@@ -277,7 +278,7 @@ namespace BE_Homnayangi.Modules.BlogModule
             }
         }
 
-        public async Task<PagedResponse<PagedList<BlogsByCatesResponse>>> GetBlogsBySubCates(BlogsBySubCatesRequest request)
+        public async Task<PagedResponse<Library.PagedList.PagedList<BlogsByCatesResponse>>> GetBlogsBySubCates(BlogsBySubCatesRequest request)
         {
             var subCateIds = request.subCateIds != null ? StringUtils.ExtractContents(request.subCateIds) : null;
             var pageSize = request.PageSize;
@@ -339,7 +340,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                         View = b.View
                     }).ToList();
 
-                var response = PagedList<BlogsByCatesResponse>.ToPagedList(source: blogsByCatesResponse, pageNumber: pageNumber, pageSize: pageSize);
+                var response = Library.PagedList.PagedList<BlogsByCatesResponse>.ToPagedList(source: blogsByCatesResponse, pageNumber: pageNumber, pageSize: pageSize);
                 return response.ToPagedResponse();
             }
             catch (Exception ex)
@@ -533,28 +534,51 @@ namespace BE_Homnayangi.Modules.BlogModule
         {
             try
             {
-                List<Blog> blogs = new();
-
-
-                blogs = _blogRepository.GetNItemRandom(b => b.BlogStatus == ((int)Status.BlogStatus.ACTIVE),
-                                                            includeProperties: "Recipe",
-                                                            numberItem: 8).Result.ToList();
-
-                var recipeDetails = await _recipeDetailRepository.GetRecipeDetailsBy(rd => rd.IngredientId == ingredientId
-                                                                                    && rd.Status.Value == (int)Status.BlogStatus.ACTIVE);
-
-                var filteredBlogs = blogs.Join(recipeDetails, b => b.RecipeId, rd => rd.RecipeId, (b, rd) => new BlogsByCatesResponse()
+                List<BlogsByCatesResponse> filteredBlogs = new List<BlogsByCatesResponse>();
+                int retry = 0;
+                while (retry < 8)
                 {
-                    BlogId = b.BlogId,
-                    RecipeName = b.Recipe.Title,
-                    Title = b.Title,
-                    // Description is below
-                    ImageUrl = b.ImageUrl,
-                    PackagePrice = b.Recipe.PackagePrice,
-                    Reaction = b.Reaction,
-                    View = b.View,
-                    CreatedDate = b.CreatedDate,
-                });
+                    ++retry;
+                    var recipeDetails = await _recipeDetailRepository.GetNItemRandom(rd => rd.IngredientId == ingredientId,
+                                                                                                        numberItem: 8);
+
+                    var blogs = _blogRepository.GetBlogsBy(b => b.BlogStatus == ((int)Status.BlogStatus.ACTIVE),
+                                                                 includeProperties: "Recipe").Result.ToList();
+                    var tmpList = recipeDetails.Join(blogs, rd => rd.RecipeId, b => b.RecipeId, (rd, b) => new BlogsByCatesResponse()
+                    {
+                        BlogId = b.BlogId,
+                        RecipeName = b.Recipe.Title,
+                        Title = b.Title,
+                        // Description is below
+                        ImageUrl = b.ImageUrl,
+                        PackagePrice = b.Recipe.PackagePrice,
+                        Reaction = b.Reaction,
+                        View = b.View,
+                        CreatedDate = b.CreatedDate,
+                    }).ToList();
+
+                    #region Check 8 blogs distinct blogId
+                    if (filteredBlogs.Count == 0)
+                    {
+                        filteredBlogs = tmpList;
+                    }
+                    else
+                    {
+                        filteredBlogs.AddRange(tmpList);
+                    }
+                    filteredBlogs = filteredBlogs.DistinctBy(b => b.BlogId).ToList();
+
+                    if (filteredBlogs.Count == 8)
+                    {
+                        break;
+                    }
+                    else if (filteredBlogs.Count > 8)
+                    {
+                        filteredBlogs = filteredBlogs.Take(8).ToList();
+                        break;
+                    }
+                    #endregion
+                }
 
                 var result = filteredBlogs.Join(_blogReferenceRepository.GetBlogReferencesBy(x => x.Type == (int)BlogReferenceType.DESCRIPTION).Result,
                     b => b.BlogId, y => y.BlogId, (b, y) => new BlogsByCatesResponse
