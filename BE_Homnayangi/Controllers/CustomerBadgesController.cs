@@ -80,6 +80,20 @@ namespace BE_Homnayangi.Controllers
                 return BadRequest();
             }
         }
+        [HttpGet("customer")]
+        public async Task<ActionResult<IEnumerable<CustomerBadge>>> GetCustomerBadgesByCurrentCustomer()
+        {
+            try
+            {
+                var currentUserId = _userService.GetCurrentUser(Request.Headers["Authorization"]).Id;
+                var response = await _customerBadgeService.GetBadgeByCusID(currentUserId);
+                return Ok(response);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
         // GET api/<ValuesController>/5
         [HttpGet("{customerId}/{badgeId}")]
         public async Task<ActionResult<CustomerBadge>> GetCustomerBadge([FromRoute] Guid customerId, [FromRoute] Guid badgeId)
