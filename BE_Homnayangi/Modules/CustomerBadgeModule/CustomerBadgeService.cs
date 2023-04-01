@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BE_Homnayangi.Modules.AdminModules.BadgeConditionModule.Interface;
 using BE_Homnayangi.Modules.CustomerBadgeModule.DTO;
 using BE_Homnayangi.Modules.CustomerBadgeModule.Interface;
 using Library.Models;

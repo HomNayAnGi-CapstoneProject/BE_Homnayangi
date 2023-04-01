@@ -270,7 +270,7 @@ namespace BE_Homnayangi.Modules.UserModule
         }
         public async Task<Customer> GetCustomerById(Guid id)
         {
-            Customer customer = await _customerRepository.GetFirstOrDefaultAsync(x => x.CustomerId == id);
+            Customer customer = await _customerRepository.GetFirstOrDefaultAsync(x => x.CustomerId == id, includeProperties: "Orders,Accomplishments");
             return customer;
         }
         public async Task<Customer> GetCustomerByIdAndusername(Guid? id, string userName)
