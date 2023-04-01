@@ -64,7 +64,7 @@ namespace BE_Homnayangi.Controllers
                     var diffNextBadgeConditonAccomplishments = nextBadgeConditionAccomplishments - curentUserAccomplishments;
                     var diffCurrentBadgeConditionOrders = currentBadgeConditionOrders - curentUserOrders;
                     var diffNextBadgeConditonOrders = nextBadgeConditionOrders - curentUserOrders;
-                    if (diffCurrentBadgeConditionAccompishments > diffNextBadgeConditonAccomplishments && diffCurrentBadgeConditionOrders > diffNextBadgeConditonOrders)
+                    if (diffCurrentBadgeConditionAccompishments > diffNextBadgeConditonAccomplishments || diffCurrentBadgeConditionOrders > diffNextBadgeConditonOrders)
                     {
                         var temp = badgeConditionList[i];
                         badgeConditionList[i] = badgeConditionList[i + 1];
