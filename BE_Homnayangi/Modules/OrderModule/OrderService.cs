@@ -614,5 +614,78 @@ namespace BE_Homnayangi.Modules.OrderModule
         {
             return await _OrderRepository.GetAll();
         }
+
+        public async Task<ICollection<OrderResponse>> GetOrderByCustomer(Guid customerId, int status = -1)
+        {
+            var orders = status > -1
+                ? await _OrderRepository.GetOrdersBy(o => o.OrderStatus.GetValueOrDefault() == status && o.CustomerId.Equals(customerId),
+                includeProperties: "OrderDetails")
+                : await _OrderRepository.GetOrdersBy(o => o.CustomerId.Equals(customerId),
+                includeProperties: "OrderDetails");
+
+            var ingredients = await _ingredientRepository.GetAll();
+            var recipes = await _recipeRepository.GetRecipesBy(includeProperties: "RecipeDetails");
+
+            var res = new List<OrderResponse>();
+            foreach (var order in orders)
+            {
+                var ingOrderDetails = order.OrderDetails.Where(detail => detail.RecipeId == null)
+                    .Join(ingredients, x => x.IngredientId, y => y.IngredientId, (x, y) => {
+                        return new OrderResponse.IngredientResponse
+                        {
+                            IngredientId = x.IngredientId,
+                            Quantity = x.Quantity,
+                            Price = x.Price,
+                            IngredientImage = y.Picture,
+                            IngredientName = y.Name
+                        };
+                    })
+                    .ToList();
+
+                var recipeOrderDetails = order.OrderDetails.Where(detail => detail.RecipeId != null)
+                    .Join(recipes, x => x.RecipeId, y => y.RecipeId, (x, y) => {
+                        return new OrderResponse.OrderDetailResponse
+                        {
+                            OrderId = order.OrderId,
+                            RecipeId = y.RecipeId,
+                            RecipeImage = y.ImageUrl ?? "",
+                            RecipeName = y.Title ?? "",
+                            RecipeQuantity = x.Quantity.Value,
+                            PackagePrice = y.PackagePrice,
+                            CookedPrice = y.CookedPrice,
+                            RecipeDetails = y.RecipeDetails.Join(ingredients, x => x.IngredientId, y => y.IngredientId, (x, y) => {
+                                return new OrderResponse.IngredientResponse
+                                {
+                                    IngredientId = y.IngredientId,
+                                    Quantity = x.Quantity,
+                                    Price = y.Price,
+                                    IngredientImage = y.Picture,
+                                    IngredientName = y.Name
+                                };
+                            }).ToList()
+                        };
+                    })
+                    .ToList();
+
+                var orderResponse = new OrderResponse
+                {
+                    OrderId = order.OrderId,
+                    OrderDate = order.OrderDate,
+                    ShippedDate = order.ShippedDate,
+                    ShippedAddress = order.ShippedAddress,
+                    Discount = order.Discount,
+                    TotalPrice = order.TotalPrice,
+                    OrderStatus = order.OrderStatus,
+                    CustomerId = order.CustomerId,
+                    IsCooked = order.IsCooked,
+                    VoucherId = order.VoucherId,
+                    PaymentMethod = order.PaymentMethod,
+                    OrderDetailRecipes = recipeOrderDetails,
+                    OrderDetailIngredients = ingOrderDetails
+                };
+                res.Add(orderResponse);
+            }
+            return res;
+        }
     }
 }

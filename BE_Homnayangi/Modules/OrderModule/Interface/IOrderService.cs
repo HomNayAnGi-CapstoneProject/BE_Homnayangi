@@ -18,6 +18,8 @@ namespace BE_Homnayangi.Modules.OrderModule.Interface
 
         public Task<ICollection<OrderResponse>> GetOrderResponse(int status = -1);
 
+        public Task<ICollection<OrderResponse>> GetOrderByCustomer(Guid customerId, int status = -1);
+
         public Task<ICollection<Order>> GetByCustomer(Guid id);
 
         public Task<ICollection<Order>> GetOrdersBy(

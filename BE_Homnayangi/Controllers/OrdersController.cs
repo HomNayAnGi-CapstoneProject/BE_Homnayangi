@@ -186,11 +186,14 @@ namespace BE_Homnayangi.Controllers
         }
 
         [HttpGet("status")]
-        public async Task<ActionResult> GetOrderResponse([FromQuery] int status = -1)
+        public async Task<ActionResult> GetOrderResponse([FromQuery] Guid? customerid, [FromQuery] int status = -1)
         {
             try
             {
-                var res = await _orderService.GetOrderResponse(status);
+                
+                var res = customerid == null
+                    ? await _orderService.GetOrderResponse(status)
+                    : await _orderService.GetOrderByCustomer(customerid.Value, status);
                 return Ok(res);
             }
             catch (Exception ex)
