@@ -201,5 +201,22 @@ namespace BE_Homnayangi.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("status/customer")]
+        public async Task<ActionResult> GetOrderResponseByCustomer([FromQuery] int status = -1)
+        {
+            try
+            {
+                var customerId = _userService.GetCurrentUser(Request.Headers["Authorization"]).Id;
+                if (customerId.Equals(Guid.Empty))
+                    throw new Exception("Require login");
+                var res = await _orderService.GetOrderByCustomer(customerId, status);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
