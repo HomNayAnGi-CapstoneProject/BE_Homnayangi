@@ -29,12 +29,6 @@ namespace BE_Homnayangi.Modules.AdminModules.BadgeConditionModule
             try
             {
                 var badgeConditions = await _badgeConditionRepository.GetAll(includeProperties: "Badge");
-
-                if (badgeConditions.Count() == 0)
-                {
-                    throw new Exception(ErrorMessage.CommonError.LIST_IS_NULL);
-                }
-
                 return badgeConditions.ToList();
             }
             catch (Exception ex)
@@ -89,8 +83,9 @@ namespace BE_Homnayangi.Modules.AdminModules.BadgeConditionModule
                 newBadgeCondition.BadgeId = newBadgeConditionRequest.BadgeId;
 
                 await _badgeConditionRepository.AddAsync(newBadgeCondition);
-
                 return newBadgeCondition.BadgeConditionId;
+
+
             }
             catch (Exception ex)
             {
