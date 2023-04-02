@@ -16,8 +16,8 @@ namespace BE_Homnayangi.Modules.AdminModules.BadgeConditionModule.Request
     {
         public CreateNeBadgeConditionRequestValidator()
         {
-            RuleFor(x => x.Accomplishments).NotEmpty().NotNull().GreaterThanOrEqualTo(0);
-            RuleFor(x => x.Orders).NotEmpty().NotNull().GreaterThanOrEqualTo(0);
+            RuleFor(x => x.Accomplishments).NotNull().GreaterThanOrEqualTo(0);
+            RuleFor(x => x.Orders).NotNull().GreaterThanOrEqualTo(0);
         }
     }
 }
