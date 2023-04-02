@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Library.PagedList;
 using BE_Homnayangi.Modules.BadgeModule.DTO.Request;
 using BE_Homnayangi.Modules.RewardModule.DTO.Request;
+using BE_Homnayangi.Modules.BadgeModule.Response;
 
 namespace BE_Homnayangi.Modules.BadgeModule.Interface
 {
@@ -33,6 +34,7 @@ namespace BE_Homnayangi.Modules.BadgeModule.Interface
         public Task<PagedResponse<PagedList<Badge>>> GetAllPaged(BadgeFilterRequest request);
 
         public Task<bool> CheckExistedName(string name);
+        public Task<ICollection<BadgeDropdownResponse>> GetBadgeDropdown();
     }
 }
 

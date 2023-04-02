@@ -79,10 +79,6 @@
     <Folder Include="Modules\IngredientModule\IngredientDTO\" />
     <Folder Include="Modules\AutoMapper\" />
     <Folder Include="Modules\RecipeModule\Response\" />
-    <Folder Include="Modules\RewardModule\" />
-    <Folder Include="Modules\RewardModule\Interface\" />
-    <Folder Include="Modules\RewardModule\DTO\" />
-    <Folder Include="Modules\RewardModule\DTO\Request\" />
     <Folder Include="Modules\TransactionModule\" />
     <Folder Include="Modules\TransactionModule\Interface\" />
     <Folder Include="Modules\OrderModule\Request\" />

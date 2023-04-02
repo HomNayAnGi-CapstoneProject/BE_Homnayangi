@@ -147,7 +147,7 @@ namespace BE_Homnayangi.Controllers
 
         [HttpGet("drop-down")]
         [Authorize(Roles = "Staff,Manager")]
-        public async Task<ActionResult<IEnumerable<TypeDropdownResponse>>> GetUnitsDropdown()
+        public async Task<ActionResult<IEnumerable<TypeDropdownResponse>>> GetTypesDropdown()
         {
             try
             {

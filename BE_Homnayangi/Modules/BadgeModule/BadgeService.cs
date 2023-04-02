@@ -10,18 +10,18 @@ using Library.Models.Enum;
 using BE_Homnayangi.Modules.BadgeModule.DTO.Request;
 using BE_Homnayangi.Modules.RewardModule.DTO.Request;
 using AutoMapper;
+using BE_Homnayangi.Modules.BadgeModule.Response;
+using static Library.Models.Enum.Status;
 
 namespace BE_Homnayangi.Modules.BadgeModule
 {
     public class BadgeService : IBadgeService
     {
         private readonly IBadgeRepository _badgeRepository;
-        private readonly IMapper _mapper;
 
-        public BadgeService(IBadgeRepository badgeRepository, IMapper mapper)
+        public BadgeService(IBadgeRepository badgeRepository)
         {
             _badgeRepository = badgeRepository;
-            _mapper = mapper;
         }
 
         public async Task<ICollection<Badge>> GetAll()
@@ -37,6 +37,15 @@ namespace BE_Homnayangi.Modules.BadgeModule
                 string includeProperties = null)
         {
             return _badgeRepository.GetBadgesBy(filter);
+        }
+
+        public async Task<ICollection<BadgeDropdownResponse>> GetBadgeDropdown()
+        {
+            return _badgeRepository.GetBadgesBy(x => x.Status == (int?)BadgeStatus.ACTIVE).Result.Select(x => new BadgeDropdownResponse
+            {
+                BadgeId = x.BadgeId,
+                BadgeName = x.Name
+            }).ToList();
         }
 
         public Task<ICollection<Badge>> GetRandomBadgesBy(

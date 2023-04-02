@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BE_Homnayangi.Modules.BadgeModule.DTO.Request;
 using BE_Homnayangi.Modules.BadgeModule.Interface;
+using BE_Homnayangi.Modules.BadgeModule.Response;
 using BE_Homnayangi.Modules.RewardModule.DTO.Request;
 using BE_Homnayangi.Modules.Utils;
 using Library.Models;
@@ -147,6 +148,25 @@ namespace BE_Homnayangi.Controllers
         private bool BadgeExists(Guid id)
         {
             return _badgeService.GetBadgeByID(id).Result != null;
+        }
+
+        [HttpGet("dropdown")]
+        [Authorize(Roles = "Staff,Manager")]
+        public async Task<ActionResult<IEnumerable<BadgeDropdownResponse>>> GetBadgesDropdown()
+        {
+            try
+            {
+                var response = await _badgeService.GetBadgeDropdown();
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    message = ex.Message
+                });
+            }
         }
     }
 }
