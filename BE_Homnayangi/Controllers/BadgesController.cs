@@ -151,7 +151,7 @@ namespace BE_Homnayangi.Controllers
         }
 
         [HttpGet("dropdown")]
-        [Authorize(Roles = "Staff,Manager")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<BadgeDropdownResponse>>> GetBadgesDropdown()
         {
             try
