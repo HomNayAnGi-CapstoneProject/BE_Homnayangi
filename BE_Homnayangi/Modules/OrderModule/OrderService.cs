@@ -257,6 +257,9 @@ namespace BE_Homnayangi.Modules.OrderModule
             if (order == null || order.OrderStatus == (int)Status.OrderStatus.DELETED)
                 throw new Exception(ErrorMessage.OrderError.ORDER_NOT_FOUND);
 
+            if (order.OrderStatus == (int)Status.OrderStatus.ACCEPTED)
+                return;
+
             var customer = await _customerRepository.GetByIdAsync(order.CustomerId.Value);
 
             if (order.OrderStatus != (int)Status.OrderStatus.PENDING)
@@ -318,6 +321,9 @@ namespace BE_Homnayangi.Modules.OrderModule
             if (order == null || order.OrderStatus == (int)Status.OrderStatus.DELETED)
                 throw new Exception(ErrorMessage.OrderError.ORDER_NOT_FOUND);
 
+            if (order.OrderStatus == (int)Status.OrderStatus.DENIED)
+                return;
+
             var customer = await _customerRepository.GetByIdAsync(order.CustomerId.Value);
 
             order.OrderStatus = (int)Status.OrderStatus.DENIED;
@@ -357,6 +363,9 @@ namespace BE_Homnayangi.Modules.OrderModule
 
             if (order == null || order.OrderStatus == (int)Status.OrderStatus.DELETED)
                 throw new Exception(ErrorMessage.OrderError.ORDER_NOT_FOUND);
+
+            if (order.OrderStatus == (int)Status.OrderStatus.CANCEL)
+                return;
 
             var customer = await _customerRepository.GetByIdAsync(order.CustomerId.Value);
 
@@ -400,6 +409,9 @@ namespace BE_Homnayangi.Modules.OrderModule
                 if (order == null || order.OrderStatus == (int)Status.OrderStatus.DELETED)
                     throw new Exception(ErrorMessage.OrderError.ORDER_NOT_FOUND);
 
+                if (order.OrderStatus == (int)Status.OrderStatus.SHIPPING)
+                    return;
+
                 if (order.OrderStatus != (int)Status.OrderStatus.ACCEPTED)
                     throw new Exception(ErrorMessage.OrderError.ORDER_CANNOT_CHANGE_STATUS);
 
@@ -423,6 +435,9 @@ namespace BE_Homnayangi.Modules.OrderModule
                 if (order == null || order.OrderStatus == (int)Status.OrderStatus.DELETED)
                     throw new Exception(ErrorMessage.OrderError.ORDER_NOT_FOUND);
 
+                if (order.OrderStatus == (int)Status.OrderStatus.DELIVERED)
+                    return;
+
                 if (order.OrderStatus != (int)Status.OrderStatus.SHIPPING)
                     throw new Exception(ErrorMessage.OrderError.ORDER_CANNOT_CHANGE_STATUS);
 
@@ -445,6 +460,9 @@ namespace BE_Homnayangi.Modules.OrderModule
 
                 if (order == null || order.OrderStatus == (int)Status.OrderStatus.DELETED)
                     throw new Exception(ErrorMessage.OrderError.ORDER_NOT_FOUND);
+
+                if (order.OrderStatus == (int)Status.OrderStatus.DELIVERED_FAIL)
+                    return;
 
                 if (order.OrderStatus != (int)Status.OrderStatus.SHIPPING)
                     throw new Exception(ErrorMessage.OrderError.ORDER_CANNOT_CHANGE_STATUS);
