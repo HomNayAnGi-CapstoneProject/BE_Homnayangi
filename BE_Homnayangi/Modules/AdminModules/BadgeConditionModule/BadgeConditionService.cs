@@ -28,7 +28,7 @@ namespace BE_Homnayangi.Modules.AdminModules.BadgeConditionModule
         {
             try
             {
-                var badgeConditions = await _badgeConditionRepository.GetAll();
+                var badgeConditions = await _badgeConditionRepository.GetAll(includeProperties: "Badge");
 
                 if (badgeConditions.Count() == 0)
                 {

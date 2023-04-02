@@ -414,7 +414,13 @@ namespace BE_Homnayangi.Modules.UserModule
                         var tokenDescriptionAdmin = new SecurityTokenDescriptor
                         {
                             Subject = new ClaimsIdentity(new[] {
+                    new Claim("Id", admin.Id.ToString()),
                     new Claim(ClaimTypes.Name, admin.Username),
+                    new Claim("PhoneNumber", ""),
+                    new Claim("Displayname", ""),
+                    new Claim("Firstname", ""),
+                    new Claim("Lastname",""),
+                    new Claim(ClaimTypes.Gender,""),
                     new Claim(ClaimTypes.Email, admin.Email),
                     new Claim("Avatar", ""),
                     new Claim(ClaimTypes.Role, CommonEnum.RoleEnum.ADMIN)
@@ -487,7 +493,13 @@ namespace BE_Homnayangi.Modules.UserModule
                     var tokenDescriptionAdmin = new SecurityTokenDescriptor
                     {
                         Subject = new ClaimsIdentity(new[] {
+                    new Claim("Id", admin.Id.ToString()),
                     new Claim(ClaimTypes.Name, admin.Username),
+                    new Claim("PhoneNumber", ""),
+                    new Claim("Displayname", ""),
+                    new Claim("Firstname", ""),
+                    new Claim("Lastname",""),
+                    new Claim(ClaimTypes.Gender,""),
                     new Claim(ClaimTypes.Email, admin.Email),
                     new Claim("Avatar", ""),
                     new Claim(ClaimTypes.Role, CommonEnum.RoleEnum.ADMIN)
@@ -702,7 +714,7 @@ namespace BE_Homnayangi.Modules.UserModule
                     var handler = new JwtSecurityTokenHandler();
                     var jsonToken = handler.ReadToken(token);
                     var tokenS = jsonToken as JwtSecurityToken;
-                    var id = new Guid(tokenS.Claims.First(claim => claim.Type == "Id").Value);
+                    var id = new Guid(tokenS.Claims.First(claim => claim.Type == "Id")?.Value);
                     var Displayname = tokenS.Claims.First(x => x.Type == "Displayname")?.Value;
                     var Username = tokenS.Claims.First(x => x.Type == "unique_name")?.Value;
                     var Firstname = tokenS.Claims.First(x => x.Type == "Firstname")?.Value;
