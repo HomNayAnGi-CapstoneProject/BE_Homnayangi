@@ -50,29 +50,9 @@ namespace BE_Homnayangi.Controllers
             try
             {
                 var currentUserId = _userService.GetCurrentUser(Request.Headers["Authorization"]).Id;
-                var curentUserAccomplishments = _userService.GetCustomerById(currentUserId).Result.Accomplishments.Count();
-                var curentUserOrders = _userService.GetCustomerById(currentUserId).Result.Orders.Count();
                 var badgeConditionList = _badgeConditionService.GetBadgeConditions().Result.ToList();
-
-                for (int i = 0; i < badgeConditionList.Count - 1; i++)
-                {
-                    var currentBadgeConditionAccomplishments = badgeConditionList[i].Accomplishments == null ? 0 : badgeConditionList[i].Accomplishments;
-                    var currentBadgeConditionOrders = badgeConditionList[i].Orders == null ? 0 : badgeConditionList[i].Orders;
-                    var nextBadgeConditionAccomplishments = badgeConditionList[i + 1].Accomplishments == null ? 0 : badgeConditionList[i + 1].Accomplishments;
-                    var nextBadgeConditionOrders = badgeConditionList[i + 1].Orders == null ? 0 : badgeConditionList[i + 1].Orders;
-                    var diffCurrentBadgeConditionAccompishments = currentBadgeConditionAccomplishments - curentUserAccomplishments;
-                    var diffNextBadgeConditonAccomplishments = nextBadgeConditionAccomplishments - curentUserAccomplishments;
-                    var diffCurrentBadgeConditionOrders = currentBadgeConditionOrders - curentUserOrders;
-                    var diffNextBadgeConditonOrders = nextBadgeConditionOrders - curentUserOrders;
-                    if (diffCurrentBadgeConditionAccompishments > diffNextBadgeConditonAccomplishments || diffCurrentBadgeConditionOrders > diffNextBadgeConditonOrders)
-                    {
-                        var temp = badgeConditionList[i];
-                        badgeConditionList[i] = badgeConditionList[i + 1];
-                        badgeConditionList[i + 1] = temp;
-                    }
-
-                }
-
+                badgeConditionList = badgeConditionList.OrderBy(x => x.Accomplishments).ThenBy(x => x.Orders).ToList();
+                badgeConditionList = badgeConditionList.OrderBy(x => x.Orders).ToList();
                 return Ok(badgeConditionList);
             }
             catch
