@@ -19,7 +19,9 @@ namespace Library.Models
         public DateTime? CreateDate { get; set; }
         public string ImageUrl { get; set; }
         public int? Status { get; set; }
+        public Guid? VoucherId { get; set; }
 
+        public virtual Voucher Voucher { get; set; }
         public virtual ICollection<BadgeCondition> BadgeConditions { get; set; }
         public virtual ICollection<CustomerBadge> CustomerBadges { get; set; }
     }

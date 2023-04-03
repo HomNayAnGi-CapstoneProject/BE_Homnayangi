@@ -1,5 +1,4 @@
-﻿using Library.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 #nullable disable
@@ -28,6 +27,7 @@ namespace Library.Models
         public int? BlogStatus { get; set; }
         public string VideoUrl { get; set; }
         public Guid? RecipeId { get; set; }
+        public int? MinutesToCook { get; set; }
 
         public virtual User Author { get; set; }
         public virtual Recipe Recipe { get; set; }

@@ -9,6 +9,7 @@ namespace Library.Models
     {
         public Voucher()
         {
+            Badges = new HashSet<Badge>();
             CustomerVouchers = new HashSet<CustomerVoucher>();
         }
 
@@ -25,6 +26,7 @@ namespace Library.Models
         public Guid AuthorId { get; set; }
 
         public virtual User Author { get; set; }
+        public virtual ICollection<Badge> Badges { get; set; }
         public virtual ICollection<CustomerVoucher> CustomerVouchers { get; set; }
     }
 }

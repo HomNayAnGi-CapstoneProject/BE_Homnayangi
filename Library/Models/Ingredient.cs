@@ -9,7 +9,6 @@ namespace Library.Models
     {
         public Ingredient()
         {
-            OrderDetails = new HashSet<OrderDetail>();
             RecipeDetails = new HashSet<RecipeDetail>();
         }
 
@@ -30,7 +29,6 @@ namespace Library.Models
 
         public virtual Type Type { get; set; }
         public virtual Unit Unit { get; set; }
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public virtual ICollection<RecipeDetail> RecipeDetails { get; set; }
     }
 }

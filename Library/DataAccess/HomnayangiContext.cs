@@ -1,9 +1,7 @@
 ﻿using System;
 using Library.Models;
-using Library.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Type = Library.Models.Type;
 
 #nullable disable
 
@@ -122,6 +120,13 @@ namespace Library.DataAccess
                     .HasColumnName("name");
 
                 entity.Property(e => e.Status).HasColumnName("status");
+
+                entity.Property(e => e.VoucherId).HasColumnName("voucherId");
+
+                entity.HasOne(d => d.Voucher)
+                    .WithMany(p => p.Badges)
+                    .HasForeignKey(d => d.VoucherId)
+                    .HasConstraintName("FK_Badge_Voucher");
             });
 
             modelBuilder.Entity<BadgeCondition>(entity =>
@@ -167,6 +172,8 @@ namespace Library.DataAccess
                     .HasColumnName("createdDate");
 
                 entity.Property(e => e.ImageUrl).HasColumnName("imageURL");
+
+                entity.Property(e => e.MinutesToCook).HasColumnName("minutesToCook");
 
                 entity.Property(e => e.Reaction).HasColumnName("reaction");
 
@@ -394,7 +401,7 @@ namespace Library.DataAccess
             modelBuilder.Entity<CustomerBadge>(entity =>
             {
                 entity.HasKey(e => new { e.CustomerId, e.BadgeId })
-                    .HasName("PK_CustomerBadge");
+                    .HasName("PK_CustomerReward");
 
                 entity.ToTable("CustomerBadge");
 
@@ -421,19 +428,19 @@ namespace Library.DataAccess
 
             modelBuilder.Entity<CustomerVoucher>(entity =>
             {
-                entity.HasKey(e => new { e.VoucherId, e.CustomerId });
-
                 entity.ToTable("CustomerVoucher");
 
-                entity.Property(e => e.VoucherId).HasColumnName("voucherId");
-
-                entity.Property(e => e.CustomerId).HasColumnName("customerId");
+                entity.Property(e => e.CustomerVoucherId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("customerVoucherId");
 
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
                     .HasColumnName("createdDate");
 
-                entity.Property(e => e.Quantity).HasColumnName("quantity");
+                entity.Property(e => e.CustomerId).HasColumnName("customerId");
+
+                entity.Property(e => e.VoucherId).HasColumnName("voucherId");
 
                 entity.HasOne(d => d.Customer)
                     .WithMany(p => p.CustomerVouchers)
@@ -540,6 +547,10 @@ namespace Library.DataAccess
 
                 entity.Property(e => e.OrderStatus).HasColumnName("orderStatus");
 
+                entity.Property(e => e.PaymentMethod).HasColumnName("paymentMethod");
+
+                entity.Property(e => e.PaypalUrl).HasColumnName("paypalUrl");
+
                 entity.Property(e => e.ShippedAddress).HasColumnName("shippedAddress");
 
                 entity.Property(e => e.ShippedDate)
@@ -551,10 +562,6 @@ namespace Library.DataAccess
                     .HasColumnName("totalPrice");
 
                 entity.Property(e => e.VoucherId).HasColumnName("voucherId");
-
-                entity.Property(e => e.PaymentMethod).HasColumnName("paymentMethod");
-
-                entity.Property(e => e.PaypalUrl).HasColumnName("paypalUrl");
 
                 entity.HasOne(d => d.Customer)
                     .WithMany(p => p.Orders)
@@ -570,9 +577,9 @@ namespace Library.DataAccess
                     .ValueGeneratedNever()
                     .HasColumnName("orderDetailId");
 
-                entity.Property(e => e.OrderId).HasColumnName("orderId");
-
                 entity.Property(e => e.IngredientId).HasColumnName("ingredientId");
+
+                entity.Property(e => e.OrderId).HasColumnName("orderId");
 
                 entity.Property(e => e.Price)
                     .HasColumnType("money")
@@ -586,7 +593,7 @@ namespace Library.DataAccess
                     .WithMany(p => p.OrderDetails)
                     .HasForeignKey(d => d.OrderId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_OrderIngredientDetail_Order");
+                    .HasConstraintName("FK_OrderDetail_Order");
             });
 
             modelBuilder.Entity<PriceNote>(entity =>

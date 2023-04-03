@@ -12,7 +12,7 @@ namespace Library.Models
         public int? Orders { get; set; }
         public DateTime? CreatedDate { get; set; }
         public bool? Status { get; set; }
-        public Guid BadgeId { get; set; }
+        public Guid? BadgeId { get; set; }
 
         public virtual Badge Badge { get; set; }
     }
