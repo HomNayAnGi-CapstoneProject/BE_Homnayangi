@@ -152,6 +152,16 @@ namespace Library.Models.Constant
             public readonly static string NOT_FOR_STAFF = "Staff can not be here";
         }
         #endregion
+
+        #region Accomplishment error message
+        public static class AccomplishmentError
+        {
+            public readonly static string ACCOMPLISHMENT_EXISTED = "This accomlishment was existed in system";
+            public readonly static string ACCOMPLISHMENT_NOT_FOUND = "This accomlishment is not found";
+            public readonly static string NOT_OWNER = "You are not the owner";
+            public readonly static string NOT_VALID_TYPE = "Type is APPROVE or REJECT";
+        }
+        #endregion
     }
 }
 

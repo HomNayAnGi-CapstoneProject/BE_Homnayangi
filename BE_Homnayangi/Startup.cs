@@ -1,10 +1,14 @@
 using BE_Homnayangi.Modules.AccomplishmentModule;
 using BE_Homnayangi.Modules.AccomplishmentModule.Interface;
+using BE_Homnayangi.Modules.AdminModules.BadgeConditionModule;
+using BE_Homnayangi.Modules.AdminModules.BadgeConditionModule.Interface;
 using BE_Homnayangi.Modules.AdminModules.CaloReferenceModule;
 using BE_Homnayangi.Modules.AdminModules.CaloReferenceModule.Interface;
 using BE_Homnayangi.Modules.AdminModules.SeasonReferenceModule;
 using BE_Homnayangi.Modules.AdminModules.SeasonReferenceModule.Interface;
 using BE_Homnayangi.Modules.AutoMapper;
+using BE_Homnayangi.Modules.BadgeModule;
+using BE_Homnayangi.Modules.BadgeModule.Interface;
 using BE_Homnayangi.Modules.BlogModule;
 using BE_Homnayangi.Modules.BlogModule.Interface;
 using BE_Homnayangi.Modules.BlogReactionModule;
@@ -17,6 +21,8 @@ using BE_Homnayangi.Modules.CategoryModule;
 using BE_Homnayangi.Modules.CategoryModule.Interface;
 using BE_Homnayangi.Modules.CommentModule;
 using BE_Homnayangi.Modules.CommentModule.Interface;
+using BE_Homnayangi.Modules.CustomerBadgeModule;
+using BE_Homnayangi.Modules.CustomerBadgeModule.Interface;
 using BE_Homnayangi.Modules.CustomerModule;
 using BE_Homnayangi.Modules.CustomerModule.Interface;
 using BE_Homnayangi.Modules.CustomerVoucherModule;
@@ -31,8 +37,6 @@ using BE_Homnayangi.Modules.RecipeDetailModule;
 using BE_Homnayangi.Modules.RecipeDetailModule.Interface;
 using BE_Homnayangi.Modules.RecipeModule;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
-using BE_Homnayangi.Modules.BadgeModule;
-using BE_Homnayangi.Modules.BadgeModule.Interface;
 using BE_Homnayangi.Modules.SubCateModule;
 using BE_Homnayangi.Modules.SubCateModule.Interface;
 using BE_Homnayangi.Modules.TransactionModule;
@@ -46,6 +50,7 @@ using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.Utils;
 using BE_Homnayangi.Modules.VoucherModule;
 using BE_Homnayangi.Modules.VoucherModule.Interface;
+using BE_Homnayangi.Ultils.Quartz;
 using BE_Homnayangi.Utils;
 using Library.DataAccess;
 using Library.Models;
@@ -64,19 +69,10 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Quartz;
 using System;
 using System.Linq;
 using System.Text;
-using BE_Homnayangi.Modules.AdminModules.BadgeConditionModule.Interface;
-using BE_Homnayangi.Modules.AdminModules.BadgeConditionModule;
-using BE_Homnayangi.Ultils.Quartz;
-using System.Threading;
-using Quartz.Spi;
-using Quartz;
-using Quartz.Impl;
-using Quartz.AspNetCore;
-using BE_Homnayangi.Modules.CustomerBadgeModule.Interface;
-using BE_Homnayangi.Modules.CustomerBadgeModule;
 
 namespace BE_Homnayangi
 {
@@ -276,6 +272,10 @@ namespace BE_Homnayangi
             //CustomerBadge Module
             services.AddScoped<ICustomerBadgeRepository, CustomerBadgeRepository>();
             services.AddScoped<ICustomerBadgeService, CustomerBadgeService>();
+
+            //AccomplishmentBadge Module
+            services.AddScoped<IAccomplishmentRepository, AccomplishmentRepository>();
+            services.AddScoped<IAccomplishmentService, AccomplishmentService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

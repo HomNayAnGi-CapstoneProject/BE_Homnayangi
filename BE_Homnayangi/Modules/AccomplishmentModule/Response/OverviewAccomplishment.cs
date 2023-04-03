@@ -1,0 +1,16 @@
+﻿using System;
+
+namespace BE_Homnayangi.Modules.AccomplishmentModule.Response
+{
+    public class OverviewAccomplishment
+    {
+        public Guid AccomplishmentId { get; set; }
+        public Guid AuthorId { get; set; }
+        public string AuthorFullName { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public int Status { get; set; }
+        public Guid BlogId { get; set; }
+        public Guid? ConfirmBy { get; set; }
+        public string? VerifierFullName { get; set; }
+    }
+}
