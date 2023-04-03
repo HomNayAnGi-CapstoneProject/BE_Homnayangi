@@ -84,7 +84,6 @@ namespace BE_Homnayangi.Modules.VoucherModule
                 }
                 else
                 {
-                    tmp.Quantity += cv.Quantity != null ? cv.Quantity.Value : 0;
                     await _customerVoucherRepository.UpdateAsync(tmp);
                     result = ConvertDTO(tmp);
                 }
@@ -151,8 +150,7 @@ namespace BE_Homnayangi.Modules.VoucherModule
             {
                 CustomerName = cv.Customer != null ? cv.Customer.Firstname + " " + cv.Customer.Lastname : "",
                 VoucherName = cv.Voucher != null ? cv.Voucher.Name : "",
-                CreatedDate = cv.Voucher != null ? cv.Voucher.CreatedDate : new DateTime(),
-                Quantity = cv.Quantity.Value,
+                CreatedDate = cv.Voucher != null ? cv.Voucher.CreatedDate : new DateTime()
             };
         }
     }
