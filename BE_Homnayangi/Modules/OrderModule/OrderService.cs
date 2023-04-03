@@ -125,6 +125,7 @@ namespace BE_Homnayangi.Modules.OrderModule
                     IsCooked = order.IsCooked,
                     VoucherId = order.VoucherId,
                     PaymentMethod = order.PaymentMethod,
+                    PaypalUrl = order.PaypalUrl,
                     OrderDetailRecipes = recipeOrderDetails,
                     OrderDetailIngredients = ingOrderDetails
                 };
@@ -187,6 +188,7 @@ namespace BE_Homnayangi.Modules.OrderModule
                             detail.OrderDetailId = Guid.NewGuid();
                             detail.OrderId = newOrder.OrderId;
                         });
+
                         await _OrderRepository.AddAsync(newOrder);
 
                         await _transactionRepository.AddAsync(transaction);
@@ -203,6 +205,10 @@ namespace BE_Homnayangi.Modules.OrderModule
                                 default:
                                     throw new Exception(ErrorMessage.OrderError.ORDER_PAYMENT_METHOD_NOT_VALID);
                             }
+
+                            newOrder.PaypalUrl = redirectUrl;
+
+                            await _OrderRepository.UpdateAsync(newOrder);
                         }
                         else
                             throw new Exception(ErrorMessage.OrderError.ORDER_PAYMENT_METHOD_NOT_VALID);

@@ -552,6 +552,10 @@ namespace Library.DataAccess
 
                 entity.Property(e => e.VoucherId).HasColumnName("voucherId");
 
+                entity.Property(e => e.PaymentMethod).HasColumnName("paymentMethod");
+
+                entity.Property(e => e.PaypalUrl).HasColumnName("paypalUrl");
+
                 entity.HasOne(d => d.Customer)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.CustomerId)

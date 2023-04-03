@@ -51,6 +51,7 @@ namespace BE_Homnayangi.Modules.OrderModule.Response
         public bool? IsCooked { get; set; }
         public Guid? VoucherId { get; set; }
         public int? PaymentMethod { get; set; }
+        public string PaypalUrl { get; set; }
 
         public ICollection<OrderDetailResponse> OrderDetailRecipes { get; set; }
         public ICollection<IngredientResponse> OrderDetailIngredients { get; set; }
