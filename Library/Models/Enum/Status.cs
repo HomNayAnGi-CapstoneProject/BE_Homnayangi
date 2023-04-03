@@ -36,6 +36,14 @@ namespace Library.Models.Enum
             ACTIVE = 1,
             PENDING = 2
         }
+
+        public enum AccomplishmentStatus
+        {
+            DEACTIVE = 0,
+            ACTIVE = 1,
+            DRAFTED = 2,
+            PENDING = 3
+        }
     }
 }
 
