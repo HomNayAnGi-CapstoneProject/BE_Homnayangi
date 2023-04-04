@@ -704,6 +704,7 @@ namespace BE_Homnayangi.Modules.OrderModule
                     IsCooked = order.IsCooked,
                     VoucherId = order.VoucherId,
                     PaymentMethod = order.PaymentMethod,
+                    PaypalUrl = order.PaypalUrl,
                     OrderDetailRecipes = recipeOrderDetails,
                     OrderDetailIngredients = ingOrderDetails
                 };
