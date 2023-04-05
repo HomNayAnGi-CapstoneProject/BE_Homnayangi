@@ -2,6 +2,7 @@
 using BE_Homnayangi.Modules.IngredientModule.IngredientDTO;
 using BE_Homnayangi.Modules.IngredientModule.Interface;
 using BE_Homnayangi.Modules.IngredientModule.Response;
+using BE_Homnayangi.Modules.PriceNoteModule.Interface;
 using BE_Homnayangi.Modules.Utils;
 using Library.Models;
 using Library.Models.Enum;
@@ -19,10 +20,12 @@ namespace BE_Homnayangi.Modules.IngredientModule
     public class IngredientService : IIngredientService
     {
         private readonly IIngredientRepository _ingredientRepository;
+        private readonly IPriceNoteRepository _priceNoteRepository;
 
-        public IngredientService(IIngredientRepository IngredientRepository)
+        public IngredientService(IIngredientRepository ingredientRepository, IPriceNoteRepository priceNoteRepository)
         {
-            _ingredientRepository = IngredientRepository;
+            _ingredientRepository = ingredientRepository;
+            _priceNoteRepository = priceNoteRepository;
         }
 
         public async Task<ICollection<IngredientResponse>> GetAll()
@@ -84,24 +87,24 @@ namespace BE_Homnayangi.Modules.IngredientModule
             {
                 var ingredients = await _ingredientRepository.GetIngredientsBy(i => i.Status.Value, includeProperties: "Type,Unit");
                 var result = ingredients.Select(i => new IngredientResponse()
-                     {
-                         IngredientId = i.IngredientId,
-                         UnitId = i.UnitId,
-                         Name = i.Name,
-                         Description = i.Description,
-                         Quantity = i.Quantity,
-                         UnitName = i.Unit.Name,
-                         Picture = i.Picture,
-                         CreatedDate = i.CreatedDate,
-                         UpdatedDate = i.UpdatedDate,
-                         ListImage = i.ListImage != null ? StringUtils.ExtractContents(i.ListImage) : null,
-                         Status = i.Status,
-                         Price = i.Price,
-                         Kcal = i.Kcal,
-                         TypeId = i.TypeId,
-                         TypeName = i.Type.Name,
-                         TypeDescription = i.Type.Description
-                     }).OrderByDescending(i => i.CreatedDate).ToList();
+                {
+                    IngredientId = i.IngredientId,
+                    UnitId = i.UnitId,
+                    Name = i.Name,
+                    Description = i.Description,
+                    Quantity = i.Quantity,
+                    UnitName = i.Unit.Name,
+                    Picture = i.Picture,
+                    CreatedDate = i.CreatedDate,
+                    UpdatedDate = i.UpdatedDate,
+                    ListImage = i.ListImage != null ? StringUtils.ExtractContents(i.ListImage) : null,
+                    Status = i.Status,
+                    Price = i.Price,
+                    Kcal = i.Kcal,
+                    TypeId = i.TypeId,
+                    TypeName = i.Type.Name,
+                    TypeDescription = i.Type.Description
+                }).OrderByDescending(i => i.CreatedDate).ToList();
 
                 switch (sort)
                 {
@@ -179,10 +182,35 @@ namespace BE_Homnayangi.Modules.IngredientModule
                     current.Kcal = newIg.Kcal;
                     current.UpdatedDate = DateTime.Now;
                     current.Status = newIg.Status;
-                    current.Price = newIg.Price;
                     current.TypeId = newIg.TypeId;
-                    await _ingredientRepository.UpdateAsync(current);
                     current.ListImagePosition = newIg.ListImagePosition;
+                    
+                    // update new price note for ingredient
+                    if (current.Price != newIg.Price)
+                    {
+                        // Disable old price
+                        var currentPriceNote = await _priceNoteRepository.GetFirstOrDefaultAsync(p =>
+                                                                                p.IngredientId == newIg.IngredientId
+                                                                                && p.Status.Value);
+                        if (currentPriceNote != null)
+                        {
+                            currentPriceNote.Status = false;
+                            await _priceNoteRepository.UpdateAsync(currentPriceNote);
+                        }
+
+                        // Add new price note
+                        PriceNote priceNote = new PriceNote()
+                        {
+                            PriceNoteId = Guid.NewGuid(),
+                            IngredientId = newIg.IngredientId,
+                            Price = newIg.Price,
+                            DateApply = DateTime.Now,
+                            Status = true
+                        };
+                        await _priceNoteRepository.AddAsync(priceNote);
+                    }
+                    current.Price = newIg.Price;
+                    await _ingredientRepository.UpdateAsync(current);
                     isUpdated = true;
                 }
 
@@ -205,6 +233,17 @@ namespace BE_Homnayangi.Modules.IngredientModule
                 newIg.CreatedDate = DateTime.Now;
                 await _ingredientRepository.AddAsync(ToModel(newIg));
                 ingredientId = newIg.IngredientId;
+
+                // Create price note record
+                PriceNote priceNote = new PriceNote()
+                {
+                    PriceNoteId = Guid.NewGuid(),
+                    IngredientId = ingredientId,
+                    Price = newIg.Price,
+                    DateApply = DateTime.Now,
+                    Status = true
+                };
+                await _priceNoteRepository.AddAsync(priceNote);
             }
             catch (Exception ex)
             {

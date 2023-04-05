@@ -33,6 +33,8 @@ using BE_Homnayangi.Modules.OrderDetailModule;
 using BE_Homnayangi.Modules.OrderDetailModule.Interface;
 using BE_Homnayangi.Modules.OrderModule;
 using BE_Homnayangi.Modules.OrderModule.Interface;
+using BE_Homnayangi.Modules.PriceNoteModule;
+using BE_Homnayangi.Modules.PriceNoteModule.Interface;
 using BE_Homnayangi.Modules.RecipeDetailModule;
 using BE_Homnayangi.Modules.RecipeDetailModule.Interface;
 using BE_Homnayangi.Modules.RecipeModule;
@@ -276,6 +278,9 @@ namespace BE_Homnayangi
             //AccomplishmentBadge Module
             services.AddScoped<IAccomplishmentRepository, AccomplishmentRepository>();
             services.AddScoped<IAccomplishmentService, AccomplishmentService>();
+
+            //PriceNote Module
+            services.AddScoped<IPriceNoteRepository, PriceNoteRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
