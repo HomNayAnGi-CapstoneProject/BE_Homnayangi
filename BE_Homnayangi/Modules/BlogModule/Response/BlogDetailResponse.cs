@@ -24,6 +24,7 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public int? BlogStatus { get; set; }
+        public int? MinutesToCook { get; set; }
 
 
         // Recipe information

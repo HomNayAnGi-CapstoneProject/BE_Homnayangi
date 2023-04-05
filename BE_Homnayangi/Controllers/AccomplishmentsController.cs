@@ -1,9 +1,6 @@
 ﻿using BE_Homnayangi.Modules.AccomplishmentModule.Interface;
 using BE_Homnayangi.Modules.AccomplishmentModule.Request;
 using BE_Homnayangi.Modules.UserModule.Interface;
-using Library.Models;
-using Library.Models.Constant;
-using Library.Models.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -27,13 +24,12 @@ namespace BE_Homnayangi.Controllers
         // Create a new Accomplishment by Customer
         [Authorize(Roles = "Customer")]
         [HttpPost] // chỗ này FE KHÔNG CẦN truyền AuthorId để check chính chủ Accomplishment
-        public async Task<ActionResult> PostAccomplishment(CreatedAccomplishment request)
+        public async Task<ActionResult> PostAccomplishment([FromBody] CreatedAccomplishment request)
         {
             try
             {
                 var currentUser = _userService.GetCurrentUser(Request.Headers["Authorization"]);
-                request.AuthorId = currentUser.Id;
-                var result = await _accomplishmentService.CreateANewAccomplishment(request);
+                var result = await _accomplishmentService.CreateANewAccomplishment(currentUser.Id, request);
                 if (result)
                 {
                     return new JsonResult(new
@@ -87,14 +83,12 @@ namespace BE_Homnayangi.Controllers
 
         [Authorize(Roles = "Customer")]
         [HttpPut] // chỗ này FE phải truyền AuthorId để check chính chủ Accomplishment
-        public async Task<ActionResult> UpdateAccomplishmentDetail(UpdatedAccomplishment request)
+        public async Task<ActionResult> UpdateAccomplishmentDetail([FromBody] UpdatedAccomplishment request)
         {
             try
             {
                 var currentUser = _userService.GetCurrentUser(Request.Headers["Authorization"]);
-                if (currentUser.Id != request.AuthorId)
-                    throw new Exception(ErrorMessage.AccomplishmentError.NOT_OWNER);
-                var result = await _accomplishmentService.UpdateAccomplishmentDetail(request);
+                var result = await _accomplishmentService.UpdateAccomplishmentDetail(currentUser.Id, request);
                 return new JsonResult(new
                 {
                     status = "success"

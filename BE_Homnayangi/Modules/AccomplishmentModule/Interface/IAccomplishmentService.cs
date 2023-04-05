@@ -9,11 +9,11 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule.Interface
     public interface IAccomplishmentService
     {
         // Create 
-        public Task<bool> CreateANewAccomplishment(CreatedAccomplishment request);
+        public Task<bool> CreateANewAccomplishment(Guid authorId, CreatedAccomplishment request);
 
         // Update
         public Task<bool> ApproveRejectAccomplishment(VerifiedAccomplishment request, Guid userId);
-        public Task<bool> UpdateAccomplishmentDetail(UpdatedAccomplishment request);
+        public Task<bool> UpdateAccomplishmentDetail(Guid authorId, UpdatedAccomplishment request);
 
         // Get
         public Task<ICollection<OverviewAccomplishment>> GetAccomplishmentByStatus(string status);
