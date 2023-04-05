@@ -3,6 +3,7 @@ using BE_Homnayangi.Modules.AccomplishmentModule.Request;
 using BE_Homnayangi.Modules.AccomplishmentModule.Response;
 using BE_Homnayangi.Modules.BlogModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Interface;
+using BE_Homnayangi.Modules.Utils;
 using Library.Models;
 using Library.Models.Constant;
 using Library.Models.Enum;
@@ -28,14 +29,14 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
         }
 
         #region Create Accomplishment
-        public async Task<bool> CreateANewAccomplishment(CreatedAccomplishment request)
+        public async Task<bool> CreateANewAccomplishment(Guid authorId, CreatedAccomplishment request)
         {
             bool isInserted = false;
             try
             {
                 // Check accomplishment existed or not
                 var tmpAccom = await _accomplishmentRepository.GetFirstOrDefaultAsync(a =>
-                                                                a.AuthorId == request.AuthorId
+                                                                a.AuthorId == authorId
                                                                 && a.BlogId == request.BlogId);
                 if (tmpAccom != null)
                     throw new Exception(ErrorMessage.AccomplishmentError.ACCOMPLISHMENT_EXISTED);
@@ -50,12 +51,13 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                 {
                     AccomplishmentId = Guid.NewGuid(),
                     Content = request.Content,
-                    AuthorId = request.AuthorId,
+                    AuthorId = authorId,
                     CreatedDate = DateTime.Now,
                     Status = (int)Status.AccomplishmentStatus.PENDING,
                     BlogId = request.BlogId,
                     ConfirmBy = null,
-                    ListVideoUrl = request.VideoURL
+                    ListVideoUrl = StringUtils.CompressContents(request.ListVideo),
+                    ListImageUrl = StringUtils.CompressContents(request.ListImage)
                 };
                 await _accomplishmentRepository.AddAsync(accom);
                 isInserted = true;
@@ -99,7 +101,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
             return isUpdated;
         }
 
-        public async Task<bool> UpdateAccomplishmentDetail(UpdatedAccomplishment request)
+        public async Task<bool> UpdateAccomplishmentDetail(Guid authorId, UpdatedAccomplishment request)
         {
             bool isUpdated = false;
             try
@@ -108,8 +110,13 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                 if (accom == null)
                     throw new Exception(ErrorMessage.AccomplishmentError.ACCOMPLISHMENT_NOT_FOUND);
 
+                if (authorId != accom.AuthorId)
+                    throw new Exception(ErrorMessage.AccomplishmentError.NOT_OWNER);
+
+
                 accom.Content = request.Content == null ? accom.Content : request.Content;
-                accom.ListVideoUrl = request.VideoURL == null ? accom.ListVideoUrl : request.VideoURL;
+                accom.ListImageUrl = StringUtils.CompressContents(request.ListImage);
+                accom.ListVideoUrl = StringUtils.CompressContents(request.ListVideo);
                 accom.Status = (int)Status.AccomplishmentStatus.PENDING;
                 accom.ConfirmBy = null;
                 await _accomplishmentRepository.UpdateAsync(accom);
@@ -172,7 +179,8 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                     AuthorId = tmpAccom.AuthorId.Value,
                     AuthorImage = tmpAccom.Author.Avatar,
                     BlogId = tmpAccom.BlogId.Value,
-                    VideoURL = tmpAccom.ListVideoUrl,
+                    ListImage = tmpAccom.ListImageUrl != null ? StringUtils.ExtractContents(tmpAccom.ListImageUrl) : null,
+                    ListVideo = tmpAccom.ListVideoUrl != null ? StringUtils.ExtractContents(tmpAccom.ListVideoUrl) : null,
                     CreatedDate = tmpAccom.CreatedDate.Value,
                     Status = tmpAccom.Status.Value,
                     AuthorFullName = tmpAccom.Author.Firstname + " " + tmpAccom.Author.Lastname,
