@@ -20,6 +20,7 @@ namespace Library.DataAccess
         }
 
         public virtual DbSet<Accomplishment> Accomplishments { get; set; }
+        public virtual DbSet<AccomplishmentReaction> AccomplishmentReactions { get; set; }
         public virtual DbSet<Badge> Badges { get; set; }
         public virtual DbSet<BadgeCondition> BadgeConditions { get; set; }
         public virtual DbSet<Blog> Blogs { get; set; }
@@ -80,9 +81,11 @@ namespace Library.DataAccess
                     .HasColumnType("datetime")
                     .HasColumnName("createdDate");
 
-                entity.Property(e => e.Status).HasColumnName("status");
+                entity.Property(e => e.ListImageUrl).HasColumnName("listImageUrl");
 
-                entity.Property(e => e.VideoUrl).HasColumnName("videoURL");
+                entity.Property(e => e.ListVideoUrl).HasColumnName("listVideoUrl");
+
+                entity.Property(e => e.Status).HasColumnName("status");
 
                 entity.HasOne(d => d.Author)
                     .WithMany(p => p.Accomplishments)
@@ -98,6 +101,33 @@ namespace Library.DataAccess
                     .WithMany(p => p.Accomplishments)
                     .HasForeignKey(d => d.ConfirmBy)
                     .HasConstraintName("FK_Accomplishment_User");
+            });
+
+            modelBuilder.Entity<AccomplishmentReaction>(entity =>
+            {
+                entity.HasKey(e => new { e.AccomplishmentId, e.CustomerId });
+
+                entity.ToTable("AccomplishmentReaction");
+
+                entity.Property(e => e.AccomplishmentId).HasColumnName("accomplishmentId");
+
+                entity.Property(e => e.CustomerId).HasColumnName("customerId");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("createdDate");
+
+                entity.HasOne(d => d.Accomplishment)
+                    .WithMany(p => p.AccomplishmentReactions)
+                    .HasForeignKey(d => d.AccomplishmentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_AccomplishmentReaction_Accomplishment");
+
+                entity.HasOne(d => d.Customer)
+                    .WithMany(p => p.AccomplishmentReactions)
+                    .HasForeignKey(d => d.CustomerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_AccomplishmentReaction_Customer");
             });
 
             modelBuilder.Entity<Badge>(entity =>
@@ -153,6 +183,7 @@ namespace Library.DataAccess
                 entity.HasOne(d => d.Badge)
                     .WithMany(p => p.BadgeConditions)
                     .HasForeignKey(d => d.BadgeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_BadgeCondition_Badge");
             });
 

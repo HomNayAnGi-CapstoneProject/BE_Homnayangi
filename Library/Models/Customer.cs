@@ -9,6 +9,7 @@ namespace Library.Models
     {
         public Customer()
         {
+            AccomplishmentReactions = new HashSet<AccomplishmentReaction>();
             Accomplishments = new HashSet<Accomplishment>();
             BlogReactions = new HashSet<BlogReaction>();
             CustomerBadges = new HashSet<CustomerBadge>();
@@ -31,6 +32,7 @@ namespace Library.Models
         public bool? IsBlocked { get; set; }
         public bool? IsGoogle { get; set; }
 
+        public virtual ICollection<AccomplishmentReaction> AccomplishmentReactions { get; set; }
         public virtual ICollection<Accomplishment> Accomplishments { get; set; }
         public virtual ICollection<BlogReaction> BlogReactions { get; set; }
         public virtual ICollection<CustomerBadge> CustomerBadges { get; set; }

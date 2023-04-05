@@ -55,7 +55,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                     Status = (int)Status.AccomplishmentStatus.PENDING,
                     BlogId = request.BlogId,
                     ConfirmBy = null,
-                    VideoUrl = request.VideoURL
+                    ListVideoUrl = request.VideoURL
                 };
                 await _accomplishmentRepository.AddAsync(accom);
                 isInserted = true;
@@ -109,7 +109,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                     throw new Exception(ErrorMessage.AccomplishmentError.ACCOMPLISHMENT_NOT_FOUND);
 
                 accom.Content = request.Content == null ? accom.Content : request.Content;
-                accom.VideoUrl = request.VideoURL == null ? accom.VideoUrl : request.VideoURL;
+                accom.ListVideoUrl = request.VideoURL == null ? accom.ListVideoUrl : request.VideoURL;
                 accom.Status = (int)Status.AccomplishmentStatus.PENDING;
                 accom.ConfirmBy = null;
                 await _accomplishmentRepository.UpdateAsync(accom);
@@ -172,7 +172,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                     AuthorId = tmpAccom.AuthorId.Value,
                     AuthorImage = tmpAccom.Author.Avatar,
                     BlogId = tmpAccom.BlogId.Value,
-                    VideoURL = tmpAccom.VideoUrl,
+                    VideoURL = tmpAccom.ListVideoUrl,
                     CreatedDate = tmpAccom.CreatedDate.Value,
                     Status = tmpAccom.Status.Value,
                     AuthorFullName = tmpAccom.Author.Firstname + " " + tmpAccom.Author.Lastname,
