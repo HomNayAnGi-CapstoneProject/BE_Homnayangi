@@ -286,6 +286,7 @@ namespace BE_Homnayangi
             
             //Accomplishment Reaction Module
             services.AddScoped<IAccomplishmentReactionRepository, AccomplishmentReactionRepository>();
+            services.AddScoped<IAccomplishmentReactionService, AccomplishmentReactionService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
