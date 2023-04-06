@@ -9,6 +9,7 @@ using BE_Homnayangi.Modules.AdminModules.BadgeConditionModule.Interface;
 using System.Linq;
 using BE_Homnayangi.Modules.AdminModules.BadgeConditionModule.Request;
 using FluentValidation.Results;
+using PayPal.Api;
 
 namespace BE_Homnayangi.Modules.AdminModules.BadgeConditionModule
 {
@@ -70,25 +71,64 @@ namespace BE_Homnayangi.Modules.AdminModules.BadgeConditionModule
             {
                 ValidationResult validationResult = new CreateNeBadgeConditionRequestValidator().Validate(newBadgeConditionRequest);
                 if (!validationResult.IsValid)
-                {
                     throw new Exception(ErrorMessage.CommonError.INVALID_REQUEST);
+
+                if (await CheckNotDuplicatedConditionWhenCreate(newBadgeConditionRequest.BadgeId, newBadgeConditionRequest.Orders, newBadgeConditionRequest.Accomplishments))
+                {
+                    var newBadgeCondition = new BadgeCondition();
+                    newBadgeCondition.BadgeConditionId = Guid.NewGuid();
+                    newBadgeCondition.Accomplishments = newBadgeConditionRequest.Accomplishments;
+                    newBadgeCondition.Orders = newBadgeConditionRequest.Orders;
+                    newBadgeCondition.CreatedDate = DateTime.Now;
+                    newBadgeCondition.Status = true;
+                    newBadgeCondition.BadgeId = newBadgeConditionRequest.BadgeId;
+
+                    await _badgeConditionRepository.AddAsync(newBadgeCondition);
+                    return newBadgeCondition.BadgeConditionId;
                 }
-
-                var newBadgeCondition = new BadgeCondition();
-                newBadgeCondition.BadgeConditionId = Guid.NewGuid();
-                newBadgeCondition.Accomplishments = newBadgeConditionRequest.Accomplishments;
-                newBadgeCondition.Orders = newBadgeConditionRequest.Orders;
-                newBadgeCondition.CreatedDate = DateTime.Now;
-                newBadgeCondition.Status = true;
-                newBadgeCondition.BadgeId = newBadgeConditionRequest.BadgeId;
-
-                await _badgeConditionRepository.AddAsync(newBadgeCondition);
-                return newBadgeCondition.BadgeConditionId;
-
-
             }
             catch (Exception ex)
             {
+                Console.WriteLine("Error at CreateNewBadgeCondition: " + ex.Message);
+                throw new Exception(ex.Message);
+            }
+            return new Guid(); // dummy code, sure it never come here
+        }
+
+        private async Task<bool> CheckNotDuplicatedConditionWhenCreate(Guid badgeId, int orders, int accoms)
+        {
+            try
+            {
+                var list = await _badgeConditionRepository.GetBadgeConditionsBy(bc => bc.Status.Value);
+                int count = list.Where(bc => bc.BadgeId == badgeId || (orders == bc.Orders && accoms == bc.Accomplishments)).Count();
+                foreach (var item in list)
+                {
+                    if (badgeId == item.BadgeId || (orders == item.Orders && accoms == item.Accomplishments))
+                        throw new Exception(ErrorMessage.BadgeConditionError.BADGE_CONDITION_IS_DUPLICATED);
+                }
+                return count == 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at CheckDuplicatedConditionWhenCreate: " + ex.Message);
+                throw new Exception(ex.Message);
+            }
+        }
+
+        private async Task CheckNotDuplicatedConditionWhenUpdate(Guid badgeId, int orders, int accoms)
+        {
+            try
+            {
+                var list = await _badgeConditionRepository.GetBadgeConditionsBy(bc => bc.Status.Value);
+                foreach (var item in list)
+                {
+                    if (badgeId != item.BadgeId && orders == item.Orders && accoms == item.Accomplishments)
+                        throw new Exception(ErrorMessage.BadgeConditionError.BADGE_CONDITION_IS_DUPLICATED);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at CheckNotDuplicatedConditionWhenUpdate: " + ex.Message);
                 throw new Exception(ex.Message);
             }
         }
@@ -103,6 +143,7 @@ namespace BE_Homnayangi.Modules.AdminModules.BadgeConditionModule
                     throw new Exception(ErrorMessage.CommonError.INVALID_REQUEST);
                 }
 
+                await CheckNotDuplicatedConditionWhenUpdate(updateBadgeConditionRequest.BadgeId, updateBadgeConditionRequest.Orders.Value, updateBadgeConditionRequest.Accomplishments.Value);
                 var badgeConditionUpdate = _badgeConditionRepository.GetFirstOrDefaultAsync(x => x.BadgeConditionId == updateBadgeConditionRequest.BadgeConditionId).Result;
                 var listBadgeConditionUpdate = new List<BadgeCondition>();
 
@@ -130,6 +171,7 @@ namespace BE_Homnayangi.Modules.AdminModules.BadgeConditionModule
             }
             catch (Exception ex)
             {
+                Console.WriteLine("Error at UpdateBadgeCondition: " + ex.Message);
                 throw new Exception(ex.Message);
             }
         }

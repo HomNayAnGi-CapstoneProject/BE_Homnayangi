@@ -3,7 +3,6 @@ using BE_Homnayangi.Modules.BadgeModule.DTO.Request;
 using BE_Homnayangi.Modules.BadgeModule.Interface;
 using BE_Homnayangi.Modules.BadgeModule.Response;
 using BE_Homnayangi.Modules.RewardModule.DTO.Request;
-using BE_Homnayangi.Modules.Utils;
 using Library.Models;
 using Library.Models.Enum;
 using Microsoft.AspNetCore.Authorization;
@@ -92,14 +91,13 @@ namespace BE_Homnayangi.Controllers
                 await _badgeService.UpdateBadge(badgeUpdate: badge);
                 return Ok("Update success");
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!BadgeExists(updateBadge.BadgeId))
+                return new JsonResult(new
                 {
-                    return NotFound();
-                }
-
-                return NoContent();
+                    status = "failed",
+                    msg = ex.Message
+                });
             }
         }
         // POST: api/Badges
@@ -111,19 +109,15 @@ namespace BE_Homnayangi.Controllers
             var badge = _mapper.Map<Badge>(newBadge);
             try
             {
-
                 await _badgeService.AddNewBadge(badge);
             }
-            catch (DbUpdateException)
+            catch (Exception ex)
             {
-                if (BadgeExists(badge.BadgeId))
+                return new JsonResult(new
                 {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                    status = "failed",
+                    msg = ex.Message
+                });
             }
 
             return CreatedAtAction("GetBadge", new { id = badge.BadgeId }, badge);
@@ -143,11 +137,6 @@ namespace BE_Homnayangi.Controllers
             await _badgeService.UpdateBadge(badge);
 
             return NoContent();
-        }
-
-        private bool BadgeExists(Guid id)
-        {
-            return _badgeService.GetBadgeByID(id).Result != null;
         }
 
         [HttpGet("dropdown")]
