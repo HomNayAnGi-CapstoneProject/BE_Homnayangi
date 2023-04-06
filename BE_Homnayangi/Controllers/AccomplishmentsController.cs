@@ -1,6 +1,7 @@
 ﻿using BE_Homnayangi.Modules.AccomplishmentModule.Interface;
 using BE_Homnayangi.Modules.AccomplishmentModule.Request;
 using BE_Homnayangi.Modules.UserModule.Interface;
+using Library.Models.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -152,13 +153,36 @@ namespace BE_Homnayangi.Controllers
             }
         }
 
-        [Authorize(Roles = "Staff,Manager")]
-        [HttpGet("customers/{customerId}")]
-        public async Task<ActionResult> GetAccomplishmentByCustomerId([FromRoute] Guid customerId)
+        [Authorize(Roles = "Customer")]
+        [HttpGet("customer-manage")]
+        public async Task<ActionResult> GetAccomplishmentByCustomerId()
         {
             try
             {
-                var result = await _accomplishmentService.GetAccomplishmentsByCustomerId(customerId);
+                var currentCustomer = _userService.GetCurrentUser(Request.Headers["Authorization"]);
+                var result = await _accomplishmentService.GetAccomplishmentsByCustomerId(currentCustomer.Id);
+                return new JsonResult(new
+                {
+                    total = result.Count,
+                    result = result
+                });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
+            }
+        }
+
+        [HttpGet("blogs/{blogId}")]
+        public async Task<ActionResult> GetAccomplishmentsByBlogId([FromRoute] Guid blogId)
+        {
+            try
+            {
+                var result = await _accomplishmentService.GetAccomplishmentsByBlogId(blogId);
                 return new JsonResult(new
                 {
                     total = result.Count,

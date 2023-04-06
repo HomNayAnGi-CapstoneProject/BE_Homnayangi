@@ -1,6 +1,7 @@
 ﻿using BE_Homnayangi.Modules.AccomplishmentModule.Interface;
 using BE_Homnayangi.Modules.AccomplishmentModule.Request;
 using BE_Homnayangi.Modules.AccomplishmentModule.Response;
+using BE_Homnayangi.Modules.AccomplishmentReactionModule.Interface;
 using BE_Homnayangi.Modules.BlogModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.Utils;
@@ -17,13 +18,15 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
     public class AccomplishmentService : IAccomplishmentService
     {
         private readonly IAccomplishmentRepository _accomplishmentRepository;
+        private readonly IAccomplishmentReactionRepository _accomplishmentReactionRepository;
         private readonly IBlogRepository _blogRepository;
         private readonly IUserRepository _userRepository;
 
         public AccomplishmentService(IAccomplishmentRepository accomplishmentRepository, IBlogRepository blogRepository,
-            IUserRepository userRepository)
+            IUserRepository userRepository, IAccomplishmentReactionRepository accomplishmentReactionRepository)
         {
             _accomplishmentRepository = accomplishmentRepository;
+            _accomplishmentReactionRepository = accomplishmentReactionRepository;
             _blogRepository = blogRepository;
             _userRepository = userRepository;
         }
@@ -34,6 +37,10 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
             bool isInserted = false;
             try
             {
+                // Check valid image and video
+                if (request.ListVideo == null && request.ListImage == null)
+                    throw new Exception(ErrorMessage.AccomplishmentError.NOT_VALID_DATA);
+
                 // Check accomplishment existed or not
                 var tmpAccom = await _accomplishmentRepository.GetFirstOrDefaultAsync(a =>
                                                                 a.AuthorId == authorId
@@ -56,8 +63,8 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                     Status = (int)Status.AccomplishmentStatus.PENDING,
                     BlogId = request.BlogId,
                     ConfirmBy = null,
-                    ListVideoUrl = StringUtils.CompressContents(request.ListVideo),
-                    ListImageUrl = StringUtils.CompressContents(request.ListImage)
+                    ListVideoUrl = request.ListVideo != null ? StringUtils.CompressContents(request.ListVideo) : null,
+                    ListImageUrl = request.ListImage != null ? StringUtils.CompressContents(request.ListImage) : null
                 };
                 await _accomplishmentRepository.AddAsync(accom);
                 isInserted = true;
@@ -106,6 +113,10 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
             bool isUpdated = false;
             try
             {
+                // Check valid image and video
+                if (request.ListVideo == null && request.ListImage == null)
+                    throw new Exception(ErrorMessage.AccomplishmentError.NOT_VALID_DATA);
+
                 var accom = await _accomplishmentRepository.GetFirstOrDefaultAsync(a => a.AccomplishmentId == request.AccomplishmentId);
                 if (accom == null)
                     throw new Exception(ErrorMessage.AccomplishmentError.ACCOMPLISHMENT_NOT_FOUND);
@@ -113,10 +124,9 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                 if (authorId != accom.AuthorId)
                     throw new Exception(ErrorMessage.AccomplishmentError.NOT_OWNER);
 
-
                 accom.Content = request.Content == null ? accom.Content : request.Content;
-                accom.ListImageUrl = StringUtils.CompressContents(request.ListImage);
-                accom.ListVideoUrl = StringUtils.CompressContents(request.ListVideo);
+                accom.ListImageUrl = request.ListImage != null ? StringUtils.CompressContents(request.ListImage) : null;
+                accom.ListVideoUrl = request.ListVideo != null ? StringUtils.CompressContents(request.ListVideo) : null;
                 accom.Status = (int)Status.AccomplishmentStatus.PENDING;
                 accom.ConfirmBy = null;
                 await _accomplishmentRepository.UpdateAsync(accom);
@@ -138,26 +148,73 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
             try
             {
                 int statusAccom = ConvertAccomplishmentStatus(status);
-                var tmpAccom = await _accomplishmentRepository.GetAccomplishmentsBy(a => a.Status == statusAccom,
+                ICollection<Accomplishment> tmpAccoms = null;
+                if (statusAccom == -1) // Get all Accoms
+                {
+                    tmpAccoms = await _accomplishmentRepository.GetAll(includeProperties: "Author,ConfirmByNavigation");
+                }
+                else // get accoms by status
+                {
+                    tmpAccoms = await _accomplishmentRepository.GetAccomplishmentsBy(a => a.Status == statusAccom,
                                                                 includeProperties: "Author,ConfirmByNavigation");
-                if (tmpAccom.Count > 0)
-                    result = tmpAccom.Select(a => new OverviewAccomplishment()
+                }
+                var reactions = await _accomplishmentReactionRepository.GetAccomplishmentReactionsBy(r => r.Status);
+                foreach (var a in tmpAccoms)
+                {
+                    OverviewAccomplishment tmp = new OverviewAccomplishment()
                     {
                         AccomplishmentId = a.AccomplishmentId,
                         AuthorId = a.AuthorId.Value,
                         AuthorFullName = a.Author.Firstname + " " + a.Author.Lastname,
                         CreatedDate = a.CreatedDate.Value,
                         Status = a.Status.Value,
+                        Reaction = reactions.Where(r => r.AccomplishmentId == a.AccomplishmentId).Count(),
                         BlogId = a.BlogId.Value,
                         ConfirmBy = a.ConfirmBy,
                         VerifierFullName = a.ConfirmByNavigation == null
                                         ? null
                                         : a.ConfirmByNavigation.Firstname + " " + a.ConfirmByNavigation.Lastname
-                    }).ToList();
+                    };
+                    result.Add(tmp);
+                }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error at GetAccomplishmentByStatus:" + ex.Message);
+                throw new Exception(ex.Message);
+            }
+            return result;
+        }
+
+        public async Task<ICollection<AccomplishmentResponse>> GetAccomplishmentsByBlogId(Guid blogId)
+        {
+            ICollection<AccomplishmentResponse> result = new List<AccomplishmentResponse>();
+            try
+            {
+                var tmpAccoms = await _accomplishmentRepository.GetAccomplishmentsBy(a => a.BlogId == blogId && a.Status == (int)Status.AccomplishmentStatus.ACTIVE,
+                                                                includeProperties: "Author,ConfirmByNavigation");
+                var reactions = await _accomplishmentReactionRepository.GetAccomplishmentReactionsBy(r => r.Status);
+                foreach (var a in tmpAccoms)
+                {
+                    AccomplishmentResponse tmp = new AccomplishmentResponse()
+                    {
+                        AuthorId = a.AuthorId.Value,
+                        AccomplishmentId = a.AccomplishmentId,
+                        Status = a.Status.Value,
+                        Content = a.Content,
+                        ListImage = a.ListImageUrl != null ? StringUtils.ExtractContents(a.ListImageUrl) : null,
+                        ListVideo = a.ListVideoUrl != null ? StringUtils.ExtractContents(a.ListVideoUrl) : null,
+                        CreatedDate = a.CreatedDate.Value,
+                        AuthorFullName = a.Author.Firstname + " " + a.Author.Lastname,
+                        Avatar = a.Author.Avatar,
+                        Reaction = reactions.Where(r => r.AccomplishmentId == a.AccomplishmentId).Count(),
+                    };
+                    result.Add(tmp);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at GetAccomplishmentsByBlogId:" + ex.Message);
                 throw new Exception(ex.Message);
             }
             return result;
@@ -172,6 +229,8 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                     includeProperties: "Author,ConfirmByNavigation");
                 if (tmpAccom == null)
                     throw new Exception(ErrorMessage.AccomplishmentError.ACCOMPLISHMENT_NOT_FOUND);
+                var reactions = await _accomplishmentReactionRepository.GetAccomplishmentReactionsBy(r => r.Status);
+
                 result = new DetailAccomplishment()
                 {
                     AccomplishmentId = tmpAccom.AccomplishmentId,
@@ -182,6 +241,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                     ListImage = tmpAccom.ListImageUrl != null ? StringUtils.ExtractContents(tmpAccom.ListImageUrl) : null,
                     ListVideo = tmpAccom.ListVideoUrl != null ? StringUtils.ExtractContents(tmpAccom.ListVideoUrl) : null,
                     CreatedDate = tmpAccom.CreatedDate.Value,
+                    Reaction = reactions.Where(r => r.AccomplishmentId == tmpAccom.AccomplishmentId).Count(),
                     Status = tmpAccom.Status.Value,
                     AuthorFullName = tmpAccom.Author.Firstname + " " + tmpAccom.Author.Lastname,
                     VerifierFullName = tmpAccom.ConfirmByNavigation == null
@@ -198,27 +258,33 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
             return result;
         }
 
-        public async Task<ICollection<OverviewAccomplishment>> GetAccomplishmentsByCustomerId(Guid customerId)
+        public async Task<ICollection<AccomplishmentResponse>> GetAccomplishmentsByCustomerId(Guid customerId)
         {
-            ICollection<OverviewAccomplishment> result = new List<OverviewAccomplishment>();
+            ICollection<AccomplishmentResponse> result = new List<AccomplishmentResponse>();
             try
             {
                 var accoms = await _accomplishmentRepository.GetAccomplishmentsBy(a => a.AuthorId == customerId,
                                                                     includeProperties: "Author,ConfirmByNavigation");
+                var reactions = await _accomplishmentReactionRepository.GetAccomplishmentReactionsBy(r => r.Status);
+
                 if (accoms.Count > 0)
-                    result = accoms.Select(a => new OverviewAccomplishment()
+                    foreach (var a in accoms)
                     {
-                        AccomplishmentId = a.AccomplishmentId,
-                        AuthorId = a.AuthorId.Value,
-                        AuthorFullName = a.Author.Firstname + " " + a.Author.Lastname,
-                        CreatedDate = a.CreatedDate.Value,
-                        Status = a.Status.Value,
-                        BlogId = a.BlogId.Value,
-                        ConfirmBy = a.ConfirmBy,
-                        VerifierFullName = a.ConfirmByNavigation == null
-                                        ? null
-                                        : a.ConfirmByNavigation.Firstname + " " + a.ConfirmByNavigation.Lastname
-                    }).ToList();
+                        AccomplishmentResponse tmp = new AccomplishmentResponse()
+                        {
+                            AuthorId = a.AuthorId.Value,
+                            AccomplishmentId = a.AccomplishmentId,
+                            Status = a.Status.Value,
+                            Content = a.Content,
+                            ListImage = a.ListImageUrl != null ? StringUtils.ExtractContents(a.ListImageUrl) : null,
+                            ListVideo = a.ListVideoUrl != null ? StringUtils.ExtractContents(a.ListVideoUrl) : null,
+                            CreatedDate = a.CreatedDate.Value,
+                            AuthorFullName = a.Author.Firstname + " " + a.Author.Lastname,
+                            Avatar = a.Author.Avatar,
+                            Reaction = reactions.Where(r => r.AccomplishmentId == a.AccomplishmentId).Count(),
+                        };
+                        result.Add(tmp);
+                    }
             }
             catch (Exception ex)
             {
@@ -253,12 +319,17 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                         result = 3;
                         break;
                     }
+                case "ALL":
+                    {
+                        result = -1;
+                        break;
+                    }
             }
             return result;
         }
         #endregion
 
-        #region
+        #region Delete Accomplishment
         public async Task<bool> RejectAccomplishment(Guid userId, Guid accomplishmentId)
         {
             bool isUpdated = false;
@@ -307,6 +378,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
             }
             return isUpdated;
         }
+
         #endregion
     }
 }

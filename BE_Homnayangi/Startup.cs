@@ -1,5 +1,7 @@
 using BE_Homnayangi.Modules.AccomplishmentModule;
 using BE_Homnayangi.Modules.AccomplishmentModule.Interface;
+using BE_Homnayangi.Modules.AccomplishmentReactionModule;
+using BE_Homnayangi.Modules.AccomplishmentReactionModule.Interface;
 using BE_Homnayangi.Modules.AdminModules.BadgeConditionModule;
 using BE_Homnayangi.Modules.AdminModules.BadgeConditionModule.Interface;
 using BE_Homnayangi.Modules.AdminModules.CaloReferenceModule;
@@ -275,12 +277,15 @@ namespace BE_Homnayangi
             services.AddScoped<ICustomerBadgeRepository, CustomerBadgeRepository>();
             services.AddScoped<ICustomerBadgeService, CustomerBadgeService>();
 
-            //AccomplishmentBadge Module
+            //Accomplishment Module
             services.AddScoped<IAccomplishmentRepository, AccomplishmentRepository>();
             services.AddScoped<IAccomplishmentService, AccomplishmentService>();
 
             //PriceNote Module
             services.AddScoped<IPriceNoteRepository, PriceNoteRepository>();
+            
+            //Accomplishment Reaction Module
+            services.AddScoped<IAccomplishmentReactionRepository, AccomplishmentReactionRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

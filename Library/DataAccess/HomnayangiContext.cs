@@ -117,6 +117,8 @@ namespace Library.DataAccess
                     .HasColumnType("datetime")
                     .HasColumnName("createdDate");
 
+                entity.Property(e => e.Status).HasColumnName("status");
+
                 entity.HasOne(d => d.Accomplishment)
                     .WithMany(p => p.AccomplishmentReactions)
                     .HasForeignKey(d => d.AccomplishmentId)

@@ -1,13 +1,12 @@
-﻿using System;
+﻿using BE_Homnayangi.Modules.BadgeModule.DTO.Request;
+using BE_Homnayangi.Modules.BadgeModule.Response;
 using Library.Models;
+using Library.PagedList;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Library.PagedList;
-using BE_Homnayangi.Modules.BadgeModule.DTO.Request;
-using BE_Homnayangi.Modules.RewardModule.DTO.Request;
-using BE_Homnayangi.Modules.BadgeModule.Response;
 
 namespace BE_Homnayangi.Modules.BadgeModule.Interface
 {

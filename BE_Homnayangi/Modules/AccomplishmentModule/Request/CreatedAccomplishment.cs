@@ -7,7 +7,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule.Request
     {
         public string Content { get; set; }
         public Guid BlogId { get; set; }
-        public ICollection<string> ListImage { get; set; }
-        public ICollection<string> ListVideo { get; set; }
+        public ICollection<string>? ListImage { get; set; }
+        public ICollection<string>? ListVideo { get; set; }
     }
 }

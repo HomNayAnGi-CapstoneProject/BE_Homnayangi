@@ -1,16 +1,15 @@
-﻿using System;
+﻿using BE_Homnayangi.Modules.BadgeModule.DTO.Request;
 using BE_Homnayangi.Modules.BadgeModule.Interface;
+using BE_Homnayangi.Modules.BadgeModule.Response;
 using Library.Models;
+using Library.Models.Constant;
+using Library.Models.Enum;
+using Library.PagedList;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Library.PagedList;
-using Library.Models.Enum;
-using BE_Homnayangi.Modules.BadgeModule.DTO.Request;
-using BE_Homnayangi.Modules.RewardModule.DTO.Request;
-using AutoMapper;
-using BE_Homnayangi.Modules.BadgeModule.Response;
 using static Library.Models.Enum.Status;
 
 namespace BE_Homnayangi.Modules.BadgeModule
@@ -59,17 +58,79 @@ namespace BE_Homnayangi.Modules.BadgeModule
 
         public async Task AddNewBadge(Badge newBadge)
         {
-
-            newBadge.BadgeId = Guid.NewGuid();
-            newBadge.CreateDate = DateTime.Now;
-            newBadge.Status = (int)Status.BadgeStatus.ACTIVE;
-            await _badgeRepository.AddAsync(newBadge);
+            try
+            {
+                if (!await CheckDuplicatedBadgeNameWhenCreate(newBadge.Name))
+                {
+                    newBadge.BadgeId = Guid.NewGuid();
+                    newBadge.CreateDate = DateTime.Now;
+                    newBadge.Status = (int)Status.BadgeStatus.ACTIVE;
+                    await _badgeRepository.AddAsync(newBadge);
+                }
+                else
+                {
+                    throw new Exception(ErrorMessage.BadgeError.BADGE_NAME_EXISTED);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at AddNewBadge: " + ex.Message);
+                throw new Exception(ex.Message);
+            }
         }
 
-        public async Task UpdateBadge(Badge BadgeUpdate)
+        public async Task UpdateBadge(Badge newBadge)
         {
+            try
+            {
+                var badge = await _badgeRepository.GetFirstOrDefaultAsync(b => b.BadgeId == newBadge.BadgeId);
+                if (!await CheckDuplicatedBadgeNameWhenUpdate(newBadge.BadgeId, newBadge.Name))
+                {
+                    badge.Name = newBadge.Name;
+                    badge.Description = newBadge.Description;
+                    badge.ImageUrl = newBadge.ImageUrl;
+                    // Do request ko có
+                    //badge.VoucherId = newBadge.VoucherId == null ? badge.VoucherId : newBadge.VoucherId;
+                    await _badgeRepository.UpdateAsync(badge);
+                }
+                else
+                    throw new Exception(ErrorMessage.BadgeError.BADGE_NAME_EXISTED);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at UpdateBadge: " + ex.Message);
+                throw new Exception(ex.Message);
+            }
+        }
 
-            await _badgeRepository.UpdateAsync(BadgeUpdate);
+        private async Task<bool> CheckDuplicatedBadgeNameWhenUpdate(Guid badgeId, string badgeName)
+        {
+            try
+            {
+                var list = await _badgeRepository.GetBadgesBy(b => b.Status.Value == (int)Status.BadgeStatus.ACTIVE);
+                int count = list.Where(item => item.Name.Equals(badgeName) && item.BadgeId != badgeId).Count();
+                return (count > 0);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at CheckDuplicatedBadgeNameWhenUpdate: " + ex.Message);
+                throw new Exception(ex.Message);
+            }
+        }
+
+        private async Task<bool> CheckDuplicatedBadgeNameWhenCreate(string badgeName)
+        {
+            try
+            {
+                var list = await _badgeRepository.GetBadgesBy(b => b.Status.Value == (int)Status.BadgeStatus.ACTIVE);
+                int count = list.Where(item => item.Name.Equals(badgeName)).Count();
+                return (count > 0);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at CheckDuplicatedBadgeNameWhenCreate: " + ex.Message);
+                throw new Exception(ex.Message);
+            }
         }
 
         public async Task<Badge> GetBadgeByID(Guid? id)
