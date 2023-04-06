@@ -44,6 +44,12 @@ namespace Library.Models.Enum
             DRAFTED = 2,
             PENDING = 3
         }
+
+        public enum PriceNote
+        {
+            DEACTIVE = 0,
+            ACTIVE = 1
+        }
     }
 }
 

@@ -77,10 +77,18 @@ namespace Library.Models.Constant
         }
         #endregion
 
+        #region Badge error message
+        public static class BadgeError
+        {
+            public readonly static string BADGE_NAME_EXISTED = "This badge name has existed in system";
+        }
+        #endregion
+
         #region Badge Condition error message
         public static class BadgeConditionError
         {
             public readonly static string BADGE_CONDITION_NOT_FOUND = "This badge condition can not be found";
+            public readonly static string BADGE_CONDITION_IS_DUPLICATED = "This badge condition is duplicated";
         }
         #endregion
 
@@ -159,7 +167,8 @@ namespace Library.Models.Constant
             public readonly static string ACCOMPLISHMENT_EXISTED = "This accomlishment was existed in system";
             public readonly static string ACCOMPLISHMENT_NOT_FOUND = "This accomlishment is not found";
             public readonly static string NOT_OWNER = "You are not the owner";
-            public readonly static string NOT_VALID_TYPE = "Type is APPROVE or REJECT";
+            public readonly static string NOT_VALID_TYPE = "Type is only APPROVE or REJECT";
+            public readonly static string NOT_VALID_DATA = "You need to have either image or video";
         }
         #endregion
     }

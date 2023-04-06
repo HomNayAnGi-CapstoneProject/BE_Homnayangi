@@ -191,13 +191,12 @@ namespace BE_Homnayangi.Modules.OrderModule
 
                         await _OrderRepository.AddAsync(newOrder);
 
-                        await _transactionRepository.AddAsync(transaction);
-
                         if (newOrder.PaymentMethod.HasValue)
                         {
                             switch (newOrder.PaymentMethod.GetValueOrDefault())
                             {
                                 case (int)PaymentMethodEnum.PaymentMethods.PAYPAL:
+                                    await _transactionRepository.AddAsync(transaction);
                                     redirectUrl = await PaymentWithPaypal(newOrder.OrderId);
                                     break;
                                 case (int)PaymentMethodEnum.PaymentMethods.COD:

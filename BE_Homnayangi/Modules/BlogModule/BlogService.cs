@@ -629,7 +629,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                     BlogStatus = 2, // drafted
                     AuthorId = authorId,
                     Reaction = 0,
-                    View = 0
+                    View = 0,
+                    MinutesToCook = 0
                 };
                 await _blogRepository.AddAsync(blog);
 
@@ -771,6 +772,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                 request.Blog.CreatedDate = blog.CreatedDate;
                 request.Blog.Reaction = blog.Reaction;
                 request.Blog.View = blog.View;
+                request.Blog.MinutesToCook = request.Blog.MinutesToCook == null ? blog.MinutesToCook : request.Blog.MinutesToCook;
                 await _blogRepository.UpdateAsync(request.Blog);
                 #endregion
             }
@@ -1112,6 +1114,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     RecipeImageURL = blog.Recipe.ImageUrl,
                     MaxSize = blog.Recipe.MaxSize,
                     MinSize = blog.Recipe.MinSize,
+                    MinutesToCook= blog.MinutesToCook,
                     PackagePrice = blog.Recipe.PackagePrice,
                     CookedPrice = blog.Recipe.CookedPrice,
                 };
@@ -1200,6 +1203,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     RecipeImageURL = blog.Recipe.ImageUrl,
                     MaxSize = blog.Recipe.MaxSize,
                     MinSize = blog.Recipe.MinSize,
+                    MinutesToCook = blog.MinutesToCook,
                     PackagePrice = blog.Recipe.PackagePrice,
                     CookedPrice = blog.Recipe.CookedPrice,
                 };
