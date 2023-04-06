@@ -195,6 +195,40 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
             return count;
         }
 
+        public async Task<ICollection<AccomplishmentResponse>> GetAccomplishmentsByBlogId(Guid blogId)
+        {
+            ICollection<AccomplishmentResponse> result = new List<AccomplishmentResponse>();
+            try
+            {
+                var tmpAccoms = await _accomplishmentRepository.GetAccomplishmentsBy(a => a.BlogId == blogId && a.Status == (int)Status.AccomplishmentStatus.ACTIVE,
+                                                                includeProperties: "Author,ConfirmByNavigation");
+                var reactions = await _accomplishmentReactionRepository.GetAccomplishmentReactionsBy(r => r.Status);
+                foreach (var a in tmpAccoms)
+                {
+                    AccomplishmentResponse tmp = new AccomplishmentResponse()
+                    {
+                        AuthorId = a.AuthorId.Value,
+                        AccomplishmentId = a.AccomplishmentId,
+                        Status = a.Status.Value,
+                        Content = a.Content,
+                        ListImage = a.ListImageUrl != null ? StringUtils.ExtractContents(a.ListImageUrl) : null,
+                        ListVideo = a.ListVideoUrl != null ? StringUtils.ExtractContents(a.ListVideoUrl) : null,
+                        CreatedDate = a.CreatedDate.Value,
+                        AuthorFullName = a.Author.Firstname + " " + a.Author.Lastname,
+                        Avatar = a.Author.Avatar,
+                        Reaction = GetReactionByAccomplishmentId(a.AccomplishmentId, reactions),
+                    };
+                    result.Add(tmp);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at GetAccomplishmentsByBlogId:" + ex.Message);
+                throw new Exception(ex.Message);
+            }
+            return result;
+        }
+
         public async Task<DetailAccomplishment> GetAccomplishmentById(Guid id)
         {
             DetailAccomplishment result = null;
@@ -300,7 +334,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
         }
         #endregion
 
-        #region
+        #region Delete Accomplishment
         public async Task<bool> RejectAccomplishment(Guid userId, Guid accomplishmentId)
         {
             bool isUpdated = false;
@@ -349,6 +383,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
             }
             return isUpdated;
         }
+
         #endregion
     }
 }

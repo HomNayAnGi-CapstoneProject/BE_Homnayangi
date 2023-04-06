@@ -17,6 +17,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule.Interface
 
         // Get
         public Task<ICollection<OverviewAccomplishment>> GetAccomplishmentByStatus(string status);
+        public Task<ICollection<AccomplishmentResponse>> GetAccomplishmentsByBlogId(Guid blogId);
         public Task<DetailAccomplishment> GetAccomplishmentById(Guid id);
         public Task<ICollection<OverviewAccomplishment>> GetAccomplishmentsByCustomerId(Guid customerId);
 
