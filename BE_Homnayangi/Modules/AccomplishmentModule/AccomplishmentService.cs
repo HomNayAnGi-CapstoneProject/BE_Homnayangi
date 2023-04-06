@@ -10,6 +10,7 @@ using Library.Models.Constant;
 using Library.Models.Enum;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BE_Homnayangi.Modules.AccomplishmentModule
@@ -147,8 +148,16 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
             try
             {
                 int statusAccom = ConvertAccomplishmentStatus(status);
-                var tmpAccoms = await _accomplishmentRepository.GetAccomplishmentsBy(a => a.Status == statusAccom,
+                ICollection<Accomplishment> tmpAccoms = null;
+                if (statusAccom == -1) // Get all Accoms
+                {
+                    tmpAccoms = await _accomplishmentRepository.GetAll(includeProperties: "Author,ConfirmByNavigation");
+                }
+                else // get accoms by status
+                {
+                    tmpAccoms = await _accomplishmentRepository.GetAccomplishmentsBy(a => a.Status == statusAccom,
                                                                 includeProperties: "Author,ConfirmByNavigation");
+                }
                 var reactions = await _accomplishmentReactionRepository.GetAccomplishmentReactionsBy(r => r.Status);
                 foreach (var a in tmpAccoms)
                 {
@@ -158,8 +167,8 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                         AuthorId = a.AuthorId.Value,
                         AuthorFullName = a.Author.Firstname + " " + a.Author.Lastname,
                         CreatedDate = a.CreatedDate.Value,
-                        Reaction = GetReactionByAccomplishmentId(a.AccomplishmentId, reactions),
                         Status = a.Status.Value,
+                        Reaction = reactions.Where(r => r.AccomplishmentId == a.AccomplishmentId).Count(),
                         BlogId = a.BlogId.Value,
                         ConfirmBy = a.ConfirmBy,
                         VerifierFullName = a.ConfirmByNavigation == null
@@ -175,24 +184,6 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                 throw new Exception(ex.Message);
             }
             return result;
-        }
-
-        private int GetReactionByAccomplishmentId(Guid id, ICollection<AccomplishmentReaction> list)
-        {
-            int count = 0;
-            try
-            {
-                foreach (var item in list)
-                {
-                    count = item.AccomplishmentId == id ? ++count : count;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error at GetReactionByAccomplishmentId: " + ex.Message);
-                throw new Exception(ex.Message);
-            }
-            return count;
         }
 
         public async Task<ICollection<AccomplishmentResponse>> GetAccomplishmentsByBlogId(Guid blogId)
@@ -216,7 +207,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                         CreatedDate = a.CreatedDate.Value,
                         AuthorFullName = a.Author.Firstname + " " + a.Author.Lastname,
                         Avatar = a.Author.Avatar,
-                        Reaction = GetReactionByAccomplishmentId(a.AccomplishmentId, reactions),
+                        Reaction = reactions.Where(r => r.AccomplishmentId == a.AccomplishmentId).Count(),
                     };
                     result.Add(tmp);
                 }
@@ -250,7 +241,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                     ListImage = tmpAccom.ListImageUrl != null ? StringUtils.ExtractContents(tmpAccom.ListImageUrl) : null,
                     ListVideo = tmpAccom.ListVideoUrl != null ? StringUtils.ExtractContents(tmpAccom.ListVideoUrl) : null,
                     CreatedDate = tmpAccom.CreatedDate.Value,
-                    Reaction = GetReactionByAccomplishmentId(tmpAccom.AccomplishmentId, reactions),
+                    Reaction = reactions.Where(r => r.AccomplishmentId == tmpAccom.AccomplishmentId).Count(),
                     Status = tmpAccom.Status.Value,
                     AuthorFullName = tmpAccom.Author.Firstname + " " + tmpAccom.Author.Lastname,
                     VerifierFullName = tmpAccom.ConfirmByNavigation == null
@@ -290,7 +281,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                             CreatedDate = a.CreatedDate.Value,
                             AuthorFullName = a.Author.Firstname + " " + a.Author.Lastname,
                             Avatar = a.Author.Avatar,
-                            Reaction = GetReactionByAccomplishmentId(a.AccomplishmentId, reactions),
+                            Reaction = reactions.Where(r => r.AccomplishmentId == a.AccomplishmentId).Count(),
                         };
                         result.Add(tmp);
                     }
@@ -326,6 +317,11 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                 case "PENDING":
                     {
                         result = 3;
+                        break;
+                    }
+                case "ALL":
+                    {
+                        result = -1;
                         break;
                     }
             }

@@ -86,6 +86,10 @@ namespace BE_Homnayangi.Modules.AdminModules.BadgeConditionModule
                     await _badgeConditionRepository.AddAsync(newBadgeCondition);
                     return newBadgeCondition.BadgeConditionId;
                 }
+                else
+                {
+                    throw new Exception(ErrorMessage.BadgeConditionError.BADGE_CONDITION_IS_DUPLICATED);
+                }
             }
             catch (Exception ex)
             {
@@ -100,12 +104,9 @@ namespace BE_Homnayangi.Modules.AdminModules.BadgeConditionModule
             try
             {
                 var list = await _badgeConditionRepository.GetBadgeConditionsBy(bc => bc.Status.Value);
-                int count = list.Where(bc => bc.BadgeId == badgeId || (orders == bc.Orders && accoms == bc.Accomplishments)).Count();
-                foreach (var item in list)
-                {
-                    if (badgeId == item.BadgeId || (orders == item.Orders && accoms == item.Accomplishments))
-                        throw new Exception(ErrorMessage.BadgeConditionError.BADGE_CONDITION_IS_DUPLICATED);
-                }
+                int count = list.Where(bc => bc.BadgeId == badgeId 
+                                            || (orders == bc.Orders 
+                                                && accoms == bc.Accomplishments)).Count();
                 return count == 0;
             }
             catch (Exception ex)
