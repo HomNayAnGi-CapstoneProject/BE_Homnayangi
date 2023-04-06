@@ -30,6 +30,7 @@ namespace Library.DataAccess
         public virtual DbSet<CaloReference> CaloReferences { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
+        public virtual DbSet<CronJobTimeConfig> CronJobTimeConfigs { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
         public virtual DbSet<CustomerBadge> CustomerBadges { get; set; }
         public virtual DbSet<CustomerVoucher> CustomerVouchers { get; set; }
@@ -385,6 +386,33 @@ namespace Library.DataAccess
                     .WithMany(p => p.InverseParent)
                     .HasForeignKey(d => d.ParentId)
                     .HasConstraintName("FK_Comment_Comment");
+            });
+
+            modelBuilder.Entity<CronJobTimeConfig>(entity =>
+            {
+                entity.ToTable("CronJobTimeConfig");
+
+                entity.Property(e => e.CronJobTimeConfigId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("cronJobTimeConfigId");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("createdDate");
+
+                entity.Property(e => e.Day).HasColumnName("day");
+
+                entity.Property(e => e.Hour).HasColumnName("hour");
+
+                entity.Property(e => e.Minute).HasColumnName("minute");
+
+                entity.Property(e => e.Month).HasColumnName("month");
+
+                entity.Property(e => e.TargetObject).HasColumnName("targetObject");
+
+                entity.Property(e => e.UpdatedDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("updatedDate");
             });
 
             modelBuilder.Entity<Customer>(entity =>

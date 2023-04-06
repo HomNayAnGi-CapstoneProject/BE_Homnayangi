@@ -77,7 +77,6 @@
     <None Remove="PayPal" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models2\" />
     <Folder Include="Modules\RecipeModule\Interface\" />
     <Folder Include="Modules\RecipeDetailModule\Interface\" />
     <Folder Include="Modules\IngredientModule\Interface\" />
