@@ -19,7 +19,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule.Interface
         public Task<ICollection<OverviewAccomplishment>> GetAccomplishmentByStatus(string status);
         public Task<ICollection<AccomplishmentResponse>> GetAccomplishmentsByBlogId(Guid blogId);
         public Task<DetailAccomplishment> GetAccomplishmentById(Guid id);
-        public Task<ICollection<OverviewAccomplishment>> GetAccomplishmentsByCustomerId(Guid customerId);
+        public Task<ICollection<AccomplishmentResponse>> GetAccomplishmentsByCustomerId(Guid customerId);
 
         // Delete
         public Task<bool> RejectAccomplishment(Guid userId, Guid accomplishmentId);

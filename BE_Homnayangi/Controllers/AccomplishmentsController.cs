@@ -153,13 +153,14 @@ namespace BE_Homnayangi.Controllers
             }
         }
 
-        [Authorize(Roles = "Staff,Manager")]
-        [HttpGet("customers/{customerId}")]
-        public async Task<ActionResult> GetAccomplishmentByCustomerId([FromRoute] Guid customerId)
+        [Authorize(Roles = "Customer")]
+        [HttpGet("customer-manage")]
+        public async Task<ActionResult> GetAccomplishmentByCustomerId()
         {
             try
             {
-                var result = await _accomplishmentService.GetAccomplishmentsByCustomerId(customerId);
+                var currentCustomer = _userService.GetCurrentUser(Request.Headers["Authorization"]);
+                var result = await _accomplishmentService.GetAccomplishmentsByCustomerId(currentCustomer.Id);
                 return new JsonResult(new
                 {
                     total = result.Count,

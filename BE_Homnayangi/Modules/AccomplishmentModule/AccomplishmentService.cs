@@ -267,9 +267,9 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
             return result;
         }
 
-        public async Task<ICollection<OverviewAccomplishment>> GetAccomplishmentsByCustomerId(Guid customerId)
+        public async Task<ICollection<AccomplishmentResponse>> GetAccomplishmentsByCustomerId(Guid customerId)
         {
-            ICollection<OverviewAccomplishment> result = new List<OverviewAccomplishment>();
+            ICollection<AccomplishmentResponse> result = new List<AccomplishmentResponse>();
             try
             {
                 var accoms = await _accomplishmentRepository.GetAccomplishmentsBy(a => a.AuthorId == customerId,
@@ -279,19 +279,18 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                 if (accoms.Count > 0)
                     foreach (var a in accoms)
                     {
-                        OverviewAccomplishment tmp = new OverviewAccomplishment()
+                        AccomplishmentResponse tmp = new AccomplishmentResponse()
                         {
-                            AccomplishmentId = a.AccomplishmentId,
                             AuthorId = a.AuthorId.Value,
-                            AuthorFullName = a.Author.Firstname + " " + a.Author.Lastname,
-                            CreatedDate = a.CreatedDate.Value,
-                            Reaction = GetReactionByAccomplishmentId(a.AccomplishmentId, reactions),
+                            AccomplishmentId = a.AccomplishmentId,
                             Status = a.Status.Value,
-                            BlogId = a.BlogId.Value,
-                            ConfirmBy = a.ConfirmBy,
-                            VerifierFullName = a.ConfirmByNavigation == null
-                                            ? null
-                                            : a.ConfirmByNavigation.Firstname + " " + a.ConfirmByNavigation.Lastname
+                            Content = a.Content,
+                            ListImage = a.ListImageUrl != null ? StringUtils.ExtractContents(a.ListImageUrl) : null,
+                            ListVideo = a.ListVideoUrl != null ? StringUtils.ExtractContents(a.ListVideoUrl) : null,
+                            CreatedDate = a.CreatedDate.Value,
+                            AuthorFullName = a.Author.Firstname + " " + a.Author.Lastname,
+                            Avatar = a.Author.Avatar,
+                            Reaction = GetReactionByAccomplishmentId(a.AccomplishmentId, reactions),
                         };
                         result.Add(tmp);
                     }
