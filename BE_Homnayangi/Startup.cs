@@ -73,7 +73,8 @@ using Quartz;
 using System;
 using System.Linq;
 using System.Text;
-
+using Hangfire;
+using Hangfire.SqlServer;
 namespace BE_Homnayangi
 {
     public class Startup
@@ -105,17 +106,17 @@ namespace BE_Homnayangi
 
             services.AddDbContext<HomnayangiContext>(
                  options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddQuartz(opt =>
-            {
-                opt.UseMicrosoftDependencyInjectionJobFactory();
-                var jobKey = new JobKey("BadgeJob");
-                opt.AddJob<BadgeJob>(option => option.WithIdentity(jobKey));
-                opt.AddTrigger(opts => opts
-               .ForJob(jobKey)
-               .WithIdentity($"{jobKey}-trigger")
-               .WithCronSchedule(Configuration.GetSection("BadgeJob:CronSchedule").Value ?? "0 0/5 0 ? * * *"));
-            });
-            services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
+            /*   services.AddQuartz(opt =>
+               {
+                   opt.UseMicrosoftDependencyInjectionJobFactory();
+                   var jobKey = new JobKey("BadgeJob");
+                   opt.AddJob<BadgeJob>(option => option.WithIdentity(jobKey));
+                   opt.AddTrigger(opts => opts
+                  .ForJob(jobKey)
+                  .WithIdentity($"{jobKey}-trigger")
+                  .WithCronSchedule(Configuration.GetSection("BadgeJob:CronSchedule").Value ?? "0 0/5 0 ? * * *"));
+               });
+               services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);*/
             services.AddMvcCore().ConfigureApiBehaviorOptions(options =>
             {
                 options.InvalidModelStateResponseFactory = (errorContext) =>
@@ -131,7 +132,21 @@ namespace BE_Homnayangi
                     return new BadRequestObjectResult(result);
                 };
             });
-
+            #region hangfire
+            var hangfireDBConnectionString = Configuration.GetConnectionString("HangfireDb");
+            services.AddHangfire(configuration => configuration.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UseSqlServerStorage(hangfireDBConnectionString, new SqlServerStorageOptions
+    {
+        CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+        SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+        QueuePollInterval = TimeSpan.Zero,
+        UseRecommendedIsolationLevel = true,
+        DisableGlobalLocks = true
+    }));
+            services.AddHangfireServer();
+            #endregion
             services.Configure<AppSetting>(Configuration.GetSection("AppSetting"));
             services.Configure<AdministratorAccount>(Configuration.GetSection("AdministratorAccount"));
             var secretKey = Configuration["AppSetting:SecretKey"];
@@ -298,7 +313,7 @@ namespace BE_Homnayangi
             app.UseAuthentication();
 
             app.UseAuthorization();
-
+            app.UseHangfireDashboard();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

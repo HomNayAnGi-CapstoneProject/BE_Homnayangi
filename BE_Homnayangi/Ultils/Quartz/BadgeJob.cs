@@ -3,6 +3,7 @@ using BE_Homnayangi.Modules.AdminModules.BadgeConditionModule.Interface;
 using BE_Homnayangi.Modules.BadgeModule.Interface;
 using BE_Homnayangi.Modules.CustomerBadgeModule.Interface;
 using BE_Homnayangi.Modules.CustomerModule.Interface;
+using BE_Homnayangi.Modules.CustomerVoucherModule.Interface;
 using BE_Homnayangi.Modules.OrderModule.Interface;
 using Library.Models;
 using Quartz;
@@ -24,7 +25,8 @@ namespace BE_Homnayangi.Ultils.Quartz
         private readonly IBadgeConditionRepository _badgeConditionRepository;
         private readonly ICustomerBadgeRepository _customerBadgeRepository;
         private readonly IOrderRepository _orderRepository;
-        public BadgeJob(ICustomerRepository customerRepository, IBadgeRepository badgeRepository, IAccomplishmentRepository accomplishmenttRepository, IBadgeConditionRepository badgeConditionRepository, ICustomerBadgeRepository customerBadgeRepository, IOrderRepository orderRepository)
+        private readonly ICustomerVoucherRepository _customerVoucherRepository;
+        public BadgeJob(ICustomerRepository customerRepository, IBadgeRepository badgeRepository, IAccomplishmentRepository accomplishmenttRepository, IBadgeConditionRepository badgeConditionRepository, ICustomerBadgeRepository customerBadgeRepository, IOrderRepository orderRepository, ICustomerVoucherRepository customerVoucherRepository)
         {
             _customerRepository = customerRepository;
             _badgeRepository = badgeRepository;
@@ -32,6 +34,8 @@ namespace BE_Homnayangi.Ultils.Quartz
             _badgeConditionRepository = badgeConditionRepository;
             _customerBadgeRepository = customerBadgeRepository;
             _orderRepository = orderRepository;
+            _customerVoucherRepository = customerVoucherRepository;
+
         }
         public async Task Execute(IJobExecutionContext context)
         {
@@ -41,6 +45,7 @@ namespace BE_Homnayangi.Ultils.Quartz
         }
         public async Task BadgeCondition()
         {
+            Console.WriteLine("Hello from Hangfire");
             var customers = await _customerRepository.GetAll();
             var accomplishmentsList = await _accomplishmenttRepository.GetAll();
             var ordersList = await _orderRepository.GetAll();
@@ -64,7 +69,7 @@ namespace BE_Homnayangi.Ultils.Quartz
                 int orders = customer.Orders.Count();
                 Console.WriteLine(customer.Displayname);
                 var badgeConditions = await _badgeConditionRepository.GetAll();
-                badgeConditions = badgeConditions.Where(x => x.Accomplishments == accomplishments && x.Orders == orders).ToList();
+                badgeConditions = badgeConditions.Where(x => x.Accomplishments <= accomplishments && x.Orders <= orders).ToList();
                 foreach (BadgeCondition badgeCondition in badgeConditions)
                 {
                     var tmp = await _customerBadgeRepository.GetFirstOrDefaultAsync(x => x.CustomerId == customer.CustomerId && x.BadgeId == badgeCondition.BadgeId);
@@ -77,7 +82,23 @@ namespace BE_Homnayangi.Ultils.Quartz
                             CreatedDate = DateTime.Now
 
                         };
+
                         _customerBadgeRepository.Add(customerBadge);
+                        var badge = await _badgeRepository.GetByIdAsync(customerBadge.BadgeId);
+                        var cv = await _customerVoucherRepository.GetFirstOrDefaultAsync(x => x.CustomerId == customer.CustomerId && x.VoucherId == badge.VoucherId);
+                        if (cv == null)
+                        {
+                            CustomerVoucher customerVoucher = new CustomerVoucher
+                            {
+                                CustomerVoucherId = Guid.NewGuid(),
+                                CustomerId = customer.CustomerId,
+                                VoucherId = (Guid)badge.VoucherId,
+                                CreatedDate = DateTime.Now
+
+
+                            };
+                            _customerVoucherRepository.Add(customerVoucher);
+                        }
                     }
                 };
             };

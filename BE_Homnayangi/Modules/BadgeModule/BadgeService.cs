@@ -12,6 +12,8 @@ using BE_Homnayangi.Modules.RewardModule.DTO.Request;
 using AutoMapper;
 using BE_Homnayangi.Modules.BadgeModule.Response;
 using static Library.Models.Enum.Status;
+using Hangfire;
+using BE_Homnayangi.Ultils.Quartz;
 
 namespace BE_Homnayangi.Modules.BadgeModule
 {
@@ -128,6 +130,16 @@ namespace BE_Homnayangi.Modules.BadgeModule
             {
                 throw new Exception("Name existed");
             }
+        }
+
+        public void AwardBadge()
+        {
+            int minute = 1;
+            int hour = 0;
+            int date = 0;
+            int month = 0;
+            RecurringJob.AddOrUpdate<BadgeJob>("awardbadge", x => x.BadgeCondition(), Cron.Yearly(month, date, hour, minute), TimeZoneInfo.Local);
+
         }
     }
 }
