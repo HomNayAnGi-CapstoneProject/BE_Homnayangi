@@ -165,7 +165,10 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                     {
                         AccomplishmentId = a.AccomplishmentId,
                         AuthorId = a.AuthorId.Value,
-                        AuthorFullName = a.Author.Firstname + " " + a.Author.Lastname,
+                        AuthorFullName = a.Author.Firstname != null && a.Author.Lastname != null 
+                                            ? a.Author.Firstname + " " + a.Author.Lastname 
+                                            : a.Author.Displayname,
+                        Avatar = a.Author.Avatar,
                         CreatedDate = a.CreatedDate.Value,
                         Status = a.Status.Value,
                         Reaction = reactions.Where(r => r.AccomplishmentId == a.AccomplishmentId).Count(),
@@ -192,7 +195,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
             try
             {
                 var tmpAccoms = await _accomplishmentRepository.GetAccomplishmentsBy(a => a.BlogId == blogId && a.Status == (int)Status.AccomplishmentStatus.ACTIVE,
-                                                                includeProperties: "Author,ConfirmByNavigation");
+                                                                includeProperties: "Author,ConfirmByNavigation,Blog");
                 var reactions = await _accomplishmentReactionRepository.GetAccomplishmentReactionsBy(r => r.Status);
                 foreach (var a in tmpAccoms)
                 {
@@ -208,6 +211,8 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                         AuthorFullName = a.Author.Firstname + " " + a.Author.Lastname,
                         Avatar = a.Author.Avatar,
                         Reaction = reactions.Where(r => r.AccomplishmentId == a.AccomplishmentId).Count(),
+                        BlogId = a.BlogId.Value,
+                        BlogTitle = a.Blog.Title,
                     };
                     result.Add(tmp);
                 }
@@ -264,7 +269,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
             try
             {
                 var accoms = await _accomplishmentRepository.GetAccomplishmentsBy(a => a.AuthorId == customerId,
-                                                                    includeProperties: "Author,ConfirmByNavigation");
+                                                                    includeProperties: "Author,ConfirmByNavigation,Blog");
                 var reactions = await _accomplishmentReactionRepository.GetAccomplishmentReactionsBy(r => r.Status);
 
                 if (accoms.Count > 0)
@@ -282,6 +287,8 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                             AuthorFullName = a.Author.Firstname + " " + a.Author.Lastname,
                             Avatar = a.Author.Avatar,
                             Reaction = reactions.Where(r => r.AccomplishmentId == a.AccomplishmentId).Count(),
+                            BlogId = a.BlogId.Value,
+                            BlogTitle = a.Blog.Title,
                         };
                         result.Add(tmp);
                     }
