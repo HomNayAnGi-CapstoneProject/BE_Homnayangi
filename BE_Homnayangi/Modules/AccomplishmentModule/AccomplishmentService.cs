@@ -3,6 +3,7 @@ using BE_Homnayangi.Modules.AccomplishmentModule.Request;
 using BE_Homnayangi.Modules.AccomplishmentModule.Response;
 using BE_Homnayangi.Modules.AccomplishmentReactionModule.Interface;
 using BE_Homnayangi.Modules.BlogModule.Interface;
+using BE_Homnayangi.Modules.CustomerModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.Utils;
 using Library.Models;
@@ -21,14 +22,16 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
         private readonly IAccomplishmentReactionRepository _accomplishmentReactionRepository;
         private readonly IBlogRepository _blogRepository;
         private readonly IUserRepository _userRepository;
+        private readonly ICustomerRepository _customerRepository;
 
         public AccomplishmentService(IAccomplishmentRepository accomplishmentRepository, IBlogRepository blogRepository,
-            IUserRepository userRepository, IAccomplishmentReactionRepository accomplishmentReactionRepository)
+            IUserRepository userRepository, IAccomplishmentReactionRepository accomplishmentReactionRepository, ICustomerRepository customerRepository)
         {
             _accomplishmentRepository = accomplishmentRepository;
             _accomplishmentReactionRepository = accomplishmentReactionRepository;
             _blogRepository = blogRepository;
             _userRepository = userRepository;
+            _customerRepository = customerRepository;
         }
 
         #region Create Accomplishment
@@ -337,20 +340,20 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
         #endregion
 
         #region Delete Accomplishment
-        public async Task<bool> RejectAccomplishment(Guid userId, Guid accomplishmentId)
+        public async Task<bool> RejectAccomplishment(Guid customerId, Guid accomplishmentId)
         {
             bool isUpdated = false;
             try
             {
-                var tmpUser = await _userRepository.GetFirstOrDefaultAsync(u => u.UserId == userId && !u.IsBlocked.Value);
-                if (tmpUser == null)
-                    throw new Exception(ErrorMessage.UserError.USER_NOT_EXISTED);
+                var tmpCustomer = await _customerRepository.GetFirstOrDefaultAsync(u => u.CustomerId == customerId && !u.IsBlocked.Value);
+                if (tmpCustomer == null)
+                    throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_FOUND);
                 var accom = await _accomplishmentRepository.GetFirstOrDefaultAsync(a => a.AccomplishmentId == accomplishmentId
-                                                                && a.Status == (int)Status.AccomplishmentStatus.PENDING);
+                                                                && a.Status == (int)Status.AccomplishmentStatus.PENDING
+                                                                && a.AuthorId == customerId);
                 if (accom == null)
                     throw new Exception(ErrorMessage.AccomplishmentError.ACCOMPLISHMENT_NOT_FOUND);
 
-                accom.ConfirmBy = userId;
                 accom.Status = (int)Status.AccomplishmentStatus.DEACTIVE;
                 await _accomplishmentRepository.UpdateAsync(accom);
                 isUpdated = true;
