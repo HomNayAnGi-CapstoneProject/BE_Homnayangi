@@ -202,7 +202,7 @@ namespace BE_Homnayangi.Controllers
         #region
 
         [Authorize(Roles = "Customer")]
-        [HttpPut("reject/{accomplishmentId}")] // delete soft: ACTIVE > DEACTIVE
+        [HttpDelete("customer-delete/{accomplishmentId}")] // delete soft: ACTIVE || PENDING || DRAFTED > DEACTIVE
         public async Task<ActionResult> RejectAccomplishment([FromRoute] Guid accomplishmentId)
         {
             try
