@@ -305,6 +305,7 @@ namespace BE_Homnayangi
             //Accomplishment Reaction Module
             services.AddScoped<IAccomplishmentReactionRepository, AccomplishmentReactionRepository>();
             //CronJob Time Config Module
+            services.AddScoped<ICronJobTimeConfigService, CronJobTimeConfigService>();
             services.AddScoped<ICronJobTimeConfigRepository, CronJobTimeConfigRepository>();
         }
 
