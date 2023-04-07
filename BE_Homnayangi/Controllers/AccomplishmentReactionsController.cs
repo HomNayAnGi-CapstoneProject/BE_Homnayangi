@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BE_Homnayangi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class AccomplishmentReactionsController : ControllerBase
     {
@@ -51,7 +51,7 @@ namespace BE_Homnayangi.Controllers
         // PUT: api/AccomplishmentReactions/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{accomplishmentId}")]
-        public async Task<IActionResult> InteractWithAccomplishment([FromRoute]Guid accomplishmentId)
+        public async Task<IActionResult> InteractWithAccomplishment([FromRoute] Guid accomplishmentId)
         {
             try
             {
