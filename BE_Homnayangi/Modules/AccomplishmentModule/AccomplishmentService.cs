@@ -349,7 +349,9 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                 if (tmpCustomer == null)
                     throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_FOUND);
                 var accom = await _accomplishmentRepository.GetFirstOrDefaultAsync(a => a.AccomplishmentId == accomplishmentId
-                                                                && a.Status == (int)Status.AccomplishmentStatus.PENDING
+                                                                && (a.Status == (int)Status.AccomplishmentStatus.ACTIVE ||
+                                                                    a.Status == (int)Status.AccomplishmentStatus.PENDING || 
+                                                                    a.Status == (int)Status.AccomplishmentStatus.DRAFTED)
                                                                 && a.AuthorId == customerId);
                 if (accom == null)
                     throw new Exception(ErrorMessage.AccomplishmentError.ACCOMPLISHMENT_NOT_FOUND);
