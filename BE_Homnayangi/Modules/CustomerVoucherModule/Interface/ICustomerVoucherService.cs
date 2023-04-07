@@ -24,6 +24,7 @@ namespace BE_Homnayangi.Modules.CustomerVoucherModule.Interface
         public Task<CustomerVoucher> GetCustomerVoucherByCombineID(Guid cusId, Guid voucherId);
 
         public Task<bool> DeleteCustomerVouchersByVoucherId(Guid voucherId);
+        public void AwardVoucher();
 
     }
 }

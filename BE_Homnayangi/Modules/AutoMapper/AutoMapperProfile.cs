@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BE_Homnayangi.Modules.CommentModule.Response;
 using BE_Homnayangi.Modules.CustomerVoucherModule.Request;
+using BE_Homnayangi.Modules.CustomerVoucherModule.Validation;
 using BE_Homnayangi.Modules.DTO.IngredientDTO;
 using BE_Homnayangi.Modules.DTO.RecipeDetailsDTO;
 using BE_Homnayangi.Modules.DTO.RecipeDTO;
@@ -65,6 +66,8 @@ namespace BE_Homnayangi.Modules.AutoMapper
             // Badge
             CreateMap<CreateNewBadgeRequest, Badge>().ReverseMap();
             CreateMap<UpdateBadgeRequest, Badge>().ReverseMap();
+            //CronJob Time
+            CreateMap<CronJobTimeVoucher, CronJobTimeConfig>().ReverseMap();
         }
         private void CreateUserMap()
         {

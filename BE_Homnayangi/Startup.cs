@@ -79,6 +79,9 @@ using System.Linq;
 using System.Text;
 using Hangfire;
 using Hangfire.SqlServer;
+using BE_Homnayangi.Modules.AdminModules.CronJobTimeConfigModule.Interface;
+using BE_Homnayangi.Modules.AdminModules.CronJobTimeConfigModule;
+
 namespace BE_Homnayangi
 {
     public class Startup
@@ -110,17 +113,17 @@ namespace BE_Homnayangi
 
             services.AddDbContext<HomnayangiContext>(
                  options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            /*   services.AddQuartz(opt =>
-               {
-                   opt.UseMicrosoftDependencyInjectionJobFactory();
-                   var jobKey = new JobKey("BadgeJob");
-                   opt.AddJob<BadgeJob>(option => option.WithIdentity(jobKey));
-                   opt.AddTrigger(opts => opts
-                  .ForJob(jobKey)
-                  .WithIdentity($"{jobKey}-trigger")
-                  .WithCronSchedule(Configuration.GetSection("BadgeJob:CronSchedule").Value ?? "0 0/5 0 ? * * *"));
-               });
-               services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);*/
+            services.AddQuartz(opt =>
+            {
+                opt.UseMicrosoftDependencyInjectionJobFactory();
+                var jobKey = new JobKey("BadgeJob");
+                opt.AddJob<BadgeJob>(option => option.WithIdentity(jobKey));
+                opt.AddTrigger(opts => opts
+               .ForJob(jobKey)
+               .WithIdentity($"{jobKey}-trigger")
+               .WithCronSchedule(Configuration.GetSection("BadgeJob:CronSchedule").Value ?? "0 0/5 0 ? * * *"));
+            });
+            services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
             services.AddMvcCore().ConfigureApiBehaviorOptions(options =>
             {
                 options.InvalidModelStateResponseFactory = (errorContext) =>
@@ -298,9 +301,11 @@ namespace BE_Homnayangi
 
             //PriceNote Module
             services.AddScoped<IPriceNoteRepository, PriceNoteRepository>();
-            
+
             //Accomplishment Reaction Module
             services.AddScoped<IAccomplishmentReactionRepository, AccomplishmentReactionRepository>();
+            //CronJob Time Config Module
+            services.AddScoped<ICronJobTimeConfigRepository, CronJobTimeConfigRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

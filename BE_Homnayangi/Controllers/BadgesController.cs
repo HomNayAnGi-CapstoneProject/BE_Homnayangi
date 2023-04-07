@@ -163,8 +163,19 @@ namespace BE_Homnayangi.Controllers
         [HttpGet("begin-badge")]
         public IActionResult AwardBadgeToUser()
         {
-            _badgeService.AwardBadge();
-            return Ok();
+            try
+            {
+                _badgeService.AwardBadge();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
+            }
         }
     }
 }

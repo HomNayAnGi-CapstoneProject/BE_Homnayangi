@@ -39,7 +39,6 @@ namespace BE_Homnayangi.Ultils.Quartz
         }
         public async Task Execute(IJobExecutionContext context)
         {
-            Console.WriteLine("Hello from Quartz");
             await BadgeCondition();
 
         }
@@ -65,39 +64,44 @@ namespace BE_Homnayangi.Ultils.Quartz
          .ToList();
             foreach (Customer customer in customers)
             {
-                int accomplishments = customer.Accomplishments.Count();
-                int orders = customer.Orders.Count();
+
                 Console.WriteLine(customer.Displayname);
                 var badgeConditions = await _badgeConditionRepository.GetAll();
-                badgeConditions = badgeConditions.Where(x => x.Accomplishments <= accomplishments && x.Orders <= orders).ToList();
+                /*         badgeConditions = badgeConditions.Where(x => x.Accomplishments <= accomplishmentsCount && x.Orders <= ordersCount ).ToList();*/
                 foreach (BadgeCondition badgeCondition in badgeConditions)
                 {
-                    var tmp = await _customerBadgeRepository.GetFirstOrDefaultAsync(x => x.CustomerId == customer.CustomerId && x.BadgeId == badgeCondition.BadgeId);
-                    if (tmp == null)
+                    var accomplishments = customer.Accomplishments.Where(x => x.CreatedDate >= badgeCondition.CreatedDate);
+                    var orders = customer.Orders.Where(x => x.OrderDate >= badgeCondition.CreatedDate);
+
+                    if (badgeCondition.Accomplishments <= accomplishments.Count() && badgeCondition.Orders <= orders.Count())
                     {
-                        CustomerBadge customerBadge = new CustomerBadge
+                        var tmp = await _customerBadgeRepository.GetFirstOrDefaultAsync(x => x.CustomerId == customer.CustomerId && x.BadgeId == badgeCondition.BadgeId);
+                        if (tmp == null)
                         {
-                            CustomerId = customer.CustomerId,
-                            BadgeId = badgeCondition.BadgeId,
-                            CreatedDate = DateTime.Now
-
-                        };
-
-                        _customerBadgeRepository.Add(customerBadge);
-                        var badge = await _badgeRepository.GetByIdAsync(customerBadge.BadgeId);
-                        var cv = await _customerVoucherRepository.GetFirstOrDefaultAsync(x => x.CustomerId == customer.CustomerId && x.VoucherId == badge.VoucherId);
-                        if (cv == null)
-                        {
-                            CustomerVoucher customerVoucher = new CustomerVoucher
+                            CustomerBadge customerBadge = new CustomerBadge
                             {
-                                CustomerVoucherId = Guid.NewGuid(),
                                 CustomerId = customer.CustomerId,
-                                VoucherId = (Guid)badge.VoucherId,
+                                BadgeId = badgeCondition.BadgeId,
                                 CreatedDate = DateTime.Now
 
-
                             };
-                            _customerVoucherRepository.Add(customerVoucher);
+
+                            _customerBadgeRepository.Add(customerBadge);
+                            var badge = await _badgeRepository.GetByIdAsync(customerBadge.BadgeId);
+                            var cv = await _customerVoucherRepository.GetFirstOrDefaultAsync(x => x.CustomerId == customer.CustomerId && x.VoucherId == badge.VoucherId);
+                            if (cv == null)
+                            {
+                                CustomerVoucher customerVoucher = new CustomerVoucher
+                                {
+                                    CustomerVoucherId = Guid.NewGuid(),
+                                    CustomerId = customer.CustomerId,
+                                    VoucherId = (Guid)badge.VoucherId,
+                                    CreatedDate = DateTime.Now
+
+
+                                };
+                                _customerVoucherRepository.Add(customerVoucher);
+                            }
                         }
                     }
                 };
