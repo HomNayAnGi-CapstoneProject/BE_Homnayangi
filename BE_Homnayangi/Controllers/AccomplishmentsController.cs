@@ -1,7 +1,6 @@
 ﻿using BE_Homnayangi.Modules.AccomplishmentModule.Interface;
 using BE_Homnayangi.Modules.AccomplishmentModule.Request;
 using BE_Homnayangi.Modules.UserModule.Interface;
-using Library.Models.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -202,8 +201,8 @@ namespace BE_Homnayangi.Controllers
 
         #region
 
-        //[Authorize(Roles = "Staff,Manager")]
-        [HttpPut("reject/{accomplishmentId}")] // delete soft: ACTIVE > DEACTIVE
+        [Authorize(Roles = "Customer")]
+        [HttpDelete("customer-delete/{accomplishmentId}")] // delete soft: ACTIVE || PENDING || DRAFTED > DEACTIVE
         public async Task<ActionResult> RejectAccomplishment([FromRoute] Guid accomplishmentId)
         {
             try

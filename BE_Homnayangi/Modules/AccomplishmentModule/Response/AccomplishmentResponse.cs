@@ -15,5 +15,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule.Response
         public string AuthorFullName { get; set; }
         public string Avatar { get; set; }
         public int Reaction { get; set; }
+        public Guid BlogId { get; set; }
+        public string BlogTitle { get; set; }
     }
 }

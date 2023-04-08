@@ -22,7 +22,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule.Interface
         public Task<ICollection<AccomplishmentResponse>> GetAccomplishmentsByCustomerId(Guid customerId);
 
         // Delete
-        public Task<bool> RejectAccomplishment(Guid userId, Guid accomplishmentId);
+        public Task<bool> RejectAccomplishment(Guid customerId, Guid accomplishmentId);
         public Task<bool> DeleteHardAccomplishment(Guid accomplishmentId);
 
     }

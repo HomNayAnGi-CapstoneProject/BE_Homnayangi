@@ -7,6 +7,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule.Response
         public Guid AccomplishmentId { get; set; }
         public Guid AuthorId { get; set; }
         public string AuthorFullName { get; set; }
+        public string Avatar { get; set; }
         public DateTime CreatedDate { get; set; }
         public int Reaction { get; set; }
         public int Status { get; set; }

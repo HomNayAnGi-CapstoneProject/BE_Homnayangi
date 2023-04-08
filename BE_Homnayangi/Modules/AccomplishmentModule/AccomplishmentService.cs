@@ -3,6 +3,7 @@ using BE_Homnayangi.Modules.AccomplishmentModule.Request;
 using BE_Homnayangi.Modules.AccomplishmentModule.Response;
 using BE_Homnayangi.Modules.AccomplishmentReactionModule.Interface;
 using BE_Homnayangi.Modules.BlogModule.Interface;
+using BE_Homnayangi.Modules.CustomerModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.Utils;
 using Library.Models;
@@ -21,14 +22,16 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
         private readonly IAccomplishmentReactionRepository _accomplishmentReactionRepository;
         private readonly IBlogRepository _blogRepository;
         private readonly IUserRepository _userRepository;
+        private readonly ICustomerRepository _customerRepository;
 
         public AccomplishmentService(IAccomplishmentRepository accomplishmentRepository, IBlogRepository blogRepository,
-            IUserRepository userRepository, IAccomplishmentReactionRepository accomplishmentReactionRepository)
+            IUserRepository userRepository, IAccomplishmentReactionRepository accomplishmentReactionRepository, ICustomerRepository customerRepository)
         {
             _accomplishmentRepository = accomplishmentRepository;
             _accomplishmentReactionRepository = accomplishmentReactionRepository;
             _blogRepository = blogRepository;
             _userRepository = userRepository;
+            _customerRepository = customerRepository;
         }
 
         #region Create Accomplishment
@@ -165,7 +168,10 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                     {
                         AccomplishmentId = a.AccomplishmentId,
                         AuthorId = a.AuthorId.Value,
-                        AuthorFullName = a.Author.Firstname + " " + a.Author.Lastname,
+                        AuthorFullName = a.Author.Firstname != null && a.Author.Lastname != null 
+                                            ? a.Author.Firstname + " " + a.Author.Lastname 
+                                            : a.Author.Displayname,
+                        Avatar = a.Author.Avatar,
                         CreatedDate = a.CreatedDate.Value,
                         Status = a.Status.Value,
                         Reaction = reactions.Where(r => r.AccomplishmentId == a.AccomplishmentId).Count(),
@@ -192,7 +198,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
             try
             {
                 var tmpAccoms = await _accomplishmentRepository.GetAccomplishmentsBy(a => a.BlogId == blogId && a.Status == (int)Status.AccomplishmentStatus.ACTIVE,
-                                                                includeProperties: "Author,ConfirmByNavigation");
+                                                                includeProperties: "Author,ConfirmByNavigation,Blog");
                 var reactions = await _accomplishmentReactionRepository.GetAccomplishmentReactionsBy(r => r.Status);
                 foreach (var a in tmpAccoms)
                 {
@@ -208,6 +214,8 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                         AuthorFullName = a.Author.Firstname + " " + a.Author.Lastname,
                         Avatar = a.Author.Avatar,
                         Reaction = reactions.Where(r => r.AccomplishmentId == a.AccomplishmentId).Count(),
+                        BlogId = a.BlogId.Value,
+                        BlogTitle = a.Blog.Title,
                     };
                     result.Add(tmp);
                 }
@@ -264,7 +272,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
             try
             {
                 var accoms = await _accomplishmentRepository.GetAccomplishmentsBy(a => a.AuthorId == customerId,
-                                                                    includeProperties: "Author,ConfirmByNavigation");
+                                                                    includeProperties: "Author,ConfirmByNavigation,Blog");
                 var reactions = await _accomplishmentReactionRepository.GetAccomplishmentReactionsBy(r => r.Status);
 
                 if (accoms.Count > 0)
@@ -282,6 +290,8 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                             AuthorFullName = a.Author.Firstname + " " + a.Author.Lastname,
                             Avatar = a.Author.Avatar,
                             Reaction = reactions.Where(r => r.AccomplishmentId == a.AccomplishmentId).Count(),
+                            BlogId = a.BlogId.Value,
+                            BlogTitle = a.Blog.Title,
                         };
                         result.Add(tmp);
                     }
@@ -330,20 +340,22 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
         #endregion
 
         #region Delete Accomplishment
-        public async Task<bool> RejectAccomplishment(Guid userId, Guid accomplishmentId)
+        public async Task<bool> RejectAccomplishment(Guid customerId, Guid accomplishmentId)
         {
             bool isUpdated = false;
             try
             {
-                var tmpUser = await _userRepository.GetFirstOrDefaultAsync(u => u.UserId == userId && !u.IsBlocked.Value);
-                if (tmpUser == null)
-                    throw new Exception(ErrorMessage.UserError.USER_NOT_EXISTED);
+                var tmpCustomer = await _customerRepository.GetFirstOrDefaultAsync(u => u.CustomerId == customerId && !u.IsBlocked.Value);
+                if (tmpCustomer == null)
+                    throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_FOUND);
                 var accom = await _accomplishmentRepository.GetFirstOrDefaultAsync(a => a.AccomplishmentId == accomplishmentId
-                                                                && a.Status == (int)Status.AccomplishmentStatus.PENDING);
+                                                                && (a.Status == (int)Status.AccomplishmentStatus.ACTIVE ||
+                                                                    a.Status == (int)Status.AccomplishmentStatus.PENDING || 
+                                                                    a.Status == (int)Status.AccomplishmentStatus.DRAFTED)
+                                                                && a.AuthorId == customerId);
                 if (accom == null)
                     throw new Exception(ErrorMessage.AccomplishmentError.ACCOMPLISHMENT_NOT_FOUND);
 
-                accom.ConfirmBy = userId;
                 accom.Status = (int)Status.AccomplishmentStatus.DEACTIVE;
                 await _accomplishmentRepository.UpdateAsync(accom);
                 isUpdated = true;
