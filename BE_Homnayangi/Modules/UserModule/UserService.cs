@@ -391,7 +391,7 @@ namespace BE_Homnayangi.Modules.UserModule
 
                 }),
 
-                        Expires = DateTime.UtcNow.AddMinutes(60),
+                        Expires = DateTime.UtcNow.AddMinutes(180),
                         SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytesCustomer), SecurityAlgorithms.HmacSha512Signature)
                     };
 
@@ -427,7 +427,7 @@ namespace BE_Homnayangi.Modules.UserModule
 
                 }),
 
-                            Expires = DateTime.UtcNow.AddMinutes(60),
+                            Expires = DateTime.UtcNow.AddMinutes(180),
                             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytesAdmin), SecurityAlgorithms.HmacSha512Signature)
                         };
 
@@ -462,7 +462,7 @@ namespace BE_Homnayangi.Modules.UserModule
                     new Claim(ClaimTypes.Role, user.Role == 1 ? CommonEnum.RoleEnum.MANAGER : CommonEnum.RoleEnum.STAFF )
                 }),
 
-                    Expires = DateTime.UtcNow.AddMinutes(60),
+                    Expires = DateTime.UtcNow.AddMinutes(180),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha512Signature)
 
                 };
@@ -506,7 +506,7 @@ namespace BE_Homnayangi.Modules.UserModule
 
                 }),
 
-                        Expires = DateTime.UtcNow.AddMinutes(60),
+                        Expires = DateTime.UtcNow.AddMinutes(180),
                         SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytesAdmin), SecurityAlgorithms.HmacSha512Signature)
                     };
 
@@ -543,7 +543,7 @@ namespace BE_Homnayangi.Modules.UserModule
                     new Claim(ClaimTypes.Role, CommonEnum.RoleEnum.CUSTOMER)
 
                 }),
-                            Expires = DateTime.UtcNow.AddMinutes(60),
+                            Expires = DateTime.UtcNow.AddMinutes(180),
                             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytesCustomer), SecurityAlgorithms.HmacSha512Signature)
                         };
                         var principal = new ClaimsPrincipal(tokenDescriptionCustomer.Subject);
@@ -580,7 +580,7 @@ namespace BE_Homnayangi.Modules.UserModule
                     new Claim(ClaimTypes.Role, CommonEnum.RoleEnum.CUSTOMER)
 
                 }),
-                            Expires = DateTime.UtcNow.AddMinutes(60),
+                            Expires = DateTime.UtcNow.AddMinutes(180),
                             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytesCustomer), SecurityAlgorithms.HmacSha512Signature)
                         };
                         var principal = new ClaimsPrincipal(tokenDescriptionCustomer.Subject);
@@ -613,7 +613,7 @@ namespace BE_Homnayangi.Modules.UserModule
                     new Claim("Avatar", user.Avatar  == null ? "" : user.Avatar),
                     new Claim(ClaimTypes.Role,user.Role == 1 ? CommonEnum.RoleEnum.MANAGER : CommonEnum.RoleEnum.STAFF)
                 }),
-                    Expires = DateTime.UtcNow.AddMinutes(60),
+                    Expires = DateTime.UtcNow.AddMinutes(180),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha512Signature)
                 };
 
