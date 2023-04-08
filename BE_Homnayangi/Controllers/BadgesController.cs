@@ -3,6 +3,9 @@ using BE_Homnayangi.Modules.BadgeModule.DTO.Request;
 using BE_Homnayangi.Modules.BadgeModule.Interface;
 using BE_Homnayangi.Modules.BadgeModule.Response;
 using BE_Homnayangi.Modules.RewardModule.DTO.Request;
+using BE_Homnayangi.Modules.Utils;
+using BE_Homnayangi.Ultils.Quartz;
+using Hangfire;
 using Library.Models;
 using Library.Models.Enum;
 using Microsoft.AspNetCore.Authorization;
@@ -154,6 +157,23 @@ namespace BE_Homnayangi.Controllers
                 {
                     status = "failed",
                     message = ex.Message
+                });
+            }
+        }
+        [HttpGet("begin-badge")]
+        public IActionResult AwardBadgeToUser()
+        {
+            try
+            {
+                _badgeService.AwardBadge();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
                 });
             }
         }

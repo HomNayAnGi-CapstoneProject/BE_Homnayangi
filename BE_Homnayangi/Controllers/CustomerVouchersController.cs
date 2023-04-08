@@ -59,6 +59,24 @@ namespace BE_Homnayangi.Controllers
                     data = cv
                 });
             }
+
+        }
+        [HttpGet("begin-voucher")]
+        public IActionResult AwardBadgeToUser()
+        {
+            try
+            {
+                _customerVoucherService.AwardVoucher();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
+            }
         }
     }
 }
