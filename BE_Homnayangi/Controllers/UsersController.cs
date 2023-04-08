@@ -32,13 +32,25 @@ namespace BE_Homnayangi.Controllers
         // GET: api/<ValuesController>
         [Authorize(Roles = "Manager")]
         [HttpGet]
-        public async Task<ActionResult<PagedResponse<PagedList<User>>>> GetAllUsers([FromQuery] PagingUserRequest request)
+        public async Task<ActionResult> GetAllUsers()
         {
-            var response = await _userService.GetAllUser(request);
-            return Ok(new
+            try
             {
-                result = response
-            });
+                var result = await _userService.GetUserByRole("Staff");
+                return new JsonResult(new
+                {
+                    status = "success",
+                    result = result
+                });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
+            }
         }
 
 

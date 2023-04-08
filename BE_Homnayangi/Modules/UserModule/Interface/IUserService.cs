@@ -13,7 +13,6 @@ namespace BE_Homnayangi.Modules.UserModule.Interface
     public interface IUserService
     {
         #region CRUD staff
-        public Task<PagedResponse<PagedList<User>>> GetAllUser(PagingUserRequest request);
         public Task<User> GetUserByEmail(string email);
         public Task<User> GetUserById(Guid id);
         public Task AddNewUser(User newUser);

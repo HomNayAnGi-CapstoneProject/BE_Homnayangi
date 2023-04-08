@@ -56,14 +56,6 @@ namespace BE_Homnayangi.Modules.UserModule
         }
 
         #region CRUD User
-        public async Task<PagedResponse<PagedList<User>>> GetAllUser(PagingUserRequest request)
-        {
-            int pageNumber = request.PageNumber;
-            int pageSize = request.PageSize;
-            var user = await _userRepository.GetUsersBy(x => x.Role == 1, includeProperties: "Blogs");
-            var response = PagedList<User>.ToPagedList(source: user, pageNumber: pageNumber, pageSize: pageSize);
-            return response.ToPagedResponse();
-        }
 
         public async Task<User> GetUserByEmail(string email)
         {
