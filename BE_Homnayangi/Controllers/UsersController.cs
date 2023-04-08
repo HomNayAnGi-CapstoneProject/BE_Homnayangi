@@ -15,7 +15,6 @@ namespace BE_Homnayangi.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Manager")]
     public class UsersController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -31,18 +30,32 @@ namespace BE_Homnayangi.Controllers
         }
 
         // GET: api/<ValuesController>
+        [Authorize(Roles = "Manager")]
         [HttpGet]
-        public async Task<ActionResult<PagedResponse<PagedList<User>>>> GetAllUsers([FromQuery] PagingUserRequest request)
+        public async Task<ActionResult> GetAllUsers()
         {
-            var response = await _userService.GetAllUser(request);
-            return Ok(new
+            try
             {
-                result = response
-            });
+                var result = await _userService.GetUserByRole("Staff");
+                return new JsonResult(new
+                {
+                    status = "success",
+                    result = result
+                });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
+            }
         }
 
 
         // GET api/<ValuesController>/5
+        [Authorize(Roles = "Manager")]
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUserById([FromRoute] Guid id)
         {
@@ -53,13 +66,13 @@ namespace BE_Homnayangi.Controllers
             });
         }
 
-
-
         private async Task<bool> UserExists(Guid id)
         {
             return await _userService.GetUserById(id) != null;
         }
+
         // POST api/<ValuesController>
+        [Authorize(Roles = "Manager")]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CreateUser createUser)
         {
@@ -94,8 +107,8 @@ namespace BE_Homnayangi.Controllers
             return Ok("Create staff succcessfully");
         }
 
-
         //PUT api/<ValuesController>/5
+        [Authorize(Roles = "Manager")]
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] UpdateUser updateUser)
         {
@@ -123,7 +136,9 @@ namespace BE_Homnayangi.Controllers
             }
 
         }
+
         //DELETE api/<ValuesController>/5
+        [Authorize(Roles = "Manager")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
@@ -148,5 +163,96 @@ namespace BE_Homnayangi.Controllers
             });
             ;
         }
+
+        #region Admin's actions
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("admin-manage/managers")]
+        public async Task<IActionResult> GetAllManagersByAdmin()
+        {
+            try
+            {
+                var result = await _userService.GetUserByRole("Manager");
+                return new JsonResult(new
+                {
+                    status = "success",
+                    result = result
+                });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut("admin-manage/status")]
+        public async Task<IActionResult> UnBlockManagerByAdmin([FromBody] UpdatedStatusManager request)
+        {
+            try
+            {
+                var result = await _userService.ChangeStatusManagerByAdmin(request);
+                if (result)
+                {
+                    return new JsonResult(new
+                    {
+                        status = "success"
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        status = "failed"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("admin-manage")]
+        public async Task<IActionResult> CreateANewManager([FromBody] CreateManager request)
+        {
+            try
+            {
+                var result = await _userService.CreateANewManager(request);
+                if (result)
+                {
+                    return new JsonResult(new
+                    {
+                        status = "success"
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        status = "failed"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
+            }
+        }
+
+        #endregion
     }
 }

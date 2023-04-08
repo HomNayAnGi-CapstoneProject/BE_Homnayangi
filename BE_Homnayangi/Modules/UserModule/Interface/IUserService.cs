@@ -4,7 +4,7 @@ using Library.Models;
 using Library.Models.DTO.UserDTO;
 using Library.PagedList;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BE_Homnayangi.Modules.UserModule.Interface
@@ -13,7 +13,6 @@ namespace BE_Homnayangi.Modules.UserModule.Interface
     public interface IUserService
     {
         #region CRUD staff
-        public Task<PagedResponse<PagedList<User>>> GetAllUser(PagingUserRequest request);
         public Task<User> GetUserByEmail(string email);
         public Task<User> GetUserById(Guid id);
         public Task AddNewUser(User newUser);
@@ -39,6 +38,18 @@ namespace BE_Homnayangi.Modules.UserModule.Interface
         public Task<string> GenerateGoolgleToken(LoginGoogleDTO loginGoogle);
         public Task Register(RegisterDTO register);
         #endregion
+        
         public CurrentUserResponse GetCurrentUser(string authHeader);
+
+        #region CRUD Manager (Admin's actions)
+
+        public Task<ICollection<CurrentUserResponse>> GetUserByRole(string role);
+
+        public Task<bool> ChangeStatusManagerByAdmin(UpdatedStatusManager request);
+
+        public Task<bool> CreateANewManager(CreateManager request);
+
+
+        #endregion
     }
 }

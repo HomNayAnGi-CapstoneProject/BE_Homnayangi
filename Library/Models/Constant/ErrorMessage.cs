@@ -20,6 +20,7 @@ namespace Library.Models.Constant
             public readonly static string NOT_OWNER = "You are not the owner";
             public readonly static string USERNAME_EXISTED = "Username is already existed with another user";
             public readonly static string EMAIL_EXISTED = "This email is already existed with another user";
+            public readonly static string PHONE_EXISTED = "This phone is already existed with another user";
             public readonly static string USER_NOT_EXISTED = "This user can not be found";
             public readonly static string USER_EXISTED = "This user is existed";
             public readonly static string USER_NOT_LOGIN = "You did not login. Login and try this action again, please!";
@@ -103,6 +104,13 @@ namespace Library.Models.Constant
         public static class SeasonRefError
         {
             public readonly static string SEASON_REF_NOT_FOUND = "This season reference can not be found";
+        }
+        #endregion
+
+        #region Manager error message
+        public static class ManagerError
+        {
+            public readonly static string MANAGER_NOT_FOUND = "Manager is not found";
         }
         #endregion
 

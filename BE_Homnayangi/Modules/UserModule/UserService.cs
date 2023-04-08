@@ -1,29 +1,28 @@
-﻿using Library.Commons;
+﻿using AutoMapper;
+using BE_Homnayangi.Modules.CustomerModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Interface;
+using BE_Homnayangi.Modules.UserModule.Request;
+using BE_Homnayangi.Modules.UserModule.Response;
+using BE_Homnayangi.Modules.Utils;
+using Library.Commons;
 using Library.Models;
+using Library.Models.Constant;
 using Library.Models.DTO.UserDTO;
+using Library.Models.Enum;
+using Library.PagedList;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using AutoMapper;
-using System.Security.Cryptography;
-using System.IO;
-using Library.PagedList;
-using BE_Homnayangi.Modules.UserModule.Request;
-using System.Linq.Expressions;
-using BE_Homnayangi.Modules.CustomerModule.Interface;
-using Library.Models.Constant;
-using Microsoft.AspNetCore.Http;
-using BE_Homnayangi.Modules.UserModule.Response;
-using BE_Homnayangi.Utils;
-using BE_Homnayangi.Modules.Utils;
-using Library.Models.Enum;
 
 namespace BE_Homnayangi.Modules.UserModule
 {
@@ -57,33 +56,20 @@ namespace BE_Homnayangi.Modules.UserModule
         }
 
         #region CRUD User
-        public async Task<PagedResponse<PagedList<User>>> GetAllUser(PagingUserRequest request)
-        {
-
-            int pageNumber = request.PageNumber;
-            int pageSize = request.PageSize;
-            var user = await _userRepository.GetUsersBy(x => x.Role == 1, includeProperties: "Blogs");
-            var response = PagedList<User>.ToPagedList(source: user, pageNumber: pageNumber, pageSize: pageSize);
-            return response.ToPagedResponse();
-
-
-
-
-
-        }
 
         public async Task<User> GetUserByEmail(string email)
         {
             User user = await _userRepository.GetFirstOrDefaultAsync(x => x.Email == email); ;
             return user;
         }
+
         public User GetUserByUsername(string? username)
         {
             return _userRepository.GetFirstOrDefaultAsync(x => x.Username == username).Result;
         }
+
         public async Task<User> GetUserById(Guid id)
         {
-
             User user = await _userRepository.GetFirstOrDefaultAsync(x => x.UserId == id, includeProperties: "Blogs");
             return user;
         }
@@ -96,42 +82,17 @@ namespace BE_Homnayangi.Modules.UserModule
             {
                 if (customer.Username == null && customer.Email == null)
                 {
-                    //generate random password
-                    string RandomString(int size, bool lowerCase = false)
-                    {
-                        var builder = new StringBuilder(size);
-
-                        Random _random = new Random();
-
-                        char offset = lowerCase ? 'a' : 'A';
-                        const int lettersOffset = 26; // A...Z or a..z: length=26  
-
-                        for (var i = 0; i < size; i++)
-                        {
-                            var @char = (char)_random.Next(offset, offset + lettersOffset);
-                            builder.Append(@char);
-                        }
-                        return lowerCase ? builder.ToString().ToLower() : builder.ToString();
-                    }
-                    var sb = new StringBuilder();
-                    sb.Append(RandomString(8, true));
-                    string pw = sb.ToString();
-
-                    string encryptPassword = EncryptPassword(pw);
-
                     //Add user
-                    newUser.Password = encryptPassword;
+                    newUser.Password = GenerateEncryptRandomPassword();
                     newUser.CreatedDate = DateTime.Now;
                     newUser.Role = 2;
                     newUser.IsBlocked = false;
                     newUser.IsGoogle = newUser.Email == null ? false : true;
-
-
-
                     await _userRepository.AddAsync(newUser);
                 }
             }
         }
+
         public async Task<bool?> BlockUserById(Guid id)
         {
             bool isBlock = false;
@@ -228,6 +189,7 @@ namespace BE_Homnayangi.Modules.UserModule
             }
             return isUpdated;
         }
+
         public async Task UpdateUserPassword(Guid userId, string oldPass, string newPass)
         {
             User user = await _userRepository.GetFirstOrDefaultAsync(x => x.UserId == userId);
@@ -247,8 +209,175 @@ namespace BE_Homnayangi.Modules.UserModule
             await _userRepository.UpdateAsync(user);
         }
 
+        // Admin's actions
 
+        public async Task<ICollection<CurrentUserResponse>> GetUserByRole(string role)
+        {
+            try
+            {
+                int roleNumber = ConvertRole(role);
+                var users = await _userRepository.GetUsersBy(u => u.Role == roleNumber);
+                var result = users.Select(m => new CurrentUserResponse()
+                {
+                    Id = m.UserId,
+                    Displayname = m.Displayname,
+                    Username = m.Username,
+                    Firstname = m.Firstname,
+                    Lastname = m.Lastname,
+                    Email = m.Email,
+                    Phonenumber = m.Phonenumber,
+                    Gender = m.Gender,
+                    Avatar = m.Avatar,
+                    Role = CommonEnum.RoleEnum.MANAGER,
+                    Status = m.IsBlocked.Value,
+                }).ToList();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at GetUserByRole: " + ex.Message);
+                throw new Exception(ex.Message);
+            }
+        }
 
+        public async Task<bool> ChangeStatusManagerByAdmin(UpdatedStatusManager request)
+        {
+            bool isUpdated = false;
+            try
+            {
+                var manager = await _userRepository.GetFirstOrDefaultAsync(m => m.UserId == request.ManagerId && m.Role == 1);
+                if (manager == null)
+                    throw new Exception(ErrorMessage.ManagerError.MANAGER_NOT_FOUND);
+                manager.IsBlocked = request.IsBlocked;
+                await _userRepository.UpdateAsync(manager);
+                isUpdated = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at UnblockManagerByAdmin: " + ex.Message);
+                throw new Exception(ex.Message);
+            }
+            return isUpdated;
+        }
+
+        public async Task<bool> CreateANewManager(CreateManager request)
+        {
+            bool isInserted = false;
+            try
+            {
+
+                var users = await _userRepository.GetAll();
+                var customers = await _customerRepository.GetAll();
+
+                string username = request.Username.Trim();
+                string email = request.Email.Trim();
+                string phone = request.Phonenumber.Trim();
+
+                // Check duplicated data or not? (username, email, password)
+                IsDuplicatedUsername(username, users, customers);
+                IsDuplicatedEmail(email, users, customers);
+                IsDuplicatedPhone(phone, users, customers);
+
+                User manager = new User()
+                {
+                    UserId = Guid.NewGuid(),
+                    Displayname = request.Firstname + " " + request.Lastname,
+                    Username = username,
+                    Firstname = request.Firstname.Trim(),
+                    Lastname = request.Lastname.Trim(),
+                    Email = email,
+                    Password = GenerateEncryptRandomPassword(),
+                    Phonenumber = phone,
+                    Gender = request.Gender,
+                    Avatar = null,
+                    Role = 1,
+                    CreatedDate = DateTime.Now,
+                    UpdatedDate = DateTime.Now,
+                    IsBlocked = false,
+                    IsGoogle = true
+                };
+                await _userRepository.AddAsync(manager);
+                isInserted = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at CreateANewManager: " + ex.Message);
+                throw new Exception(ex.Message);
+            }
+            return isInserted;
+        }
+
+        private void IsDuplicatedUsername(string username, ICollection<User> users, ICollection<Customer> customers)
+        {
+            try
+            {
+                var userNumber = users.Where(u => u.Username != null && u.Username.Equals(username)).Count();
+                var customerNumber = customers.Where(u => u.Username != null && u.Username.Equals(username)).Count();
+                if (userNumber > 0 || customerNumber > 0)
+                    throw new Exception(ErrorMessage.UserError.USERNAME_EXISTED);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at IsDuplicatedUsername: " + ex.Message);
+                throw new Exception(ex.Message);
+            }
+        }
+
+        private void IsDuplicatedEmail(string email, ICollection<User> users, ICollection<Customer> customers)
+        {
+            try
+            {
+                var userNumber = users.Where(u => u.Email != null && u.Email.Equals(email)).Count();
+                var customerNumber = customers.Where(u => u.Email != null && u.Email.Equals(email)).Count();
+                if (userNumber > 0 || customerNumber > 0)
+                    throw new Exception(ErrorMessage.UserError.EMAIL_EXISTED);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at IsDuplicatedEmail: " + ex.Message);
+                throw new Exception(ex.Message);
+            }
+        }
+
+        private void IsDuplicatedPhone(string phone, ICollection<User> users, ICollection<Customer> customers)
+        {
+            try
+            {
+                var userNumber = users.Where(u => u.Phonenumber != null && u.Phonenumber.Equals(phone)).Count();
+                var customerNumber = customers.Where(u => u.Phonenumber != null && u.Phonenumber.Equals(phone)).Count();
+                if (userNumber > 0 || customerNumber > 0)
+                    throw new Exception(ErrorMessage.UserError.PHONE_EXISTED);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at IsDuplicatedPhone: " + ex.Message);
+                throw new Exception(ex.Message);
+            }
+        }
+
+        private string GenerateEncryptRandomPassword()
+        {
+            string RandomString(int size, bool lowerCase = false)
+            {
+                var builder = new StringBuilder(size);
+
+                Random _random = new Random();
+
+                char offset = lowerCase ? 'a' : 'A';
+                const int lettersOffset = 26; // A...Z or a..z: length=26  
+
+                for (var i = 0; i < size; i++)
+                {
+                    var @char = (char)_random.Next(offset, offset + lettersOffset);
+                    builder.Append(@char);
+                }
+                return lowerCase ? builder.ToString().ToLower() : builder.ToString();
+            }
+            var sb = new StringBuilder();
+            sb.Append(RandomString(8, true));
+
+            return EncryptPassword(sb.ToString());
+        }
         #endregion
 
         #region CRUD Customer
@@ -260,22 +389,25 @@ namespace BE_Homnayangi.Modules.UserModule
             var response = PagedList<Customer>.ToPagedList(source: customer, pageNumber: pageNumber, pageSize: pageSize);
             return response.ToPagedResponse();
         }
+
         public Customer GetCustomerByEmail(string? email)
         {
             return _customerRepository.GetFirstOrDefaultAsync(x => x.Email == email).Result;
         }
+
         public Customer GetCustomerByUsername(string? username)
         {
             return _customerRepository.GetFirstOrDefaultAsync(x => x.Username == username).Result;
         }
+
         public async Task<Customer> GetCustomerById(Guid id)
         {
             Customer customer = await _customerRepository.GetFirstOrDefaultAsync(x => x.CustomerId == id, includeProperties: "Orders,Accomplishments");
             return customer;
         }
+
         public async Task<Customer> GetCustomerByIdAndusername(Guid? id, string userName)
         {
-
             Customer customer = await _customerRepository.GetFirstOrDefaultAsync(x => x.CustomerId == id && x.Username == userName);
             return customer;
         }
@@ -299,9 +431,8 @@ namespace BE_Homnayangi.Modules.UserModule
                 isBlock = false;
             }
             return isBlock;
-
-
         }
+
         public async Task<bool> UpdateCustomer(Customer customer)
         {
             bool isUpdated = false;
@@ -337,6 +468,7 @@ namespace BE_Homnayangi.Modules.UserModule
             }
             return isUpdated;
         }
+
         public async Task UpdateCustomerPassword(Guid userId, string oldPass, string newPass)
         {
             Customer customer = await _customerRepository.GetFirstOrDefaultAsync(x => x.CustomerId == userId);
@@ -355,7 +487,6 @@ namespace BE_Homnayangi.Modules.UserModule
 
             await _customerRepository.UpdateAsync(customer);
         }
-
 
         #endregion
 
@@ -414,18 +545,17 @@ namespace BE_Homnayangi.Modules.UserModule
                         var tokenDescriptionAdmin = new SecurityTokenDescriptor
                         {
                             Subject = new ClaimsIdentity(new[] {
-                    new Claim("Id", admin.Id.ToString()),
-                    new Claim(ClaimTypes.Name, admin.Username),
-                    new Claim("PhoneNumber", ""),
-                    new Claim("Displayname", ""),
-                    new Claim("Firstname", ""),
-                    new Claim("Lastname",""),
-                    new Claim(ClaimTypes.Gender,""),
-                    new Claim(ClaimTypes.Email, admin.Email),
-                    new Claim("Avatar", ""),
-                    new Claim(ClaimTypes.Role, CommonEnum.RoleEnum.ADMIN)
-
-                }),
+                                    new Claim("Id", admin.Id.ToString()),
+                                    new Claim(ClaimTypes.Name, admin.Username),
+                                    new Claim("PhoneNumber", ""),
+                                    new Claim("Displayname", ""),
+                                    new Claim("Firstname", ""),
+                                    new Claim("Lastname",""),
+                                    new Claim(ClaimTypes.Gender,""),
+                                    new Claim(ClaimTypes.Email, admin.Email),
+                                    new Claim("Avatar", ""),
+                                    new Claim(ClaimTypes.Role, CommonEnum.RoleEnum.ADMIN)
+                        }),
 
                             Expires = DateTime.UtcNow.AddMinutes(180),
                             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytesAdmin), SecurityAlgorithms.HmacSha512Signature)
@@ -474,12 +604,10 @@ namespace BE_Homnayangi.Modules.UserModule
 
             }
             return null;
-
-
         }
+
         public async Task<string> GenerateGoolgleToken(LoginGoogleDTO loginGoogle)
         {
-
             var user = await _userRepository.GetFirstOrDefaultAsync(x => x.Email == loginGoogle.Email);
             var admin = _admin;
             if (user == null)
@@ -700,8 +828,6 @@ namespace BE_Homnayangi.Modules.UserModule
             }
         }
 
-
-
         #endregion
 
         public CurrentUserResponse GetCurrentUser(string authHeader)
@@ -794,6 +920,35 @@ namespace BE_Homnayangi.Modules.UserModule
                 Console.WriteLine("Error at CheckExistedEmail: " + ex.Message);
                 throw new Exception(ex.Message);
             }
+        }
+
+        private int ConvertRole(string role)
+        {
+            int result = -1;
+            switch (role)
+            {
+                case CommonEnum.RoleEnum.CUSTOMER:
+                    {
+                        result = 0;
+                        break;
+                    }
+                case CommonEnum.RoleEnum.MANAGER:
+                    {
+                        result = 1;
+                        break;
+                    }
+                case CommonEnum.RoleEnum.STAFF:
+                    {
+                        result = 2;
+                        break;
+                    }
+                case CommonEnum.RoleEnum.ADMIN:
+                    {
+                        result = 3;
+                        break;
+                    }
+            }
+            return result;
         }
     }
 }
