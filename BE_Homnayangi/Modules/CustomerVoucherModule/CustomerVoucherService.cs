@@ -1,6 +1,14 @@
-﻿using BE_Homnayangi.Modules.CustomerVoucherModule.Interface;
+﻿using AutoMapper;
+using BE_Homnayangi.Modules.AdminModules.CronJobTimeConfigModule.Interface;
+using BE_Homnayangi.Modules.CustomerVoucherModule.Interface;
 using BE_Homnayangi.Modules.CustomerVoucherModule.Response;
+using BE_Homnayangi.Modules.CustomerVoucherModule.Validation;
+using BE_Homnayangi.Ultils.Quartz;
+using Hangfire;
 using Library.Models;
+using Library.Models.Enum;
+using Quartz;
+using Quartz.Impl.Triggers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +20,13 @@ namespace BE_Homnayangi.Modules.VoucherModule
     public class CustomerVoucherService : ICustomerVoucherService
     {
         private readonly ICustomerVoucherRepository _customerVoucherRepository;
-
-        public CustomerVoucherService(ICustomerVoucherRepository customerVoucherRepository)
+        private readonly ICronJobTimeConfigRepository _cronJobTimeConfigRepository;
+        private readonly IMapper _mapper;
+        public CustomerVoucherService(ICustomerVoucherRepository customerVoucherRepository, ICronJobTimeConfigRepository cronJobTimeConfigRepository, IMapper mapper)
         {
             _customerVoucherRepository = customerVoucherRepository;
+            _cronJobTimeConfigRepository = cronJobTimeConfigRepository;
+            _mapper = mapper;
         }
 
         public Task<ICollection<CustomerVoucher>> GetCustomerVouchersBy(
@@ -152,6 +163,43 @@ namespace BE_Homnayangi.Modules.VoucherModule
                 VoucherName = cv.Voucher != null ? cv.Voucher.Name : "",
                 CreatedDate = cv.Voucher != null ? cv.Voucher.CreatedDate : new DateTime()
             };
+        }
+
+        public void AwardVoucher()
+        {
+            try
+            {
+                var badgeTime = _cronJobTimeConfigRepository.GetFirstOrDefaultAsync(x => x.TargetObject == (int)CronJobTimeConfigType.CronJobTimeConfig.VOUCHER).Result;
+                var badgeTimeVoucher = _mapper.Map<CronJobTimeVoucher>(badgeTime);
+                var hour = badgeTimeVoucher.Hour;
+                var date = badgeTimeVoucher.Day;
+                var month = badgeTimeVoucher.Month;
+                var minute = badgeTimeVoucher.Minute;
+                if (month == null && date == null && hour == null)
+                {
+                    RecurringJob.AddOrUpdate<VoucherJob>("awardvoucher", x => x.AddVoucher(), Cron.Hourly((int)minute), TimeZoneInfo.Local);
+                }
+                else if (month == null && date == null)
+                {
+                    RecurringJob.AddOrUpdate<VoucherJob>("awardvoucher", x => x.AddVoucher(), Cron.Daily((int)hour, (int)minute), TimeZoneInfo.Local);
+
+                }
+                else if (month == null)
+                {
+                    RecurringJob.AddOrUpdate<VoucherJob>("awardvoucher", x => x.AddVoucher(), Cron.Monthly((int)hour, (int)minute), TimeZoneInfo.Local);
+                }
+                else
+                {
+                    RecurringJob.AddOrUpdate<VoucherJob>("awardvoucher", x => x.AddVoucher(), Cron.Yearly((int)month, (int)date, (int)hour, (int)minute), TimeZoneInfo.Local);
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at AwardVoucher: " + ex.Message);
+                throw;
+            }
         }
     }
 }

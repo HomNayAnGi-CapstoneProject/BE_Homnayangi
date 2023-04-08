@@ -50,7 +50,7 @@ namespace Library.Models.Constant
         {
             public readonly static string CART_NOT_FOUND = "This cart is not found";
             public readonly static string ITEM_NOT_FOUND = "This item is not found";
-            public readonly static string QUANTITY_NOT_VALID= "Quantity must be more than 0";
+            public readonly static string QUANTITY_NOT_VALID = "Quantity must be more than 0";
         }
         #endregion
 
@@ -89,6 +89,13 @@ namespace Library.Models.Constant
         {
             public readonly static string BADGE_CONDITION_NOT_FOUND = "This badge condition can not be found";
             public readonly static string BADGE_CONDITION_IS_DUPLICATED = "This badge condition is duplicated";
+        }
+        #endregion
+        #region CronJob Time Config error message
+        public static class CronJobTimeConfigError
+        {
+            public readonly static string CRON_JOB_TIME_CONFIG_NOT_FOUND = "This CronJob Time Config can not be found";
+            public readonly static string CRON_JOB_TIME_CONFIG_IS_DUPLICATED = "This CronJob Time Config is duplicated";
         }
         #endregion
 

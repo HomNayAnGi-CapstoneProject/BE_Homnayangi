@@ -11,16 +11,21 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using static Library.Models.Enum.Status;
+using Hangfire;
+using BE_Homnayangi.Ultils.Quartz;
+using BE_Homnayangi.Modules.AdminModules.CronJobTimeConfigModule.Interface;
 
 namespace BE_Homnayangi.Modules.BadgeModule
 {
     public class BadgeService : IBadgeService
     {
         private readonly IBadgeRepository _badgeRepository;
+        private readonly ICronJobTimeConfigRepository _cronJobTimeConfigRepository;
 
-        public BadgeService(IBadgeRepository badgeRepository)
+        public BadgeService(IBadgeRepository badgeRepository, ICronJobTimeConfigRepository cronJobTimeConfigRepository)
         {
             _badgeRepository = badgeRepository;
+            _cronJobTimeConfigRepository = cronJobTimeConfigRepository;
         }
 
         public async Task<ICollection<Badge>> GetAll()
@@ -189,6 +194,43 @@ namespace BE_Homnayangi.Modules.BadgeModule
             {
                 throw new Exception("Name existed");
             }
+        }
+
+        public void AwardBadge()
+        {
+            try
+            {
+
+
+                var badgeTime = _cronJobTimeConfigRepository.GetFirstOrDefaultAsync(x => x.TargetObject == (int)CronJobTimeConfigType.CronJobTimeConfig.BADGE).Result;
+                var minute = badgeTime.Minute;
+                var hour = badgeTime.Hour;
+                var date = badgeTime.Day;
+                var month = badgeTime.Month;
+                if (month == null && date == null && hour == null)
+                {
+                    RecurringJob.AddOrUpdate<BadgeJob>("awardbadge", x => x.BadgeCondition(), Cron.Hourly((int)minute), TimeZoneInfo.Local);
+                }
+                else if (month == null && date == null)
+                {
+                    RecurringJob.AddOrUpdate<BadgeJob>("awardbadge", x => x.BadgeCondition(), Cron.Daily((int)hour, (int)minute), TimeZoneInfo.Local);
+
+                }
+                else if (month == null)
+                {
+                    RecurringJob.AddOrUpdate<BadgeJob>("awardbadge", x => x.BadgeCondition(), Cron.Monthly((int)hour, (int)minute), TimeZoneInfo.Local);
+                }
+                else
+                {
+                    RecurringJob.AddOrUpdate<BadgeJob>("awardbadge", x => x.BadgeCondition(), Cron.Yearly((int)month, (int)date, (int)hour, (int)minute), TimeZoneInfo.Local);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at AwardBadge: " + ex.Message);
+                throw;
+            }
+
         }
     }
 }

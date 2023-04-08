@@ -77,6 +77,10 @@ using Quartz;
 using System;
 using System.Linq;
 using System.Text;
+using Hangfire;
+using Hangfire.SqlServer;
+using BE_Homnayangi.Modules.AdminModules.CronJobTimeConfigModule.Interface;
+using BE_Homnayangi.Modules.AdminModules.CronJobTimeConfigModule;
 
 namespace BE_Homnayangi
 {
@@ -135,7 +139,21 @@ namespace BE_Homnayangi
                     return new BadRequestObjectResult(result);
                 };
             });
-
+            #region hangfire
+            var hangfireDBConnectionString = Configuration.GetConnectionString("HangfireDb");
+            services.AddHangfire(configuration => configuration.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UseSqlServerStorage(hangfireDBConnectionString, new SqlServerStorageOptions
+    {
+        CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+        SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+        QueuePollInterval = TimeSpan.Zero,
+        UseRecommendedIsolationLevel = true,
+        DisableGlobalLocks = true
+    }));
+            services.AddHangfireServer();
+            #endregion
             services.Configure<AppSetting>(Configuration.GetSection("AppSetting"));
             services.Configure<AdministratorAccount>(Configuration.GetSection("AdministratorAccount"));
             var secretKey = Configuration["AppSetting:SecretKey"];
@@ -283,10 +301,14 @@ namespace BE_Homnayangi
 
             //PriceNote Module
             services.AddScoped<IPriceNoteRepository, PriceNoteRepository>();
-            
+
             //Accomplishment Reaction Module
             services.AddScoped<IAccomplishmentReactionRepository, AccomplishmentReactionRepository>();
             services.AddScoped<IAccomplishmentReactionService, AccomplishmentReactionService>();
+            //CronJob Time Config Module
+            services.AddScoped<ICronJobTimeConfigService, CronJobTimeConfigService>();
+            services.AddScoped<ICronJobTimeConfigRepository, CronJobTimeConfigRepository>();
+    
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -309,7 +331,7 @@ namespace BE_Homnayangi
             app.UseAuthentication();
 
             app.UseAuthorization();
-
+            app.UseHangfireDashboard();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

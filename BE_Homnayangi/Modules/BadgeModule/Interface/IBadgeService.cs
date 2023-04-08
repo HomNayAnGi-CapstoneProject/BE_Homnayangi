@@ -34,6 +34,8 @@ namespace BE_Homnayangi.Modules.BadgeModule.Interface
 
         public Task<bool> CheckExistedName(string name);
         public Task<ICollection<BadgeDropdownResponse>> GetBadgeDropdown();
+        public void AwardBadge();
+
     }
 }
 

@@ -48,8 +48,8 @@ namespace Library.Models.Enum
         public enum PriceNote
         {
             DEACTIVE = 0,
-            ACTIVE = 1
         }
+
     }
 }
 
