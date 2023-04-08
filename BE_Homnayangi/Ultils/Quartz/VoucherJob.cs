@@ -47,6 +47,19 @@ namespace BE_Homnayangi.Ultils.Quartz
                         };
                         _customerVoucherRepository.Add(cv);
                     }
+                    else if (customerVoucher == null)
+                    {
+                        CustomerVoucher cv = new CustomerVoucher
+                        {
+                            CustomerVoucherId = Guid.NewGuid(),
+                            CustomerId = customer.CustomerId,
+                            VoucherId = (Guid)customerVoucher.VoucherId,
+                            CreatedDate = DateTime.Now
+
+
+                        };
+                        _customerVoucherRepository.Add(cv);
+                    }
                 }
             }
         }
