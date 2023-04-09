@@ -167,92 +167,92 @@ namespace BE_Homnayangi.Controllers
 
         #region Admin's actions
 
-        [Authorize(Roles = "Admin")]
-        [HttpGet("admin-manage/managers")]
-        public async Task<IActionResult> GetAllManagersByAdmin()
-        {
-            try
-            {
-                var result = await _userService.GetUserByRole("Manager");
-                return new JsonResult(new
-                {
-                    status = "success",
-                    result = result
-                });
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(new
-                {
-                    status = "failed",
-                    msg = ex.Message
-                });
-            }
-        }
+        //[Authorize(Roles = "Admin")]
+        //[HttpGet("admin-manage/managers")]
+        //public async Task<IActionResult> GetAllManagersByAdmin()
+        //{
+        //    try
+        //    {
+        //        var result = await _userService.GetUserByRole("Manager");
+        //        return new JsonResult(new
+        //        {
+        //            status = "success",
+        //            result = result
+        //        });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new JsonResult(new
+        //        {
+        //            status = "failed",
+        //            msg = ex.Message
+        //        });
+        //    }
+        //}
 
-        [Authorize(Roles = "Admin")]
-        [HttpPut("admin-manage/status")]
-        public async Task<IActionResult> UnBlockManagerByAdmin([FromBody] UpdatedStatusManager request)
-        {
-            try
-            {
-                var result = await _userService.ChangeStatusManagerByAdmin(request);
-                if (result)
-                {
-                    return new JsonResult(new
-                    {
-                        status = "success"
-                    });
-                }
-                else
-                {
-                    return new JsonResult(new
-                    {
-                        status = "failed"
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(new
-                {
-                    status = "failed",
-                    msg = ex.Message
-                });
-            }
-        }
+        //[Authorize(Roles = "Admin")]
+        //[HttpPut("admin-manage/status")]
+        //public async Task<IActionResult> UnBlockManagerByAdmin([FromBody] UpdatedStatusManager request)
+        //{
+        //    try
+        //    {
+        //        var result = await _userService.ChangeStatusManagerByAdmin(request);
+        //        if (result)
+        //        {
+        //            return new JsonResult(new
+        //            {
+        //                status = "success"
+        //            });
+        //        }
+        //        else
+        //        {
+        //            return new JsonResult(new
+        //            {
+        //                status = "failed"
+        //            });
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new JsonResult(new
+        //        {
+        //            status = "failed",
+        //            msg = ex.Message
+        //        });
+        //    }
+        //}
 
-        [Authorize(Roles = "Admin")]
-        [HttpPost("admin-manage")]
-        public async Task<IActionResult> CreateANewManager([FromBody] CreateManager request)
-        {
-            try
-            {
-                var result = await _userService.CreateANewManager(request);
-                if (result)
-                {
-                    return new JsonResult(new
-                    {
-                        status = "success"
-                    });
-                }
-                else
-                {
-                    return new JsonResult(new
-                    {
-                        status = "failed"
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(new
-                {
-                    status = "failed",
-                    msg = ex.Message
-                });
-            }
-        }
+        //[Authorize(Roles = "Admin")]
+        //[HttpPost("admin-manage")]
+        //public async Task<IActionResult> CreateANewManager([FromBody] CreateManager request)
+        //{
+        //    try
+        //    {
+        //        var result = await _userService.CreateANewManager(request);
+        //        if (result)
+        //        {
+        //            return new JsonResult(new
+        //            {
+        //                status = "success"
+        //            });
+        //        }
+        //        else
+        //        {
+        //            return new JsonResult(new
+        //            {
+        //                status = "failed"
+        //            });
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new JsonResult(new
+        //        {
+        //            status = "failed",
+        //            msg = ex.Message
+        //        });
+        //    }
+        //}
 
         #endregion
     }
