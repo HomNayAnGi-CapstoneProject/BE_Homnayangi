@@ -273,7 +273,7 @@ namespace BE_Homnayangi.Modules.UserModule
                     Gender = m.Gender,
                     Avatar = m.Avatar,
                     Role = role,
-                    Status = m.IsBlocked.Value,
+                    Status = !m.IsBlocked.Value,
                 }).ToList();
                 return result;
             }
