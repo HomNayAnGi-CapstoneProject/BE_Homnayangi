@@ -93,6 +93,7 @@ namespace BE_Homnayangi.Controllers
                 else
                 {
                     await _userService.AddNewUser(user);
+                    return Ok("Create staff succcessfully");
                 }
 
             }
@@ -104,7 +105,7 @@ namespace BE_Homnayangi.Controllers
                     msg = ex.Message
                 });
             }
-            return Ok("Create staff succcessfully");
+
         }
 
         //PUT api/<ValuesController>/5
