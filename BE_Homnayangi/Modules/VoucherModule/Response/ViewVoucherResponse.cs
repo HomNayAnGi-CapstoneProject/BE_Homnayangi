@@ -12,8 +12,8 @@ namespace BE_Homnayangi.Modules.VoucherModule.Response
         public DateTime? ValidFrom { get; set; }
         public DateTime? ValidTo { get; set; }
         public decimal? Discount { get; set; }
-        public decimal? MinimumOrder { get; set; }
-        public decimal? MaximumOrder { get; set; }
+        public decimal? MinimumOrderPrice { get; set; }
+        public decimal? MaximumOrderPrice { get; set; }
         public string AuthorName { get; set; }
     }
 }

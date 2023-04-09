@@ -907,11 +907,11 @@ namespace Library.DataAccess
                     .HasColumnType("money")
                     .HasColumnName("discount");
 
-                entity.Property(e => e.MaximumOrder)
+                entity.Property(e => e.MaximumOrderPrice)
                     .HasColumnType("money")
                     .HasColumnName("maximumOrder");
 
-                entity.Property(e => e.MinimumOrder)
+                entity.Property(e => e.MinimumOrderPrice)
                     .HasColumnType("money")
                     .HasColumnName("minimumOrder");
 

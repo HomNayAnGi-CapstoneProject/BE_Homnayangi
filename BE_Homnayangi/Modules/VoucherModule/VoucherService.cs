@@ -49,8 +49,8 @@ namespace BE_Homnayangi.Modules.VoucherModule
                         vvr.ValidFrom = voucher.ValidFrom != null ? voucher.ValidFrom : DateTime.Now;
                         vvr.ValidTo = voucher.ValidTo != null ? voucher.ValidTo : DateTime.Now;
                         vvr.Discount = voucher.Discount != null ? voucher.Discount : 0;
-                        vvr.MinimumOrder = voucher.MinimumOrder != null ? voucher.MinimumOrder : 0;
-                        vvr.MaximumOrder = voucher.MaximumOrder != null ? voucher.MaximumOrder : 0;
+                        vvr.MinimumOrderPrice = voucher.MinimumOrderPrice != null ? voucher.MinimumOrderPrice : 0;
+                        vvr.MaximumOrderPrice = voucher.MaximumOrderPrice != null ? voucher.MaximumOrderPrice : 0;
                         vvr.AuthorName = voucher.Author != null ? voucher.Author.Firstname + " " + voucher.Author.Lastname : "";
 
                         result.Add(vvr);
@@ -84,8 +84,8 @@ namespace BE_Homnayangi.Modules.VoucherModule
                     result.ValidFrom = voucher.ValidFrom != null ? voucher.ValidFrom : DateTime.Now;
                     result.ValidTo = voucher.ValidTo != null ? voucher.ValidTo : DateTime.Now;
                     result.Discount = voucher.Discount != null ? voucher.Discount : 0;
-                    result.MinimumOrder = voucher.MinimumOrder != null ? voucher.MinimumOrder : 0;
-                    result.MaximumOrder = voucher.MaximumOrder != null ? voucher.MaximumOrder : 0;
+                    result.MinimumOrderPrice = voucher.MinimumOrderPrice != null ? voucher.MinimumOrderPrice : 0;
+                    result.MaximumOrderPrice = voucher.MaximumOrderPrice != null ? voucher.MaximumOrderPrice : 0;
                     result.AuthorName = voucher.Author != null ? voucher.Author.Firstname + " " + voucher.Author.Lastname : "";
                 }
             }
@@ -134,8 +134,8 @@ namespace BE_Homnayangi.Modules.VoucherModule
                     voucher.ValidFrom = newVoucher.ValidFrom == null ? voucher.ValidFrom : newVoucher.ValidFrom;
                     voucher.ValidTo = newVoucher.ValidTo == null ? voucher.ValidTo : newVoucher.ValidTo;
                     voucher.Discount = newVoucher.Discount == null ? voucher.Discount : newVoucher.Discount;
-                    voucher.MinimumOrder = newVoucher.MinimumOrder == null ? voucher.MinimumOrder : newVoucher.MinimumOrder;
-                    voucher.MaximumOrder = newVoucher.MaximumOrder == null ? voucher.MaximumOrder : newVoucher.MaximumOrder;
+                    voucher.MinimumOrderPrice = newVoucher.MinimumOrderPrice == null ? voucher.MinimumOrderPrice : newVoucher.MinimumOrderPrice;
+                    voucher.MaximumOrderPrice = newVoucher.MaximumOrderPrice == null ? voucher.MaximumOrderPrice : newVoucher.MaximumOrderPrice;
 
                     await _voucherRepository.UpdateAsync(voucher);
                     isUpdated = true;
