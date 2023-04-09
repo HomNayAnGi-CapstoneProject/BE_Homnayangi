@@ -4,6 +4,7 @@ using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Request;
 using BE_Homnayangi.Modules.UserModule.Response;
 using BE_Homnayangi.Modules.Utils;
+using BE_Homnayangi.Ultils.EmailServices;
 using Library.Commons;
 using Library.Models;
 using Library.Models.Constant;
@@ -11,6 +12,7 @@ using Library.Models.DTO.UserDTO;
 using Library.Models.Enum;
 using Library.PagedList;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -19,6 +21,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -36,7 +40,9 @@ namespace BE_Homnayangi.Modules.UserModule
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ICustomAuthorization _customAuthorization;
-        public UserService(IUserRepository userRepository, ICustomerRepository customerRepository, IOptionsMonitor<AppSetting> optionsMonitor, IOptionsMonitor<AdministratorAccount> admin, IMapper mapper, IHttpContextAccessor httpContextAccessor, ICustomAuthorization customAuthorization)
+        IConfiguration _configuration;
+        private readonly IEmailSender _emailSender;
+        public UserService(IUserRepository userRepository, ICustomerRepository customerRepository, IOptionsMonitor<AppSetting> optionsMonitor, IOptionsMonitor<AdministratorAccount> admin, IMapper mapper, IHttpContextAccessor httpContextAccessor, ICustomAuthorization customAuthorization, IConfiguration configuration, IEmailSender emailSender)
         {
             _userRepository = userRepository;
             _customerRepository = customerRepository;
@@ -45,6 +51,8 @@ namespace BE_Homnayangi.Modules.UserModule
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
             _customAuthorization = customAuthorization;
+            _configuration = configuration;
+            _emailSender = emailSender;
         }
 
         public Task<ICollection<User>> GetUsersBy(
@@ -76,23 +84,59 @@ namespace BE_Homnayangi.Modules.UserModule
 
         public async Task AddNewUser(User newUser)
         {
-            User user = await _userRepository.GetFirstOrDefaultAsync(x => x.Username == newUser.Username);
-            Customer customer = await _customerRepository.GetFirstOrDefaultAsync(x => x.Username == newUser.Username);
-            if (user.Username == null && user.Email == null)
+            try
             {
-                if (customer.Username == null && customer.Email == null)
-                {
-                    //Add user
-                    newUser.Password = GenerateEncryptRandomPassword();
-                    newUser.CreatedDate = DateTime.Now;
-                    newUser.Role = 2;
-                    newUser.IsBlocked = false;
-                    newUser.IsGoogle = newUser.Email == null ? false : true;
-                    await _userRepository.AddAsync(newUser);
-                }
-            }
-        }
+                var users = await _userRepository.GetAll();
+                var customers = await _customerRepository.GetAll();
 
+                string username = newUser.Username.Trim();
+                string email = newUser.Email.Trim();
+                string phone = newUser.Phonenumber.Trim();
+
+                // Check duplicated data or not? (username, email, password)
+                IsDuplicatedUsername(username, users, customers);
+                IsDuplicatedEmail(email, users, customers);
+                IsDuplicatedPhone(phone, users, customers);
+                //Add user
+                newUser.Password = GenerateEncryptRandomPassword();
+                newUser.CreatedDate = DateTime.Now;
+                newUser.Role = 2;
+                newUser.IsBlocked = false;
+                newUser.IsGoogle = newUser.Email == null ? false : true;
+                await _userRepository.AddAsync(newUser);
+                var mailSubject = $"Thông tin tài khoản và mật khẩu ";
+                var mailBody = $"Kính gửi {newUser.Firstname} {newUser.Lastname} , \n" +
+                    $"Homnayangi Website xin thông báo rằng tài khoản của bạn đã được tạo thành công trên hệ thống của chúng tôi. \n" +
+                    $"Tên đăng nhập của bạn là: {newUser.Username}. \n" +
+                    $"Mật khẩu tạm thời của bạn là: {DecryptPassword(newUser.Password)}. \n" +
+                    $"Vui lòng lưu ý rằng vì lý do bảo mật, chúng tôi khuyên bạn nên thay đổi mật khẩu của mình ngay sau khi đăng nhập. \n" +
+                    $"Để truy cập vào tài khoản của mình, vui lòng truy cập vào đường dẫn bên dưới và nhập tên đăng nhập và mật khẩu tạm thời của bạn: \n" +
+                    $"[Thêm đường dẫn đến trang đăng nhập] \n" +
+                    $"Sau khi đăng nhập thành công, vui lòng truy cập vào phần Thông tin cá nhân để thay đổi mật khẩu của bạn. Chúng tôi khuyên bạn nên tạo một mật khẩu mạnh bao gồm cả chữ hoa, chữ thường, số và ký tự đặc biệt. Nếu bạn gặp bất kỳ vấn đề nào khi đăng nhập vào tài khoản hoặc có bất kỳ câu hỏi nào khác, xin vui lòng liên hệ với chúng tôi theo thông tin liên hệ sau đây: \n" +
+                    $"[Thêm thông tin liên hệ] \n" +
+                    $"Cảm ơn bạn đã lựa chọn sử dụng dịch vụ của Homnayangi Website và chúc bạn sử dụng tài khoản thành công. \n" +
+                    $"Trân trọng, \n" +
+                    $"Homnayangi Website. ";
+
+                SendMail(mailSubject, mailBody, newUser.Email);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at CreateANewManager: " + ex.Message);
+                throw new Exception(ex.Message);
+            }
+
+        }
+        public void SendMail(string mailSubject, string mailBody, string receiver)
+        {
+            var message = new Message(
+                 to: new string[] {
+                   receiver
+                 },
+                 subject: mailSubject,
+                 content: mailBody);
+            _emailSender.SendEmail(message);
+        }
         public async Task<bool?> BlockUserById(Guid id)
         {
             bool isBlock = false;
@@ -297,6 +341,21 @@ namespace BE_Homnayangi.Modules.UserModule
                     IsGoogle = true
                 };
                 await _userRepository.AddAsync(manager);
+                var mailSubject = $"Thông tin tài khoản và mật khẩu ";
+                var mailBody = $"Kính gửi {manager.Firstname} {manager.Lastname} , \n" +
+                    $"Homnayangi Website xin thông báo rằng tài khoản của bạn đã được tạo thành công trên hệ thống của chúng tôi. \n" +
+                    $"Tên đăng nhập của bạn là: {manager.Username}. \n" +
+                    $"Mật khẩu tạm thời của bạn là: {DecryptPassword(manager.Password)}. \n" +
+                    $"Vui lòng lưu ý rằng vì lý do bảo mật, chúng tôi khuyên bạn nên thay đổi mật khẩu của mình ngay sau khi đăng nhập. \n" +
+                    $"Để truy cập vào tài khoản của mình, vui lòng truy cập vào đường dẫn bên dưới và nhập tên đăng nhập và mật khẩu tạm thời của bạn: \n" +
+                    $"[Thêm đường dẫn đến trang đăng nhập] \n" +
+                    $"Sau khi đăng nhập thành công, vui lòng truy cập vào phần Thông tin cá nhân để thay đổi mật khẩu của bạn. Chúng tôi khuyên bạn nên tạo một mật khẩu mạnh bao gồm cả chữ hoa, chữ thường, số và ký tự đặc biệt. Nếu bạn gặp bất kỳ vấn đề nào khi đăng nhập vào tài khoản hoặc có bất kỳ câu hỏi nào khác, xin vui lòng liên hệ với chúng tôi theo thông tin liên hệ sau đây: \n" +
+                    $"[Thêm thông tin liên hệ] \n" +
+                    $"Cảm ơn bạn đã lựa chọn sử dụng dịch vụ của Homnayangi Website và chúc bạn sử dụng tài khoản thành công. \n" +
+                    $"Trân trọng, \n" +
+                    $"Homnayangi Website. ";
+
+                SendMail(mailSubject, mailBody, manager.Email);
                 isInserted = true;
             }
             catch (Exception ex)

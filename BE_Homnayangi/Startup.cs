@@ -81,6 +81,7 @@ using Hangfire;
 using Hangfire.SqlServer;
 using BE_Homnayangi.Modules.AdminModules.CronJobTimeConfigModule.Interface;
 using BE_Homnayangi.Modules.AdminModules.CronJobTimeConfigModule;
+using BE_Homnayangi.Ultils.EmailServices;
 
 namespace BE_Homnayangi
 {
@@ -153,6 +154,12 @@ namespace BE_Homnayangi
         DisableGlobalLocks = true
     }));
             services.AddHangfireServer();
+            #endregion
+            #region Mailkit service 
+            var emailConfig = Configuration
+                    .GetSection("EmailConfiguration")
+                    .Get<EmailConfiguration>();
+            services.AddSingleton(emailConfig);
             #endregion
             services.Configure<AppSetting>(Configuration.GetSection("AppSetting"));
             services.Configure<AdministratorAccount>(Configuration.GetSection("AdministratorAccount"));
@@ -308,7 +315,9 @@ namespace BE_Homnayangi
             //CronJob Time Config Module
             services.AddScoped<ICronJobTimeConfigService, CronJobTimeConfigService>();
             services.AddScoped<ICronJobTimeConfigRepository, CronJobTimeConfigRepository>();
-    
+            //Email sender
+            services.AddScoped<IEmailSender, EmailSender>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
