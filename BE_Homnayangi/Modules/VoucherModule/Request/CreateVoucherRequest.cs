@@ -11,7 +11,5 @@ namespace BE_Homnayangi.Modules.VoucherModule.Request
         public decimal Discount { get; set; }
         public decimal MinimumOrder { get; set; }
         public decimal MaximumOrder { get; set; }
-        public Guid AuthorId { get; set; }
-
     }
 }

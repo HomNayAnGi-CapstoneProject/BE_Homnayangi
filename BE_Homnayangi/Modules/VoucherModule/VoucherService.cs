@@ -149,7 +149,7 @@ namespace BE_Homnayangi.Modules.VoucherModule
             return isUpdated;
         }
 
-        public async Task<bool> CreateByUser(Voucher voucher)
+        public async Task<bool> CreateByUser(Guid userId, Voucher voucher)
         {
             bool isInserted = false;
             try
@@ -157,6 +157,7 @@ namespace BE_Homnayangi.Modules.VoucherModule
                 voucher.VoucherId = Guid.NewGuid();
                 voucher.Name = voucher.Name.Trim();
                 voucher.Status = 1;
+                voucher.AuthorId = userId;
                 voucher.CreatedDate = DateTime.Now;
                 await _voucherRepository.AddAsync(voucher);
                 isInserted = true;

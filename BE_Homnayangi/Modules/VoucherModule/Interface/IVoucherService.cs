@@ -23,7 +23,7 @@ namespace BE_Homnayangi.Modules.VoucherModule.Interface
 
         public Task<bool> UpdateVoucher(Voucher voucher);
 
-        public Task<bool> CreateByUser(Voucher voucher);
+        public Task<bool> CreateByUser(Guid userId, Voucher voucher);
 
     }
 }

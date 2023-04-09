@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BE_Homnayangi.Modules.CustomerVoucherModule.Interface;
+using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.VoucherModule.Interface;
 using BE_Homnayangi.Modules.VoucherModule.Request;
 using BE_Homnayangi.Modules.VoucherModule.Response;
@@ -18,13 +19,16 @@ namespace BE_Homnayangi.Controllers
     public class VouchersController : ControllerBase
     {
         private readonly IMapper _mapper;
+        private readonly IUserService _userService;
         private readonly IVoucherService _voucherService;
         private readonly ICustomerVoucherService _customerVoucherService;
 
-        public VouchersController(IMapper mapper, IVoucherService voucherService, ICustomerVoucherService customerVoucherService)
+        public VouchersController(IMapper mapper, IVoucherService voucherService, ICustomerVoucherService customerVoucherService,
+            IUserService userService)
         {
             _mapper = mapper;
             _voucherService = voucherService;
+            _userService = userService;
             _customerVoucherService = customerVoucherService;
         }
 
@@ -67,12 +71,26 @@ namespace BE_Homnayangi.Controllers
         [Authorize(Roles = "Staff,Manager")]
         public async Task<IActionResult> PostVoucher([FromBody] CreateVoucherRequest voucher)
         {
-            var mappedVoucher = _mapper.Map<Voucher>(voucher);
-            bool isUpdated = await _voucherService.CreateByUser(mappedVoucher);
-            return new JsonResult(new
+            try
             {
-                status = "success"
-            });
+                var currentAccount = _userService.GetCurrentUser(Request.Headers["Authorization"]);
+
+                var mappedVoucher = _mapper.Map<Voucher>(voucher);
+                bool isUpdated = await _voucherService.CreateByUser(currentAccount.Id, mappedVoucher);
+                return new JsonResult(new
+                {
+                    status = "success"
+                });
+            }
+            catch (Exception ex)
+            {
+
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
+            }
         }
 
         // DELETE: api/v1/vouchers/5
