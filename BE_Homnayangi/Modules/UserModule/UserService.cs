@@ -259,7 +259,7 @@ namespace BE_Homnayangi.Modules.UserModule
         {
             try
             {
-                int roleNumber = ConvertRole(role);
+                int roleNumber = ConvertRoleInt(role);
                 var users = await _userRepository.GetUsersBy(u => u.Role == roleNumber);
                 var result = users.Select(m => new CurrentUserResponse()
                 {
@@ -272,7 +272,7 @@ namespace BE_Homnayangi.Modules.UserModule
                     Phonenumber = m.Phonenumber,
                     Gender = m.Gender,
                     Avatar = m.Avatar,
-                    Role = CommonEnum.RoleEnum.MANAGER,
+                    Role = role,
                     Status = m.IsBlocked.Value,
                 }).ToList();
                 return result;
@@ -981,7 +981,7 @@ namespace BE_Homnayangi.Modules.UserModule
             }
         }
 
-        private int ConvertRole(string role)
+        private int ConvertRoleInt(string role)
         {
             int result = -1;
             switch (role)
