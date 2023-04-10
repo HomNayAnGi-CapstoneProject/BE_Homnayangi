@@ -1,4 +1,5 @@
-﻿using BE_Homnayangi.Modules.VoucherModule.Response;
+﻿using BE_Homnayangi.Modules.VoucherModule.Request;
+using BE_Homnayangi.Modules.VoucherModule.Response;
 using Library.Models;
 using System;
 using System.Collections.Generic;
@@ -21,9 +22,9 @@ namespace BE_Homnayangi.Modules.VoucherModule.Interface
 
         public Task<bool> DeleteVoucherById(Guid id);
 
-        public Task<bool> UpdateVoucher(Voucher voucher);
+        public Task<bool> UpdateVoucher(Guid authorId, UpdateVoucherRequest voucher);
 
-        public Task<bool> CreateByUser(Guid userId, Voucher voucher);
+        public Task<bool> CreateByUser(Guid userId, CreateVoucherRequest voucher);
 
     }
 }
