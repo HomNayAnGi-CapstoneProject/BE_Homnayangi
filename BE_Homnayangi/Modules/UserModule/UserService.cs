@@ -76,10 +76,24 @@ namespace BE_Homnayangi.Modules.UserModule
             return _userRepository.GetFirstOrDefaultAsync(x => x.Username == username).Result;
         }
 
-        public async Task<User> GetUserById(Guid id)
+        public async Task<CurrentUserResponse> GetUserById(Guid id)
         {
             User user = await _userRepository.GetFirstOrDefaultAsync(x => x.UserId == id, includeProperties: "Blogs");
-            return user;
+            CurrentUserResponse userById = new CurrentUserResponse
+            {
+                Id = user.UserId,
+                Displayname = user.Displayname,
+                Username = user.Username,
+                Firstname = user.Firstname,
+                Lastname = user.Lastname,
+                Email = user.Email,
+                Phonenumber = user.Phonenumber,
+                Gender = user.Gender,
+                Avatar = user.Avatar,
+                Role = user.Role == 1 ? CommonEnum.RoleEnum.MANAGER : CommonEnum.RoleEnum.STAFF,
+                IsBlocked = user.IsBlocked.Value,
+            };
+            return userById;
         }
 
         public async Task AddNewUser(User newUser)
@@ -197,7 +211,6 @@ namespace BE_Homnayangi.Modules.UserModule
             }
             return isUpdated;
         }
-
         public async Task<bool> UpdateUser(User user)
         {
             bool isUpdated = false;
@@ -273,7 +286,7 @@ namespace BE_Homnayangi.Modules.UserModule
                     Gender = m.Gender,
                     Avatar = m.Avatar,
                     Role = role,
-                    Status = !m.IsBlocked.Value,
+                    IsBlocked = m.IsBlocked.Value,
                 }).ToList();
                 return result;
             }
@@ -440,14 +453,37 @@ namespace BE_Homnayangi.Modules.UserModule
         #endregion
 
         #region CRUD Customer
-        public async Task<PagedResponse<PagedList<Customer>>> GetAllCustomer(PagingUserRequest request)
+        public async Task<ICollection<CurrentUserResponse>> GetAllCustomer()
         {
-            int pageNumber = request.PageNumber;
-            int pageSize = request.PageSize;
-            var customer = await _customerRepository.GetAll();
-            var response = PagedList<Customer>.ToPagedList(source: customer, pageNumber: pageNumber, pageSize: pageSize);
-            return response.ToPagedResponse();
+            try
+            {
+                var customer = await _customerRepository.GetAll();
+                var result = customer.Select(m => new CurrentUserResponse()
+                {
+                    Id = m.CustomerId,
+                    Displayname = m.Displayname,
+                    Username = m.Username,
+                    Firstname = m.Firstname,
+                    Lastname = m.Lastname,
+                    Email = m.Email,
+                    Phonenumber = m.Phonenumber,
+                    Gender = m.Gender,
+                    Role = CommonEnum.RoleEnum.CUSTOMER,
+                    Avatar = m.Avatar,
+                    IsBlocked = m.IsBlocked.Value,
+                }).ToList();
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine("Error at GetAllCustomers: " + ex.Message);
+                throw new Exception(ex.Message);
+
+            }
         }
+
 
         public Customer GetCustomerByEmail(string? email)
         {
@@ -459,10 +495,24 @@ namespace BE_Homnayangi.Modules.UserModule
             return _customerRepository.GetFirstOrDefaultAsync(x => x.Username == username).Result;
         }
 
-        public async Task<Customer> GetCustomerById(Guid id)
+        public async Task<CurrentUserResponse> GetCustomerById(Guid id)
         {
             Customer customer = await _customerRepository.GetFirstOrDefaultAsync(x => x.CustomerId == id, includeProperties: "Orders,Accomplishments");
-            return customer;
+            CurrentUserResponse customerById = new CurrentUserResponse
+            {
+                Id = customer.CustomerId,
+                Displayname = customer.Displayname,
+                Username = customer.Username,
+                Firstname = customer.Firstname,
+                Lastname = customer.Lastname,
+                Email = customer.Email,
+                Phonenumber = customer.Phonenumber,
+                Gender = customer.Gender,
+                Avatar = customer.Avatar,
+                Role = CommonEnum.RoleEnum.CUSTOMER,
+                IsBlocked = customer.IsBlocked.Value,
+            };
+            return customerById;
         }
 
         public async Task<Customer> GetCustomerByIdAndusername(Guid? id, string userName)

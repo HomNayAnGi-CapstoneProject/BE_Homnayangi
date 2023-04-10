@@ -143,16 +143,29 @@ namespace BE_Homnayangi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
-            bool? isBlocked = await _userService.BlockUserById(id);
-            if (isBlocked == true)
+            var user = await _userService.GetUserById(id);
+            if (user.IsBlocked == false)
             {
+                user.IsBlocked = (bool)await _userService.BlockUserById(id);
                 return new JsonResult(new
                 {
                     status = "staff is blocked"
                 });
             }
-            else if (isBlocked == false)
+            return new JsonResult(new
             {
+                status = "failed"
+            });
+            ;
+        }
+        [Authorize(Roles = "Manager")]
+        [HttpPut("status/{id}")]
+        public async Task<IActionResult> UnBlockStaff([FromRoute] Guid id)
+        {
+            var user = await _userService.GetUserById(id);
+            if (user.IsBlocked == true)
+            {
+                user.IsBlocked = (bool)await _userService.BlockUserById(id);
                 return new JsonResult(new
                 {
                     status = "staff is unblocked"
