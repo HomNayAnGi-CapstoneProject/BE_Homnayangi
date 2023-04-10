@@ -186,6 +186,15 @@ namespace Library.Models.Constant
             public readonly static string NOT_VALID_DATA = "You need to have either image or video";
         }
         #endregion
+
+        #region Voucher error message
+        public static class VoucherError
+        {
+            public readonly static string DATETIME_NOT_VALID = "Start and end date are not valid";
+            public readonly static string DISCOUNT_CONDITION_NOT_VALID = "Min and max price are not valid";
+            public readonly static string DISCOUNT_PRICE_NOT_VALID = "Discount is not valid";
+        }
+        #endregion
     }
 }
 

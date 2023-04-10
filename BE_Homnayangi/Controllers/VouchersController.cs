@@ -59,12 +59,23 @@ namespace BE_Homnayangi.Controllers
         [Authorize(Roles = "Staff,Manager")]
         public async Task<IActionResult> PutVoucher([FromBody] UpdateVoucherRequest voucher)
         {
-            var mappedVoucher = _mapper.Map<Voucher>(voucher);
-            bool isUpdated = await _voucherService.UpdateVoucher(mappedVoucher);
-            return new JsonResult(new
+            try
             {
-                status = "success"
-            });
+                var currentAccount = _userService.GetCurrentUser(Request.Headers["Authorization"]);
+                bool isUpdated = await _voucherService.UpdateVoucher(currentAccount.Id, voucher);
+                return new JsonResult(new
+                {
+                    status = "success"
+                });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
+            }
         }
 
         [HttpPost]
@@ -75,8 +86,7 @@ namespace BE_Homnayangi.Controllers
             {
                 var currentAccount = _userService.GetCurrentUser(Request.Headers["Authorization"]);
 
-                var mappedVoucher = _mapper.Map<Voucher>(voucher);
-                bool isUpdated = await _voucherService.CreateByUser(currentAccount.Id, mappedVoucher);
+                bool isUpdated = await _voucherService.CreateByUser(currentAccount.Id, voucher);
                 return new JsonResult(new
                 {
                     status = "success"

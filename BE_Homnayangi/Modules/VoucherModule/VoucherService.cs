@@ -1,6 +1,8 @@
 ﻿using BE_Homnayangi.Modules.VoucherModule.Interface;
+using BE_Homnayangi.Modules.VoucherModule.Request;
 using BE_Homnayangi.Modules.VoucherModule.Response;
 using Library.Models;
+using Library.Models.Constant;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -119,23 +121,28 @@ namespace BE_Homnayangi.Modules.VoucherModule
         }
 
         // Note: Không update AuthorId
-        public async Task<bool> UpdateVoucher(Voucher newVoucher)
+        public async Task<bool> UpdateVoucher(Guid authorId, UpdateVoucherRequest newVoucher)
         {
             bool isUpdated = false;
             try
             {
+                ValidateVoucher(newVoucher.ValidFrom.Value, newVoucher.ValidTo.Value, 
+                    newVoucher.MinimumOrderPrice.Value, newVoucher.MaximumOrderPrice.Value, newVoucher.Discount.Value);
+
                 Voucher voucher = await _voucherRepository.GetFirstOrDefaultAsync(x => x.VoucherId == newVoucher.VoucherId);
+
                 if (voucher != null)
                 {
                     voucher.Name = newVoucher.Name == null ? voucher.Name : newVoucher.Name;
                     voucher.Description = newVoucher.Description == null ? voucher.Description : newVoucher.Description;
                     voucher.Status = newVoucher.Status == null ? voucher.Status : newVoucher.Status;
-                    voucher.CreatedDate = newVoucher.CreatedDate == null ? voucher.CreatedDate : newVoucher.CreatedDate;
+                    //voucher.CreatedDate = newVoucher.CreatedDate == null ? voucher.CreatedDate : newVoucher.CreatedDate;
                     voucher.ValidFrom = newVoucher.ValidFrom == null ? voucher.ValidFrom : newVoucher.ValidFrom;
                     voucher.ValidTo = newVoucher.ValidTo == null ? voucher.ValidTo : newVoucher.ValidTo;
                     voucher.Discount = newVoucher.Discount == null ? voucher.Discount : newVoucher.Discount;
                     voucher.MinimumOrderPrice = newVoucher.MinimumOrderPrice == null ? voucher.MinimumOrderPrice : newVoucher.MinimumOrderPrice;
                     voucher.MaximumOrderPrice = newVoucher.MaximumOrderPrice == null ? voucher.MaximumOrderPrice : newVoucher.MaximumOrderPrice;
+                    voucher.AuthorId = authorId;
 
                     await _voucherRepository.UpdateAsync(voucher);
                     isUpdated = true;
@@ -144,33 +151,62 @@ namespace BE_Homnayangi.Modules.VoucherModule
             catch (Exception ex)
             {
                 Console.WriteLine("Error at UpdateVoucher: " + ex.Message);
-                throw;
+                throw new Exception(ex.Message);
             }
             return isUpdated;
         }
 
-        public async Task<bool> CreateByUser(Guid userId, Voucher voucher)
+        public async Task<bool> CreateByUser(Guid userId, CreateVoucherRequest request)
         {
             bool isInserted = false;
             try
             {
-                voucher.VoucherId = Guid.NewGuid();
-                voucher.Name = voucher.Name.Trim();
-                voucher.Status = 1;
-                voucher.AuthorId = userId;
-                voucher.CreatedDate = DateTime.Now;
+                ValidateVoucher(request.ValidFrom, request.ValidTo, request.MinimumOrderPrice, request.MaximumOrderPrice, request.Discount);
+
+                Voucher voucher = new Voucher()
+                {
+                    VoucherId = Guid.NewGuid(),
+                    Name = request.Name.Trim(),
+                    Description = request.Description.Trim(),
+                    Status = 1,
+                    ValidFrom = request.ValidFrom,
+                    ValidTo = request.ValidTo,
+                    Discount = request.Discount,
+                    MinimumOrderPrice = request.MinimumOrderPrice,
+                    MaximumOrderPrice = request.MaximumOrderPrice,
+                    AuthorId = userId,
+                    CreatedDate = DateTime.Now,
+                };
+
                 await _voucherRepository.AddAsync(voucher);
                 isInserted = true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error at CreateByUser: " + ex.Message);
-                throw;
+                throw new Exception(ex.Message);
             }
             return isInserted;
         }
 
+        private void ValidateVoucher(DateTime start, DateTime end, decimal min, decimal max, decimal discount)
+        {
+            try
+            {
+                if (end <= start)
+                    throw new Exception(ErrorMessage.VoucherError.DATETIME_NOT_VALID);
 
+                if (max <= min || min < 0)
+                    throw new Exception(ErrorMessage.VoucherError.DISCOUNT_CONDITION_NOT_VALID);
+
+                if(discount <= 0)
+                    throw new Exception(ErrorMessage.VoucherError.DISCOUNT_PRICE_NOT_VALID);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }
 
