@@ -32,13 +32,20 @@ namespace BE_Homnayangi.Controllers
 
         // GET: api/<ValuesController>
         [HttpGet]
-        public async Task<ActionResult<PagedResponse<PagedList<Customer>>>> GetAllUsers([FromQuery] PagingUserRequest request)
+        public async Task<ActionResult<PagedResponse<PagedList<Customer>>>> GetAllUsers()
         {
-            var response = await _userService.GetAllCustomer(request);
-            return Ok(new
+            try
             {
-                result = response
-            });
+                var response = await _userService.GetAllCustomer();
+                return Ok(new
+                {
+                    result = response
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
 
@@ -56,16 +63,28 @@ namespace BE_Homnayangi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
-            bool? isBlocked = await _userService.BlockCustomerById(id);
-            if (isBlocked == true)
+            var customer = await _userService.GetCustomerById(id);
+            if (customer.IsBlocked == false)
             {
+                customer.IsBlocked = (bool)await _userService.BlockCustomerById(id);
                 return new JsonResult(new
                 {
                     status = "staff is blocked"
                 });
             }
-            else if (isBlocked == false)
+            return new JsonResult(new
             {
+                status = "failed"
+            });
+            ;
+        }
+        [HttpPut("status/{id}")]
+        public async Task<IActionResult> UnblockCustomer([FromRoute] Guid id)
+        {
+            var customer = await _userService.GetCustomerById(id);
+            if (customer.IsBlocked == true)
+            {
+                customer.IsBlocked = (bool)await _userService.BlockCustomerById(id);
                 return new JsonResult(new
                 {
                     status = "staff is unblocked"

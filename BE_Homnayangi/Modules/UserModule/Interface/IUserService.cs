@@ -14,7 +14,7 @@ namespace BE_Homnayangi.Modules.UserModule.Interface
     {
         #region CRUD staff
         public Task<User> GetUserByEmail(string email);
-        public Task<User> GetUserById(Guid id);
+        public Task<CurrentUserResponse> GetUserById(Guid id);
         public Task AddNewUser(User newUser);
         public Task<bool?> BlockUserById(Guid id);
         public Task<bool> UpdateStaff(User user);
@@ -24,9 +24,9 @@ namespace BE_Homnayangi.Modules.UserModule.Interface
 
         #region CRUD Customer
 
-        public Task<PagedResponse<PagedList<Customer>>> GetAllCustomer(PagingUserRequest request);
+        public Task<ICollection<CurrentUserResponse>> GetAllCustomer();
         public Customer GetCustomerByUsername(string? username);
-        public Task<Customer> GetCustomerById(Guid id);
+        public Task<CurrentUserResponse> GetCustomerById(Guid id);
         public Customer GetCustomerByEmail(string? email);
         public Task<bool> UpdateCustomer(Customer customer);
         public Task<bool?> BlockCustomerById(Guid id);
@@ -38,7 +38,7 @@ namespace BE_Homnayangi.Modules.UserModule.Interface
         public Task<string> GenerateGoolgleToken(LoginGoogleDTO loginGoogle);
         public Task Register(RegisterDTO register);
         #endregion
-        
+
         public CurrentUserResponse GetCurrentUser(string authHeader);
 
         #region CRUD Manager (Admin's actions)
