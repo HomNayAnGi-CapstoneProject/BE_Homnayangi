@@ -317,10 +317,15 @@ namespace BE_Homnayangi.Controllers
 
             if (response.Resource.Count == 0)
             {
-                return NotFound();
+                return new JsonResult(new
+                {
+                    status = "failed"
+                });
             }
-
-            return Ok(response);
+            else
+            {
+                return Ok(response);
+            }
         }
 
         [HttpGet("suggest-blog/{Age}/{IsMale}/{IsLoseWeight}")]

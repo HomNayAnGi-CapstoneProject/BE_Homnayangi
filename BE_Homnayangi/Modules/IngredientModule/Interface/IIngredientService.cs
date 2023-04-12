@@ -1,5 +1,6 @@
 ﻿using BE_Homnayangi.Modules.DTO.IngredientDTO;
 using BE_Homnayangi.Modules.IngredientModule.IngredientDTO;
+using BE_Homnayangi.Modules.IngredientModule.Request;
 using BE_Homnayangi.Modules.IngredientModule.Response;
 using Library.Models;
 using Library.PagedList;
@@ -21,7 +22,7 @@ namespace BE_Homnayangi.Modules.IngredientModule.Interface
         public IngredientResponse GetIngredientByID(Guid? IngredientId);
 
         public Task<ICollection<IngredientResponse>> GetAllIngredients();
-        public Task<PagedResponse<PagedList<IngredientResponse>>> GetAllIngredientsWithPagination(PagedRequest request);
+        public Task<PagedResponse<PagedList<IngredientResponse>>> GetAllIngredientsWithPagination(IngredientsByTypeRequest request);
 
         public Task<ICollection<IngredientResponse>> GetIngredientsByTypeId(Guid typeId);
 

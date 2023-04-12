@@ -122,6 +122,7 @@ namespace Library.Models.Constant
             public readonly static string ADMIN_NOT_ALLOWED_TO_DELETE_RECIPE = "Staff and Manager role are allowed to delete a recipe";
             public readonly static string ADMIN_NOT_ALLOWED_TO_RESTORE_BLOG = "Staff and Manager role are allowed to restore an old blog";
             public readonly static string ADMIN_NOT_ALLOWED_TO_RESTORE_RECIPE = "Staff and Manager role are allowed to restore an old reipce";
+            public readonly static string ROLE_NOT_VALID = "Only update into Staff or Manager roles";
         }
         #endregion
 

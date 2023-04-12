@@ -6,7 +6,8 @@ namespace BE_Homnayangi.Modules.BlogModule.Request
 {
     public class BlogsBySubCatesRequest : PagedRequest
     {
-        public string subCateIds { get; set; }
+        public string SubCateIds { get; set; }
+        public string? SearchString { get; set; }
 
         public BlogsBySubCatesRequest() : base() { }
     }

@@ -46,10 +46,13 @@ namespace BE_Homnayangi.Modules.UserModule.Interface
         public Task<ICollection<CurrentUserResponse>> GetUserByRole(string role);
 
         public Task<bool> ChangeStatusManagerByAdmin(UpdatedStatusManager request);
-
+        
         public Task<bool> CreateANewManager(CreateManager request);
 
+        public Task<ICollection<CurrentUserResponse>> GetAllUsers();
 
         #endregion
+
+        public Task<bool> UpdateRoleUser(UpdatedUserRole request);
     }
 }
