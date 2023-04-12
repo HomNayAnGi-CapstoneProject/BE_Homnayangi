@@ -1,9 +1,11 @@
 ﻿using BE_Homnayangi.Modules.DTO.IngredientDTO;
 using BE_Homnayangi.Modules.IngredientModule.IngredientDTO;
 using BE_Homnayangi.Modules.IngredientModule.Interface;
+using BE_Homnayangi.Modules.IngredientModule.Request;
 using BE_Homnayangi.Modules.IngredientModule.Response;
 using BE_Homnayangi.Modules.PriceNoteModule.Interface;
 using BE_Homnayangi.Modules.Utils;
+using GSF;
 using Library.Models;
 using Library.Models.Enum;
 using Library.PagedList;
@@ -77,15 +79,29 @@ namespace BE_Homnayangi.Modules.IngredientModule
             }
         }
 
-        public async Task<PagedResponse<PagedList<IngredientResponse>>> GetAllIngredientsWithPagination(PagedRequest request)
+        public async Task<PagedResponse<PagedList<IngredientResponse>>> GetAllIngredientsWithPagination(IngredientsByTypeRequest request)
         {
             var pageSize = request.PageSize;
             var pageNumber = request.PageNumber;
             var sort = request.sort;
             var sortDesc = request.sortDesc;
+            var typeId = request.TypeId;
+            var searchString = request.SearchString;
             try
             {
-                var ingredients = await _ingredientRepository.GetIngredientsBy(i => i.Status.Value, includeProperties: "Type,Unit");
+                ICollection<Ingredient> ingredients = null;
+                ingredients = await _ingredientRepository.GetIngredientsBy(i => i.Status.Value, includeProperties: "Type,Unit");
+                if (typeId != null)
+                {
+                    ingredients = ingredients.Where(i => i.TypeId.Value == typeId).ToList();
+                }
+                if (searchString != null)
+                {
+                    searchString = Regex.Replace(request.SearchString, @"\s+", " ").Trim();
+                    ingredients = ingredients.Where(x => ConvertToUnSign(x.Name).Contains(ConvertToUnSign(searchString), StringComparison.CurrentCultureIgnoreCase)
+                                                || x.Name.Contains(searchString, StringComparison.CurrentCultureIgnoreCase))
+                                                .ToList();
+                }
                 var result = ingredients.Select(i => new IngredientResponse()
                 {
                     IngredientId = i.IngredientId,
@@ -126,7 +142,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
             catch (Exception ex)
             {
                 Console.WriteLine("Error at GetAllIngredients: " + ex.Message);
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -184,7 +200,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
                     current.Status = newIg.Status;
                     current.TypeId = newIg.TypeId;
                     current.ListImagePosition = newIg.ListImagePosition;
-                    
+
                     // update new price note for ingredient
                     if (current.Price != newIg.Price)
                     {

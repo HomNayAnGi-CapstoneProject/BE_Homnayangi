@@ -63,7 +63,7 @@ namespace BE_Homnayangi.Modules.TypeModule
         }
         public async Task<ICollection<TypeDropdownResponse>> GetTypeDropdown()
         {
-            return _TypeRepository.GetAll().Result.Where(x => x.Status == true).Select(x => new TypeDropdownResponse
+            return _TypeRepository.GetTypesBy(t => t.Status.Value).Result.Select(x => new TypeDropdownResponse
             {
                 TypeId = x.TypeId,
                 TypeName = x.Name

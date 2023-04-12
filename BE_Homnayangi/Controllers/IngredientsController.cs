@@ -44,7 +44,7 @@ namespace BE_Homnayangi.Controllers
 
         // GET: api/v1/Ingredients
         [HttpGet("customer")]
-        public async Task<ActionResult<PagedResponse<PagedList<IngredientResponse>>>> GetIngredientsWithPagination([FromQuery] PagedRequest request)
+        public async Task<ActionResult<PagedResponse<PagedList<IngredientResponse>>>> GetIngredientsWithPagination([FromQuery] IngredientsByTypeRequest request)
         {
             var result = await _ingredientService.GetAllIngredientsWithPagination(request);
 

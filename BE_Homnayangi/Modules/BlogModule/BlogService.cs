@@ -28,6 +28,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using static Library.Models.Enum.ReferenceType;
 using static Library.Models.Enum.Status;
 
@@ -280,11 +281,12 @@ namespace BE_Homnayangi.Modules.BlogModule
 
         public async Task<PagedResponse<Library.PagedList.PagedList<BlogsByCatesResponse>>> GetBlogsBySubCates(BlogsBySubCatesRequest request)
         {
-            var subCateIds = request.subCateIds != null ? StringUtils.ExtractContents(request.subCateIds) : null;
+            var subCateIds = request.SubCateIds != null ? StringUtils.ExtractContents(request.SubCateIds) : null;
             var pageSize = request.PageSize;
             var pageNumber = request.PageNumber;
             var sort = request.sort;
             var sortDesc = request.sortDesc;
+            var searchString = request.SearchString;
             try
             {
                 List<Blog> blogs = new();
@@ -292,14 +294,31 @@ namespace BE_Homnayangi.Modules.BlogModule
                 if (subCateIds == null)
                 {
                     blogs = _blogRepository.GetBlogsBy(b => b.BlogStatus == ((int)Status.BlogStatus.ACTIVE)).Result.ToList();
+                    if (searchString != null)
+                    {
+                        searchString = Regex.Replace(request.SearchString, @"\s+", " ").Trim();
+                        blogs = blogs.Where(x => ConvertToUnSign(x.Title)
+                                                .Contains(ConvertToUnSign(searchString), StringComparison.CurrentCultureIgnoreCase)
+                                                || x.Title.Contains(searchString, StringComparison.CurrentCultureIgnoreCase))
+                                                .ToList();
+                    }
                 }
                 else
                 {
                     var filteredBlogs = await _blogSubCateRepository
-                        .GetBlogSubCatesBy(options: (bs) => { return bs.Where(b => subCateIds.Contains(b.SubCateId.ToString())).ToList(); },
-                            includeProperties: "Blog");
+                        .GetBlogSubCatesBy(options: (bs) => { return bs.Where(b => subCateIds.Contains(b.SubCateId.ToString()) 
+                                                                                && b.Blog.BlogStatus == (int)Status.BlogStatus.ACTIVE).ToList(); },
+                                                                                includeProperties: "Blog");
 
                     blogs = filteredBlogs.Select(f => f.Blog).ToList();
+                    if (searchString != null)
+                    {
+                        searchString = Regex.Replace(request.SearchString, @"\s+", " ").Trim();
+                        blogs = blogs.Where(x => ConvertToUnSign(x.Title)
+                                                .Contains(ConvertToUnSign(searchString), StringComparison.CurrentCultureIgnoreCase)
+                                                || x.Title.Contains(searchString, StringComparison.CurrentCultureIgnoreCase))
+                                                .ToList();
+                    }
                 }
 
                 switch (sort)
@@ -1114,7 +1133,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     RecipeImageURL = blog.Recipe.ImageUrl,
                     MaxSize = blog.Recipe.MaxSize,
                     MinSize = blog.Recipe.MinSize,
-                    MinutesToCook= blog.MinutesToCook,
+                    MinutesToCook = blog.MinutesToCook,
                     PackagePrice = blog.Recipe.PackagePrice,
                     CookedPrice = blog.Recipe.CookedPrice,
                 };

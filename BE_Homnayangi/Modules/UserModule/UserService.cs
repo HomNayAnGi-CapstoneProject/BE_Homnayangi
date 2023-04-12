@@ -17,6 +17,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
@@ -266,6 +267,32 @@ namespace BE_Homnayangi.Modules.UserModule
             await _userRepository.UpdateAsync(user);
         }
 
+        public async Task<bool> UpdateRoleUser(UpdatedUserRole request) // MANAGER - STAFF
+        {
+            bool isUpdated = false;
+            try
+            {
+                var user = await _userRepository.GetFirstOrDefaultAsync(u => u.UserId == request.UserId);
+                if (user == null)
+                    throw new Exception(ErrorMessage.UserError.USER_NOT_EXISTED);
+
+                if (!(request.Role.Equals("Manager") || request.Role.Equals("Staff")))
+                    throw new Exception(ErrorMessage.AdminError.ROLE_NOT_VALID);
+
+                int roleInt = ConvertRoleInt(request.Role);
+                user.UpdatedDate = DateTime.Now;
+                user.Role = roleInt;
+                await _userRepository.UpdateAsync(user);
+                isUpdated = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at UpdateRoleUser: " + ex.Message);
+                throw new Exception(ex.Message);
+            }
+            return isUpdated;
+        }
+
         // Admin's actions
 
         public async Task<ICollection<CurrentUserResponse>> GetUserByRole(string role)
@@ -377,6 +404,35 @@ namespace BE_Homnayangi.Modules.UserModule
                 throw new Exception(ex.Message);
             }
             return isInserted;
+        }
+
+        public async Task<ICollection<CurrentUserResponse>> GetAllUsers()
+        {
+            try
+            {
+                var users = await _userRepository.GetUsersBy(u => (u.Role.Value == 1 || u.Role.Value == 2) 
+                                                                    && !u.IsBlocked.Value); // Manager || Staff: ACTIVE
+                var result = users.Select(m => new CurrentUserResponse()
+                {
+                    Id = m.UserId,
+                    Displayname = m.Displayname,
+                    Username = m.Username,
+                    Firstname = m.Firstname,
+                    Lastname = m.Lastname,
+                    Email = m.Email,
+                    Phonenumber = m.Phonenumber,
+                    Gender = m.Gender,
+                    Avatar = m.Avatar,
+                    Role = m.Role.Value == 1 ? "Manager" : "Staff",
+                    IsBlocked = m.IsBlocked.Value,
+                }).ToList();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at GetAllUsers: " + ex.Message);
+                throw new Exception(ex.Message);
+            }
         }
 
         private void IsDuplicatedUsername(string username, ICollection<User> users, ICollection<Customer> customers)

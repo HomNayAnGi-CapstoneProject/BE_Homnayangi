@@ -180,28 +180,50 @@ namespace BE_Homnayangi.Controllers
 
         #region Admin's actions
 
-        //[Authorize(Roles = "Admin")]
-        //[HttpGet("admin-manage/managers")]
-        //public async Task<IActionResult> GetAllManagersByAdmin()
-        //{
-        //    try
-        //    {
-        //        var result = await _userService.GetUserByRole("Manager");
-        //        return new JsonResult(new
-        //        {
-        //            status = "success",
-        //            result = result
-        //        });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return new JsonResult(new
-        //        {
-        //            status = "failed",
-        //            msg = ex.Message
-        //        });
-        //    }
-        //}
+        [Authorize(Roles = "Admin")]
+        [HttpGet("admin-manage/users")] // Get all Staff || Manager ACTIVE
+        public async Task<IActionResult> GetAllUsersByAdmin()
+        {
+            try
+            {
+                var result = await _userService.GetAllUsers();
+                return new JsonResult(new
+                {
+                    status = "success",
+                    result = result
+                });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut("admin-manage/update-role")]
+        public async Task<IActionResult> UpdateRole(UpdatedUserRole request)
+        {
+            try
+            {
+                var result = await _userService.UpdateRoleUser(request);
+                return new JsonResult(new
+                {
+                    status = result ? "success" : "failed"
+                });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
+            }
+        }
 
         //[Authorize(Roles = "Admin")]
         //[HttpPut("admin-manage/status")]
