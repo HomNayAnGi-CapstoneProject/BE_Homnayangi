@@ -53,7 +53,7 @@ namespace BE_Homnayangi.Ultils.Quartz
                         {
                             CustomerVoucherId = Guid.NewGuid(),
                             CustomerId = customer.CustomerId,
-                            VoucherId = (Guid)customerVoucher.VoucherId,
+                            VoucherId = (Guid)customerBadge.Badge.VoucherId,
                             CreatedDate = DateTime.Now
 
 
