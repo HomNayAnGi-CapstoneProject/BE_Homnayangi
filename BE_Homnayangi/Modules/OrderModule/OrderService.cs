@@ -8,6 +8,7 @@ using BE_Homnayangi.Modules.RecipeModule;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
 using BE_Homnayangi.Modules.TransactionModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Interface;
+using BE_Homnayangi.Modules.VoucherModule.Interface;
 using Library.Models;
 using Library.Models.Constant;
 using Library.Models.Enum;
@@ -36,6 +37,7 @@ namespace BE_Homnayangi.Modules.OrderModule
         private readonly ITransactionRepository _transactionRepository;
         private readonly IIngredientRepository _ingredientRepository;
         private readonly IRecipeRepository _recipeRepository;
+        private readonly IVoucherRepository _voucherRepository;
         IConfiguration _configuration;
         private readonly IMapper _mapper;
 
@@ -46,6 +48,7 @@ namespace BE_Homnayangi.Modules.OrderModule
             ITransactionRepository transactionRepository,
             IIngredientRepository ingredientRepository,
             IRecipeRepository recipeRepository,
+            IVoucherRepository voucherRepository,
             IMapper mapper,
             IConfiguration configuration)
         {
@@ -57,6 +60,7 @@ namespace BE_Homnayangi.Modules.OrderModule
             _ingredientRepository = ingredientRepository;
             _recipeRepository = recipeRepository;
             _configuration = configuration;
+            _voucherRepository = voucherRepository;
             _mapper = mapper;
         }
 
@@ -118,7 +122,6 @@ namespace BE_Homnayangi.Modules.OrderModule
                     OrderDate = order.OrderDate,
                     ShippedDate = order.ShippedDate,
                     ShippedAddress = order.ShippedAddress,
-                    Discount = order.Discount,
                     TotalPrice = order.TotalPrice,
                     OrderStatus = order.OrderStatus,
                     CustomerId = order.CustomerId,
@@ -162,10 +165,43 @@ namespace BE_Homnayangi.Modules.OrderModule
                 newOrder.OrderDate = DateTime.Now;
                 newOrder.OrderStatus = (int)Status.OrderStatus.PENDING;
 
+                #region Validation
                 if (string.IsNullOrEmpty(newOrder.ShippedAddress))
                     throw new Exception(ErrorMessage.OrderError.ORDER_SHIPPING_ADDRESS_REQUIRED);
                 if (newOrder.TotalPrice < 10000)
                     throw new Exception(ErrorMessage.OrderError.ORDER_TOTAL_PRICE_NOT_VALID);
+
+                var voucher = newOrder.VoucherId.HasValue
+                    ? await _voucherRepository.GetByIdAsync(newOrder.VoucherId.Value)
+                    : null;
+                if(voucher != null)
+                {
+                    decimal price = 0;
+                    foreach(var detail in newOrder.OrderDetails)
+                    {
+                        price += detail.Price.GetValueOrDefault() * detail.Quantity.GetValueOrDefault();
+                    }
+
+                    if (voucher.Discount > 0 && voucher.Discount <= 1)
+                    {
+                        if (price < voucher.MinimumOrder.GetValueOrDefault())
+                            throw new Exception(ErrorMessage.OrderError.ORDER_TOTAL_PRICE_NOT_VALID_TO_USE_VOUCHER);
+                        var discountAmount = price * voucher.Discount > voucher.MaximumOrder
+                            ? voucher.MaximumOrder
+                            : price * voucher.Discount;
+                        if (newOrder.TotalPrice != price - discountAmount)
+                            throw new Exception(ErrorMessage.OrderError.ORDER_TOTAL_PRICE_NOT_VALID);
+                    }
+                    else
+                    {
+                        if (price < voucher.MinimumOrder.GetValueOrDefault())
+                            throw new Exception(ErrorMessage.OrderError.ORDER_TOTAL_PRICE_NOT_VALID_TO_USE_VOUCHER);
+                        if (newOrder.TotalPrice != price - voucher.Discount)
+                            throw new Exception(ErrorMessage.OrderError.ORDER_TOTAL_PRICE_NOT_VALID);
+                    }
+                }
+                #endregion
+
 
                 #region create transaction
                 var transaction = new Library.Models.Transaction()
@@ -351,8 +387,8 @@ namespace BE_Homnayangi.Modules.OrderModule
                 if (customer.Email != null)
                 {
                     // gui mail thong bao don hang bi tu choi
-                    var mailSubject = $"[Tu choi don hang] Thong tin don hang #{order.OrderId}";
-                    var mailBody = $"Don hang #{order.OrderId} da bi tu choi.";
+                    var mailSubject = $"[Từ chối đơn hàng] Thông tin đơn hàng #{order.OrderId}";
+                    var mailBody = $"Đơn hàng #{order.OrderId} đã bị từ chối.";
 
                     SendMail(mailSubject, mailBody, customer.Email);
                 }
@@ -394,8 +430,8 @@ namespace BE_Homnayangi.Modules.OrderModule
                 if (customer.Email != null)
                 {
                     // gui mail thong bao don hang bi huy
-                    var mailSubject = $"[Huy don hang] Thong tin don hang #{order.OrderId}";
-                    var mailBody = $"Don hang #{order.OrderId} da bi huy.";
+                    var mailSubject = $"[Hủy đơn hàng] Thông tin đơn hàng #{order.OrderId}";
+                    var mailBody = $"Bạn đã hủy đơn hàng #{order.OrderId}.";
 
                     SendMail(mailSubject, mailBody, customer.Email);
                 }
@@ -696,7 +732,6 @@ namespace BE_Homnayangi.Modules.OrderModule
                     OrderDate = order.OrderDate,
                     ShippedDate = order.ShippedDate,
                     ShippedAddress = order.ShippedAddress,
-                    Discount = order.Discount,
                     TotalPrice = order.TotalPrice,
                     OrderStatus = order.OrderStatus,
                     CustomerId = order.CustomerId,
