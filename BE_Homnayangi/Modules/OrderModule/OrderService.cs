@@ -431,11 +431,8 @@ namespace BE_Homnayangi.Modules.OrderModule
                 return;
 
             var transaction = await _transactionRepository.GetByIdAsync(id);
-            if (transaction.TransactionStatus != (int)Status.TransactionStatus.FAIL && order.OrderStatus != (int)Status.OrderStatus.CANCEL)
+            if (transaction.TransactionStatus != (int)Status.TransactionStatus.FAIL && order.OrderStatus != (int)Status.OrderStatus.DENIED)
                 throw new Exception(ErrorMessage.OrderError.ORDER_CANNOT_CHANGE_STATUS);
-
-            var customer = await _customerRepository.GetByIdAsync(order.CustomerId.Value);
-
 
             order.OrderStatus = (int)Status.OrderStatus.REFUND;
 
