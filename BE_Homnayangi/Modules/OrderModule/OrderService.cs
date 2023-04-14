@@ -8,6 +8,7 @@ using BE_Homnayangi.Modules.RecipeModule;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
 using BE_Homnayangi.Modules.TransactionModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Interface;
+using BE_Homnayangi.Modules.VoucherModule.Interface;
 using Library.Models;
 using Library.Models.Constant;
 using Library.Models.Enum;
@@ -36,6 +37,7 @@ namespace BE_Homnayangi.Modules.OrderModule
         private readonly ITransactionRepository _transactionRepository;
         private readonly IIngredientRepository _ingredientRepository;
         private readonly IRecipeRepository _recipeRepository;
+        private readonly IVoucherRepository _voucherRepository;
         IConfiguration _configuration;
         private readonly IMapper _mapper;
 
@@ -46,6 +48,7 @@ namespace BE_Homnayangi.Modules.OrderModule
             ITransactionRepository transactionRepository,
             IIngredientRepository ingredientRepository,
             IRecipeRepository recipeRepository,
+            IVoucherRepository voucherRepository,
             IMapper mapper,
             IConfiguration configuration)
         {
@@ -57,6 +60,7 @@ namespace BE_Homnayangi.Modules.OrderModule
             _ingredientRepository = ingredientRepository;
             _recipeRepository = recipeRepository;
             _configuration = configuration;
+            _voucherRepository = voucherRepository;
             _mapper = mapper;
         }
 
@@ -118,7 +122,6 @@ namespace BE_Homnayangi.Modules.OrderModule
                     OrderDate = order.OrderDate,
                     ShippedDate = order.ShippedDate,
                     ShippedAddress = order.ShippedAddress,
-                    Discount = order.Discount,
                     TotalPrice = order.TotalPrice,
                     OrderStatus = order.OrderStatus,
                     CustomerId = order.CustomerId,
@@ -162,10 +165,43 @@ namespace BE_Homnayangi.Modules.OrderModule
                 newOrder.OrderDate = DateTime.Now;
                 newOrder.OrderStatus = (int)Status.OrderStatus.PENDING;
 
+                #region Validation
                 if (string.IsNullOrEmpty(newOrder.ShippedAddress))
                     throw new Exception(ErrorMessage.OrderError.ORDER_SHIPPING_ADDRESS_REQUIRED);
                 if (newOrder.TotalPrice < 10000)
                     throw new Exception(ErrorMessage.OrderError.ORDER_TOTAL_PRICE_NOT_VALID);
+
+                var voucher = newOrder.VoucherId.HasValue
+                    ? await _voucherRepository.GetByIdAsync(newOrder.VoucherId.Value)
+                    : null;
+                if(voucher != null)
+                {
+                    decimal price = 0;
+                    foreach(var detail in newOrder.OrderDetails)
+                    {
+                        price += detail.Price.GetValueOrDefault() * detail.Quantity.GetValueOrDefault();
+                    }
+
+                    if (voucher.Discount > 0 && voucher.Discount <= 1)
+                    {
+                        if (price < voucher.MinimumOrderPrice.GetValueOrDefault())
+                            throw new Exception(ErrorMessage.OrderError.ORDER_TOTAL_PRICE_NOT_VALID_TO_USE_VOUCHER);
+                        var discountAmount = price * voucher.Discount > voucher.MaximumOrderPrice
+                            ? voucher.MaximumOrderPrice
+                            : price * voucher.Discount;
+                        if (newOrder.TotalPrice != price - discountAmount)
+                            throw new Exception(ErrorMessage.OrderError.ORDER_TOTAL_PRICE_NOT_VALID);
+                    }
+                    else
+                    {
+                        if (price < voucher.MinimumOrderPrice.GetValueOrDefault())
+                            throw new Exception(ErrorMessage.OrderError.ORDER_TOTAL_PRICE_NOT_VALID_TO_USE_VOUCHER);
+                        if (newOrder.TotalPrice != price - voucher.Discount)
+                            throw new Exception(ErrorMessage.OrderError.ORDER_TOTAL_PRICE_NOT_VALID);
+                    }
+                }
+                #endregion
+
 
                 #region create transaction
                 var transaction = new Library.Models.Transaction()
@@ -196,6 +232,7 @@ namespace BE_Homnayangi.Modules.OrderModule
                             switch (newOrder.PaymentMethod.GetValueOrDefault())
                             {
                                 case (int)PaymentMethodEnum.PaymentMethods.PAYPAL:
+                                    newOrder.OrderStatus = (int)Status.OrderStatus.PAYING;
                                     await _transactionRepository.AddAsync(transaction);
                                     redirectUrl = await PaymentWithPaypal(newOrder.OrderId);
                                     break;
@@ -255,22 +292,24 @@ namespace BE_Homnayangi.Modules.OrderModule
                 includeProperties: "OrderDetails");
         }
 
-        public async Task AcceptOrder(Guid orderId)
+        public async Task PaidOrder(Guid orderId)
         {
             var order = await _OrderRepository.GetByIdAsync(orderId);
 
             if (order == null || order.OrderStatus == (int)Status.OrderStatus.DELETED)
                 throw new Exception(ErrorMessage.OrderError.ORDER_NOT_FOUND);
 
-            if (order.OrderStatus == (int)Status.OrderStatus.ACCEPTED)
+            if (order.OrderStatus == (int)Status.OrderStatus.PENDING)
                 return;
+            if (order.PaymentMethod != (int)PaymentMethods.PAYPAL)
+                throw new Exception(ErrorMessage.OrderError.ORDER_CANNOT_CHANGE_STATUS);
 
             var customer = await _customerRepository.GetByIdAsync(order.CustomerId.Value);
 
-            if (order.OrderStatus != (int)Status.OrderStatus.PENDING)
+            if (order.OrderStatus != (int)Status.OrderStatus.PAYING)
                 throw new Exception(ErrorMessage.OrderError.ORDER_CANNOT_CHANGE_STATUS);
 
-            order.OrderStatus = (int)Status.OrderStatus.ACCEPTED;
+            order.OrderStatus = (int)Status.OrderStatus.PENDING;
 
             #region update order status, create transaction if COD, update status if Paypal
             var transactionScope = _OrderRepository.Transaction();
@@ -301,22 +340,41 @@ namespace BE_Homnayangi.Modules.OrderModule
                     await _transactionRepository.AddAsync(transaction);
                 }
 
-                #region sending mail
-                if (customer.Email != null)
-                {
-                    // gui mail thong tin order
-                    var mailSubject = $"[Da duyet] Thong tin don hang #{order.OrderId}";
-                    var mailBody = $"Cam on ban da mua hang, don hang #{order.OrderId} da duoc duyet.\n" +
-                        $"Don hang cua ban dang duoc giao";
-
-                    SendMail(mailSubject, mailBody, customer.Email);
-                }
-                #endregion
-
                 transactionScope.Commit();
             }
             #endregion
+        }
 
+        public async Task AcceptOrder(Guid orderId)
+        {
+            var order = await _OrderRepository.GetByIdAsync(orderId);
+
+            if (order == null || order.OrderStatus == (int)Status.OrderStatus.DELETED)
+                throw new Exception(ErrorMessage.OrderError.ORDER_NOT_FOUND);
+
+            if (order.OrderStatus == (int)Status.OrderStatus.ACCEPTED)
+                return;
+
+            var customer = await _customerRepository.GetByIdAsync(order.CustomerId.Value);
+
+            if (order.OrderStatus != (int)Status.OrderStatus.PENDING)
+                throw new Exception(ErrorMessage.OrderError.ORDER_CANNOT_CHANGE_STATUS);
+
+            order.OrderStatus = (int)Status.OrderStatus.ACCEPTED;
+
+            await _OrderRepository.UpdateAsync(order);
+
+            #region sending mail
+            if (customer.Email != null)
+            {
+                // gui mail thong tin order
+                var mailSubject = $"[Da duyet] Thong tin don hang #{order.OrderId}";
+                var mailBody = $"Cam on ban da mua hang, don hang #{order.OrderId} da duoc duyet.\n" +
+                    $"Don hang cua ban dang duoc giao";
+
+                SendMail(mailSubject, mailBody, customer.Email);
+            }
+            #endregion
         }
 
         public async Task DenyOrder(Guid id)
@@ -351,8 +409,8 @@ namespace BE_Homnayangi.Modules.OrderModule
                 if (customer.Email != null)
                 {
                     // gui mail thong bao don hang bi tu choi
-                    var mailSubject = $"[Tu choi don hang] Thong tin don hang #{order.OrderId}";
-                    var mailBody = $"Don hang #{order.OrderId} da bi tu choi.";
+                    var mailSubject = $"[Từ chối đơn hàng] Thông tin đơn hàng #{order.OrderId}";
+                    var mailBody = $"Đơn hàng #{order.OrderId} đã bị từ chối.";
 
                     SendMail(mailSubject, mailBody, customer.Email);
                 }
@@ -360,6 +418,29 @@ namespace BE_Homnayangi.Modules.OrderModule
 
                 transactionScope.Commit();
             }
+        }
+
+        public async Task RefundOrder(Guid id)
+        {
+            var order = await _OrderRepository.GetByIdAsync(id);
+
+            if (order == null || order.OrderStatus == (int)Status.OrderStatus.DELETED)
+                throw new Exception(ErrorMessage.OrderError.ORDER_NOT_FOUND);
+
+            if (order.OrderStatus == (int)Status.OrderStatus.REFUND)
+                return;
+
+            var transaction = await _transactionRepository.GetByIdAsync(id);
+            if (transaction.TransactionStatus != (int)Status.TransactionStatus.FAIL && order.OrderStatus != (int)Status.OrderStatus.CANCEL)
+                throw new Exception(ErrorMessage.OrderError.ORDER_CANNOT_CHANGE_STATUS);
+
+            var customer = await _customerRepository.GetByIdAsync(order.CustomerId.Value);
+
+
+            order.OrderStatus = (int)Status.OrderStatus.REFUND;
+
+            await _OrderRepository.UpdateAsync(order);
+
         }
 
         public async Task CancelOrder(Guid id)
@@ -394,8 +475,8 @@ namespace BE_Homnayangi.Modules.OrderModule
                 if (customer.Email != null)
                 {
                     // gui mail thong bao don hang bi huy
-                    var mailSubject = $"[Huy don hang] Thong tin don hang #{order.OrderId}";
-                    var mailBody = $"Don hang #{order.OrderId} da bi huy.";
+                    var mailSubject = $"[Hủy đơn hàng] Thông tin đơn hàng #{order.OrderId}";
+                    var mailBody = $"Bạn đã hủy đơn hàng #{order.OrderId}.";
 
                     SendMail(mailSubject, mailBody, customer.Email);
                 }
@@ -696,7 +777,6 @@ namespace BE_Homnayangi.Modules.OrderModule
                     OrderDate = order.OrderDate,
                     ShippedDate = order.ShippedDate,
                     ShippedAddress = order.ShippedAddress,
-                    Discount = order.Discount,
                     TotalPrice = order.TotalPrice,
                     OrderStatus = order.OrderStatus,
                     CustomerId = order.CustomerId,

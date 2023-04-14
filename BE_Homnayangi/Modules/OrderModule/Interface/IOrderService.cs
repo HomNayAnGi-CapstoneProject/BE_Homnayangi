@@ -36,9 +36,13 @@ namespace BE_Homnayangi.Modules.OrderModule.Interface
 
         public Task DeleteOrder(Guid id);
 
+        public Task PaidOrder(Guid id);
+
         public Task AcceptOrder(Guid id);
 
         public Task DenyOrder(Guid id);
+
+        public Task RefundOrder(Guid id);
 
         public Task CancelOrder(Guid id);
 

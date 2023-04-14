@@ -10,7 +10,6 @@ namespace BE_Homnayangi.Modules.OrderModule.Request
         [MaxLength(255, ErrorMessage = "Max length is 255")]
         public string ShippedAddress { get; set; }
         public DateTime? ShippedDate { get; set; }
-        public decimal? Discount { get; set; }
         public decimal? TotalPrice { get; set; }
         public Guid? VoucherId { get; set; }
         public bool? IsCooked { get; set; }

@@ -17,7 +17,6 @@ namespace Library.Models
         public DateTime? OrderDate { get; set; }
         public DateTime? ShippedDate { get; set; }
         public string ShippedAddress { get; set; }
-        public decimal? Discount { get; set; }
         public decimal? TotalPrice { get; set; }
         public int? OrderStatus { get; set; }
         public Guid? CustomerId { get; set; }

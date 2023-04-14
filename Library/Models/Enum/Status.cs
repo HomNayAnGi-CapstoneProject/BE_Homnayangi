@@ -21,6 +21,8 @@ namespace Library.Models.Enum
             SHIPPING = 5,
             DELIVERED = 6,
             DELIVERED_FAIL = 7,
+            REFUND = 8,
+            PAYING = 9
         }
 
         public enum TransactionStatus

@@ -82,6 +82,20 @@ namespace BE_Homnayangi.Controllers
             }
         }
 
+        [HttpPut("paid/{id}")]
+        public async Task<ActionResult> PaidOrder([FromRoute] Guid id)
+        {
+            try
+            {
+                await _orderService.PaidOrder(id);
+                return Ok("Order had paid");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPut("accept/{id}")]
         public async Task<ActionResult> AcceptOrder([FromRoute] Guid id)
         {
@@ -117,6 +131,20 @@ namespace BE_Homnayangi.Controllers
             {
                 await _orderService.CancelOrder(id);
                 return Ok("Order cancelled");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("refund/{id}")]
+        public async Task<ActionResult> Refund([FromRoute] Guid id)
+        {
+            try
+            {
+                await _orderService.RefundOrder(id);
+                return Ok("Order refunded");
             }
             catch (Exception ex)
             {
