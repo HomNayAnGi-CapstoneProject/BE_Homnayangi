@@ -597,9 +597,9 @@ namespace Library.DataAccess
 
                 entity.Property(e => e.CustomerId).HasColumnName("customerId");
 
-                entity.Property(e => e.Discount)
-                    .HasColumnType("money")
-                    .HasColumnName("discount");
+                //entity.Property(e => e.Discount)
+                //    .HasColumnType("money")
+                //    .HasColumnName("discount");
 
                 entity.Property(e => e.IsCooked).HasColumnName("isCooked");
 
