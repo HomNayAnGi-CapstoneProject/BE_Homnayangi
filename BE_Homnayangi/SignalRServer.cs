@@ -9,5 +9,10 @@ namespace BE_Homnayangi
         {
             await Clients.All.SendAsync("ReceiveMessage", message);
         }
+
+        public async Task OrderStatusNotify(string message)
+        {
+            await Clients.All.SendAsync("OrderStatusChanged", message);
+        }
     }
 }

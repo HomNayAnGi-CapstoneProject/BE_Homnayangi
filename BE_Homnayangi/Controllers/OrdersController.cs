@@ -21,6 +21,7 @@ namespace BE_Homnayangi.Controllers
         private readonly IMapper _mapper;
         private readonly IOrderService _orderService;
         private readonly IUserService _userService;
+        private readonly SignalRServer signalRServer;
 
         public OrdersController(IMapper mapper, IOrderService orderService, IUserService userService)
         {
@@ -102,6 +103,7 @@ namespace BE_Homnayangi.Controllers
             try
             {
                 await _orderService.AcceptOrder(id);
+                await signalRServer.OrderStatusNotify("Order accepted");
                 return Ok("Order accepted");
             }
             catch (Exception ex)
