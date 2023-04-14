@@ -184,17 +184,17 @@ namespace BE_Homnayangi.Modules.OrderModule
 
                     if (voucher.Discount > 0 && voucher.Discount <= 1)
                     {
-                        if (price < voucher.MinimumOrder.GetValueOrDefault())
+                        if (price < voucher.MinimumOrderPrice.GetValueOrDefault())
                             throw new Exception(ErrorMessage.OrderError.ORDER_TOTAL_PRICE_NOT_VALID_TO_USE_VOUCHER);
-                        var discountAmount = price * voucher.Discount > voucher.MaximumOrder
-                            ? voucher.MaximumOrder
+                        var discountAmount = price * voucher.Discount > voucher.MaximumOrderPrice
+                            ? voucher.MaximumOrderPrice
                             : price * voucher.Discount;
                         if (newOrder.TotalPrice != price - discountAmount)
                             throw new Exception(ErrorMessage.OrderError.ORDER_TOTAL_PRICE_NOT_VALID);
                     }
                     else
                     {
-                        if (price < voucher.MinimumOrder.GetValueOrDefault())
+                        if (price < voucher.MinimumOrderPrice.GetValueOrDefault())
                             throw new Exception(ErrorMessage.OrderError.ORDER_TOTAL_PRICE_NOT_VALID_TO_USE_VOUCHER);
                         if (newOrder.TotalPrice != price - voucher.Discount)
                             throw new Exception(ErrorMessage.OrderError.ORDER_TOTAL_PRICE_NOT_VALID);
