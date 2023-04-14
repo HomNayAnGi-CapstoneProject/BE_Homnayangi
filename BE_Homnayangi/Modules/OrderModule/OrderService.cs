@@ -301,6 +301,8 @@ namespace BE_Homnayangi.Modules.OrderModule
 
             if (order.OrderStatus == (int)Status.OrderStatus.PENDING)
                 return;
+            if (order.PaymentMethod != (int)PaymentMethods.PAYPAL)
+                throw new Exception(ErrorMessage.OrderError.ORDER_CANNOT_CHANGE_STATUS);
 
             var customer = await _customerRepository.GetByIdAsync(order.CustomerId.Value);
 
@@ -428,7 +430,12 @@ namespace BE_Homnayangi.Modules.OrderModule
             if (order.OrderStatus == (int)Status.OrderStatus.REFUND)
                 return;
 
+            var transaction = await _transactionRepository.GetByIdAsync(id);
+            if (transaction.TransactionStatus != (int)Status.TransactionStatus.FAIL && order.OrderStatus != (int)Status.OrderStatus.CANCEL)
+                throw new Exception(ErrorMessage.OrderError.ORDER_CANNOT_CHANGE_STATUS);
+
             var customer = await _customerRepository.GetByIdAsync(order.CustomerId.Value);
+
 
             order.OrderStatus = (int)Status.OrderStatus.REFUND;
 
