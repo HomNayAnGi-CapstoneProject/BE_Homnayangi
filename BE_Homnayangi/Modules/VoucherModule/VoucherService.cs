@@ -67,6 +67,24 @@ namespace BE_Homnayangi.Modules.VoucherModule
             return result;
         }
 
+        public async Task<ICollection<OverviewVoucher>> GetAllActiveVoucher()
+        {
+            try
+            {
+                var vouchers = await _voucherRepository.GetVouchersBy(v => v.Status == 1);
+                return vouchers.Select(v => new OverviewVoucher()
+                {
+                    VoucherId = v.VoucherId,
+                    VoucherName = v.Name
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at GetAllActiveVoucher: " + ex.Message);
+                throw new Exception(ex.Message);
+            }
+        }
+
         public async Task<ViewVoucherResponse> GetVoucherByID(Guid id)
         {
             ViewVoucherResponse result = null;
@@ -126,7 +144,7 @@ namespace BE_Homnayangi.Modules.VoucherModule
             bool isUpdated = false;
             try
             {
-                ValidateVoucher(newVoucher.ValidFrom.Value, newVoucher.ValidTo.Value, 
+                ValidateVoucher(newVoucher.ValidFrom.Value, newVoucher.ValidTo.Value,
                     newVoucher.MinimumOrderPrice.Value, newVoucher.MaximumOrderPrice.Value, newVoucher.Discount.Value);
 
                 Voucher voucher = await _voucherRepository.GetFirstOrDefaultAsync(x => x.VoucherId == newVoucher.VoucherId);
@@ -199,7 +217,7 @@ namespace BE_Homnayangi.Modules.VoucherModule
                 if (max <= min || min < 0)
                     throw new Exception(ErrorMessage.VoucherError.DISCOUNT_CONDITION_NOT_VALID);
 
-                if(discount <= 0)
+                if (discount <= 0)
                     throw new Exception(ErrorMessage.VoucherError.DISCOUNT_PRICE_NOT_VALID);
             }
             catch (Exception ex)

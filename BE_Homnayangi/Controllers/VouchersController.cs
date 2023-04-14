@@ -44,6 +44,29 @@ namespace BE_Homnayangi.Controllers
             });
         }
 
+        [Authorize(Roles = "Staff,Manager")]
+        [HttpGet("active-vouchers")]
+        public async Task<ActionResult> GetAllAvailableVouchers()
+        {
+            try
+            {
+                var result = await _voucherService.GetAllActiveVoucher();
+                return new JsonResult(new
+                {
+                    status = "success",
+                    result = result
+                });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
+            }
+        }
+
         // GET: api/v1/vouchers/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Voucher>> GetVoucherById([FromRoute] Guid id)

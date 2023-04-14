@@ -17,6 +17,7 @@ namespace BE_Homnayangi.Modules.VoucherModule.Interface
             string includeProperties = null);
 
         public Task<ICollection<ViewVoucherResponse>> GetAllVoucher();
+        public Task<ICollection<OverviewVoucher>> GetAllActiveVoucher();
 
         public Task<ViewVoucherResponse> GetVoucherByID(Guid id);
 
