@@ -232,6 +232,7 @@ namespace BE_Homnayangi.Modules.OrderModule
                             switch (newOrder.PaymentMethod.GetValueOrDefault())
                             {
                                 case (int)PaymentMethodEnum.PaymentMethods.PAYPAL:
+                                    newOrder.OrderStatus = (int)Status.OrderStatus.PAYING;
                                     await _transactionRepository.AddAsync(transaction);
                                     redirectUrl = await PaymentWithPaypal(newOrder.OrderId);
                                     break;
@@ -291,22 +292,22 @@ namespace BE_Homnayangi.Modules.OrderModule
                 includeProperties: "OrderDetails");
         }
 
-        public async Task AcceptOrder(Guid orderId)
+        public async Task PaidOrder(Guid orderId)
         {
             var order = await _OrderRepository.GetByIdAsync(orderId);
 
             if (order == null || order.OrderStatus == (int)Status.OrderStatus.DELETED)
                 throw new Exception(ErrorMessage.OrderError.ORDER_NOT_FOUND);
 
-            if (order.OrderStatus == (int)Status.OrderStatus.ACCEPTED)
+            if (order.OrderStatus == (int)Status.OrderStatus.PENDING)
                 return;
 
             var customer = await _customerRepository.GetByIdAsync(order.CustomerId.Value);
 
-            if (order.OrderStatus != (int)Status.OrderStatus.PENDING)
+            if (order.OrderStatus != (int)Status.OrderStatus.PAYING)
                 throw new Exception(ErrorMessage.OrderError.ORDER_CANNOT_CHANGE_STATUS);
 
-            order.OrderStatus = (int)Status.OrderStatus.ACCEPTED;
+            order.OrderStatus = (int)Status.OrderStatus.PENDING;
 
             #region update order status, create transaction if COD, update status if Paypal
             var transactionScope = _OrderRepository.Transaction();
@@ -337,22 +338,41 @@ namespace BE_Homnayangi.Modules.OrderModule
                     await _transactionRepository.AddAsync(transaction);
                 }
 
-                #region sending mail
-                if (customer.Email != null)
-                {
-                    // gui mail thong tin order
-                    var mailSubject = $"[Da duyet] Thong tin don hang #{order.OrderId}";
-                    var mailBody = $"Cam on ban da mua hang, don hang #{order.OrderId} da duoc duyet.\n" +
-                        $"Don hang cua ban dang duoc giao";
-
-                    SendMail(mailSubject, mailBody, customer.Email);
-                }
-                #endregion
-
                 transactionScope.Commit();
             }
             #endregion
+        }
 
+        public async Task AcceptOrder(Guid orderId)
+        {
+            var order = await _OrderRepository.GetByIdAsync(orderId);
+
+            if (order == null || order.OrderStatus == (int)Status.OrderStatus.DELETED)
+                throw new Exception(ErrorMessage.OrderError.ORDER_NOT_FOUND);
+
+            if (order.OrderStatus == (int)Status.OrderStatus.ACCEPTED)
+                return;
+
+            var customer = await _customerRepository.GetByIdAsync(order.CustomerId.Value);
+
+            if (order.OrderStatus != (int)Status.OrderStatus.PENDING)
+                throw new Exception(ErrorMessage.OrderError.ORDER_CANNOT_CHANGE_STATUS);
+
+            order.OrderStatus = (int)Status.OrderStatus.ACCEPTED;
+
+            await _OrderRepository.UpdateAsync(order);
+
+            #region sending mail
+            if (customer.Email != null)
+            {
+                // gui mail thong tin order
+                var mailSubject = $"[Da duyet] Thong tin don hang #{order.OrderId}";
+                var mailBody = $"Cam on ban da mua hang, don hang #{order.OrderId} da duoc duyet.\n" +
+                    $"Don hang cua ban dang duoc giao";
+
+                SendMail(mailSubject, mailBody, customer.Email);
+            }
+            #endregion
         }
 
         public async Task DenyOrder(Guid id)
@@ -396,6 +416,24 @@ namespace BE_Homnayangi.Modules.OrderModule
 
                 transactionScope.Commit();
             }
+        }
+
+        public async Task RefundOrder(Guid id)
+        {
+            var order = await _OrderRepository.GetByIdAsync(id);
+
+            if (order == null || order.OrderStatus == (int)Status.OrderStatus.DELETED)
+                throw new Exception(ErrorMessage.OrderError.ORDER_NOT_FOUND);
+
+            if (order.OrderStatus == (int)Status.OrderStatus.REFUND)
+                return;
+
+            var customer = await _customerRepository.GetByIdAsync(order.CustomerId.Value);
+
+            order.OrderStatus = (int)Status.OrderStatus.REFUND;
+
+            await _OrderRepository.UpdateAsync(order);
+
         }
 
         public async Task CancelOrder(Guid id)
