@@ -1,6 +1,9 @@
-﻿using BE_Homnayangi.Modules.BadgeModule.DTO.Request;
+﻿using BE_Homnayangi.Modules.AdminModules.CronJobTimeConfigModule.Interface;
+using BE_Homnayangi.Modules.BadgeModule.DTO.Request;
 using BE_Homnayangi.Modules.BadgeModule.Interface;
 using BE_Homnayangi.Modules.BadgeModule.Response;
+using BE_Homnayangi.Ultils.Quartz;
+using Hangfire;
 using Library.Models;
 using Library.Models.Constant;
 using Library.Models.Enum;
@@ -11,9 +14,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using static Library.Models.Enum.Status;
-using Hangfire;
-using BE_Homnayangi.Ultils.Quartz;
-using BE_Homnayangi.Modules.AdminModules.CronJobTimeConfigModule.Interface;
 
 namespace BE_Homnayangi.Modules.BadgeModule
 {
@@ -94,8 +94,7 @@ namespace BE_Homnayangi.Modules.BadgeModule
                     badge.Name = newBadge.Name;
                     badge.Description = newBadge.Description;
                     badge.ImageUrl = newBadge.ImageUrl;
-                    // Do request ko có
-                    //badge.VoucherId = newBadge.VoucherId == null ? badge.VoucherId : newBadge.VoucherId;
+                    badge.VoucherId = newBadge.VoucherId;
                     await _badgeRepository.UpdateAsync(badge);
                 }
                 else
