@@ -9,13 +9,16 @@ using Library.Models;
 using Quartz;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace BE_Homnayangi.Ultils.Quartz
 {
-    public class BadgeJob
+
+
+
+    [DisallowConcurrentExecution]
+    public class CheckBadgeJob : IJob
     {
         private readonly IBadgeService BadgeService;
         private readonly ICustomerRepository _customerRepository;
@@ -25,7 +28,7 @@ namespace BE_Homnayangi.Ultils.Quartz
         private readonly ICustomerBadgeRepository _customerBadgeRepository;
         private readonly IOrderRepository _orderRepository;
         private readonly ICustomerVoucherRepository _customerVoucherRepository;
-        public BadgeJob(ICustomerRepository customerRepository, IBadgeRepository badgeRepository, IAccomplishmentRepository accomplishmenttRepository, IBadgeConditionRepository badgeConditionRepository, ICustomerBadgeRepository customerBadgeRepository, IOrderRepository orderRepository, ICustomerVoucherRepository customerVoucherRepository)
+        public CheckBadgeJob(ICustomerRepository customerRepository, IBadgeRepository badgeRepository, IAccomplishmentRepository accomplishmenttRepository, IBadgeConditionRepository badgeConditionRepository, ICustomerBadgeRepository customerBadgeRepository, IOrderRepository orderRepository, ICustomerVoucherRepository customerVoucherRepository)
         {
             _customerRepository = customerRepository;
             _badgeRepository = badgeRepository;
@@ -36,9 +39,14 @@ namespace BE_Homnayangi.Ultils.Quartz
             _customerVoucherRepository = customerVoucherRepository;
 
         }
+        public async Task Execute(IJobExecutionContext context)
+        {
+            await BadgeCondition();
+
+        }
         public async Task BadgeCondition()
         {
-            Console.WriteLine("Hello from Hangfire");
+            Console.WriteLine("Hello from CheckBadge");
             var customers = await _customerRepository.GetAll();
             var accomplishmentsList = await _accomplishmenttRepository.GetAll();
             var ordersList = await _orderRepository.GetAll();
@@ -64,38 +72,15 @@ namespace BE_Homnayangi.Ultils.Quartz
                 /*         badgeConditions = badgeConditions.Where(x => x.Accomplishments <= accomplishmentsCount && x.Orders <= ordersCount ).ToList();*/
                 foreach (BadgeCondition badgeCondition in badgeConditions)
                 {
-                    var accomplishments = customer.Accomplishments.Where(x => x.CreatedDate >= badgeCondition.CreatedDate && x.CreatedDate >= DateTime.Now.AddMonths(-2));
-                    var orders = customer.Orders.Where(x => x.OrderDate >= badgeCondition.CreatedDate && x.OrderDate >= DateTime.Now.AddMonths(-2));
+                    var accomplishments = customer.Accomplishments.Where(x => x.CreatedDate >= DateTime.Now.AddMonths(-2));
+                    var orders = customer.Orders.Where(x => x.OrderDate >= DateTime.Now.AddMonths(-2));
 
-                    if (badgeCondition.Accomplishments <= accomplishments.Count() && badgeCondition.Orders <= orders.Count())
+                    if (badgeCondition.Accomplishments > accomplishments.Count() || badgeCondition.Orders > orders.Count())
                     {
                         var tmp = await _customerBadgeRepository.GetFirstOrDefaultAsync(x => x.CustomerId == customer.CustomerId && x.BadgeId == badgeCondition.BadgeId);
-                        if (tmp == null)
+                        if (tmp != null)
                         {
-                            CustomerBadge customerBadge = new CustomerBadge
-                            {
-                                CustomerId = customer.CustomerId,
-                                BadgeId = badgeCondition.BadgeId,
-                                CreatedDate = DateTime.Now
-
-                            };
-
-                            _customerBadgeRepository.Add(customerBadge);
-                            var badge = await _badgeRepository.GetByIdAsync(customerBadge.BadgeId);
-                            var cv = await _customerVoucherRepository.GetFirstOrDefaultAsync(x => x.CustomerId == customer.CustomerId && x.VoucherId == badge.VoucherId);
-                            if (cv == null)
-                            {
-                                CustomerVoucher customerVoucher = new CustomerVoucher
-                                {
-                                    CustomerVoucherId = Guid.NewGuid(),
-                                    CustomerId = customer.CustomerId,
-                                    VoucherId = (Guid)badge.VoucherId,
-                                    CreatedDate = DateTime.Now
-
-
-                                };
-                                _customerVoucherRepository.Add(customerVoucher);
-                            }
+                            await _customerBadgeRepository.RemoveAsync(tmp);
                         }
                     }
                 };

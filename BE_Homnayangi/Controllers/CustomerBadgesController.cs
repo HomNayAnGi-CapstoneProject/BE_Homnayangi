@@ -50,9 +50,14 @@ namespace BE_Homnayangi.Controllers
             try
             {
                 var currentUserId = _userService.GetCurrentUser(Request.Headers["Authorization"]).Id;
-                var badgeConditionList = _badgeConditionService.GetBadgeConditions().Result.ToList();
-                badgeConditionList = badgeConditionList.OrderBy(x => x.Accomplishments).ThenBy(x => x.Orders).ToList();
-                badgeConditionList = badgeConditionList.OrderBy(x => x.Orders).ToList();
+                var currentUser = await _userService.GetCustomer(currentUserId);
+                var currentUserBadgeIds = currentUser.CustomerBadges.Select(cb => cb.BadgeId).ToList();
+                var badgeConditions = _badgeConditionService.GetBadgeConditions().Result.ToList();
+                var badgeConditionList = badgeConditions
+        .Where(bc => !currentUserBadgeIds.Contains(bc.BadgeId))
+        .ToList();
+
+
                 return Ok(badgeConditionList);
             }
             catch

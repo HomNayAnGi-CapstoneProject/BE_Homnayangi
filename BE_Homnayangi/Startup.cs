@@ -97,7 +97,7 @@ namespace BE_Homnayangi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            /*   services.AddSingleton<IJobFactory, JobFactory>();
+            /*  services.AddSingleton<IJobFactory, JobFactory>();
                services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
                services.AddSingleton<BadgeJob>();
                services.AddSingleton(new BadgeJobScheduler
@@ -114,15 +114,19 @@ namespace BE_Homnayangi
 
             services.AddDbContext<HomnayangiContext>(
                  options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddQuartz(opt =>
+            services.AddQuartz(q =>
             {
-                opt.UseMicrosoftDependencyInjectionJobFactory();
-                var jobKey = new JobKey("BadgeJob");
-                opt.AddJob<BadgeJob>(option => option.WithIdentity(jobKey));
-                opt.AddTrigger(opts => opts
-               .ForJob(jobKey)
-               .WithIdentity($"{jobKey}-trigger")
-               .WithCronSchedule(Configuration.GetSection("BadgeJob:CronSchedule").Value ?? "0 0/5 0 ? * * *"));
+                q.UseMicrosoftDependencyInjectionScopedJobFactory();
+                // Just use the name of your job that you created in the Jobs folder.
+                var jobKey = new JobKey("CheckBadgeJob");
+                q.AddJob<CheckBadgeJob>(opts => opts.WithIdentity(jobKey));
+
+                q.AddTrigger(opts => opts
+                    .ForJob(jobKey)
+                    .WithIdentity("CheckBadgeJob-trigger")
+                    //This Cron interval can be described as "run every minute" (when second is zero)
+                    .WithCronSchedule(Configuration.GetSection("BadgeJob:CronSchedule").Value ?? "0/5 * * * * ?")
+                );
             });
             services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
             services.AddMvcCore().ConfigureApiBehaviorOptions(options =>

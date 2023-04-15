@@ -30,6 +30,8 @@ namespace BE_Homnayangi.Modules.AdminModules.BadgeConditionModule
             try
             {
                 var badgeConditions = await _badgeConditionRepository.GetAll(includeProperties: "Badge");
+                badgeConditions = badgeConditions.OrderBy(x => x.Accomplishments).ThenBy(x => x.Orders).ToList();
+                badgeConditions = badgeConditions.OrderBy(x => x.Orders).ToList();
                 return badgeConditions.ToList();
             }
             catch (Exception ex)
@@ -104,8 +106,8 @@ namespace BE_Homnayangi.Modules.AdminModules.BadgeConditionModule
             try
             {
                 var list = await _badgeConditionRepository.GetBadgeConditionsBy(bc => bc.Status.Value);
-                int count = list.Where(bc => bc.BadgeId == badgeId 
-                                            || (orders == bc.Orders 
+                int count = list.Where(bc => bc.BadgeId == badgeId
+                                            || (orders == bc.Orders
                                                 && accoms == bc.Accomplishments)).Count();
                 return count == 0;
             }
