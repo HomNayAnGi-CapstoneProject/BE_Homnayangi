@@ -11,6 +11,7 @@ using BE_Homnayangi.Modules.VoucherModule.Response;
 using Library.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace BE_Homnayangi.Controllers
 {
@@ -21,13 +22,14 @@ namespace BE_Homnayangi.Controllers
         private readonly IMapper _mapper;
         private readonly IOrderService _orderService;
         private readonly IUserService _userService;
-        private readonly SignalRServer signalRServer;
+        private readonly IHubContext<SignalRServer> _hubContext;
 
-        public OrdersController(IMapper mapper, IOrderService orderService, IUserService userService)
+        public OrdersController(IMapper mapper, IOrderService orderService, IUserService userService, IHubContext<SignalRServer> hubContext)
         {
             _mapper = mapper;
             _orderService = orderService;
             _userService = userService;
+            _hubContext = hubContext;
         }
 
         #region Get all orders for staff include deleted, without paging
@@ -103,7 +105,7 @@ namespace BE_Homnayangi.Controllers
             try
             {
                 await _orderService.AcceptOrder(id);
-                await signalRServer.OrderStatusNotify("Order accepted");
+                await _hubContext.Clients.All.SendAsync("OrderStatusChanged", "Order accepted");
                 return Ok("Order accepted");
             }
             catch (Exception ex)
