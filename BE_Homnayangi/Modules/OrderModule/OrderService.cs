@@ -389,7 +389,10 @@ namespace BE_Homnayangi.Modules.OrderModule
 
             var customer = await _customerRepository.GetByIdAsync(order.CustomerId.Value);
 
-            order.OrderStatus = (int)Status.OrderStatus.DENIED;
+            
+            order.OrderStatus = order.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL
+                ? (int)Status.OrderStatus.NEED_REFUND
+                : (int)Status.OrderStatus.DENIED;
 
             var transactionScope = _OrderRepository.Transaction();
             using (transactionScope)
