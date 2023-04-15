@@ -15,8 +15,7 @@ using System.Threading.Tasks;
 
 namespace BE_Homnayangi.Ultils.Quartz
 {
-    [DisallowConcurrentExecution]
-    public class BadgeJob : IJob
+    public class BadgeJob
     {
         private readonly IBadgeService BadgeService;
         private readonly ICustomerRepository _customerRepository;
@@ -35,11 +34,6 @@ namespace BE_Homnayangi.Ultils.Quartz
             _customerBadgeRepository = customerBadgeRepository;
             _orderRepository = orderRepository;
             _customerVoucherRepository = customerVoucherRepository;
-
-        }
-        public async Task Execute(IJobExecutionContext context)
-        {
-            await BadgeCondition();
 
         }
         public async Task BadgeCondition()
@@ -70,8 +64,8 @@ namespace BE_Homnayangi.Ultils.Quartz
                 /*         badgeConditions = badgeConditions.Where(x => x.Accomplishments <= accomplishmentsCount && x.Orders <= ordersCount ).ToList();*/
                 foreach (BadgeCondition badgeCondition in badgeConditions)
                 {
-                    var accomplishments = customer.Accomplishments.Where(x => x.CreatedDate >= badgeCondition.CreatedDate);
-                    var orders = customer.Orders.Where(x => x.OrderDate >= badgeCondition.CreatedDate);
+                    var accomplishments = customer.Accomplishments.Where(x => x.CreatedDate >= badgeCondition.CreatedDate && x.CreatedDate >= DateTime.Now.AddMonths(-2));
+                    var orders = customer.Orders.Where(x => x.OrderDate >= badgeCondition.CreatedDate && x.OrderDate >= DateTime.Now.AddMonths(-2));
 
                     if (badgeCondition.Accomplishments <= accomplishments.Count() && badgeCondition.Orders <= orders.Count())
                     {

@@ -410,7 +410,7 @@ namespace BE_Homnayangi.Modules.UserModule
         {
             try
             {
-                var users = await _userRepository.GetUsersBy(u => (u.Role.Value == 1 || u.Role.Value == 2) 
+                var users = await _userRepository.GetUsersBy(u => (u.Role.Value == 1 || u.Role.Value == 2)
                                                                     && !u.IsBlocked.Value); // Manager || Staff: ACTIVE
                 var result = users.Select(m => new CurrentUserResponse()
                 {
@@ -553,7 +553,7 @@ namespace BE_Homnayangi.Modules.UserModule
 
         public async Task<CurrentUserResponse> GetCustomerById(Guid id)
         {
-            Customer customer = await _customerRepository.GetFirstOrDefaultAsync(x => x.CustomerId == id, includeProperties: "Orders,Accomplishments");
+            Customer customer = await _customerRepository.GetFirstOrDefaultAsync(x => x.CustomerId == id, includeProperties: "Orders,Accomplishments,CustomerBadges");
             CurrentUserResponse customerById = new CurrentUserResponse
             {
                 Id = customer.CustomerId,
@@ -570,6 +570,13 @@ namespace BE_Homnayangi.Modules.UserModule
             };
             return customerById;
         }
+        public async Task<Customer> GetCustomer(Guid id)
+        {
+            Customer customer = await _customerRepository.GetFirstOrDefaultAsync(x => x.CustomerId == id, includeProperties: "CustomerBadges");
+
+            return customer;
+        }
+
 
         public async Task<Customer> GetCustomerByIdAndusername(Guid? id, string userName)
         {

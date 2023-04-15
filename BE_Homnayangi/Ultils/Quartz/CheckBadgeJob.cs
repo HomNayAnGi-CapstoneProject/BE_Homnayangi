@@ -72,38 +72,15 @@ namespace BE_Homnayangi.Ultils.Quartz
                 /*         badgeConditions = badgeConditions.Where(x => x.Accomplishments <= accomplishmentsCount && x.Orders <= ordersCount ).ToList();*/
                 foreach (BadgeCondition badgeCondition in badgeConditions)
                 {
-                    var accomplishments = customer.Accomplishments.Where(x => x.CreatedDate >= badgeCondition.CreatedDate);
-                    var orders = customer.Orders.Where(x => x.OrderDate >= badgeCondition.CreatedDate);
+                    var accomplishments = customer.Accomplishments.Where(x => x.CreatedDate >= DateTime.Now.AddMonths(-2));
+                    var orders = customer.Orders.Where(x => x.OrderDate >= DateTime.Now.AddMonths(-2));
 
-                    if (badgeCondition.Accomplishments <= accomplishments.Count() && badgeCondition.Orders <= orders.Count())
+                    if (badgeCondition.Accomplishments > accomplishments.Count() || badgeCondition.Orders > orders.Count())
                     {
                         var tmp = await _customerBadgeRepository.GetFirstOrDefaultAsync(x => x.CustomerId == customer.CustomerId && x.BadgeId == badgeCondition.BadgeId);
-                        if (tmp == null)
+                        if (tmp != null)
                         {
-                            CustomerBadge customerBadge = new CustomerBadge
-                            {
-                                CustomerId = customer.CustomerId,
-                                BadgeId = badgeCondition.BadgeId,
-                                CreatedDate = DateTime.Now
-
-                            };
-
-                            _customerBadgeRepository.Add(customerBadge);
-                            var badge = await _badgeRepository.GetByIdAsync(customerBadge.BadgeId);
-                            var cv = await _customerVoucherRepository.GetFirstOrDefaultAsync(x => x.CustomerId == customer.CustomerId && x.VoucherId == badge.VoucherId);
-                            if (cv == null)
-                            {
-                                CustomerVoucher customerVoucher = new CustomerVoucher
-                                {
-                                    CustomerVoucherId = Guid.NewGuid(),
-                                    CustomerId = customer.CustomerId,
-                                    VoucherId = (Guid)badge.VoucherId,
-                                    CreatedDate = DateTime.Now
-
-
-                                };
-                                _customerVoucherRepository.Add(customerVoucher);
-                            }
+                            await _customerBadgeRepository.RemoveAsync(tmp);
                         }
                     }
                 };

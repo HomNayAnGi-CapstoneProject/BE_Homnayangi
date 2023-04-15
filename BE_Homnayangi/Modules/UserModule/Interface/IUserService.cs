@@ -31,6 +31,7 @@ namespace BE_Homnayangi.Modules.UserModule.Interface
         public Task<bool> UpdateCustomer(Customer customer);
         public Task<bool?> BlockCustomerById(Guid id);
         public Task UpdateCustomerPassword(Guid userId, string oldPass, string newPass);
+        public Task<Customer> GetCustomer(Guid id);
         #endregion
 
         #region Authentication
@@ -46,7 +47,7 @@ namespace BE_Homnayangi.Modules.UserModule.Interface
         public Task<ICollection<CurrentUserResponse>> GetUserByRole(string role);
 
         public Task<bool> ChangeStatusManagerByAdmin(UpdatedStatusManager request);
-        
+
         public Task<bool> CreateANewManager(CreateManager request);
 
         public Task<ICollection<CurrentUserResponse>> GetAllUsers();
