@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Library.Models;
+using System;
 
 namespace BE_Homnayangi.Modules.CustomerVoucherModule.Response
 {
@@ -6,7 +7,7 @@ namespace BE_Homnayangi.Modules.CustomerVoucherModule.Response
     {
         public string CustomerName { get; set; }
         public string VoucherName { get; set; }
+        public virtual Voucher Voucher { get; set; }
         public DateTime CreatedDate { get; set; }
-        public int Quantity { get; set; }
     }
 }

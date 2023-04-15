@@ -30,11 +30,23 @@ namespace BE_Homnayangi.Controllers
         public async Task<ActionResult<IEnumerable<CustomerVoucher>>> GetAllCustomerVouchersByCusId([FromRoute] Guid cusId)
         {
             var result = await _customerVoucherService.GetAllCustomerVouchersByCusId(cusId);
-            return new JsonResult(new
+            if (result != null)
             {
-                total_results = result.Count,
-                result = result,
-            });
+                return new JsonResult(new
+                {
+                    total_results = result.Count,
+                    result = result,
+                });
+            }
+            else
+            {
+                return new JsonResult(new
+                {
+                    status = "failed",
+                });
+
+            }
+            ;
         }
 
         [HttpPost]

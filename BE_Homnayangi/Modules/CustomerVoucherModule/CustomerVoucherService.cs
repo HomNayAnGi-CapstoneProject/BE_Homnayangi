@@ -161,7 +161,8 @@ namespace BE_Homnayangi.Modules.VoucherModule
             {
                 CustomerName = cv.Customer != null ? cv.Customer.Firstname + " " + cv.Customer.Lastname : "",
                 VoucherName = cv.Voucher != null ? cv.Voucher.Name : "",
-                CreatedDate = cv.Voucher != null ? cv.Voucher.CreatedDate : new DateTime()
+                CreatedDate = cv.Voucher != null ? cv.Voucher.CreatedDate : new DateTime(),
+                Voucher = cv.Voucher != null ? cv.Voucher : null
             };
         }
 

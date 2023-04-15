@@ -6,6 +6,7 @@ using BE_Homnayangi.Modules.CustomerModule.Interface;
 using BE_Homnayangi.Modules.CustomerVoucherModule.Interface;
 using BE_Homnayangi.Modules.OrderModule.Interface;
 using Library.Models;
+using Library.Models.Enum;
 using Quartz;
 using System;
 using System.Collections.Generic;
@@ -64,8 +65,8 @@ namespace BE_Homnayangi.Ultils.Quartz
                 /*         badgeConditions = badgeConditions.Where(x => x.Accomplishments <= accomplishmentsCount && x.Orders <= ordersCount ).ToList();*/
                 foreach (BadgeCondition badgeCondition in badgeConditions)
                 {
-                    var accomplishments = customer.Accomplishments.Where(x => x.CreatedDate >= badgeCondition.CreatedDate && x.CreatedDate >= DateTime.Now.AddMonths(-2));
-                    var orders = customer.Orders.Where(x => x.OrderDate >= badgeCondition.CreatedDate && x.OrderDate >= DateTime.Now.AddMonths(-2));
+                    var accomplishments = customer.Accomplishments.Where(x => x.CreatedDate >= badgeCondition.CreatedDate && x.CreatedDate >= DateTime.Now.AddMonths(-2) && x.Status == (int)Status.AccomplishmentStatus.ACTIVE);
+                    var orders = customer.Orders.Where(x => x.OrderDate >= badgeCondition.CreatedDate && x.OrderDate >= DateTime.Now.AddMonths(-2) && x.OrderStatus == (int)Status.OrderStatus.DELIVERED);
 
                     if (badgeCondition.Accomplishments <= accomplishments.Count() && badgeCondition.Orders <= orders.Count())
                     {
