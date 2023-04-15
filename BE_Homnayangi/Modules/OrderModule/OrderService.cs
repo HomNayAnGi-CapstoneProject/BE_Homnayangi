@@ -389,7 +389,10 @@ namespace BE_Homnayangi.Modules.OrderModule
 
             var customer = await _customerRepository.GetByIdAsync(order.CustomerId.Value);
 
-            order.OrderStatus = (int)Status.OrderStatus.DENIED;
+            
+            order.OrderStatus = order.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL
+                ? (int)Status.OrderStatus.NEED_REFUND
+                : (int)Status.OrderStatus.DENIED;
 
             var transactionScope = _OrderRepository.Transaction();
             using (transactionScope)
@@ -431,11 +434,8 @@ namespace BE_Homnayangi.Modules.OrderModule
                 return;
 
             var transaction = await _transactionRepository.GetByIdAsync(id);
-            if (transaction.TransactionStatus != (int)Status.TransactionStatus.FAIL && order.OrderStatus != (int)Status.OrderStatus.CANCEL)
+            if (order.OrderStatus != (int)Status.OrderStatus.NEED_REFUND)
                 throw new Exception(ErrorMessage.OrderError.ORDER_CANNOT_CHANGE_STATUS);
-
-            var customer = await _customerRepository.GetByIdAsync(order.CustomerId.Value);
-
 
             order.OrderStatus = (int)Status.OrderStatus.REFUND;
 
@@ -455,7 +455,10 @@ namespace BE_Homnayangi.Modules.OrderModule
 
             var customer = await _customerRepository.GetByIdAsync(order.CustomerId.Value);
 
-            order.OrderStatus = (int)Status.OrderStatus.CANCEL;
+            if (order.OrderStatus == (int)Status.OrderStatus.PAYING)
+                order.OrderStatus = (int)Status.OrderStatus.CANCEL;
+            if (order.OrderStatus == (int)Status.OrderStatus.PENDING)
+                order.OrderStatus = (int)Status.OrderStatus.NEED_REFUND;
 
             var transactionScope = _OrderRepository.Transaction();
             using (transactionScope)
@@ -465,10 +468,11 @@ namespace BE_Homnayangi.Modules.OrderModule
                 if (order.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL)
                 {
                     var transaction = await _transactionRepository.GetByIdAsync(order.OrderId);
-                    if (transaction == null)
-                        throw new Exception(ErrorMessage.TransactionError.TRANSACTION_NOT_FOUND);
-                    transaction.TransactionStatus = (int)Status.TransactionStatus.FAIL;
-                    await _transactionRepository.UpdateAsync(transaction);
+                    if (transaction != null)
+                    {
+                        transaction.TransactionStatus = (int)Status.TransactionStatus.FAIL;
+                        await _transactionRepository.UpdateAsync(transaction);
+                    }
                 }
 
                 #region sending mail
