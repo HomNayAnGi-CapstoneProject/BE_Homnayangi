@@ -1,11 +1,12 @@
 ﻿using BE_Homnayangi.Modules.NotificationModule.Interface;
 using BE_Homnayangi.Modules.NotificationModule.Request;
-using Library.Models;
 using Library.Models.Constant;
-using Library.Models.Enum;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Notification = Library.Models.Notification;
 
 namespace BE_Homnayangi.Modules.NotificationModule
 {
@@ -16,6 +17,16 @@ namespace BE_Homnayangi.Modules.NotificationModule
         public NotificationService(INotificationRepository notificationRepository)
         {
             _notificationRepository = notificationRepository;
+        }
+
+        public Task<ICollection<Notification>> GetNotificationsBy(
+                Expression<Func<Notification,
+                bool>> filter = null,
+                Func<IQueryable<Notification>,
+                ICollection<Notification>> options = null,
+                string includeProperties = null)
+        {
+            return _notificationRepository.GetNotificationsBy(filter, options, includeProperties);
         }
 
         public async Task<ICollection<Notification>> GetAllNofications() // DEACTIVE, UNREAD, READ
