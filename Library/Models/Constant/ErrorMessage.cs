@@ -197,6 +197,13 @@ namespace Library.Models.Constant
             public readonly static string DISCOUNT_PRICE_NOT_VALID = "Discount is not valid";
         }
         #endregion
+
+        #region Notification error message
+        public static class NotificationError
+        {
+            public readonly static string NOTIFICATION_NOT_FOUND = "This notification is not found";
+        }
+        #endregion
     }
 }
 

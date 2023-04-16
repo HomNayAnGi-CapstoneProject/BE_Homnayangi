@@ -82,6 +82,8 @@ using Hangfire.SqlServer;
 using BE_Homnayangi.Modules.AdminModules.CronJobTimeConfigModule.Interface;
 using BE_Homnayangi.Modules.AdminModules.CronJobTimeConfigModule;
 using BE_Homnayangi.Ultils.EmailServices;
+using BE_Homnayangi.Modules.NotificationModule;
+using BE_Homnayangi.Modules.NotificationModule.Interface;
 
 namespace BE_Homnayangi
 {
@@ -316,11 +318,17 @@ namespace BE_Homnayangi
             //Accomplishment Reaction Module
             services.AddScoped<IAccomplishmentReactionRepository, AccomplishmentReactionRepository>();
             services.AddScoped<IAccomplishmentReactionService, AccomplishmentReactionService>();
+
             //CronJob Time Config Module
             services.AddScoped<ICronJobTimeConfigService, CronJobTimeConfigService>();
             services.AddScoped<ICronJobTimeConfigRepository, CronJobTimeConfigRepository>();
+
             //Email sender
             services.AddScoped<IEmailSender, EmailSender>();
+
+            //Notification Reaction Module
+            services.AddScoped<INotificationRepository, NotificationRepository>();
+            services.AddScoped<INotificationService, NotificationService>();
 
         }
 
