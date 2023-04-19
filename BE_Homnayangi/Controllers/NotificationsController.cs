@@ -115,6 +115,27 @@ namespace BE_Homnayangi.Controllers
             }
         }
 
+        [HttpPut("status")]
+        public async Task<IActionResult> UpdateNotificationStatus([FromBody] UpdatedNotificationStatus request)
+        {
+            try
+            {
+                await _notificationService.UpdateNotificationStatus(request.NotificationId, request.Status);
+                return new JsonResult(new
+                {
+                    status = "success"
+                });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
+            }
+        }
+
         // POST: api/Notifications
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
