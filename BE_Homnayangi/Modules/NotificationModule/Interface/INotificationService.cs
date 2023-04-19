@@ -24,6 +24,8 @@ namespace BE_Homnayangi.Modules.NotificationModule.Interface
 
         public Task<Guid> CreateNotification(CreatedNotification request);
 
+        public Task UpdateNotificationStatus(Guid id, bool status);
+
         public Task UpdateNotification(UpdatedNotification request);
 
         public Task DeleteNotification(Guid id);

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using BE_Homnayangi.Modules.NotificationModule.Interface;
+using BE_Homnayangi.Modules.NotificationModule.Request;
 using BE_Homnayangi.Modules.OrderModule.Interface;
 using BE_Homnayangi.Modules.OrderModule.Request;
 using BE_Homnayangi.Modules.UserModule.Interface;
@@ -12,6 +14,7 @@ using Library.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 
 namespace BE_Homnayangi.Controllers
 {
@@ -23,13 +26,15 @@ namespace BE_Homnayangi.Controllers
         private readonly IOrderService _orderService;
         private readonly IUserService _userService;
         private readonly IHubContext<SignalRServer> _hubContext;
+        private readonly INotificationService _notificationService;
 
-        public OrdersController(IMapper mapper, IOrderService orderService, IUserService userService, IHubContext<SignalRServer> hubContext)
+        public OrdersController(IMapper mapper, IOrderService orderService, IUserService userService, IHubContext<SignalRServer> hubContext, INotificationService notificationService)
         {
             _mapper = mapper;
             _orderService = orderService;
             _userService = userService;
             _hubContext = hubContext;
+            _notificationService = notificationService;
         }
 
         #region Get all orders for staff include deleted, without paging
@@ -105,7 +110,6 @@ namespace BE_Homnayangi.Controllers
             try
             {
                 await _orderService.AcceptOrder(id);
-                await _hubContext.Clients.All.SendAsync("OrderStatusChanged", "Order accepted");
                 return Ok("Order accepted");
             }
             catch (Exception ex)

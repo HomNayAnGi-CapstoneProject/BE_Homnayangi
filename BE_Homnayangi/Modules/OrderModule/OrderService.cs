@@ -12,7 +12,9 @@ using BE_Homnayangi.Modules.VoucherModule.Interface;
 using Library.Models;
 using Library.Models.Constant;
 using Library.Models.Enum;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -23,6 +25,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Transactions;
+using BE_Homnayangi.Modules.NotificationModule.Interface;
 using static Library.Models.Enum.PaymentMethodEnum;
 using static Library.Models.Enum.Status;
 
@@ -38,6 +41,8 @@ namespace BE_Homnayangi.Modules.OrderModule
         private readonly IIngredientRepository _ingredientRepository;
         private readonly IRecipeRepository _recipeRepository;
         private readonly IVoucherRepository _voucherRepository;
+        private readonly INotificationRepository _notificationRepository;
+        private readonly IHubContext<SignalRServer> _hubContext;
         IConfiguration _configuration;
         private readonly IMapper _mapper;
 
@@ -49,6 +54,8 @@ namespace BE_Homnayangi.Modules.OrderModule
             IIngredientRepository ingredientRepository,
             IRecipeRepository recipeRepository,
             IVoucherRepository voucherRepository,
+            INotificationRepository notificationRepository,
+            IHubContext<SignalRServer> hubContext,
             IMapper mapper,
             IConfiguration configuration)
         {
@@ -61,6 +68,8 @@ namespace BE_Homnayangi.Modules.OrderModule
             _recipeRepository = recipeRepository;
             _configuration = configuration;
             _voucherRepository = voucherRepository;
+            _notificationRepository = notificationRepository;
+            _hubContext = hubContext;
             _mapper = mapper;
         }
 
@@ -253,8 +262,22 @@ namespace BE_Homnayangi.Modules.OrderModule
                     {
                         throw new Exception($"Transaction fail - {e.Message}");
                     }
-                    
                     transactionScope.Commit();
+
+                    #region Create notification
+                    var id = Guid.NewGuid();
+                    var noti = new Notification
+                    {
+                        NotificationId = id,
+                        Description = $"Order - {newOrder.OrderId} created",
+                        CreatedDate = DateTime.Now,
+                        Status = false,
+                        ReceiverId = null
+                    };
+                    await _notificationRepository.AddAsync(noti);
+
+                    await _hubContext.Clients.All.SendAsync("OrderCreated", JsonConvert.SerializeObject(noti));
+                    #endregion
                 }
             }
             catch (Exception ex)
