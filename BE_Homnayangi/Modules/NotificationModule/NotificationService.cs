@@ -1,6 +1,7 @@
 ﻿using BE_Homnayangi.Modules.NotificationModule.Interface;
 using BE_Homnayangi.Modules.NotificationModule.Request;
 using Library.Models.Constant;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -122,6 +123,23 @@ namespace BE_Homnayangi.Modules.NotificationModule
             catch (Exception ex)
             {
                 Console.WriteLine("Error at DeleteNotification:" + ex.Message);
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task UpdateNotificationStatus(Guid id, bool status)
+        {
+            try
+            {
+                var noti = await _notificationRepository.GetByIdAsync(id);
+                if (noti == null)
+                    throw new Exception(ErrorMessage.NotificationError.NOTIFICATION_NOT_FOUND);
+                noti.Status = status;
+                await _notificationRepository.UpdateAsync(noti);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at UpdateNotificationStatus:" + ex.Message);
                 throw new Exception(ex.Message);
             }
         }
