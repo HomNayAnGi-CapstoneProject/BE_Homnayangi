@@ -10,7 +10,6 @@ using Library.Models;
 using Library.Models.Constant;
 using Library.Models.DTO.UserDTO;
 using Library.Models.Enum;
-using Library.PagedList;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -22,8 +21,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Net;
-using System.Net.Mail;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -267,7 +264,7 @@ namespace BE_Homnayangi.Modules.UserModule
             await _userRepository.UpdateAsync(user);
         }
 
-        public async Task<bool> UpdateRoleUser(UpdatedUserRole request) // MANAGER - STAFF
+        public async Task<bool> UpdateRoleUser(UpdatedRoleUser request) // MANAGER - STAFF
         {
             bool isUpdated = false;
             try

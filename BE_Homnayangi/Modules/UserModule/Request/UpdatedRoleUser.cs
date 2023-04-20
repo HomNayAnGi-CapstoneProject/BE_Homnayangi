@@ -2,7 +2,7 @@
 
 namespace BE_Homnayangi.Modules.UserModule.Request
 {
-    public class UpdatedUserRole
+    public class UpdatedRoleUser
     {
         public Guid UserId { get; set; }
         public string Role { get; set; }

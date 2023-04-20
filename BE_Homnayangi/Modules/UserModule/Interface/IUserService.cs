@@ -2,7 +2,6 @@
 using BE_Homnayangi.Modules.UserModule.Response;
 using Library.Models;
 using Library.Models.DTO.UserDTO;
-using Library.PagedList;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -54,6 +53,6 @@ namespace BE_Homnayangi.Modules.UserModule.Interface
 
         #endregion
 
-        public Task<bool> UpdateRoleUser(UpdatedUserRole request);
+        public Task<bool> UpdateRoleUser(UpdatedRoleUser request);
     }
 }
