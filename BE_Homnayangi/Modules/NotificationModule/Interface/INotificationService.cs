@@ -22,6 +22,8 @@ namespace BE_Homnayangi.Modules.NotificationModule.Interface
 
         public Task<ICollection<Notification>> GetNoficationsByReceiverId(Guid receiverId);
 
+        public Task<ICollection<Notification>> GetNoficationsForStaff();
+
         public Task<Guid> CreateNotification(CreatedNotification request);
 
         public Task UpdateNotificationStatus(Guid id, bool status);

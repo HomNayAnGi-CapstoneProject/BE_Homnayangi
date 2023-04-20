@@ -283,7 +283,7 @@ namespace BE_Homnayangi.Modules.OrderModule
                     var noti = new Notification
                     {
                         NotificationId = id,
-                        Description = $"Order - {newOrder.OrderId} created",
+                        Description = $"Đơn hàng - {newOrder.OrderId} đã được tạo",
                         CreatedDate = DateTime.Now,
                         Status = false,
                         ReceiverId = null
@@ -412,6 +412,21 @@ namespace BE_Homnayangi.Modules.OrderModule
                 SendMail(mailSubject, mailBody, customer.Email);
             }
             #endregion
+
+            #region Create notification
+            var id = Guid.NewGuid();
+            var noti = new Notification
+            {
+                NotificationId = id,
+                Description = $"Đơn hàng - {order.OrderId} đã được chấp nhận",
+                CreatedDate = DateTime.Now,
+                Status = false,
+                ReceiverId = customer.CustomerId
+            };
+            await _notificationRepository.AddAsync(noti);
+
+            await _hubContext.Clients.All.SendAsync($"{customer.CustomerId}_OrderStatusChanged", JsonConvert.SerializeObject(noti));
+            #endregion
         }
 
         public async Task DenyOrder(Guid id)
@@ -525,6 +540,21 @@ namespace BE_Homnayangi.Modules.OrderModule
 
                 transactionScope.Commit();
             }
+
+            #region Create notification
+            var notiId = Guid.NewGuid();
+            var noti = new Notification
+            {
+                NotificationId = notiId,
+                Description = $"Đơn hàng - {order.OrderId} đã bị hủy",
+                CreatedDate = DateTime.Now,
+                Status = false,
+                ReceiverId = null
+            };
+            await _notificationRepository.AddAsync(noti);
+
+            await _hubContext.Clients.All.SendAsync("OrderStatusChanged", JsonConvert.SerializeObject(noti));
+            #endregion
         }
 
         public async Task Shipping(Guid id)
