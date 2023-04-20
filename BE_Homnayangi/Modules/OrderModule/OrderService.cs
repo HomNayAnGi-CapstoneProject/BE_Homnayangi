@@ -23,11 +23,13 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Net.Mail;
+using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using System.Transactions;
 using BE_Homnayangi.Modules.NotificationModule.Interface;
 using static Library.Models.Enum.PaymentMethodEnum;
 using static Library.Models.Enum.Status;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace BE_Homnayangi.Modules.OrderModule
 {
@@ -73,13 +75,25 @@ namespace BE_Homnayangi.Modules.OrderModule
             _mapper = mapper;
         }
 
-        public async Task<ICollection<OrderResponse>> GetOrderResponse(int status = -1)
+        public async Task<ICollection<OrderResponse>> GetOrderResponse(DateTime? fromDate, DateTime? toDate, int status = -1)
         {
+            if(fromDate.HasValue && !toDate.HasValue)
+                throw new Exception("To date is required");
+            if (!fromDate.HasValue && toDate.HasValue)
+                throw new Exception("From date is required");
+            if (fromDate.Value.CompareTo(toDate.Value) > 0)
+                throw new Exception("From date must before To date");
+
             var orders = status > -1
                 ? await _OrderRepository.GetOrdersBy(o => o.OrderStatus.GetValueOrDefault() == status,
                 includeProperties: "OrderDetails")
                 : await _OrderRepository.GetOrdersBy(
                 includeProperties: "OrderDetails");
+
+            if (fromDate.HasValue && toDate.HasValue)
+            {
+                orders = orders.Where(o => o.OrderDate.GetValueOrDefault() >= fromDate && o.OrderDate.GetValueOrDefault() <= toDate).ToList();
+            }
 
             var ingredients = await _ingredientRepository.GetAll();
             var recipes = await _recipeRepository.GetRecipesBy(includeProperties: "RecipeDetails");
@@ -143,7 +157,7 @@ namespace BE_Homnayangi.Modules.OrderModule
                 };
                 res.Add(orderResponse);
             }
-            return res;
+            return res.OrderByDescending(r=>r.OrderDate).ToList();
         }
 
         public Task<ICollection<Order>> GetOrdersBy(
@@ -746,13 +760,25 @@ namespace BE_Homnayangi.Modules.OrderModule
             return await _OrderRepository.GetAll();
         }
 
-        public async Task<ICollection<OrderResponse>> GetOrderByCustomer(Guid customerId, int status = -1)
+        public async Task<ICollection<OrderResponse>> GetOrderByCustomer(DateTime? fromDate, DateTime? toDate, Guid customerId, int status = -1)
         {
+            if (fromDate.HasValue && !toDate.HasValue)
+                throw new Exception("To date is required");
+            if (!fromDate.HasValue && toDate.HasValue)
+                throw new Exception("From date is required");
+            if (fromDate.Value.CompareTo(toDate.Value) > 0)
+                throw new Exception("From date must before To date");
+
             var orders = status > -1
                 ? await _OrderRepository.GetOrdersBy(o => o.OrderStatus.GetValueOrDefault() == status && o.CustomerId.Equals(customerId),
                 includeProperties: "OrderDetails")
                 : await _OrderRepository.GetOrdersBy(o => o.CustomerId.Equals(customerId),
                 includeProperties: "OrderDetails");
+
+            if (fromDate.HasValue && toDate.HasValue)
+            {
+                orders = orders.Where(o => o.OrderDate.GetValueOrDefault() >= fromDate && o.OrderDate.GetValueOrDefault() <= toDate).ToList();
+            }
 
             var ingredients = await _ingredientRepository.GetAll();
             var recipes = await _recipeRepository.GetRecipesBy(includeProperties: "RecipeDetails");
@@ -816,7 +842,8 @@ namespace BE_Homnayangi.Modules.OrderModule
                 };
                 res.Add(orderResponse);
             }
-            return res;
+            return res.OrderByDescending(r => r.OrderDate).ToList();
         }
+
     }
 }

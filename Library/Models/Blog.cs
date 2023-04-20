@@ -28,6 +28,8 @@ namespace Library.Models
         public string VideoUrl { get; set; }
         public Guid? RecipeId { get; set; }
         public int? MinutesToCook { get; set; }
+        public bool? IsEvent { get; set; }
+        public DateTime? EventExpiredDate { get; set; }
 
         public virtual User Author { get; set; }
         public virtual Recipe Recipe { get; set; }

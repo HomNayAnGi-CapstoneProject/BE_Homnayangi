@@ -222,14 +222,13 @@ namespace BE_Homnayangi.Controllers
         }
 
         [HttpGet("status")]
-        public async Task<ActionResult> GetOrderResponse([FromQuery] Guid? customerid, [FromQuery] int status = -1)
+        public async Task<ActionResult> GetOrderResponse([FromQuery] DateTime? fromDate, [FromQuery] DateTime? toDate, [FromQuery] Guid? customerid, [FromQuery] int status = -1)
         {
             try
             {
-                
                 var res = customerid == null
-                    ? await _orderService.GetOrderResponse(status)
-                    : await _orderService.GetOrderByCustomer(customerid.Value, status);
+                    ? await _orderService.GetOrderResponse(fromDate, toDate, status)
+                    : await _orderService.GetOrderByCustomer(fromDate, toDate, customerid.Value, status);
                 return Ok(res);
             }
             catch (Exception ex)
@@ -239,14 +238,14 @@ namespace BE_Homnayangi.Controllers
         }
 
         [HttpGet("status/customer")]
-        public async Task<ActionResult> GetOrderResponseByCustomer([FromQuery] int status = -1)
+        public async Task<ActionResult> GetOrderResponseByCustomer([FromQuery] DateTime? fromDate, [FromQuery] DateTime? toDate, [FromQuery] int status = -1)
         {
             try
             {
                 var customerId = _userService.GetCurrentUser(Request.Headers["Authorization"]).Id;
                 if (customerId.Equals(Guid.Empty))
                     throw new Exception("Require login");
-                var res = await _orderService.GetOrderByCustomer(customerId, status);
+                var res = await _orderService.GetOrderByCustomer(fromDate, toDate, customerId, status);
                 return Ok(res);
             }
             catch (Exception ex)

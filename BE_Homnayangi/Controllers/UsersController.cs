@@ -205,7 +205,7 @@ namespace BE_Homnayangi.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPut("admin-manage/update-role")]
-        public async Task<IActionResult> UpdateRole(UpdatedUserRole request)
+        public async Task<IActionResult> UpdateRole(UpdatedRoleUser request)
         {
             try
             {
