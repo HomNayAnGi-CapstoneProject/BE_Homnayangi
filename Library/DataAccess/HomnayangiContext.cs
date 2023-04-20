@@ -206,7 +206,13 @@ namespace Library.DataAccess
                     .HasColumnType("datetime")
                     .HasColumnName("createdDate");
 
+                entity.Property(e => e.EventExpiredDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("eventExpiredDate");
+
                 entity.Property(e => e.ImageUrl).HasColumnName("imageURL");
+
+                entity.Property(e => e.IsEvent).HasColumnName("isEvent");
 
                 entity.Property(e => e.MinutesToCook).HasColumnName("minutesToCook");
 
@@ -596,10 +602,6 @@ namespace Library.DataAccess
                     .HasColumnName("orderId");
 
                 entity.Property(e => e.CustomerId).HasColumnName("customerId");
-
-                //entity.Property(e => e.Discount)
-                //    .HasColumnType("money")
-                //    .HasColumnName("discount");
 
                 entity.Property(e => e.IsCooked).HasColumnName("isCooked");
 

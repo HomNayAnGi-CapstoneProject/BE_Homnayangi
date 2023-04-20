@@ -1020,3 +1020,35 @@ E:\Download2\Ki9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.dll
 E:\Download2\Ki9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\ref\BE_Homnayangi.dll
 E:\Download2\Ki9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.pdb
 E:\Download2\Ki9\BE_Homnayangi\BE_Homnayangi\obj\Debug\net5.0\BE_Homnayangi.genruntimeconfig.cache
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Cronos.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Hangfire.AspNetCore.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Hangfire.Core.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\Hangfire.SqlServer.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\MailKit.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\MimeKit.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\BouncyCastle.Crypto.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\System.Data.SqlClient.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\System.Formats.Asn1.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\System.Security.Cryptography.Pkcs.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\System.Text.Encoding.CodePages.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\ca\Hangfire.Core.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\de\Hangfire.Core.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\es\Hangfire.Core.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\fa\Hangfire.Core.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\fr\Hangfire.Core.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\nb\Hangfire.Core.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\nl\Hangfire.Core.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\pt-BR\Hangfire.Core.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\pt-PT\Hangfire.Core.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\pt\Hangfire.Core.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\sv\Hangfire.Core.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\tr-TR\Hangfire.Core.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\zh-TW\Hangfire.Core.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\zh\Hangfire.Core.resources.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\win-arm64\native\sni.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\win-x64\native\sni.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\win-x86\native\sni.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\unix\lib\netstandard2.0\System.Data.SqlClient.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\win\lib\netstandard2.0\System.Data.SqlClient.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\win\lib\netcoreapp3.1\System.Security.Cryptography.Pkcs.dll
+C:\Users\USER\Desktop\New folder\BE_Homnayangi\bin\Debug\net5.0\runtimes\win\lib\netcoreapp3.1\System.Text.Encoding.CodePages.dll
