@@ -143,5 +143,19 @@ namespace BE_Homnayangi.Modules.NotificationModule
                 throw new Exception(ex.Message);
             }
         }
+
+        public async Task<ICollection<Notification>> GetNoficationsForStaff()
+        {
+            try
+            {
+                var result = await _notificationRepository.GetNotificationsBy(n => n.ReceiverId == null);
+                return result.OrderByDescending(r => r.CreatedDate).ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at GetNoficationsForStaff:" + ex.Message);
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }
