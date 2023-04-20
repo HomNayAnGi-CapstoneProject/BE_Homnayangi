@@ -128,6 +128,20 @@ namespace BE_Homnayangi
                     .WithCronSchedule(Configuration.GetSection("BadgeJob:CronSchedule").Value ?? "0/5 * * * * ?")
                 );
             });
+            services.AddQuartz(q =>
+            {
+                q.UseMicrosoftDependencyInjectionScopedJobFactory();
+                // Just use the name of your job that you created in the Jobs folder.
+                var jobKey = new JobKey("CancelOrderJob");
+                q.AddJob<CancelOrderJob>(opts => opts.WithIdentity(jobKey));
+
+                q.AddTrigger(opts => opts
+                    .ForJob(jobKey)
+                    .WithIdentity("CancelOrderJob-trigger")
+                    //This Cron interval can be described as "run every minute" (when second is zero)
+                    .WithCronSchedule("0/5 * * * * ?")
+                );
+            });
             services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
             services.AddMvcCore().ConfigureApiBehaviorOptions(options =>
             {
