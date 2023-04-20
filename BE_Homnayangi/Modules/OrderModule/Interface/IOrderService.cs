@@ -16,9 +16,9 @@ namespace BE_Homnayangi.Modules.OrderModule.Interface
 
         public Task<ICollection<Order>> GetAll();
 
-        public Task<ICollection<OrderResponse>> GetOrderResponse(int status = -1);
+        public Task<ICollection<OrderResponse>> GetOrderResponse(DateTime? fromDate, DateTime? toDate, int status = -1);
 
-        public Task<ICollection<OrderResponse>> GetOrderByCustomer(Guid customerId, int status = -1);
+        public Task<ICollection<OrderResponse>> GetOrderByCustomer(DateTime? fromDate, DateTime? toDate, Guid customerId, int status = -1);
 
         public Task<ICollection<Order>> GetByCustomer(Guid id);
 
