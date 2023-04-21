@@ -12,6 +12,8 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
         public DateTime? CreatedDate { get; set; }
         public int? Reaction { get; set; }
         public int? View { get; set; }
+        public bool IsEvent { get; set; }
+        public DateTime? EventExpiredDate { get; set; }
     }
 }
 

@@ -15,7 +15,7 @@ namespace BE_Homnayangi.Modules.IngredientModule.Interface
     public interface IIngredientService
     {
         public Task AddNewIngredient(IngredientRequest newIngredient);
-        public Task<ICollection<IngredientResponse>> GetAll();
+        public Task<ICollection<IngredientResponse>> GetAll(string? searchString);
         public Task<ICollection<IngredientResponse>> GetIngredientsBy(Expression<Func<Ingredient, bool>> filter = null,
             Func<IQueryable<Ingredient>, ICollection<Ingredient>> options = null,
             string includeProperties = null);

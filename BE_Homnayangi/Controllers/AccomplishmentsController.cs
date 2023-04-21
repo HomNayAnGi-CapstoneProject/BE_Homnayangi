@@ -197,6 +197,28 @@ namespace BE_Homnayangi.Controllers
                 });
             }
         }
+
+        [HttpGet("top3/{eventId}")]
+        public async Task<ActionResult> GetTop3AccomplishmentsByEventId([FromRoute] Guid eventId)
+        {
+            try
+            {
+                var result = await _accomplishmentService.GetTop3AccomplishmentsByEventId(eventId);
+                return new JsonResult(new
+                {
+                    status = "success",
+                    result = result
+                });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
+            }
+        }
         #endregion
 
         #region

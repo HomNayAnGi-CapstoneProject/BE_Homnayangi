@@ -9,6 +9,7 @@ using GSF;
 using Library.Models;
 using Library.Models.Enum;
 using Library.PagedList;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,10 +31,12 @@ namespace BE_Homnayangi.Modules.IngredientModule
             _priceNoteRepository = priceNoteRepository;
         }
 
-        public async Task<ICollection<IngredientResponse>> GetAll()
+        public async Task<ICollection<IngredientResponse>> GetAll(string? searchString)
         {
             var ingredients = await _ingredientRepository.GetIngredientsBy(includeProperties: "Type,Unit");
-
+            if(!string.IsNullOrEmpty(searchString))
+                ingredients = ingredients.Where(x => ConvertToUnSign(x.Name).Contains(ConvertToUnSign(searchString), StringComparison.CurrentCultureIgnoreCase)
+                                                                    || x.Name.Contains(searchString, StringComparison.CurrentCultureIgnoreCase)).ToList();
             return ingredients.Select(ToResponse).ToList();
         }
 
