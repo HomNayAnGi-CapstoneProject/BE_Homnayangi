@@ -2,8 +2,13 @@
 using BE_Homnayangi.Modules.BlogReactionModule.Interface;
 using BE_Homnayangi.Modules.BlogReactionModule.Response;
 using BE_Homnayangi.Modules.CustomerModule.Interface;
+using BE_Homnayangi.Modules.NotificationModule;
+using BE_Homnayangi.Modules.NotificationModule.Interface;
 using Library.Models;
 using Library.Models.Constant;
+using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
+using PayPal.Api;
 using System;
 using System.Threading.Tasks;
 
@@ -14,13 +19,19 @@ namespace BE_Homnayangi.Modules.BlogReactionModule
         private readonly IBlogReactionRepository _blogReactionRepository;
         private readonly IBlogRepository _blogRepository;
         private readonly ICustomerRepository _customerRepository;
+        private readonly INotificationRepository _notificationRepository;
+        private readonly IHubContext<SignalRServer> _hubContext;
 
         public BlogReactionService(IBlogReactionRepository blogReactionRepository,
-            IBlogRepository blogRepository, ICustomerRepository customerRepository)
+            IBlogRepository blogRepository, ICustomerRepository customerRepository,
+            NotificationRepository notificationRepository,
+            IHubContext<SignalRServer> hubContext)
         {
             _blogReactionRepository = blogReactionRepository;
             _blogRepository = blogRepository;
             _customerRepository = customerRepository;
+            _notificationRepository = notificationRepository;
+            _hubContext = hubContext;
         }
 
         public async Task<BlogReactionResponse> GetBlogReactionByBlogAndCustomerId(Guid blogId, Guid customerId)
@@ -73,6 +84,21 @@ namespace BE_Homnayangi.Modules.BlogReactionModule
                     };
                     await _blogReactionRepository.AddAsync(reaction);
                     result = ConvertDTO(reaction);
+
+                    #region Create notification
+                    var notiId = Guid.NewGuid();
+                    var noti = new Library.Models.Notification
+                    {
+                        NotificationId = notiId,
+                        Description = $"{customer.Displayname ?? customer.Username} đã tương tác với bài blog [{blog.Title}] của bạn",
+                        CreatedDate = DateTime.Now,
+                        Status = false,
+                        ReceiverId = blog.AuthorId
+                    };
+                    await _notificationRepository.AddAsync(noti);
+
+                    await _hubContext.Clients.All.SendAsync($"{blog.AuthorId}_BlogReacted", JsonConvert.SerializeObject(noti));
+                    #endregion
                 }
                 else
                 { // update reaction status in db
