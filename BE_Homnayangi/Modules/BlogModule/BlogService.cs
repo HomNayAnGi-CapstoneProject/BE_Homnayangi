@@ -21,6 +21,7 @@ using Library.Models.Constant;
 using Library.Models.Enum;
 using Library.PagedList;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
 using System.Composition;
@@ -71,20 +72,29 @@ namespace BE_Homnayangi.Modules.BlogModule
 
         #region Get Blog
 
-        public async Task<ICollection<OverviewBlog>> GetBlogsByUser(string role, bool? isPending, bool isEvent)
+        public async Task<ICollection<OverviewBlog>> GetBlogsByUser(string role, bool? isPending, bool? isEvent)
         {
             List<OverviewBlog> list = null;
             try
             {
                 if (isPending != null && isPending.Value) // get pending blogs
                 {
-                    var pendingBlogs = isEvent ?
-                        await _blogRepository.GetBlogsBy(b => b.BlogStatus == (int)Status.BlogStatus.PENDING
-                                                             && b.IsEvent.Value,
-                                                                                            includeProperties: "Author")
-                      : await _blogRepository.GetBlogsBy(b => b.BlogStatus == (int)Status.BlogStatus.PENDING
-                                                             && !b.IsEvent.Value,
-                                                                                            includeProperties: "Author");
+                    ICollection<Blog> pendingBlogs = new List<Blog>();
+                    if (isEvent == null) // Lấy hết
+                    {
+                        pendingBlogs = await _blogRepository.GetBlogsBy(b => b.BlogStatus == (int)Status.BlogStatus.PENDING,
+                                                                                                    includeProperties: "Author");
+                    }
+                    else if (isEvent.Value) // Lấy event
+                    {
+                        pendingBlogs = await _blogRepository.GetBlogsBy(b => b.BlogStatus == (int)Status.BlogStatus.PENDING && b.IsEvent.Value,
+                                                                                                    includeProperties: "Author");
+                    }
+                    else // Lấy blog thôi
+                    {
+                        pendingBlogs = await _blogRepository.GetBlogsBy(b => b.BlogStatus == (int)Status.BlogStatus.PENDING && !b.IsEvent.Value,
+                                                                                                    includeProperties: "Author");
+                    }
                     if (pendingBlogs.Count == 0)
                     {
                         return null;
@@ -102,12 +112,12 @@ namespace BE_Homnayangi.Modules.BlogModule
                             Status = blog.BlogStatus,
                             TotalKcal = blog.Recipe?.TotalKcal,
                             IsEvent = blog.IsEvent.Value,
-                            EventExpiredDate = blog.EventExpiredDate
+                            EventExpiredDate = blog.IsEvent.Value ? blog.EventExpiredDate : null
                         }).OrderByDescending(b => b.CreatedDate).ToList();
                 }
                 else if (isPending != null && !isPending.Value) // get !pending blogs
                 {
-                    var blogs = isEvent
+                    var blogs = isEvent != null && isEvent.Value
                         ? await _blogRepository.GetBlogsBy(b => b.BlogStatus != (int)Status.BlogStatus.PENDING && b.IsEvent.Value, includeProperties: "Recipe,Author")
                         : await _blogRepository.GetBlogsBy(b => b.BlogStatus != (int)Status.BlogStatus.PENDING && !b.IsEvent.Value, includeProperties: "Recipe,Author");
                     if (blogs != null && blogs.Count > 0)
@@ -125,13 +135,13 @@ namespace BE_Homnayangi.Modules.BlogModule
                                 Status = blog.BlogStatus,
                                 TotalKcal = blog.Recipe?.TotalKcal,
                                 IsEvent = blog.IsEvent.Value,
-                                EventExpiredDate = blog.EventExpiredDate
+                                EventExpiredDate = blog.IsEvent.Value ? blog.EventExpiredDate : null
                             }).OrderByDescending(b => b.CreatedDate).ToList();
                     }
                 }
                 else // isPending: null > get all
                 {
-                    var blogs = isEvent
+                    var blogs = isEvent != null && isEvent.Value
                        ? await _blogRepository.GetBlogsBy(b => b.IsEvent.Value && b.IsEvent.Value, includeProperties: "Recipe,Author")
                        : await _blogRepository.GetBlogsBy(b => !b.IsEvent.Value && !b.IsEvent.Value, includeProperties: "Recipe,Author");
                     if (blogs != null && blogs.Count > 0)
@@ -149,7 +159,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                                 Status = blog.BlogStatus,
                                 TotalKcal = blog.Recipe?.TotalKcal,
                                 IsEvent = blog.IsEvent.Value,
-                                EventExpiredDate = blog.EventExpiredDate
+                                EventExpiredDate = blog.IsEvent.Value ? blog.EventExpiredDate : null
                             }).OrderByDescending(b => b.CreatedDate).ToList();
                     }
                 }
@@ -308,9 +318,9 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 if (subCateIds == null)
                 {
-                    blogs = request.IsEvent
-                        ? _blogRepository.GetBlogsBy(b => b.BlogStatus == ((int)Status.BlogStatus.ACTIVE) && b.IsEvent.Value).Result.ToList()
-                        : _blogRepository.GetBlogsBy(b => b.BlogStatus == ((int)Status.BlogStatus.ACTIVE) && !b.IsEvent.Value).Result.ToList();
+                    blogs = request.IsEvent != null && request.IsEvent.Value
+                       ? _blogRepository.GetBlogsBy(b => b.BlogStatus == ((int)Status.BlogStatus.ACTIVE) && b.IsEvent.Value).Result.ToList()
+                       : _blogRepository.GetBlogsBy(b => b.BlogStatus == ((int)Status.BlogStatus.ACTIVE)).Result.ToList();
                     if (searchString != null)
                     {
                         searchString = Regex.Replace(request.SearchString, @"\s+", " ").Trim();
@@ -322,14 +332,38 @@ namespace BE_Homnayangi.Modules.BlogModule
                 }
                 else
                 {
-                    var filteredBlogs = await _blogSubCateRepository
+                    ICollection<BlogSubCate> filteredBlogs = new List<BlogSubCate>();
+                    if (request.IsEvent == null) // Lấy hết
+                    {
+                        filteredBlogs = await _blogSubCateRepository
                         .GetBlogSubCatesBy(options: (bs) =>
                         {
                             return bs.Where(b => subCateIds.Contains(b.SubCateId.ToString())
                                                                                 && b.Blog.BlogStatus == (int)Status.BlogStatus.ACTIVE).ToList();
                         },
                                                                                 includeProperties: "Blog");
-
+                    }
+                    else if (request.IsEvent.Value) // Lấy event
+                    {
+                        filteredBlogs = await _blogSubCateRepository
+                        .GetBlogSubCatesBy(options: (bs) =>
+                        {
+                            return bs.Where(b => subCateIds.Contains(b.SubCateId.ToString())
+                                                                                && b.Blog.BlogStatus == (int)Status.BlogStatus.ACTIVE && b.Blog.IsEvent.Value).ToList();
+                        },
+                                                                                includeProperties: "Blog");
+                    }
+                    else // Lấy blog thôi
+                    {
+                        filteredBlogs = await _blogSubCateRepository
+                        .GetBlogSubCatesBy(options: (bs) =>
+                        {
+                            return bs.Where(b => subCateIds.Contains(b.SubCateId.ToString())
+                                                                                && b.Blog.BlogStatus == (int)Status.BlogStatus.ACTIVE && !b.Blog.IsEvent.Value).ToList();
+                        },
+                                                                                includeProperties: "Blog");
+                    }
+                    
                     blogs = filteredBlogs.Select(f => f.Blog).ToList();
                     if (searchString != null)
                     {
@@ -378,8 +412,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                         Reaction = b.Reaction,
                         View = b.View,
                         IsEvent = b.IsEvent.Value,
-                        EventExpiredDate = b.EventExpiredDate.Value
-                        
+                        EventExpiredDate = b.IsEvent.Value ? b.EventExpiredDate.Value : null
+
                     }).ToList();
 
                 var response = Library.PagedList.PagedList<BlogsByCatesResponse>.ToPagedList(source: blogsByCatesResponse, pageNumber: pageNumber, pageSize: pageSize);
@@ -412,10 +446,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     throw new Exception(ErrorMessage.CaloRefError.CALO_REF_NOT_FOUND);
                 }
                 //get all blog
-                var listBlog = request.IsEvent
-                    ? _blogRepository.GetBlogsBy(x => x.BlogStatus == ((int)BlogStatus.ACTIVE) && x.IsEvent.Value, includeProperties: "Recipe").Result
-                    .Where(x => x.Recipe.MaxSize == 2).ToList()
-                    : _blogRepository.GetBlogsBy(x => x.BlogStatus == ((int)BlogStatus.ACTIVE) && !x.IsEvent.Value, includeProperties: "Recipe").Result
+                var listBlog = _blogRepository.GetBlogsBy(x => x.BlogStatus == ((int)BlogStatus.ACTIVE), includeProperties: "Recipe").Result
                     .Where(x => x.Recipe.MaxSize == 2).ToList();
                 if (listBlog.Count() == 0)
                 {
@@ -476,7 +507,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                                         RecipeDetails = ConvertToRecipeDetailResponse(firstBlog.BlogId, listRecipeDetails.ToList()),
                                         TotalKcal = (int)firstBlog.Recipe.TotalKcal,
                                         IsEvent = firstBlog.IsEvent.Value,
-                                        EventExpiredDate = firstBlog.EventExpiredDate.Value,
+                                        EventExpiredDate = firstBlog.IsEvent.Value ? firstBlog.EventExpiredDate.Value : null,
                                     });
 
                                     result.Add(new OverviewBlogResponse
@@ -493,8 +524,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                                         RecipeTitle = secondBlog.Recipe.Title,
                                         RecipeId = secondBlog.Recipe.RecipeId,
                                         RecipeDetails = ConvertToRecipeDetailResponse(secondBlog.BlogId, listRecipeDetails.ToList()),
-                                        IsEvent = firstBlog.IsEvent.Value,
-                                        EventExpiredDate = firstBlog.EventExpiredDate.Value,
+                                        IsEvent = secondBlog.IsEvent.Value,
+                                        EventExpiredDate = secondBlog.IsEvent.Value ? secondBlog.EventExpiredDate.Value : null,
                                     });
 
                                     result.Add(new OverviewBlogResponse
@@ -510,8 +541,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                                         RecipeTitle = soupBlog.Recipe.Title,
                                         RecipeId = soupBlog.Recipe.RecipeId,
                                         RecipeDetails = ConvertToRecipeDetailResponse(soupBlog.BlogId, listRecipeDetails.ToList()),
-                                        IsEvent = firstBlog.IsEvent.Value,
-                                        EventExpiredDate = firstBlog.EventExpiredDate.Value,
+                                        IsEvent = soupBlog.IsEvent.Value,
+                                        EventExpiredDate = soupBlog.IsEvent.Value ? soupBlog.EventExpiredDate.Value : null,
                                     });
 
                                 }
@@ -534,7 +565,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                                         RecipeDetails = ConvertToRecipeDetailResponse(firstBlog.BlogId, listRecipeDetails.ToList()),
                                         TotalKcal = (int)firstBlog.Recipe.TotalKcal,
                                         IsEvent = firstBlog.IsEvent.Value,
-                                        EventExpiredDate = firstBlog.EventExpiredDate.Value,
+                                        EventExpiredDate = firstBlog.IsEvent.Value ? firstBlog.EventExpiredDate.Value : null,
                                     });
                                     result.Add(new OverviewBlogResponse
                                     {
@@ -549,8 +580,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                                         RecipeTitle = secondBlog.Recipe.Title,
                                         RecipeId = secondBlog.Recipe.RecipeId,
                                         RecipeDetails = ConvertToRecipeDetailResponse(secondBlog.BlogId, listRecipeDetails.ToList()),
-                                        IsEvent = firstBlog.IsEvent.Value,
-                                        EventExpiredDate = firstBlog.EventExpiredDate.Value,
+                                        IsEvent = secondBlog.IsEvent.Value,
+                                        EventExpiredDate = secondBlog.IsEvent.Value ? secondBlog.EventExpiredDate.Value : null,
                                     });
                                     result.Add(new OverviewBlogResponse
                                     {
@@ -565,8 +596,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                                         RecipeTitle = soupBlog.Recipe.Title,
                                         RecipeId = soupBlog.Recipe.RecipeId,
                                         RecipeDetails = ConvertToRecipeDetailResponse(soupBlog.BlogId, listRecipeDetails.ToList()),
-                                        IsEvent = firstBlog.IsEvent.Value,
-                                        EventExpiredDate = firstBlog.EventExpiredDate.Value,
+                                        IsEvent = soupBlog.IsEvent.Value,
+                                        EventExpiredDate = soupBlog.IsEvent.Value ? soupBlog.EventExpiredDate.Value : null,
                                     });
                                 }
                             }
@@ -582,7 +613,7 @@ namespace BE_Homnayangi.Modules.BlogModule
             }
         }
 
-        public async Task<ICollection<BlogsByCatesResponse>> GetBlogsByIngredientId(Guid ingredientId, bool isEvent)
+        public async Task<ICollection<BlogsByCatesResponse>> GetBlogsByIngredientId(Guid ingredientId)
         {
             try
             {
@@ -594,12 +625,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     var recipeDetails = await _recipeDetailRepository.GetNItemRandom(rd => rd.IngredientId == ingredientId,
                                                                                                         numberItem: 8);
 
-                    var blogs = isEvent
-                        ? _blogRepository.GetBlogsBy(b => b.BlogStatus == ((int)Status.BlogStatus.ACTIVE)
-                                                          && b.IsEvent.Value,
-                                                                 includeProperties: "Recipe").Result.ToList()
-                        : _blogRepository.GetBlogsBy(b => b.BlogStatus == ((int)Status.BlogStatus.ACTIVE)
-                                                          && !b.IsEvent.Value,
+                    var blogs = _blogRepository.GetBlogsBy(b => b.BlogStatus == ((int)Status.BlogStatus.ACTIVE),
                                                                  includeProperties: "Recipe").Result.ToList();
                     var tmpList = recipeDetails.Join(blogs, rd => rd.RecipeId, b => b.RecipeId, (rd, b) => new BlogsByCatesResponse()
                     {
@@ -650,7 +676,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                         Reaction = b.Reaction,
                         View = b.View,
                         IsEvent = b.IsEvent,
-                        EventExpiredDate = b.EventExpiredDate
+                        EventExpiredDate = b.IsEvent ? b.EventExpiredDate.Value : null
                     }).OrderByDescending(b => b.CreatedDate).ToList();
 
                 return result;
@@ -700,7 +726,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                         TotalKcal = e.Recipe.TotalKcal,
                         AuthorName = e.Author.Firstname + " " + e.Author.Lastname,
                         IsEvent = e.IsEvent.Value,
-                        EventExpiredDate = e.EventExpiredDate.Value,
+                        EventExpiredDate = e.IsEvent.Value ? e.EventExpiredDate.Value : null,
                     }).OrderByDescending(b => b.CreatedDate).ToList();
                 }
                 return result;
@@ -882,7 +908,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                 request.Blog.View = blog.View;
                 request.Blog.MinutesToCook = request.Blog.MinutesToCook == null ? blog.MinutesToCook : request.Blog.MinutesToCook;
                 request.Blog.IsEvent = request.Blog.IsEvent == null ? false : request.Blog.IsEvent;
-                request.Blog.EventExpiredDate = request.Blog.IsEvent.Value ? DateTime.Now : null;
+                request.Blog.EventExpiredDate = request.Blog.IsEvent.Value ? request.Blog.EventExpiredDate : null;
                 await _blogRepository.UpdateAsync(request.Blog);
                 #endregion
             }
@@ -899,16 +925,14 @@ namespace BE_Homnayangi.Modules.BlogModule
         // 2 api restore: blog và recipe
         // bỏ chung recipe và blog vô 1 region
         // logic: tắt hết những status các bảng liên quan!!!
-        public async Task DeleteBlog(Guid id, bool isEvent)
+        public async Task DeleteBlog(Guid id)
         {
             try
             {
                 #region update Blog status into 0 > throw Error if not existed
                 Blog removedBlog = null;
 
-                removedBlog = isEvent
-                    ? await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId.Equals(id) && x.BlogStatus == 1 && x.IsEvent.Value)
-                    : await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId.Equals(id) && x.BlogStatus == 1);
+                removedBlog = await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId.Equals(id) && x.BlogStatus == 1);
                 if (removedBlog == null)
                     throw new Exception(ErrorMessage.BlogError.BLOG_NOT_FOUND);
 
@@ -1004,15 +1028,13 @@ namespace BE_Homnayangi.Modules.BlogModule
             }
         }
 
-        public async Task RestoreBlog(Guid id, bool isEvent)
+        public async Task RestoreBlog(Guid id)
         {
             try
             {
                 #region update Blog status into 1 > throw Error if not existed
                 Blog restoredBlog = null;
-                restoredBlog = isEvent ?
-                      await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId.Equals(id) && x.BlogStatus == 0 && x.IsEvent.Value)
-                    : await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId.Equals(id) && x.BlogStatus == 0);
+                restoredBlog = await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId.Equals(id) && x.BlogStatus == 0);
                 if (restoredBlog == null)
                     throw new Exception(ErrorMessage.BlogError.BLOG_NOT_FOUND);
 
@@ -1202,14 +1224,12 @@ namespace BE_Homnayangi.Modules.BlogModule
         #endregion
 
         #region Blog Detail
-        public async Task<BlogDetailResponse> GetBlogDetail(bool isEvent, Guid blogId)
+        public async Task<BlogDetailResponse> GetBlogDetail(Guid blogId)
         {
             BlogDetailResponse result = null;
             try
             {
-                var blog = isEvent
-                    ? await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId == blogId && x.IsEvent.Value, includeProperties: "Recipe")
-                    : await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId == blogId && !x.IsEvent.Value, includeProperties: "Recipe");
+                var blog = await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId == blogId && !x.IsEvent.Value, includeProperties: "Recipe");
 
                 if (blog == null) throw new Exception(ErrorMessage.BlogError.BLOG_NOT_FOUND);
 
@@ -1237,7 +1257,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     PackagePrice = blog.Recipe.PackagePrice,
                     CookedPrice = blog.Recipe.CookedPrice,
                     IsEvent = blog.IsEvent.Value,
-                    EventExpiredDate = blog.EventExpiredDate.Value
+                    EventExpiredDate = blog.IsEvent.Value ? blog.EventExpiredDate.Value : null
                 };
 
                 foreach (var item in blogReferences)
@@ -1295,14 +1315,12 @@ namespace BE_Homnayangi.Modules.BlogModule
             return result;
         }
 
-        public async Task<BlogDetailResponse> GetBlogDetailPreview(bool isEvent, Guid blogId)
+        public async Task<BlogDetailResponse> GetBlogDetailPreview(Guid blogId)
         {
             BlogDetailResponse result = null;
             try
             {
-                var blog = isEvent
-                    ? await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId == blogId && x.IsEvent.Value, includeProperties: "Recipe")
-                    : await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId == blogId && !x.IsEvent.Value, includeProperties: "Recipe");
+                var blog = await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId == blogId, includeProperties: "Recipe");
 
                 if (blog == null) throw new Exception(ErrorMessage.BlogError.BLOG_NOT_FOUND);
 
@@ -1330,7 +1348,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     PackagePrice = blog.Recipe.PackagePrice,
                     CookedPrice = blog.Recipe.CookedPrice,
                     IsEvent = blog.IsEvent.Value,
-                    EventExpiredDate = blog.EventExpiredDate
+                    EventExpiredDate = blog.IsEvent.Value ? blog.EventExpiredDate : null
                 };
 
                 foreach (var item in blogReferences)
@@ -1441,14 +1459,12 @@ namespace BE_Homnayangi.Modules.BlogModule
         #endregion
 
         #region Approve - Reject blog
-        public async Task<bool> ApproveRejectBlog(string type, Guid blogId, bool isEvent)
+        public async Task<bool> ApproveRejectBlog(string type, Guid blogId)
         {
             bool isChecked = false;
             try
             {
-                var blog = isEvent
-                    ? await _blogRepository.GetFirstOrDefaultAsync(b => b.BlogId == blogId && b.BlogStatus == (int)Status.BlogStatus.PENDING && b.IsEvent.Value, includeProperties: "Author,Recipe,BlogReferences")
-                    : await _blogRepository.GetFirstOrDefaultAsync(b => b.BlogId == blogId && b.BlogStatus == (int)Status.BlogStatus.PENDING && !b.IsEvent.Value, includeProperties: "Author,Recipe,BlogReferences");
+                var blog = await _blogRepository.GetFirstOrDefaultAsync(b => b.BlogId == blogId && b.BlogStatus == (int)Status.BlogStatus.PENDING, includeProperties: "Author,Recipe,BlogReferences");
                 var properties = blog.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
                 if (blog != null)
                 {

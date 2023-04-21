@@ -8,7 +8,6 @@ namespace BE_Homnayangi.Modules.BlogModule.Request
         public int Age { get; set; }
         public bool IsMale { get; set; }
         public bool IsLoseWeight { get; set; }
-        public bool IsEvent { get; set; }
     }
     public class SuggestBlogByCaloRequestValidator : AbstractValidator<SuggestBlogByCaloRequest>
     {

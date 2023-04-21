@@ -32,7 +32,7 @@ namespace BE_Homnayangi.Controllers
         // Get all blogs: staff and manager manage all blogs of system
         [HttpGet("user")] // blogid, authorName, img, title, created_date, views, reactions, status
         [Authorize(Roles = "Manager,Staff")]
-        public async Task<ActionResult> GetBlogsForStaff([FromQuery] bool isEvent,[FromQuery] bool? isPending)
+        public async Task<ActionResult> GetBlogsForStaff([FromQuery] bool? isEvent,[FromQuery] bool? isPending)
         {
             try
             {
@@ -67,11 +67,11 @@ namespace BE_Homnayangi.Controllers
 
         // GET: api/v1/blogs/57448A79-8855-42AD-BD2E-0295D1436037
         [HttpGet("{id}")]
-        public async Task<ActionResult<BlogDetailResponse>> GetBlogDetail([FromQuery] bool isEvent, [FromRoute] Guid id)
+        public async Task<ActionResult<BlogDetailResponse>> GetBlogDetail([FromRoute] Guid id)
         {
             try
             {
-                return Ok(await _blogService.GetBlogDetail(isEvent, id));
+                return Ok(await _blogService.GetBlogDetail(id));
             }
             catch (Exception ex)
             {
@@ -87,11 +87,11 @@ namespace BE_Homnayangi.Controllers
 
         [HttpGet("staff-preview/{id}")]
         [Authorize(Roles = "Manager,Staff")]
-        public async Task<ActionResult<BlogDetailResponse>> GetBlogForPreview([FromQuery] bool isEvent, [FromRoute] Guid id)
+        public async Task<ActionResult<BlogDetailResponse>> GetBlogForPreview([FromRoute] Guid id)
         {
             try
             {
-                return Ok(await _blogService.GetBlogDetailPreview(isEvent, id));
+                return Ok(await _blogService.GetBlogDetailPreview( id));
             }
             catch (Exception ex)
             {
@@ -104,11 +104,11 @@ namespace BE_Homnayangi.Controllers
         }
 
         [HttpGet("ingredients/{ingredientId}")]
-        public async Task<ActionResult<ICollection<BlogsByCateAndTagResponse>>> GetBlogsByIngredientId([FromRoute] Guid ingredientId, [FromQuery] bool isEvent)
+        public async Task<ActionResult<ICollection<BlogsByCateAndTagResponse>>> GetBlogsByIngredientId([FromRoute] Guid ingredientId)
         {
             try
             {
-                var result = await _blogService.GetBlogsByIngredientId(ingredientId, isEvent);
+                var result = await _blogService.GetBlogsByIngredientId(ingredientId);
 
                 if (result.Count == 0)
                 {
@@ -198,7 +198,7 @@ namespace BE_Homnayangi.Controllers
         // DELETE: api/Blogs/5
         [HttpDelete("{id}")]
         [Authorize(Roles = "Staff,Manager")]
-        public async Task<IActionResult> DeleteBlog([FromRoute] Guid id, [FromQuery] bool isEvent)
+        public async Task<IActionResult> DeleteBlog([FromRoute] Guid id)
         {
             try
             {
@@ -218,7 +218,7 @@ namespace BE_Homnayangi.Controllers
                 }
                 #endregion
 
-                await _blogService.DeleteBlog(id, isEvent);
+                await _blogService.DeleteBlog(id);
                 return new JsonResult(new
                 {
                     status = "success"
@@ -237,7 +237,7 @@ namespace BE_Homnayangi.Controllers
         // RESTORE: api/Blogs/5
         [HttpPut("restore-blog/{id}")]
         [Authorize(Roles = "Staff,Manager")]
-        public async Task<IActionResult> RestoreBlog([FromRoute] Guid id, [FromQuery] bool isEvent)
+        public async Task<IActionResult> RestoreBlog([FromRoute] Guid id)
         {
             try
             {
@@ -257,7 +257,7 @@ namespace BE_Homnayangi.Controllers
                 }
                 #endregion
 
-                await _blogService.RestoreBlog(id, isEvent);
+                await _blogService.RestoreBlog(id);
                 return new JsonResult(new
                 {
                     status = "success"
@@ -347,7 +347,7 @@ namespace BE_Homnayangi.Controllers
 
         [Authorize(Roles = "Manager")]
         [HttpPut("{type}/{blogId}")]
-        public async Task<ActionResult> ApproveRejectBlog([FromRoute] string type, [FromRoute] Guid blogId, [FromQuery] bool isEvent)
+        public async Task<ActionResult> ApproveRejectBlog([FromRoute] string type, [FromRoute] Guid blogId)
         {
             try
             {
@@ -356,7 +356,7 @@ namespace BE_Homnayangi.Controllers
                     throw new Exception(ErrorMessage.BlogError.BLOG_MNG_NOT_SUPPORT);
                 }
 
-                bool isChecked = await _blogService.ApproveRejectBlog(type, blogId, isEvent);
+                bool isChecked = await _blogService.ApproveRejectBlog(type, blogId);
                 if (isChecked)
                 {
                     return new JsonResult(new

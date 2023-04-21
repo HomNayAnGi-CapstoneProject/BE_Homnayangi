@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Library.PagedList;
+﻿using Library.PagedList;
 
 namespace BE_Homnayangi.Modules.BlogModule.Request
 {
@@ -8,7 +6,7 @@ namespace BE_Homnayangi.Modules.BlogModule.Request
     {
         public string SubCateIds { get; set; }
         public string? SearchString { get; set; }
-        public bool IsEvent { get; set; }
+        public bool? IsEvent{ get; set; }
 
         public BlogsBySubCatesRequest() : base() { }
     }
