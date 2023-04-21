@@ -24,7 +24,7 @@ namespace BE_Homnayangi.Modules.BlogReactionModule
 
         public BlogReactionService(IBlogReactionRepository blogReactionRepository,
             IBlogRepository blogRepository, ICustomerRepository customerRepository,
-            NotificationRepository notificationRepository,
+            INotificationRepository notificationRepository,
             IHubContext<SignalRServer> hubContext)
         {
             _blogReactionRepository = blogReactionRepository;
