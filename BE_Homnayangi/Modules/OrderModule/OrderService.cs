@@ -760,8 +760,6 @@ namespace BE_Homnayangi.Modules.OrderModule
                 throw new Exception("To date is required");
             if (!fromDate.HasValue && toDate.HasValue)
                 throw new Exception("From date is required");
-            if (fromDate.Value.CompareTo(toDate.Value) > 0)
-                throw new Exception("From date must before To date");
 
             var orders = status > -1
                 ? await _OrderRepository.GetOrdersBy(o => o.OrderStatus.GetValueOrDefault() == status && o.CustomerId.Equals(customerId),
@@ -771,6 +769,8 @@ namespace BE_Homnayangi.Modules.OrderModule
 
             if (fromDate.HasValue && toDate.HasValue)
             {
+                if (fromDate.Value.CompareTo(toDate.Value) > 0)
+                    throw new Exception("From date must before To date");
                 orders = orders.Where(o => o.OrderDate.GetValueOrDefault() >= fromDate && o.OrderDate.GetValueOrDefault() <= toDate).ToList();
             }
 
