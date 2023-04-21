@@ -214,12 +214,13 @@ namespace BE_Homnayangi.Modules.VoucherModule
                 if (end <= start)
                     throw new Exception(ErrorMessage.VoucherError.DATETIME_NOT_VALID);
 
-                if (max != null)
+                if (discount <= 0)
+                    throw new Exception(ErrorMessage.VoucherError.DISCOUNT_PRICE_NOT_VALID);
+
+                if (max != null && (discount >= 0 && discount <= 1))
                     if (max <= min || min < 0)
                         throw new Exception(ErrorMessage.VoucherError.DISCOUNT_CONDITION_NOT_VALID);
 
-                if (discount <= 0)
-                    throw new Exception(ErrorMessage.VoucherError.DISCOUNT_PRICE_NOT_VALID);
             }
             catch (Exception ex)
             {
