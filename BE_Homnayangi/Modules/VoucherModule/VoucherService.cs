@@ -145,7 +145,7 @@ namespace BE_Homnayangi.Modules.VoucherModule
             try
             {
                 ValidateVoucher(newVoucher.ValidFrom.Value, newVoucher.ValidTo.Value,
-                    newVoucher.MinimumOrderPrice.Value, newVoucher.MaximumOrderPrice.Value, newVoucher.Discount.Value);
+                    newVoucher.MinimumOrderPrice.Value, newVoucher.MaximumOrderPrice, newVoucher.Discount.Value);
 
                 Voucher voucher = await _voucherRepository.GetFirstOrDefaultAsync(x => x.VoucherId == newVoucher.VoucherId);
 
