@@ -911,11 +911,11 @@ namespace Library.DataAccess
 
                 entity.Property(e => e.MaximumOrderPrice)
                     .HasColumnType("money")
-                    .HasColumnName("maximumOrder");
+                    .HasColumnName("maximumOrderPrice");
 
                 entity.Property(e => e.MinimumOrderPrice)
                     .HasColumnType("money")
-                    .HasColumnName("minimumOrder");
+                    .HasColumnName("minimumOrderPrice");
 
                 entity.Property(e => e.Name)
                     .IsRequired()

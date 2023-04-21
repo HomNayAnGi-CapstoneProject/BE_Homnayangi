@@ -19,5 +19,7 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
         public decimal PackagePrice { get; set; }
         public decimal CookedPrice { get; set; }
         public List<RecipeDetailResponse> RecipeDetails { get; set; }
+        public bool IsEvent { get; set; }
+        public DateTime? EventExpiredDate{ get; set; }
     }
 }

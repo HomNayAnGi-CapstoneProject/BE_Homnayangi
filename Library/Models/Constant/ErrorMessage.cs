@@ -39,6 +39,13 @@ namespace Library.Models.Constant
         }
         #endregion
 
+        #region Event error message
+        public static class EventError
+        {
+            public readonly static string EVENT_NOT_FOUND = "Event is not found";
+        }
+        #endregion
+
         #region Recipe error message
         public static class RecipeError
         {

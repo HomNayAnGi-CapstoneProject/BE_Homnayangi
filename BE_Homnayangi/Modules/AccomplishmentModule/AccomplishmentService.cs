@@ -168,8 +168,8 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                     {
                         AccomplishmentId = a.AccomplishmentId,
                         AuthorId = a.AuthorId.Value,
-                        AuthorFullName = a.Author.Firstname != null && a.Author.Lastname != null 
-                                            ? a.Author.Firstname + " " + a.Author.Lastname 
+                        AuthorFullName = a.Author.Firstname != null && a.Author.Lastname != null
+                                            ? a.Author.Firstname + " " + a.Author.Lastname
                                             : a.Author.Displayname,
                         Avatar = a.Author.Avatar,
                         CreatedDate = a.CreatedDate.Value,
@@ -337,6 +337,46 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
             }
             return result;
         }
+
+        public async Task<ICollection<OverviewAccomplishment>> GetTop3AccomplishmentsByEventId(Guid eventId)
+        {
+            var result = new List<OverviewAccomplishment>();
+            try
+            {
+                var tmpEvent = await _blogRepository.GetFirstOrDefaultAsync(e => e.BlogId == eventId && e.IsEvent.Value);
+                if (tmpEvent == null)
+                    throw new Exception(ErrorMessage.EventError.EVENT_NOT_FOUND);
+                var accoms = await _accomplishmentRepository.GetAccomplishmentsBy(a => a.BlogId == eventId,
+                                                                                            includeProperties: "Author,ConfirmByNavigation");
+
+                var accomReactions = await _accomplishmentReactionRepository.GetAccomplishmentReactionsBy(r => r.Status);
+
+                if (accoms.Count > 0)
+                    result = accoms.Select(a => new OverviewAccomplishment()
+                    {
+                        AccomplishmentId = a.AccomplishmentId,
+                        AuthorId = a.AuthorId.Value,
+                        AuthorFullName = a.Author.Firstname != null && a.Author.Lastname != null
+                                            ? a.Author.Firstname + " " + a.Author.Lastname
+                                            : a.Author.Displayname,
+                        Avatar = a.Author.Avatar,
+                        CreatedDate = a.CreatedDate.Value,
+                        Status = a.Status.Value,
+                        Reaction = accomReactions.Where(r => r.AccomplishmentId == a.AccomplishmentId && r.Status).Count(),
+                        BlogId = a.BlogId.Value,
+                        ConfirmBy = a.ConfirmBy,
+                        VerifierFullName = a.ConfirmByNavigation == null
+                                        ? null
+                                        : a.ConfirmByNavigation.Firstname + " " + a.ConfirmByNavigation.Lastname
+                    }).OrderByDescending(a => a.Reaction).Take(3).ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at GetTop3AccomplishmentsByEventId: " + ex.Message);
+            }
+            return result;
+        }
+
         #endregion
 
         #region Delete Accomplishment
@@ -350,7 +390,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                     throw new Exception(ErrorMessage.CustomerError.CUSTOMER_NOT_FOUND);
                 var accom = await _accomplishmentRepository.GetFirstOrDefaultAsync(a => a.AccomplishmentId == accomplishmentId
                                                                 && (a.Status == (int)Status.AccomplishmentStatus.ACTIVE ||
-                                                                    a.Status == (int)Status.AccomplishmentStatus.PENDING || 
+                                                                    a.Status == (int)Status.AccomplishmentStatus.PENDING ||
                                                                     a.Status == (int)Status.AccomplishmentStatus.DRAFTED)
                                                                 && a.AuthorId == customerId);
                 if (accom == null)
