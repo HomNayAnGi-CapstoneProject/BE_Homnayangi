@@ -1,5 +1,6 @@
 ﻿using BE_Homnayangi.Modules.NotificationModule.Interface;
 using BE_Homnayangi.Modules.NotificationModule.Request;
+using BE_Homnayangi.Modules.UserModule.Interface;
 using Library.Models.Constant;
 using Org.BouncyCastle.Asn1.Ocsp;
 using System;
@@ -14,10 +15,12 @@ namespace BE_Homnayangi.Modules.NotificationModule
     public class NotificationService : INotificationService
     {
         private readonly INotificationRepository _notificationRepository;
+        private readonly IUserRepository _userRepository;
 
-        public NotificationService(INotificationRepository notificationRepository)
+        public NotificationService(INotificationRepository notificationRepository, IUserRepository userRepository)
         {
             _notificationRepository = notificationRepository;
+            _userRepository = userRepository;
         }
 
         public Task<ICollection<Notification>> GetNotificationsBy(
@@ -154,6 +157,21 @@ namespace BE_Homnayangi.Modules.NotificationModule
             catch (Exception ex)
             {
                 Console.WriteLine("Error at GetNoficationsForStaff:" + ex.Message);
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<ICollection<Notification>> GetNoficationsForManager()
+        {
+            try
+            {
+                var manager = await _userRepository.GetUsersBy(u => u.Role == 1);
+                var result = await _notificationRepository.GetNotificationsBy(n => n.ReceiverId == manager.FirstOrDefault().UserId);
+                return result.OrderByDescending(r => r.CreatedDate).ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at GetNoficationsForManager:" + ex.Message);
                 throw new Exception(ex.Message);
             }
         }
