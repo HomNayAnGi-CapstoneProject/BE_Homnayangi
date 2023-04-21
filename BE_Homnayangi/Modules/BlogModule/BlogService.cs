@@ -363,7 +363,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                         },
                                                                                 includeProperties: "Blog");
                     }
-                    
+
                     blogs = filteredBlogs.Select(f => f.Blog).ToList();
                     if (searchString != null)
                     {
@@ -1469,17 +1469,18 @@ namespace BE_Homnayangi.Modules.BlogModule
                 if (blog != null)
                 {
 
-                    foreach (var property in properties)
-                    {
-                        if (property.Name != "VideoUrl" && property.GetValue(blog) == null)
-                        {
-                            return isChecked = false;
-                        }
-
-                    }
 
                     if (type.Equals("APPROVE"))
                     {
+                        foreach (var property in properties)
+                        {
+                            if (property.Name != "VideoUrl" && property.Name != "IsEvent" && property.Name != "EventExpiredDate" && property.GetValue(blog) == null)
+                            {
+                                return isChecked = false;
+                            }
+
+                        }
+
                         blog.BlogStatus = (int)Status.BlogStatus.ACTIVE;
                         await UpdateStatusWhenApproveRejectBlog(blog.BlogId, blog.RecipeId.Value, (int)Status.BlogStatus.PENDING, (int)Status.BlogStatus.DRAFTED);
                     }

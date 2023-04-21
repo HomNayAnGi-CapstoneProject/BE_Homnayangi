@@ -32,7 +32,7 @@ namespace BE_Homnayangi.Controllers
         // Get all blogs: staff and manager manage all blogs of system
         [HttpGet("user")] // blogid, authorName, img, title, created_date, views, reactions, status
         [Authorize(Roles = "Manager,Staff")]
-        public async Task<ActionResult> GetBlogsForStaff([FromQuery] bool? isEvent,[FromQuery] bool? isPending)
+        public async Task<ActionResult> GetBlogsForStaff([FromQuery] bool? isEvent, [FromQuery] bool? isPending)
         {
             try
             {
@@ -91,7 +91,7 @@ namespace BE_Homnayangi.Controllers
         {
             try
             {
-                return Ok(await _blogService.GetBlogDetailPreview( id));
+                return Ok(await _blogService.GetBlogDetailPreview(id));
             }
             catch (Exception ex)
             {
@@ -345,7 +345,7 @@ namespace BE_Homnayangi.Controllers
             }
         }
 
-        [Authorize(Roles = "Manager")]
+        /*        [Authorize(Roles = "Manager")]*/
         [HttpPut("{type}/{blogId}")]
         public async Task<ActionResult> ApproveRejectBlog([FromRoute] string type, [FromRoute] Guid blogId)
         {
