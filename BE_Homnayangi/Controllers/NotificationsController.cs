@@ -67,6 +67,28 @@ namespace BE_Homnayangi.Controllers
             }
         }
 
+        [HttpGet("manager")]
+        public async Task<ActionResult> GetNotificationsForManager()
+        {
+            try
+            {
+                var result = await _notificationService.GetNoficationsForManager();
+                return new JsonResult(new
+                {
+                    status = "success",
+                    result = result
+                });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
+            }
+        }
+
         // GET: api/Notifications/5
         [HttpGet("{id}")]
         public async Task<ActionResult> GetNotification([FromRoute] Guid id)

@@ -926,7 +926,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                         Description = $"Bài blog - {request.Blog.BlogId} đang được chờ duyệt",
                         CreatedDate = DateTime.Now,
                         Status = false,
-                        ReceiverId = null
+                        ReceiverId = _userRepository.GetUsersBy(u=>u.Role == 1).Result.FirstOrDefault().UserId
                     };
                     await _notificationRepository.AddAsync(noti);
 
