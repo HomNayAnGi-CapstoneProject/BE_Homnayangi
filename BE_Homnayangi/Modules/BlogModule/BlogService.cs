@@ -90,7 +90,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                         pendingBlogs = await _blogRepository.GetBlogsBy(b => b.BlogStatus == (int)Status.BlogStatus.PENDING && b.IsEvent.Value,
                                                                                                     includeProperties: "Author");
                     }
-                   
+
                     if (pendingBlogs.Count == 0)
                     {
                         return null;
@@ -107,15 +107,15 @@ namespace BE_Homnayangi.Modules.BlogModule
                             Reaction = blog.Reaction,
                             Status = blog.BlogStatus,
                             TotalKcal = blog.Recipe?.TotalKcal,
-                            IsEvent = blog.IsEvent.Value,
-                            EventExpiredDate = blog.IsEvent.Value ? blog.EventExpiredDate : null
+                            IsEvent = blog.IsEvent.HasValue ? blog.IsEvent.Value : null,
+                            EventExpiredDate = blog.IsEvent.HasValue ? blog.EventExpiredDate : null
                         }).OrderByDescending(b => b.CreatedDate).ToList();
                 }
                 else if (isPending != null && !isPending.Value) // get !pending blogs
                 {
                     var blogs = isEvent != null && isEvent.Value
                         ? await _blogRepository.GetBlogsBy(b => b.BlogStatus != (int)Status.BlogStatus.PENDING && b.IsEvent.Value, includeProperties: "Recipe,Author")
-                        : await _blogRepository.GetBlogsBy(b => b.BlogStatus != (int)Status.BlogStatus.PENDING && !b.IsEvent.Value, includeProperties: "Recipe,Author");
+                        : await _blogRepository.GetBlogsBy(b => b.BlogStatus != (int)Status.BlogStatus.PENDING, includeProperties: "Recipe,Author");
                     if (blogs != null && blogs.Count > 0)
                     {
                         list = blogs.Select(
@@ -130,8 +130,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                                 Reaction = blog.Reaction,
                                 Status = blog.BlogStatus,
                                 TotalKcal = blog.Recipe?.TotalKcal,
-                                IsEvent = blog.IsEvent.Value,
-                                EventExpiredDate = blog.IsEvent.Value ? blog.EventExpiredDate : null
+                                IsEvent = blog.IsEvent.HasValue ? blog.IsEvent.Value : null,
+                                EventExpiredDate = blog.IsEvent.HasValue ? blog.EventExpiredDate : null
                             }).OrderByDescending(b => b.CreatedDate).ToList();
                     }
                 }
@@ -139,7 +139,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                 {
                     var blogs = isEvent != null && isEvent.Value
                        ? await _blogRepository.GetBlogsBy(b => b.IsEvent.Value && b.IsEvent.Value, includeProperties: "Recipe,Author")
-                       : await _blogRepository.GetBlogsBy(b => !b.IsEvent.Value && !b.IsEvent.Value, includeProperties: "Recipe,Author");
+                       : await _blogRepository.GetBlogsBy(includeProperties: "Recipe,Author");
                     if (blogs != null && blogs.Count > 0)
                     {
                         list = blogs.Select(
@@ -154,8 +154,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                                 Reaction = blog.Reaction,
                                 Status = blog.BlogStatus,
                                 TotalKcal = blog.Recipe?.TotalKcal,
-                                IsEvent = blog.IsEvent.Value,
-                                EventExpiredDate = blog.IsEvent.Value ? blog.EventExpiredDate : null
+                                IsEvent = blog.IsEvent.HasValue ? blog.IsEvent.Value : null,
+                                EventExpiredDate = blog.IsEvent.HasValue ? blog.EventExpiredDate : null
                             }).OrderByDescending(b => b.CreatedDate).ToList();
                     }
                 }
@@ -1470,12 +1470,13 @@ namespace BE_Homnayangi.Modules.BlogModule
                     {
                         foreach (var property in properties)
                         {
-                            if (property.Name != "VideoUrl" && property.Name != "IsEvent" && property.Name != "EventExpiredDate" && property.GetValue(blog) == null)
+                            if (property.Name != "VideoUrl" && property.Name != "IsEvent" && property.Name != "EventExpiredDate" && property.GetValue(blog) == null || blog.BlogReferences.Count == 0)
                             {
                                 return isChecked = false;
                             }
 
                         }
+
 
                         blog.BlogStatus = (int)Status.BlogStatus.ACTIVE;
                         await UpdateStatusWhenApproveRejectBlog(blog.BlogId, blog.RecipeId.Value, (int)Status.BlogStatus.PENDING, (int)Status.BlogStatus.DRAFTED);

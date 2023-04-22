@@ -19,7 +19,7 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
         public string? AuthorName { get; set; }
         public int? Status { get; set; }
 
-        public bool IsEvent { get; set; }
+        public bool? IsEvent { get; set; }
         public DateTime? EventExpiredDate { get; set; }
     }
 }
