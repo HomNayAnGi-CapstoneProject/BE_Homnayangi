@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using BE_Homnayangi.Modules.CustomerVoucherModule.Response;
+using BE_Homnayangi.Modules.CustomerVoucherModule.Request;
 
 namespace BE_Homnayangi.Modules.CustomerVoucherModule.Interface
 {
@@ -24,6 +25,7 @@ namespace BE_Homnayangi.Modules.CustomerVoucherModule.Interface
         public Task<CustomerVoucher> GetCustomerVoucherByCombineID(Guid cusId, Guid voucherId);
 
         public Task<bool> DeleteCustomerVouchersByVoucherId(Guid voucherId);
+        public Task GiveVoucherForCustomer(GiveVoucherForCustomer request);
         public void AwardVoucher();
 
     }
