@@ -1225,7 +1225,7 @@ namespace BE_Homnayangi.Modules.BlogModule
             BlogDetailResponse result = null;
             try
             {
-                var blog = await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId == blogId && !x.IsEvent.Value, includeProperties: "Recipe");
+                var blog = await _blogRepository.GetFirstOrDefaultAsync(includeProperties: "Recipe");
 
                 if (blog == null) throw new Exception(ErrorMessage.BlogError.BLOG_NOT_FOUND);
 
@@ -1252,8 +1252,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                     MinutesToCook = blog.MinutesToCook,
                     PackagePrice = blog.Recipe.PackagePrice,
                     CookedPrice = blog.Recipe.CookedPrice,
-                    IsEvent = blog.IsEvent.Value,
-                    EventExpiredDate = blog.IsEvent.Value ? blog.EventExpiredDate.Value : null
+                    IsEvent = blog.IsEvent.HasValue ? blog.IsEvent.Value : null,
+                    EventExpiredDate = blog.IsEvent.HasValue ? blog.EventExpiredDate : null
                 };
 
                 foreach (var item in blogReferences)
