@@ -368,7 +368,8 @@ namespace BE_Homnayangi.Controllers
                 {
                     return new JsonResult(new
                     {
-                        status = "Some of fields can not be null or empty"
+                        status = "failed",
+                        msg = "Some of fields can not be null or empty"
                     });
                 }
             }
