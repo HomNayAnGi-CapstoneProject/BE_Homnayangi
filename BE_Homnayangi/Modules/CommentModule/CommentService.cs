@@ -159,7 +159,7 @@ namespace BE_Homnayangi.Modules.CommentModule
                     };
                     await _notificationRepository.AddAsync(noti);
 
-                    await _hubContext.Clients.All.SendAsync($"{newComment.AuthorId.Value}_BlogReacted", JsonConvert.SerializeObject(noti));
+                    await _hubContext.Clients.All.SendAsync($"{newComment.AuthorId.Value}_ReplyComment", JsonConvert.SerializeObject(noti));
                 }
                 #endregion
             }
