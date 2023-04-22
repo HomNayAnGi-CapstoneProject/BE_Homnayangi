@@ -80,7 +80,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                 if (isPending != null && isPending.Value) // get pending blogs
                 {
                     ICollection<Blog> pendingBlogs = new List<Blog>();
-                    if (isEvent == null) // Lấy hết
+                    if (isEvent == null || isEvent == false) // Lấy hết
                     {
                         pendingBlogs = await _blogRepository.GetBlogsBy(b => b.BlogStatus == (int)Status.BlogStatus.PENDING,
                                                                                                     includeProperties: "Author");
@@ -90,11 +90,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                         pendingBlogs = await _blogRepository.GetBlogsBy(b => b.BlogStatus == (int)Status.BlogStatus.PENDING && b.IsEvent.Value,
                                                                                                     includeProperties: "Author");
                     }
-                    else // Lấy blog thôi
-                    {
-                        pendingBlogs = await _blogRepository.GetBlogsBy(b => b.BlogStatus == (int)Status.BlogStatus.PENDING && !b.IsEvent.Value,
-                                                                                                    includeProperties: "Author");
-                    }
+                   
                     if (pendingBlogs.Count == 0)
                     {
                         return null;
