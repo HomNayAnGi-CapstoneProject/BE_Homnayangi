@@ -9,6 +9,7 @@ using BE_Homnayangi.Modules.Utils;
 using Library.Models;
 using Library.Models.Constant;
 using Library.Models.Enum;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -346,7 +347,8 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                 var tmpEvent = await _blogRepository.GetFirstOrDefaultAsync(e => e.BlogId == eventId && e.IsEvent.Value);
                 if (tmpEvent == null)
                     throw new Exception(ErrorMessage.EventError.EVENT_NOT_FOUND);
-                var accoms = await _accomplishmentRepository.GetAccomplishmentsBy(a => a.BlogId == eventId,
+                var accoms = await _accomplishmentRepository.GetAccomplishmentsBy(a => a.BlogId == eventId
+                                                                                    && a.Status == (int)Status.AccomplishmentStatus.ACTIVE,
                                                                                             includeProperties: "Author,ConfirmByNavigation");
 
                 var accomReactions = await _accomplishmentReactionRepository.GetAccomplishmentReactionsBy(r => r.Status);
@@ -367,12 +369,16 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                         ConfirmBy = a.ConfirmBy,
                         VerifierFullName = a.ConfirmByNavigation == null
                                         ? null
-                                        : a.ConfirmByNavigation.Firstname + " " + a.ConfirmByNavigation.Lastname
+                                        : a.ConfirmByNavigation.Firstname + " " + a.ConfirmByNavigation.Lastname,
+                        Content = a.Content,
+                        ListImage = a.ListImageUrl != null ? StringUtils.ExtractContents(a.ListImageUrl) : null,
+                        ListVideo = a.ListVideoUrl != null ? StringUtils.ExtractContents(a.ListVideoUrl) : null
                     }).OrderByDescending(a => a.Reaction).Take(3).ToList();
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error at GetTop3AccomplishmentsByEventId: " + ex.Message);
+                throw new Exception(ex.Message);
             }
             return result;
         }

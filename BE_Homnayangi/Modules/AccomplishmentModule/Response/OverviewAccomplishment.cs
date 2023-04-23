@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace BE_Homnayangi.Modules.AccomplishmentModule.Response
 {
@@ -14,5 +15,8 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule.Response
         public Guid BlogId { get; set; }
         public Guid? ConfirmBy { get; set; }
         public string? VerifierFullName { get; set; }
+        public string Content { get; set; }
+        public ICollection<string>? ListImage { get; set; }
+        public ICollection<string>? ListVideo { get; set; }
     }
 }
