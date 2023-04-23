@@ -8,6 +8,7 @@ using BE_Homnayangi.Modules.CustomerVoucherModule.Response;
 using BE_Homnayangi.Modules.CustomerVoucherModule.Validation;
 using BE_Homnayangi.Modules.VoucherModule.Interface;
 using BE_Homnayangi.Ultils.Quartz;
+using GSF;
 using Hangfire;
 using Library.Models;
 using Library.Models.Constant;
@@ -92,32 +93,32 @@ namespace BE_Homnayangi.Modules.VoucherModule
             return result;
         }
 
-        public async Task<CustomerVoucherResponse> AddCustomerVoucher(CustomerVoucher cv)
-        {
-            CustomerVoucherResponse result = null;
-            try
-            {
-                var tmp = await GetCustomerVoucherByCombineID(cv.CustomerId, cv.VoucherId);
-                if (tmp == null)
-                {
-                    cv.CreatedDate = DateTime.Now;
-                    await _customerVoucherRepository.AddAsync(cv);
-                    result = ConvertDTO(cv);
-                }
-                else
-                {
-                    await _customerVoucherRepository.UpdateAsync(tmp);
-                    result = ConvertDTO(tmp);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error at AddCustomerVoucher: " + ex.Message);
-                throw;
-            }
-            return result;
+        //public async Task<CustomerVoucherResponse> AddCustomerVoucher(CustomerVoucher cv)
+        //{
+        //    CustomerVoucherResponse result = null;
+        //    try
+        //    {
+        //        var tmp = await GetCustomerVoucherByCombineID(cv.CustomerId, cv.VoucherId);
+        //        if (tmp == null)
+        //        {
+        //            cv.CreatedDate = DateTime.Now;
+        //            await _customerVoucherRepository.AddAsync(cv);
+        //            result = ConvertDTO(cv);
+        //        }
+        //        else
+        //        {
+        //            await _customerVoucherRepository.UpdateAsync(tmp);
+        //            result = ConvertDTO(tmp);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine("Error at AddCustomerVoucher: " + ex.Message);
+        //        throw;
+        //    }
+        //    return result;
 
-        }
+        //}
 
         public async Task<ICollection<CustomerVoucherResponse>> GetAllCustomerVouchersByCusId(Guid cusid)
         {
@@ -127,18 +128,28 @@ namespace BE_Homnayangi.Modules.VoucherModule
                 var list = await _customerVoucherRepository.GetCustomerVouchersBy(x => x.CustomerId == cusid, includeProperties: "Customer,Voucher");
                 if (list != null && list.Count > 0)
                 {
-                    result = new List<CustomerVoucherResponse>();
-                    foreach (var cv in list)
+                    result = list.Select(x => new CustomerVoucherResponse()
                     {
-                        result.Add(ConvertDTO(cv));
-                    }
+                        VoucherId = x.VoucherId,
+                        VoucherName = x.Voucher.Name,
+                        CustomerVoucherId = x.CustomerVoucherId,
+                        CustomerName = x.Customer.Displayname != null 
+                                        ? x.Customer.Displayname 
+                                        : x.Customer.Firstname + " " + x.Customer.Lastname,
+                        Discount = x.Voucher.Discount.Value,
+                        MinimumOrderPrice = x.Voucher.MinimumOrderPrice.Value,
+                        MaximumOrderPrice = x.Voucher.MaximumOrderPrice.Value,
+                        ValidFrom = x.Voucher.ValidFrom.Value,
+                        ValidTo = x.Voucher.ValidTo.Value,
+                        Status = x.Voucher.Status.Value,
+                        CreatedDate = x.CreatedDate.Value
+                    }).OrderByDescending(x => x.ValidTo).ToList();
                 }
-
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error at GetAllCustomerVouchersByCusId: " + ex.Message);
-                throw;
+                throw new Exception(ex.Message);
             }
             return result;
         }
@@ -173,7 +184,6 @@ namespace BE_Homnayangi.Modules.VoucherModule
                 CustomerName = cv.Customer != null ? cv.Customer.Firstname + " " + cv.Customer.Lastname : "",
                 VoucherName = cv.Voucher != null ? cv.Voucher.Name : "",
                 CreatedDate = cv.Voucher != null ? cv.Voucher.CreatedDate : new DateTime(),
-                Voucher = cv.Voucher != null ? cv.Voucher : null
             };
         }
 
@@ -243,6 +253,22 @@ namespace BE_Homnayangi.Modules.VoucherModule
             catch (Exception ex)
             {
                 Console.WriteLine("Error at GiveVoucherForCustomer: " + ex.Message);
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task DeleteCustomerVoucher(Guid customerVoucherId)
+        {
+            try
+            {
+                var tmp = await _customerVoucherRepository.GetFirstOrDefaultAsync(x => x.CustomerVoucherId == customerVoucherId);
+                if (tmp == null)
+                    throw new Exception(ErrorMessage.CustomerVoucherError.CUSTOMER_VOUCHER_NOT_FOUND);
+                await _customerVoucherRepository.RemoveAsync(tmp);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at DeleteCustomerVoucher: " + ex.Message);
                 throw new Exception(ex.Message);
             }
         }

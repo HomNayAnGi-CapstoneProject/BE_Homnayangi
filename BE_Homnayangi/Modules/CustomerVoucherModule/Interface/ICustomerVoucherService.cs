@@ -20,7 +20,7 @@ namespace BE_Homnayangi.Modules.CustomerVoucherModule.Interface
 
         public Task<ICollection<CustomerVoucherResponse>> GetAllCustomerVouchersByCusId(Guid cusid);
 
-        public Task<CustomerVoucherResponse> AddCustomerVoucher(CustomerVoucher cv);
+        //public Task<CustomerVoucherResponse> AddCustomerVoucher(CustomerVoucher cv);
 
         public Task<CustomerVoucher> GetCustomerVoucherByCombineID(Guid cusId, Guid voucherId);
 

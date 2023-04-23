@@ -210,6 +210,7 @@ namespace Library.Models.Constant
         public static class CustomerVoucherError
         {
             public readonly static string CUSTOMER_VOUCHER_EXISTED = "Duplicated with Customer and Voucher data";
+            public readonly static string CUSTOMER_VOUCHER_NOT_FOUND = "This customer voucher is not existed";
         }
         #endregion
     }

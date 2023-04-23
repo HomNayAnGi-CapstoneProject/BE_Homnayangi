@@ -149,28 +149,5 @@ namespace BE_Homnayangi.Controllers
                 });
             }
         }
-
-        // POST: api/v1/vouchers/5
-        [HttpPost("/api/v1/customerVoucher/voucher-giving")]
-        [Authorize(Roles = "Staff")]
-        public async Task<IActionResult> GiveVoucherForCustomer([FromBody] GiveVoucherForCustomer request)
-        {
-            try
-            {
-                await _customerVoucherService.GiveVoucherForCustomer(request);
-                return new JsonResult(new
-                {
-                    status = "success"
-                });
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(new
-                {
-                    status = "failed",
-                    msg = ex.Message
-                });
-            }
-        }
     }
 }
