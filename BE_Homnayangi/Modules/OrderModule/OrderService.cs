@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BE_Homnayangi.Modules.CustomerModule.Interface;
+using BE_Homnayangi.Modules.CustomerVoucherModule.Interface;
 using BE_Homnayangi.Modules.IngredientModule.Interface;
 using BE_Homnayangi.Modules.OrderDetailModule.Interface;
 using BE_Homnayangi.Modules.OrderModule.Interface;
@@ -41,6 +42,7 @@ namespace BE_Homnayangi.Modules.OrderModule
         private readonly IIngredientRepository _ingredientRepository;
         private readonly IRecipeRepository _recipeRepository;
         private readonly IVoucherRepository _voucherRepository;
+        private readonly ICustomerVoucherService _customerVoucherService;
         IConfiguration _configuration;
         private readonly IMapper _mapper;
         private readonly IEmailSender _emailSender;
@@ -53,6 +55,7 @@ namespace BE_Homnayangi.Modules.OrderModule
             IIngredientRepository ingredientRepository,
             IRecipeRepository recipeRepository,
             IVoucherRepository voucherRepository,
+            ICustomerVoucherService customerVoucherService,
             IMapper mapper,
             IConfiguration configuration,
             IEmailSender emailSender)
@@ -68,6 +71,7 @@ namespace BE_Homnayangi.Modules.OrderModule
             _voucherRepository = voucherRepository;
             _mapper = mapper;
             _emailSender = emailSender;
+            _customerVoucherService = customerVoucherService;
         }
 
         public async Task<ICollection<OrderResponse>> GetOrderResponse(DateTime? fromDate, DateTime? toDate, int status = -1)
@@ -384,6 +388,9 @@ namespace BE_Homnayangi.Modules.OrderModule
             order.OrderStatus = (int)Status.OrderStatus.ACCEPTED;
 
             await _OrderRepository.UpdateAsync(order);
+
+            if(order.VoucherId.HasValue)
+                await _customerVoucherService.DeleteCustomerVoucher(order.VoucherId.Value);
 
             #region sending mail
             if (customer.Email != null)
