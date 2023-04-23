@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BE_Homnayangi.Modules.CustomerVoucherModule.Interface;
+using BE_Homnayangi.Modules.CustomerVoucherModule.Request;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.VoucherModule.Interface;
 using BE_Homnayangi.Modules.VoucherModule.Request;
@@ -145,6 +146,29 @@ namespace BE_Homnayangi.Controllers
                 return new JsonResult(new
                 {
                     status = "failed"
+                });
+            }
+        }
+
+        // POST: api/v1/vouchers/5
+        [HttpPost("/api/v1/customerVoucher/give-voucher")]
+        [Authorize(Roles = "Staff")]
+        public async Task<IActionResult> GiveVoucherForCustomer([FromBody] GiveVoucherForCustomer request)
+        {
+            try
+            {
+                await _customerVoucherService.GiveVoucherForCustomer(request);
+                return new JsonResult(new
+                {
+                    status = "success"
+                });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
                 });
             }
         }

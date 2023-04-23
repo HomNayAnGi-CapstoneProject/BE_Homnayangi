@@ -202,6 +202,14 @@ namespace Library.Models.Constant
             public readonly static string DATETIME_NOT_VALID = "Start and end date are not valid";
             public readonly static string DISCOUNT_CONDITION_NOT_VALID = "Min and max price are not valid";
             public readonly static string DISCOUNT_PRICE_NOT_VALID = "Discount is not valid";
+            public readonly static string VOUCHER_NOT_AVAILABLE = "This voucher is not available";
+        }
+        #endregion
+
+        #region Customer Voucher error message
+        public static class CustomerVoucherError
+        {
+            public readonly static string CUSTOMER_VOUCHER_EXISTED = "Duplicated with Customer and Voucher data";
         }
         #endregion
     }
