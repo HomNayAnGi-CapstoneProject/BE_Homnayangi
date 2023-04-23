@@ -39,6 +39,13 @@ namespace Library.Models.Constant
         }
         #endregion
 
+        #region Event error message
+        public static class EventError
+        {
+            public readonly static string EVENT_NOT_FOUND = "Event is not found";
+        }
+        #endregion
+
         #region Recipe error message
         public static class RecipeError
         {
@@ -195,6 +202,22 @@ namespace Library.Models.Constant
             public readonly static string DATETIME_NOT_VALID = "Start and end date are not valid";
             public readonly static string DISCOUNT_CONDITION_NOT_VALID = "Min and max price are not valid";
             public readonly static string DISCOUNT_PRICE_NOT_VALID = "Discount is not valid";
+            public readonly static string VOUCHER_NOT_AVAILABLE = "This voucher is not available";
+        }
+        #endregion
+
+        #region Customer Voucher error message
+        public static class CustomerVoucherError
+        {
+            public readonly static string CUSTOMER_VOUCHER_EXISTED = "Duplicated with Customer and Voucher data";
+            public readonly static string CUSTOMER_VOUCHER_NOT_FOUND = "This customer voucher is not existed";
+        }
+        #endregion
+
+        #region Notification error message
+        public static class NotificationError
+        {
+            public readonly static string NOTIFICATION_NOT_FOUND = "This notification is not found";
         }
         #endregion
 

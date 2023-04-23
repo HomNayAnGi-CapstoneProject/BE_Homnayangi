@@ -19,13 +19,17 @@ namespace BE_Homnayangi.Modules.BlogModule.Interface
         #endregion
 
         #region GET
-        public Task<ICollection<OverviewBlog>> GetBlogsByUser(string role, bool? isPending);
+        public Task<ICollection<OverviewBlog>> GetBlogsByUser(string role, bool? isPending, bool? isEvent);
         public Task<ICollection<OverviewBlogResponse>> GetBlogsSortByPackagePriceAsc();
         public Task<ICollection<SearchBlogsResponse>> GetBlogAndRecipeByName(String name);
         public Task<ICollection<OverviewBlogResponse>> GetBlogsBySubCateForHomePage(Guid? tagId, int numberOfItems = 0);
         public Task<PagedResponse<PagedList<BlogsByCatesResponse>>> GetBlogsBySubCates(BlogsBySubCatesRequest request);
         public Task<ICollection<OverviewBlogResponse>> GetSuggestBlogByCalo(SuggestBlogByCaloRequest request);
         public Task<ICollection<BlogsByCatesResponse>> GetBlogsByIngredientId(Guid ingredientId);
+
+        // Event
+        public Task<ICollection<OverviewBlog>> GetAllEvent(bool? isExpired);
+
         #endregion
 
         #region Blog detail

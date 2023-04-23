@@ -10,6 +10,6 @@ namespace BE_Homnayangi.Modules.VoucherModule.Request
         public DateTime ValidTo { get; set; }
         public decimal Discount { get; set; }
         public decimal MinimumOrderPrice { get; set; }
-        public decimal MaximumOrderPrice { get; set; }
+        public decimal? MaximumOrderPrice { get; set; }
     }
 }

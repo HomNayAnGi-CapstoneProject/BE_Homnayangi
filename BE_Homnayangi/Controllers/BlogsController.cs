@@ -32,12 +32,12 @@ namespace BE_Homnayangi.Controllers
         // Get all blogs: staff and manager manage all blogs of system
         [HttpGet("user")] // blogid, authorName, img, title, created_date, views, reactions, status
         [Authorize(Roles = "Manager,Staff")]
-        public async Task<ActionResult> GetBlogsForStaff([FromQuery] bool? isPending)
+        public async Task<ActionResult> GetBlogsForStaff([FromQuery] bool? isEvent, [FromQuery] bool? isPending)
         {
             try
             {
                 var currentAccount = _userService.GetCurrentUser(Request.Headers["Authorization"]);
-                var blogs = await _blogService.GetBlogsByUser(currentAccount.Role, isPending);
+                var blogs = await _blogService.GetBlogsByUser(currentAccount.Role, isPending, isEvent);
 
                 if (blogs == null || blogs.Count == 0)
                 {
@@ -345,7 +345,7 @@ namespace BE_Homnayangi.Controllers
             }
         }
 
-        [Authorize(Roles = "Manager")]
+        /*        [Authorize(Roles = "Manager")]*/
         [HttpPut("{type}/{blogId}")]
         public async Task<ActionResult> ApproveRejectBlog([FromRoute] string type, [FromRoute] Guid blogId)
         {
@@ -368,7 +368,8 @@ namespace BE_Homnayangi.Controllers
                 {
                     return new JsonResult(new
                     {
-                        status = "Some of fields can not be null"
+                        status = "failed",
+                        msg = "Some of fields can not be null or empty"
                     });
                 }
             }

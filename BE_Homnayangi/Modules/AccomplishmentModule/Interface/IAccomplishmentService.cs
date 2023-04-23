@@ -20,7 +20,8 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule.Interface
         public Task<ICollection<AccomplishmentResponse>> GetAccomplishmentsByBlogId(Guid blogId);
         public Task<DetailAccomplishment> GetAccomplishmentById(Guid id);
         public Task<ICollection<AccomplishmentResponse>> GetAccomplishmentsByCustomerId(Guid customerId);
-
+        public Task<ICollection<OverviewAccomplishment>> GetTop3AccomplishmentsByEventId(Guid eventId);
+        
         // Delete
         public Task<bool> RejectAccomplishment(Guid customerId, Guid accomplishmentId);
         public Task<bool> DeleteHardAccomplishment(Guid accomplishmentId);

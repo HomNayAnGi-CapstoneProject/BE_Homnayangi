@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace BE_Homnayangi.Controllers
 {
@@ -57,15 +58,27 @@ namespace BE_Homnayangi.Controllers
         // GET: api/Ingredients
         [HttpGet("managing")]
         [Authorize(Roles = "Staff,Manager")]
-        public async Task<ActionResult<IEnumerable<Ingredient>>> GetIngredientsForStaff()
+        public async Task<ActionResult<IEnumerable<Ingredient>>> GetIngredientsForStaff([FromQuery(Name = "searchString")] string? searchString)
         {
-            var result = await _ingredientService.GetAll();
-
-            return new JsonResult(new
+            if (!String.IsNullOrEmpty(searchString))
             {
-                total_results = result.Count(),
-                result = result,
-            });
+                searchString = Regex.Replace(searchString, @"\s+", " ").Trim();
+                var result = await _ingredientService.GetAll(searchString);
+                return new JsonResult(new
+                {
+                    total_results = result.Count(),
+                    result = result,
+                });
+            }
+            else
+            {
+                var result = await _ingredientService.GetAll(null);
+                return new JsonResult(new
+                {
+                    total_results = result.Count(),
+                    result = result,
+                });
+            }
         }
 
         // GET: api/v1/Ingredients

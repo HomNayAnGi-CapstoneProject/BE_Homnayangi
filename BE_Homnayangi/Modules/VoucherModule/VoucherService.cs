@@ -145,7 +145,7 @@ namespace BE_Homnayangi.Modules.VoucherModule
             try
             {
                 ValidateVoucher(newVoucher.ValidFrom.Value, newVoucher.ValidTo.Value,
-                    newVoucher.MinimumOrderPrice.Value, newVoucher.MaximumOrderPrice.Value, newVoucher.Discount.Value);
+                    newVoucher.MinimumOrderPrice.Value, newVoucher.MaximumOrderPrice, newVoucher.Discount.Value);
 
                 Voucher voucher = await _voucherRepository.GetFirstOrDefaultAsync(x => x.VoucherId == newVoucher.VoucherId);
 
@@ -159,7 +159,7 @@ namespace BE_Homnayangi.Modules.VoucherModule
                     voucher.ValidTo = newVoucher.ValidTo == null ? voucher.ValidTo : newVoucher.ValidTo;
                     voucher.Discount = newVoucher.Discount == null ? voucher.Discount : newVoucher.Discount;
                     voucher.MinimumOrderPrice = newVoucher.MinimumOrderPrice == null ? voucher.MinimumOrderPrice : newVoucher.MinimumOrderPrice;
-                    voucher.MaximumOrderPrice = newVoucher.MaximumOrderPrice == null ? voucher.MaximumOrderPrice : newVoucher.MaximumOrderPrice;
+                    voucher.MaximumOrderPrice = voucher.Discount > 1 ? 0 : newVoucher.MaximumOrderPrice;
                     voucher.AuthorId = authorId;
 
                     await _voucherRepository.UpdateAsync(voucher);
@@ -191,7 +191,7 @@ namespace BE_Homnayangi.Modules.VoucherModule
                     ValidTo = request.ValidTo,
                     Discount = request.Discount,
                     MinimumOrderPrice = request.MinimumOrderPrice,
-                    MaximumOrderPrice = request.MaximumOrderPrice,
+                    MaximumOrderPrice = request.Discount > 1 ? 0 : request.MaximumOrderPrice,
                     AuthorId = userId,
                     CreatedDate = DateTime.Now,
                 };
@@ -207,18 +207,20 @@ namespace BE_Homnayangi.Modules.VoucherModule
             return isInserted;
         }
 
-        private void ValidateVoucher(DateTime start, DateTime end, decimal min, decimal max, decimal discount)
+        private void ValidateVoucher(DateTime start, DateTime end, decimal min, decimal? max, decimal discount)
         {
             try
             {
                 if (end <= start)
                     throw new Exception(ErrorMessage.VoucherError.DATETIME_NOT_VALID);
 
-                if (max <= min || min < 0)
-                    throw new Exception(ErrorMessage.VoucherError.DISCOUNT_CONDITION_NOT_VALID);
-
                 if (discount <= 0)
                     throw new Exception(ErrorMessage.VoucherError.DISCOUNT_PRICE_NOT_VALID);
+
+                if (max != null && (discount >= 0 && discount <= 1))
+                    if (max <= min || min < 0)
+                        throw new Exception(ErrorMessage.VoucherError.DISCOUNT_CONDITION_NOT_VALID);
+
             }
             catch (Exception ex)
             {

@@ -27,7 +27,7 @@ namespace BE_Homnayangi.Controllers
         // GET: api/v1/CustomerVouchers
         [HttpGet("customer/{cusId}/vouchers")]
         [Authorize(Roles = "Staff,Manager,Customer")]
-        public async Task<ActionResult<IEnumerable<CustomerVoucher>>> GetAllCustomerVouchersByCusId([FromRoute] Guid cusId)
+        public async Task<ActionResult> GetAllCustomerVouchersByCusId([FromRoute] Guid cusId)
         {
             var result = await _customerVoucherService.GetAllCustomerVouchersByCusId(cusId);
             if (result != null)
@@ -44,35 +44,56 @@ namespace BE_Homnayangi.Controllers
                 {
                     status = "failed",
                 });
-
             }
-            ;
         }
 
-        [HttpPost]
-        [Authorize(Roles = "Staff,Manager")]
-        public async Task<IActionResult> PostVoucher([FromBody] CreatedCustomerVoucherRequest cv)
+        //[HttpPost] // base api
+        //[Authorize(Roles = "Staff,Manager")]
+        //public async Task<IActionResult> PostVoucher([FromBody] CreatedCustomerVoucherRequest cv)
+        //{
+        //    var mappedObject = _mapper.Map<CustomerVoucher>(cv);
+        //    var result = await _customerVoucherService.AddCustomerVoucher(mappedObject);
+        //    if (result != null)
+        //    {
+        //        return new JsonResult(new
+        //        {
+        //            status = "success",
+        //            result = result
+        //        });
+        //    }
+        //    else
+        //    {
+        //        return new JsonResult(new
+        //        {
+        //            status = "failed",
+        //            data = cv
+        //        });
+        //    }
+        //}
+
+        // POST: api/v1/vouchers/5
+        [HttpPost("voucher-giving")]
+        [Authorize(Roles = "Staff")]
+        public async Task<IActionResult> GiveVoucherForCustomer([FromBody] GiveVoucherForCustomer request)
         {
-            var mappedObject = _mapper.Map<CustomerVoucher>(cv);
-            var result = await _customerVoucherService.AddCustomerVoucher(mappedObject);
-            if (result != null)
+            try
             {
+                await _customerVoucherService.GiveVoucherForCustomer(request);
                 return new JsonResult(new
                 {
-                    status = "success",
-                    result = result
+                    status = "success"
                 });
             }
-            else
+            catch (Exception ex)
             {
                 return new JsonResult(new
                 {
                     status = "failed",
-                    data = cv
+                    msg = ex.Message
                 });
             }
-
         }
+
         [HttpGet("begin-voucher")]
         public IActionResult AwardBadgeToUser()
         {

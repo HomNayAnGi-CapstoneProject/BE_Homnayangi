@@ -9,6 +9,7 @@ using BE_Homnayangi.Modules.RecipeModule.Interface;
 using BE_Homnayangi.Modules.TransactionModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.VoucherModule.Interface;
+using BE_Homnayangi.Ultils.EmailServices;
 using Library.Models;
 using Library.Models.Constant;
 using Library.Models.Enum;
@@ -47,6 +48,7 @@ namespace BE_Homnayangi.Modules.OrderModule
         private readonly IHubContext<SignalRServer> _hubContext;
         IConfiguration _configuration;
         private readonly IMapper _mapper;
+        private readonly IEmailSender _emailSender;
 
         public OrderService(IOrderRepository OrderRepository,
             IOrderDetailRepository orderDetailRepository,
@@ -59,7 +61,8 @@ namespace BE_Homnayangi.Modules.OrderModule
             INotificationRepository notificationRepository,
             IHubContext<SignalRServer> hubContext,
             IMapper mapper,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IEmailSender emailSender)
         {
             _OrderRepository = OrderRepository;
             _orderDetailRepository = orderDetailRepository;
@@ -73,6 +76,7 @@ namespace BE_Homnayangi.Modules.OrderModule
             _notificationRepository = notificationRepository;
             _hubContext = hubContext;
             _mapper = mapper;
+            _emailSender = emailSender;
         }
 
         public async Task<ICollection<OrderResponse>> GetOrderResponse(DateTime? fromDate, DateTime? toDate, int status = -1)
@@ -81,8 +85,6 @@ namespace BE_Homnayangi.Modules.OrderModule
                 throw new Exception("To date is required");
             if (!fromDate.HasValue && toDate.HasValue)
                 throw new Exception("From date is required");
-            if (fromDate.Value.CompareTo(toDate.Value) > 0)
-                throw new Exception("From date must before To date");
 
             var orders = status > -1
                 ? await _OrderRepository.GetOrdersBy(o => o.OrderStatus.GetValueOrDefault() == status,
@@ -92,6 +94,8 @@ namespace BE_Homnayangi.Modules.OrderModule
 
             if (fromDate.HasValue && toDate.HasValue)
             {
+                if (fromDate.Value.CompareTo(toDate.Value) > 0)
+                    throw new Exception("From date must before To date");
                 orders = orders.Where(o => o.OrderDate.GetValueOrDefault() >= fromDate && o.OrderDate.GetValueOrDefault() <= toDate).ToList();
             }
 
@@ -99,10 +103,11 @@ namespace BE_Homnayangi.Modules.OrderModule
             var recipes = await _recipeRepository.GetRecipesBy(includeProperties: "RecipeDetails");
 
             var res = new List<OrderResponse>();
-            foreach(var order in orders)
+            foreach (var order in orders)
             {
                 var ingOrderDetails = order.OrderDetails.Where(detail => detail.RecipeId == null)
-                    .Join(ingredients, x => x.IngredientId, y => y.IngredientId, (x,y) => {
+                    .Join(ingredients, x => x.IngredientId, y => y.IngredientId, (x, y) =>
+                    {
                         return new OrderResponse.IngredientResponse
                         {
                             IngredientId = x.IngredientId,
@@ -115,7 +120,8 @@ namespace BE_Homnayangi.Modules.OrderModule
                     .ToList();
 
                 var recipeOrderDetails = order.OrderDetails.Where(detail => detail.RecipeId != null)
-                    .Join(recipes, x => x.RecipeId, y => y.RecipeId, (x, y) => {
+                    .Join(recipes, x => x.RecipeId, y => y.RecipeId, (x, y) =>
+                    {
                         return new OrderResponse.OrderDetailResponse
                         {
                             OrderId = order.OrderId,
@@ -125,7 +131,8 @@ namespace BE_Homnayangi.Modules.OrderModule
                             RecipeQuantity = x.Quantity.Value,
                             PackagePrice = y.PackagePrice,
                             CookedPrice = y.CookedPrice,
-                            RecipeDetails = y.RecipeDetails.Join(ingredients, x => x.IngredientId, y => y.IngredientId, (x, y) => {
+                            RecipeDetails = y.RecipeDetails.Join(ingredients, x => x.IngredientId, y => y.IngredientId, (x, y) =>
+                            {
                                 return new OrderResponse.IngredientResponse
                                 {
                                     IngredientId = y.IngredientId,
@@ -197,10 +204,10 @@ namespace BE_Homnayangi.Modules.OrderModule
                 var voucher = newOrder.VoucherId.HasValue
                     ? await _voucherRepository.GetByIdAsync(newOrder.VoucherId.Value)
                     : null;
-                if(voucher != null)
+                if (voucher != null)
                 {
                     decimal price = 0;
-                    foreach(var detail in newOrder.OrderDetails)
+                    foreach (var detail in newOrder.OrderDetails)
                     {
                         price += detail.Price.GetValueOrDefault() * detail.Quantity.GetValueOrDefault();
                     }
@@ -319,13 +326,13 @@ namespace BE_Homnayangi.Modules.OrderModule
             if (order == null)
                 throw new Exception(ErrorMessage.OrderError.ORDER_NOT_FOUND);
 
-            order.OrderStatus = (int) Status.OrderStatus.DELETED;
+            order.OrderStatus = (int)Status.OrderStatus.DELETED;
             await _OrderRepository.UpdateAsync(order);
         }
 
         public async Task<ICollection<Order>> GetByCustomer(Guid id)
         {
-            return await _OrderRepository.GetOrdersBy(o => o.CustomerId.Equals(id) && o.OrderStatus != (int) Status.OrderStatus.DELETED,
+            return await _OrderRepository.GetOrdersBy(o => o.CustomerId.Equals(id) && o.OrderStatus != (int)Status.OrderStatus.DELETED,
                 includeProperties: "OrderDetails");
         }
 
@@ -405,9 +412,22 @@ namespace BE_Homnayangi.Modules.OrderModule
             if (customer.Email != null)
             {
                 // gui mail thong tin order
-                var mailSubject = $"[Da duyet] Thong tin don hang #{order.OrderId}";
-                var mailBody = $"Cam on ban da mua hang, don hang #{order.OrderId} da duoc duyet.\n" +
-                    $"Don hang cua ban dang duoc giao";
+                var mailSubject = $"Xác nhận đơn đặt hàng của Quý Khách đã được duyệt thành công";
+                var mailBody = $"Kính gửi Quý Khách hàng,\n" +
+                    $"\n" +
+                    $"Chúng tôi xin trân trọng thông báo rằng đơn đặt hàng của Quý Khách đã được duyệt thành công. Chúng tôi xin cảm ơn Quý Khách đã tin tưởng và lựa chọn sản phẩm/dịch vụ của chúng tôi\n" +
+                    $"\n" +
+                    $"Thông tin chi tiết của đơn đặt hàng của Quý Khách đã được xác nhận và sẽ được chúng tôi tiến hành xử lý trong thời gian sớm nhất.\n" +
+                    $"Nếu Quý Khách cần hỗ trợ hoặc có bất kỳ yêu cầu nào khác, xin vui lòng liên hệ với chúng tôi qua thông tin liên lạc được cung cấp ở dưới đây.\n" +
+                    $"\n" +
+                    $"Email: homnayangii.info@gmail.com\n" +
+                    $"Hotline: 0123456789" +
+                    $"\n" +
+                    $"Trân trọng cảm ơn và mong được phục vụ Quý Khách!\n" +
+                    $"\n" +
+                    $"Trân Trọng, \n" +
+                    $"Homnayangi"
+                    ;
 
                 SendMail(mailSubject, mailBody, customer.Email);
             }
@@ -441,7 +461,7 @@ namespace BE_Homnayangi.Modules.OrderModule
 
             var customer = await _customerRepository.GetByIdAsync(order.CustomerId.Value);
 
-            
+
             order.OrderStatus = order.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL
                 ? (int)Status.OrderStatus.NEED_REFUND
                 : (int)Status.OrderStatus.DENIED;
@@ -580,7 +600,7 @@ namespace BE_Homnayangi.Modules.OrderModule
                 Console.WriteLine($"Update Shipping Status fail - {ex.Message}");
                 throw new Exception($"Update Shipping Status fail");
             }
-            
+
         }
 
         public async Task Delivered(Guid id)
@@ -637,22 +657,19 @@ namespace BE_Homnayangi.Modules.OrderModule
 
         public void SendMail(string mailSubject, string mailBody, string receiver)
         {
-            var address = _configuration.GetValue<string>("MailService:Address");
-            var password = _configuration.GetValue<string>("MailService:Password");
-            var smtpClientConfig = _configuration.GetValue<string>("MailService:SmtpClient");
+
 
             try
             {
-                var smtpClient = new SmtpClient(smtpClientConfig)
-                {
-                    Port = 587,
-                    Credentials = new NetworkCredential(address, password),
-                    EnableSsl = true,
-                };
-
-                smtpClient.Send(address, receiver, mailSubject, mailBody);
+                var message = new Message(
+                  to: new string[] {
+                   receiver
+                  },
+                  subject: mailSubject,
+                  content: mailBody);
+                _emailSender.SendEmail(message);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine($"{ErrorMessage.MailError.MAIL_SENDING_ERROR} - {ex.Message}");
                 throw new Exception(ErrorMessage.MailError.MAIL_SENDING_ERROR);
@@ -796,8 +813,6 @@ namespace BE_Homnayangi.Modules.OrderModule
                 throw new Exception("To date is required");
             if (!fromDate.HasValue && toDate.HasValue)
                 throw new Exception("From date is required");
-            if (fromDate.Value.CompareTo(toDate.Value) > 0)
-                throw new Exception("From date must before To date");
 
             var orders = status > -1
                 ? await _OrderRepository.GetOrdersBy(o => o.OrderStatus.GetValueOrDefault() == status && o.CustomerId.Equals(customerId),
@@ -807,6 +822,8 @@ namespace BE_Homnayangi.Modules.OrderModule
 
             if (fromDate.HasValue && toDate.HasValue)
             {
+                if (fromDate.Value.CompareTo(toDate.Value) > 0)
+                    throw new Exception("From date must before To date");
                 orders = orders.Where(o => o.OrderDate.GetValueOrDefault() >= fromDate && o.OrderDate.GetValueOrDefault() <= toDate).ToList();
             }
 
@@ -817,7 +834,8 @@ namespace BE_Homnayangi.Modules.OrderModule
             foreach (var order in orders)
             {
                 var ingOrderDetails = order.OrderDetails.Where(detail => detail.RecipeId == null)
-                    .Join(ingredients, x => x.IngredientId, y => y.IngredientId, (x, y) => {
+                    .Join(ingredients, x => x.IngredientId, y => y.IngredientId, (x, y) =>
+                    {
                         return new OrderResponse.IngredientResponse
                         {
                             IngredientId = x.IngredientId,
@@ -830,7 +848,8 @@ namespace BE_Homnayangi.Modules.OrderModule
                     .ToList();
 
                 var recipeOrderDetails = order.OrderDetails.Where(detail => detail.RecipeId != null)
-                    .Join(recipes, x => x.RecipeId, y => y.RecipeId, (x, y) => {
+                    .Join(recipes, x => x.RecipeId, y => y.RecipeId, (x, y) =>
+                    {
                         return new OrderResponse.OrderDetailResponse
                         {
                             OrderId = order.OrderId,
@@ -840,7 +859,8 @@ namespace BE_Homnayangi.Modules.OrderModule
                             RecipeQuantity = x.Quantity.Value,
                             PackagePrice = y.PackagePrice,
                             CookedPrice = y.CookedPrice,
-                            RecipeDetails = y.RecipeDetails.Join(ingredients, x => x.IngredientId, y => y.IngredientId, (x, y) => {
+                            RecipeDetails = y.RecipeDetails.Join(ingredients, x => x.IngredientId, y => y.IngredientId, (x, y) =>
+                            {
                                 return new OrderResponse.IngredientResponse
                                 {
                                     IngredientId = y.IngredientId,
