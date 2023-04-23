@@ -151,7 +151,7 @@ namespace BE_Homnayangi.Controllers
         }
 
         // POST: api/v1/vouchers/5
-        [HttpPost("/api/v1/customerVoucher/give-voucher")]
+        [HttpPost("/api/v1/customerVoucher/voucher-giving")]
         [Authorize(Roles = "Staff")]
         public async Task<IActionResult> GiveVoucherForCustomer([FromBody] GiveVoucherForCustomer request)
         {
