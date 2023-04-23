@@ -23,6 +23,8 @@ using Library.Models.Enum;
 using Library.PagedList;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using PayPal.Api;
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
