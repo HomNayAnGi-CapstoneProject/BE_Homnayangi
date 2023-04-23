@@ -143,7 +143,7 @@ namespace BE_Homnayangi.Modules.VoucherModule
                         ValidTo = x.Voucher.ValidTo.Value,
                         Status = x.Voucher.Status.Value,
                         CreatedDate = x.CreatedDate.Value
-                    }).OrderByDescending(x => x.ValidTo).ToList();
+                    }).OrderByDescending(x => x.CreatedDate).ToList();
                 }
             }
             catch (Exception ex)
@@ -237,9 +237,9 @@ namespace BE_Homnayangi.Modules.VoucherModule
                 if (voucher == null)
                     throw new Exception(ErrorMessage.VoucherError.VOUCHER_NOT_AVAILABLE);
 
-                var tmp = await _customerVoucherRepository.GetFirstOrDefaultAsync(x => x.CustomerId == request.CustomerId && x.VoucherId == request.VoucherId);
-                if (tmp != null)
-                    throw new Exception(ErrorMessage.CustomerVoucherError.CUSTOMER_VOUCHER_EXISTED);
+                //var tmp = await _customerVoucherRepository.GetFirstOrDefaultAsync(x => x.CustomerId == request.CustomerId && x.VoucherId == request.VoucherId);
+                //if (tmp != null)
+                //    throw new Exception(ErrorMessage.CustomerVoucherError.CUSTOMER_VOUCHER_EXISTED);
 
                 CustomerVoucher customerVoucher = new CustomerVoucher()
                 {
