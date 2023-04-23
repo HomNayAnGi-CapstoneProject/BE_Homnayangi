@@ -75,7 +75,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentReactionModule
                 var notiId = Guid.NewGuid();
                 var accom = await _accomplishmentRepository.GetByIdAsync(accomplishmentId);
                 var customer = await _userRepository.GetByIdAsync(customerId);
-                if(accom != null)
+                if(accom != null && customer != null)
                 {
                     var noti = new Library.Models.Notification
                     {

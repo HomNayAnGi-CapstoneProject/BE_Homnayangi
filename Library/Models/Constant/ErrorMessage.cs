@@ -221,12 +221,6 @@ namespace Library.Models.Constant
         }
         #endregion
 
-        #region Notification error message
-        public static class NotificationError
-        {
-            public readonly static string NOTIFICATION_NOT_FOUND = "This notification is not found";
-        }
-        #endregion
     }
 }
 
