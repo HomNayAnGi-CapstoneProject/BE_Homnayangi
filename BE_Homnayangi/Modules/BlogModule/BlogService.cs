@@ -8,6 +8,7 @@ using BE_Homnayangi.Modules.BlogReactionModule.Interface;
 using BE_Homnayangi.Modules.BlogReferenceModule.Interface;
 using BE_Homnayangi.Modules.BlogSubCateModule.Interface;
 using BE_Homnayangi.Modules.CommentModule.Interface;
+using BE_Homnayangi.Modules.NotificationModule.Interface;
 using BE_Homnayangi.Modules.RecipeDetailModule.Interface;
 using BE_Homnayangi.Modules.RecipeModule.Interface;
 using BE_Homnayangi.Modules.SubCateModule.Interface;
@@ -20,7 +21,9 @@ using Library.Models;
 using Library.Models.Constant;
 using Library.Models.Enum;
 using Library.PagedList;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
@@ -49,12 +52,16 @@ namespace BE_Homnayangi.Modules.BlogModule
         private readonly IAccomplishmentRepository _accomplishmentRepository;
         private readonly ICaloReferenceRepository _caloReferenceRepository;
         private readonly ISeasonReferenceRepository _seasonReferenceRepository;
+        private readonly INotificationRepository _notificationRepository;
+        private readonly IHubContext<SignalRServer> _hubContext;
 
         public BlogService(IBlogRepository blogRepository, IRecipeRepository recipeRepository, IBlogSubCateRepository blogSubCateRepository,
             ISubCateRepository subCateRepository, IRecipeDetailRepository recipeDetailRepository,
             IUserRepository userRepository, IBlogReferenceRepository blogReferenceRepository, ICommentRepository commentRepository,
             IBlogReactionRepository blogReactionRepository, IAccomplishmentRepository accomplishmentRepository,
-            ICaloReferenceRepository caloReferenceRepository, ISeasonReferenceRepository seasonReferenceRepository)
+            ICaloReferenceRepository caloReferenceRepository, ISeasonReferenceRepository seasonReferenceRepository,
+            INotificationRepository notificationRepository,
+            IHubContext<SignalRServer> hubContext)
         {
             _blogRepository = blogRepository;
             _recipeRepository = recipeRepository;
@@ -67,6 +74,8 @@ namespace BE_Homnayangi.Modules.BlogModule
             _accomplishmentRepository = accomplishmentRepository;
             _caloReferenceRepository = caloReferenceRepository;
             _seasonReferenceRepository = seasonReferenceRepository;
+            _notificationRepository = notificationRepository;
+            _hubContext = hubContext;
         }
         #endregion
 
@@ -931,6 +940,25 @@ namespace BE_Homnayangi.Modules.BlogModule
                 request.Blog.EventExpiredDate = request.Blog.IsEvent.Value ? request.Blog.EventExpiredDate : null;
                 await _blogRepository.UpdateAsync(request.Blog);
                 #endregion
+
+                if (request.Blog.BlogStatus == (int)Status.BlogStatus.PENDING)
+                {
+                    #region Create notification
+                    var notiId = Guid.NewGuid();
+                    var noti = new Library.Models.Notification
+                    {
+                        NotificationId = notiId,
+                        Description = $"Bài blog - {request.Blog.BlogId} đang được chờ duyệt",
+                        CreatedDate = DateTime.Now,
+                        Status = false,
+                        ReceiverId = _userRepository.GetUsersBy(u=>u.Role == 1).Result.FirstOrDefault().UserId
+                    };
+                    await _notificationRepository.AddAsync(noti);
+
+                    await _hubContext.Clients.All.SendAsync("BlogPending", JsonConvert.SerializeObject(noti));
+                    #endregion
+                }
+
             }
             catch (Exception ex)
             {

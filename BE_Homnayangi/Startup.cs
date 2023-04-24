@@ -82,6 +82,8 @@ using Hangfire.SqlServer;
 using BE_Homnayangi.Modules.AdminModules.CronJobTimeConfigModule.Interface;
 using BE_Homnayangi.Modules.AdminModules.CronJobTimeConfigModule;
 using BE_Homnayangi.Ultils.EmailServices;
+using BE_Homnayangi.Modules.NotificationModule;
+using BE_Homnayangi.Modules.NotificationModule.Interface;
 
 namespace BE_Homnayangi
 {
@@ -111,6 +113,8 @@ namespace BE_Homnayangi
                  .AddControllers()
                  .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
                  .AddNewtonsoftJson(x => x.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore);
+
+            services.AddSignalR();
 
             services.AddDbContext<HomnayangiContext>(
                  options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -330,11 +334,17 @@ namespace BE_Homnayangi
             //Accomplishment Reaction Module
             services.AddScoped<IAccomplishmentReactionRepository, AccomplishmentReactionRepository>();
             services.AddScoped<IAccomplishmentReactionService, AccomplishmentReactionService>();
+
             //CronJob Time Config Module
             services.AddScoped<ICronJobTimeConfigService, CronJobTimeConfigService>();
             services.AddScoped<ICronJobTimeConfigRepository, CronJobTimeConfigRepository>();
+
             //Email sender
             services.AddScoped<IEmailSender, EmailSender>();
+
+            //Notification Reaction Module
+            services.AddScoped<INotificationRepository, NotificationRepository>();
+            services.AddScoped<INotificationService, NotificationService>();
 
         }
 
@@ -362,6 +372,7 @@ namespace BE_Homnayangi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<SignalRServer>("/signalRServer");
             });
 
 

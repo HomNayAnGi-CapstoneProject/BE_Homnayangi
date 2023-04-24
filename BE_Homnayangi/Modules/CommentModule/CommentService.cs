@@ -3,10 +3,15 @@ using BE_Homnayangi.Modules.CommentModule.Interface;
 using BE_Homnayangi.Modules.CommentModule.Request;
 using BE_Homnayangi.Modules.CommentModule.Response;
 using BE_Homnayangi.Modules.CustomerModule.Interface;
+using BE_Homnayangi.Modules.NotificationModule;
+using BE_Homnayangi.Modules.NotificationModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Response;
 using Library.Models;
 using Library.Models.Constant;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,14 +25,20 @@ namespace BE_Homnayangi.Modules.CommentModule
         private readonly IUserRepository _userRepository;
         private readonly ICustomerRepository _customerRepository;
         private readonly IBlogRepository _blogRepository;
+        private readonly INotificationRepository _notificationRepository;
+        private readonly IHubContext<SignalRServer> _hubContext;
 
         public CommentService(ICommentRepository commentRepository, IBlogRepository blogRepository,
-            IUserRepository userRepository, ICustomerRepository customerRepository)
+            IUserRepository userRepository, ICustomerRepository customerRepository,
+            INotificationRepository notificationRepository,
+            IHubContext<SignalRServer> hubContext)
         {
             _commentRepository = commentRepository;
             _userRepository = userRepository;
             _customerRepository = customerRepository;
             _blogRepository = blogRepository;
+            _notificationRepository = notificationRepository;
+            _hubContext = hubContext;
         }
 
         public async Task<List<Tuple<ParentComment, List<ChildComment>>>> GetCommentsByBlogId(Guid blogId)
@@ -132,6 +143,25 @@ namespace BE_Homnayangi.Modules.CommentModule
                     FullNameAuthor = user.Firstname + " " + user.Lastname,
                     Avatar = user.Avatar
                 };
+
+                #region Create notification
+                var notiId = Guid.NewGuid();
+                var parentComment = newComment.ParentId != null ? await _commentRepository.GetByIdAsync(newComment.ParentId.Value):null;
+                if (parentComment != null)
+                {
+                    var noti = new Library.Models.Notification
+                    {
+                        NotificationId = notiId,
+                        Description = $"{user.Displayname ?? user.Username} đã trả lời bình luận '{parentComment.Content}' của bạn",
+                        CreatedDate = DateTime.Now,
+                        Status = false,
+                        ReceiverId = parentComment.AuthorId.Value
+                    };
+                    await _notificationRepository.AddAsync(noti);
+
+                    await _hubContext.Clients.All.SendAsync($"{parentComment.AuthorId.Value}_ReplyComment", JsonConvert.SerializeObject(noti));
+                }
+                #endregion
             }
             catch (Exception ex)
             {

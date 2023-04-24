@@ -14,7 +14,9 @@ using BE_Homnayangi.Ultils.EmailServices;
 using Library.Models;
 using Library.Models.Constant;
 using Library.Models.Enum;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -26,6 +28,7 @@ using System.Net.Mail;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using System.Transactions;
+using BE_Homnayangi.Modules.NotificationModule.Interface;
 using static Library.Models.Enum.PaymentMethodEnum;
 using static Library.Models.Enum.Status;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -42,6 +45,8 @@ namespace BE_Homnayangi.Modules.OrderModule
         private readonly IIngredientRepository _ingredientRepository;
         private readonly IRecipeRepository _recipeRepository;
         private readonly IVoucherRepository _voucherRepository;
+        private readonly INotificationRepository _notificationRepository;
+        private readonly IHubContext<SignalRServer> _hubContext;
         private readonly ICustomerVoucherService _customerVoucherService;
         IConfiguration _configuration;
         private readonly IMapper _mapper;
@@ -55,6 +60,8 @@ namespace BE_Homnayangi.Modules.OrderModule
             IIngredientRepository ingredientRepository,
             IRecipeRepository recipeRepository,
             IVoucherRepository voucherRepository,
+            INotificationRepository notificationRepository,
+            IHubContext<SignalRServer> hubContext,
             ICustomerVoucherService customerVoucherService,
             IMapper mapper,
             IConfiguration configuration,
@@ -69,6 +76,8 @@ namespace BE_Homnayangi.Modules.OrderModule
             _recipeRepository = recipeRepository;
             _configuration = configuration;
             _voucherRepository = voucherRepository;
+            _notificationRepository = notificationRepository;
+            _hubContext = hubContext;
             _mapper = mapper;
             _emailSender = emailSender;
             _customerVoucherService = customerVoucherService;
@@ -278,8 +287,22 @@ namespace BE_Homnayangi.Modules.OrderModule
                     {
                         throw new Exception($"Transaction fail - {e.Message}");
                     }
-
                     transactionScope.Commit();
+
+                    #region Create notification
+                    var id = Guid.NewGuid();
+                    var noti = new Notification
+                    {
+                        NotificationId = id,
+                        Description = $"Đơn hàng - {newOrder.OrderId} đã được tạo",
+                        CreatedDate = DateTime.Now,
+                        Status = false,
+                        ReceiverId = null
+                    };
+                    await _notificationRepository.AddAsync(noti);
+
+                    await _hubContext.Clients.All.SendAsync("OrderCreated", JsonConvert.SerializeObject(noti));
+                    #endregion
                 }
             }
             catch (Exception ex)
@@ -416,6 +439,21 @@ namespace BE_Homnayangi.Modules.OrderModule
                 SendMail(mailSubject, mailBody, customer.Email);
             }
             #endregion
+
+            #region Create notification
+            var id = Guid.NewGuid();
+            var noti = new Notification
+            {
+                NotificationId = id,
+                Description = $"Đơn hàng - {order.OrderId} đã được chấp nhận",
+                CreatedDate = DateTime.Now,
+                Status = false,
+                ReceiverId = customer.CustomerId
+            };
+            await _notificationRepository.AddAsync(noti);
+
+            await _hubContext.Clients.All.SendAsync($"{customer.CustomerId}_OrderStatusChanged", JsonConvert.SerializeObject(noti));
+            #endregion
         }
 
         public async Task DenyOrder(Guid id)
@@ -529,6 +567,21 @@ namespace BE_Homnayangi.Modules.OrderModule
 
                 transactionScope.Commit();
             }
+
+            #region Create notification
+            var notiId = Guid.NewGuid();
+            var noti = new Notification
+            {
+                NotificationId = notiId,
+                Description = $"Đơn hàng - {order.OrderId} đã bị hủy",
+                CreatedDate = DateTime.Now,
+                Status = false,
+                ReceiverId = null
+            };
+            await _notificationRepository.AddAsync(noti);
+
+            await _hubContext.Clients.All.SendAsync("OrderStatusChanged", JsonConvert.SerializeObject(noti));
+            #endregion
         }
 
         public async Task Shipping(Guid id)

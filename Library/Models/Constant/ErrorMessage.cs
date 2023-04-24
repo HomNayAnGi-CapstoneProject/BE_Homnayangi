@@ -213,6 +213,14 @@ namespace Library.Models.Constant
             public readonly static string CUSTOMER_VOUCHER_NOT_FOUND = "This customer voucher is not existed";
         }
         #endregion
+
+        #region Notification error message
+        public static class NotificationError
+        {
+            public readonly static string NOTIFICATION_NOT_FOUND = "This notification is not found";
+        }
+        #endregion
+
     }
 }
 
