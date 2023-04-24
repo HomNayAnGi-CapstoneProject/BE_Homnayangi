@@ -37,6 +37,8 @@ namespace BE_Homnayangi.Modules.UserModule.Interface
         public Task<string> GenerateToken(LoginDTO login);
         public Task<string> GenerateGoolgleToken(LoginGoogleDTO loginGoogle);
         public Task Register(RegisterDTO register);
+        public Task<bool> ForgotPassword(EmailRequest emailRequest);
+        public Task ChangeForgotPassword(Guid userId, string newPass);
         #endregion
 
         public CurrentUserResponse GetCurrentUser(string authHeader);

@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace BE_Homnayangi.Modules.UserModule.Request
 {
-    public class UpdatePasswordRequest
+    public class UpdateForgotPassword
     {
-        [Required(ErrorMessage = "Please enter your password")]
-        public string oldPassword { get; set; }
         [Required(ErrorMessage = "Please enter your new password")]
         [StringLength(20, ErrorMessage = "Password must be between 6 and 20 characters", MinimumLength = 6)]
         public string newPassword { get; set; }
