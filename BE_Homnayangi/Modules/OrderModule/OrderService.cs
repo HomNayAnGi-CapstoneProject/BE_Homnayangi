@@ -410,30 +410,25 @@ namespace BE_Homnayangi.Modules.OrderModule
 
             order.OrderStatus = (int)Status.OrderStatus.ACCEPTED;
 
-            var transactionScope = _OrderRepository.Transaction();
-            using (transactionScope)
+            await _OrderRepository.UpdateAsync(order);
+
+            if (order.VoucherId.HasValue)
+                await _customerVoucherService.DeleteCustomerVoucher(order.VoucherId.Value, customer.CustomerId);
+
+            #region Create notification
+            var id = Guid.NewGuid();
+            var noti = new Notification
             {
-                await _OrderRepository.UpdateAsync(order);
+                NotificationId = id,
+                Description = $"Đơn hàng - {order.OrderId} đã được chấp nhận",
+                CreatedDate = DateTime.Now,
+                Status = false,
+                ReceiverId = customer.CustomerId
+            };
+            await _notificationRepository.AddAsync(noti);
 
-                if (order.VoucherId.HasValue)
-                    await _customerVoucherService.DeleteCustomerVoucher(order.VoucherId.Value, customer.CustomerId);
-
-                #region Create notification
-                var id = Guid.NewGuid();
-                var noti = new Notification
-                {
-                    NotificationId = id,
-                    Description = $"Đơn hàng - {order.OrderId} đã được chấp nhận",
-                    CreatedDate = DateTime.Now,
-                    Status = false,
-                    ReceiverId = customer.CustomerId
-                };
-                await _notificationRepository.AddAsync(noti);
-
-                await _hubContext.Clients.All.SendAsync($"{customer.CustomerId}_OrderStatusChanged", JsonConvert.SerializeObject(noti));
-                #endregion
-            }
-            transactionScope.Commit();
+            await _hubContext.Clients.All.SendAsync($"{customer.CustomerId}_OrderStatusChanged", JsonConvert.SerializeObject(noti));
+            #endregion
             
 
             #region sending mail
