@@ -1,5 +1,6 @@
 ﻿using BE_Homnayangi.Modules.AccomplishmentModule.Interface;
 using BE_Homnayangi.Modules.AccomplishmentReactionModule.Interface;
+using BE_Homnayangi.Modules.CustomerModule.Interface;
 using BE_Homnayangi.Modules.NotificationModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using Library.Models;
@@ -19,17 +20,20 @@ namespace BE_Homnayangi.Modules.AccomplishmentReactionModule
         private readonly IAccomplishmentRepository _accomplishmentRepository;
         private readonly INotificationRepository _notificationRepository;
         private readonly IUserRepository _userRepository;
+        private readonly ICustomerRepository _customerRepository;
         private readonly IHubContext<SignalRServer> _hubContext;
 
         public AccomplishmentReactionService(IAccomplishmentReactionRepository accomplishmentReactionRepository,
             INotificationRepository notificationRepository, IUserRepository userRepository, IAccomplishmentRepository accomplishmentRepository,
-            IHubContext<SignalRServer> hubContext)
+            IHubContext<SignalRServer> hubContext,
+            ICustomerRepository customerRepository)
         {
             _accomplishmentReactionRepository = accomplishmentReactionRepository;
             _accomplishmentRepository = accomplishmentRepository;
             _notificationRepository = notificationRepository;
             _userRepository = userRepository;
             _hubContext = hubContext;
+            _customerRepository = customerRepository;
         }
 
         public async Task<bool> GetReactionByCustomerId(Guid customerId, Guid accomplishmentId)
@@ -74,7 +78,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentReactionModule
                 #region Create notification
                 var notiId = Guid.NewGuid();
                 var accom = await _accomplishmentRepository.GetByIdAsync(accomplishmentId);
-                var customer = await _userRepository.GetByIdAsync(customerId);
+                var customer = await _customerRepository.GetByIdAsync(customerId);
                 if(accom != null && customer != null)
                 {
                     var noti = new Library.Models.Notification
