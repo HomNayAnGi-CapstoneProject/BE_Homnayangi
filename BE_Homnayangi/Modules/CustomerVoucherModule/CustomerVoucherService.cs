@@ -257,11 +257,11 @@ namespace BE_Homnayangi.Modules.VoucherModule
             }
         }
 
-        public async Task DeleteCustomerVoucher(Guid customerVoucherId)
+        public async Task DeleteCustomerVoucher(Guid voucherId, Guid customerId)
         {
             try
             {
-                var tmp = await _customerVoucherRepository.GetFirstOrDefaultAsync(x => x.CustomerVoucherId == customerVoucherId);
+                var tmp = await _customerVoucherRepository.GetFirstOrDefaultAsync(x => x.CustomerId == customerId && x.VoucherId == voucherId);
                 if (tmp == null)
                     throw new Exception(ErrorMessage.CustomerVoucherError.CUSTOMER_VOUCHER_NOT_FOUND);
                 await _customerVoucherRepository.RemoveAsync(tmp);
