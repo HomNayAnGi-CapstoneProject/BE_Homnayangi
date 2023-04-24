@@ -155,11 +155,11 @@ namespace BE_Homnayangi.Modules.CommentModule
                         Description = $"{user.Displayname ?? user.Username} đã trả lời bình luận '{parentComment.Content}' của bạn",
                         CreatedDate = DateTime.Now,
                         Status = false,
-                        ReceiverId = newComment.AuthorId.Value
+                        ReceiverId = parentComment.AuthorId.Value
                     };
                     await _notificationRepository.AddAsync(noti);
 
-                    await _hubContext.Clients.All.SendAsync($"{newComment.AuthorId.Value}_ReplyComment", JsonConvert.SerializeObject(noti));
+                    await _hubContext.Clients.All.SendAsync($"{parentComment.AuthorId.Value}_ReplyComment", JsonConvert.SerializeObject(noti));
                 }
                 #endregion
             }
