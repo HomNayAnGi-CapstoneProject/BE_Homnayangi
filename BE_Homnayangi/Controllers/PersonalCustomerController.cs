@@ -16,7 +16,6 @@ namespace BE_Homnayangi.Controllers
 {
     [Route("api/v1/personal-customer")]
     [ApiController]
-    [Authorize(Roles = "Customer")]
     public class PersonalCustomerController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -32,6 +31,7 @@ namespace BE_Homnayangi.Controllers
         }
 
         // GET api/<ValuesController>/5
+        [Authorize(Roles = "Customer")]
         [HttpGet]
         public async Task<ActionResult<CurrentUserResponse>> GetUserById()
         {
@@ -44,6 +44,7 @@ namespace BE_Homnayangi.Controllers
         }
 
         //PUT api/<ValuesController>/5
+        [Authorize(Roles = "Customer")]
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] UpdateCustomer customerUpdate)
         {
@@ -83,12 +84,56 @@ namespace BE_Homnayangi.Controllers
             }
         }
         //PUT api/<ValuesController>/5
+        [Authorize(Roles = "Customer")]
         [HttpPut("password")]
         public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordRequest request)
         {
             try
             {
                 await _userService.UpdateCustomerPassword(_userService.GetCurrentUser(Request.Headers["Authorization"]).Id, request.oldPassword, request.newPassword);
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    message = ex.Message
+                });
+            }
+            return Ok("Update Successfully");
+        }
+        [HttpPost("password-forgotten")]
+        public async Task<IActionResult> ForgotPassword([FromBody] EmailRequest emailRequest)
+        {
+            try
+            {
+                var isChecked = await _userService.ForgotPassword(emailRequest);
+                if (isChecked == true)
+                {
+                    return Ok("Send Successfully");
+                }
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    message = "Send Failed"
+                });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    message = ex.Message
+                });
+            }
+
+        }
+        [HttpPut("password-forgotten")]
+        public async Task<IActionResult> ChangeForgotPassword([FromQuery] Guid id, [FromBody] UpdateForgotPassword request)
+        {
+            try
+            {
+                await _userService.ChangeForgotPassword(id, request.newPassword);
             }
             catch (Exception ex)
             {

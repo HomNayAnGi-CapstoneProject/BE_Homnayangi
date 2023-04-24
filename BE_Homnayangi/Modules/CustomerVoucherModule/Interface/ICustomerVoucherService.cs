@@ -30,6 +30,8 @@ namespace BE_Homnayangi.Modules.CustomerVoucherModule.Interface
 
         public void AwardVoucher();
 
+        public Task DeleteCustomerVoucher(Guid customerVoucherId);
+
     }
 }
 

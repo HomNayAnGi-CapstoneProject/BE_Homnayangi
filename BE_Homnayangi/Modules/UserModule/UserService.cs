@@ -77,21 +77,25 @@ namespace BE_Homnayangi.Modules.UserModule
         public async Task<CurrentUserResponse> GetUserById(Guid id)
         {
             User user = await _userRepository.GetFirstOrDefaultAsync(x => x.UserId == id, includeProperties: "Blogs");
-            CurrentUserResponse userById = new CurrentUserResponse
+            if (user != null)
             {
-                Id = user.UserId,
-                Displayname = user.Displayname,
-                Username = user.Username,
-                Firstname = user.Firstname,
-                Lastname = user.Lastname,
-                Email = user.Email,
-                Phonenumber = user.Phonenumber,
-                Gender = user.Gender,
-                Avatar = user.Avatar,
-                Role = user.Role == 1 ? CommonEnum.RoleEnum.MANAGER : CommonEnum.RoleEnum.STAFF,
-                IsBlocked = user.IsBlocked.Value,
-            };
-            return userById;
+                CurrentUserResponse userById = new CurrentUserResponse
+                {
+                    Id = user.UserId,
+                    Displayname = user.Displayname,
+                    Username = user.Username,
+                    Firstname = user.Firstname,
+                    Lastname = user.Lastname,
+                    Email = user.Email,
+                    Phonenumber = user.Phonenumber,
+                    Gender = user.Gender,
+                    Avatar = user.Avatar,
+                    Role = user.Role == 1 ? CommonEnum.RoleEnum.MANAGER : CommonEnum.RoleEnum.STAFF,
+                    IsBlocked = user.IsBlocked.Value,
+                };
+                return userById;
+            }
+            return null;
         }
 
         public async Task AddNewUser(User newUser)
@@ -115,20 +119,24 @@ namespace BE_Homnayangi.Modules.UserModule
                 newUser.Role = 2;
                 newUser.IsBlocked = false;
                 newUser.IsGoogle = newUser.Email == null ? false : true;
+                string link = "https://homnayangii.vercel.app";
+                /*string linkHtml = "<a href=\"" + link + "\">Reset Password</a>";*/
+
                 await _userRepository.AddAsync(newUser);
                 var mailSubject = $"Thông tin tài khoản và mật khẩu ";
-                var mailBody = $"Kính gửi {newUser.Firstname} {newUser.Lastname} , \n" +
-                    $"Homnayangi Website xin thông báo rằng tài khoản của bạn đã được tạo thành công trên hệ thống của chúng tôi. \n" +
-                    $"Tên đăng nhập của bạn là: {newUser.Username}. \n" +
-                    $"Mật khẩu tạm thời của bạn là: {DecryptPassword(newUser.Password)}. \n" +
-                    $"Vui lòng lưu ý rằng vì lý do bảo mật, chúng tôi khuyên bạn nên thay đổi mật khẩu của mình ngay sau khi đăng nhập. \n" +
-                    $"Để truy cập vào tài khoản của mình, vui lòng truy cập vào đường dẫn bên dưới và nhập tên đăng nhập và mật khẩu tạm thời của bạn: \n" +
-                    $"[Thêm đường dẫn đến trang đăng nhập] \n" +
-                    $"Sau khi đăng nhập thành công, vui lòng truy cập vào phần Thông tin cá nhân để thay đổi mật khẩu của bạn. Chúng tôi khuyên bạn nên tạo một mật khẩu mạnh bao gồm cả chữ hoa, chữ thường, số và ký tự đặc biệt. Nếu bạn gặp bất kỳ vấn đề nào khi đăng nhập vào tài khoản hoặc có bất kỳ câu hỏi nào khác, xin vui lòng liên hệ với chúng tôi theo thông tin liên hệ sau đây: \n" +
-                    $"[Thêm thông tin liên hệ] \n" +
-                    $"Cảm ơn bạn đã lựa chọn sử dụng dịch vụ của Homnayangi Website và chúc bạn sử dụng tài khoản thành công. \n" +
-                    $"Trân trọng, \n" +
+                var mailBody = $"Kính gửi {newUser.Firstname} {newUser.Lastname}, <br>" +
+                    $"Homnayangi Website xin thông báo rằng tài khoản của bạn đã được tạo thành công trên hệ thống của chúng tôi. <br>" +
+                    $"Tên đăng nhập của bạn là: {newUser.Username}. <br>" +
+                    $"Mật khẩu tạm thời của bạn là: {DecryptPassword(newUser.Password)}. <br>" +
+                    $"Vui lòng lưu ý rằng vì lý do bảo mật, chúng tôi khuyên bạn nên thay đổi mật khẩu của mình ngay sau khi đăng nhập. <br>" +
+                    $"Để truy cập vào tài khoản của mình, vui lòng truy cập vào đường dẫn bên dưới và nhập tên đăng nhập và mật khẩu tạm thời của bạn: <br>" +
+                    $"{link} <br>" +
+                    $"Sau khi đăng nhập thành công, vui lòng truy cập vào phần Thông tin cá nhân để thay đổi mật khẩu của bạn. Chúng tôi khuyên bạn nên tạo một mật khẩu mạnh bao gồm cả chữ hoa, chữ thường, số và ký tự đặc biệt. Nếu bạn gặp bất kỳ vấn đề nào khi đăng nhập vào tài khoản hoặc có bất kỳ câu hỏi nào khác, xin vui lòng liên hệ với chúng tôi theo thông tin liên hệ sau đây: <br>" +
+                    $"[Thêm thông tin liên hệ] <br>" +
+                    $"Cảm ơn bạn đã lựa chọn sử dụng dịch vụ của Homnayangi Website và chúc bạn sử dụng tài khoản thành công. <br>" +
+                    $"Trân trọng, <br>" +
                     $"Homnayangi Website. ";
+
 
                 SendMail(mailSubject, mailBody, newUser.Email);
             }
@@ -147,6 +155,7 @@ namespace BE_Homnayangi.Modules.UserModule
                  },
                  subject: mailSubject,
                  content: mailBody);
+
             _emailSender.SendEmail(message);
         }
         public async Task<bool?> BlockUserById(Guid id)
@@ -940,6 +949,43 @@ namespace BE_Homnayangi.Modules.UserModule
             customer.IsBlocked = false;
             customer.CreatedDate = DateTime.Now;
             await _customerRepository.AddAsync(customer);
+        }
+        public async Task<bool> ForgotPassword(EmailRequest emailRequest)
+        {
+            var cus = GetCustomerByEmail(emailRequest.Email);
+            var isChecked = false;
+            if (cus != null)
+            {
+
+                string link = $"https://homnayangii.vercel.app/reset-password/{cus.CustomerId}";
+                string linkHtml = "<a href=\"" + link + "\">Reset Password</a>";
+
+                var mailSubject = $"Tạo lại mật khẩu ";
+                var mailBody = $"Kính gửi {cus.Firstname} {cus.Lastname} , <br>" +
+                    $"Homnayangi Website xin thông báo rằng bạn đã được xác nhận tạo lại mật khẩu trên hệ thống của chúng tôi. <br>" +
+                    $"Vui lòng truy cập vào đường dẫn bên dưới và mật lại mật khẩu mới của bạn: <br>" +
+                    $"{linkHtml} <br>" +
+                    $"Cảm ơn bạn đã lựa chọn sử dụng dịch vụ của Homnayangi Website. <br>" +
+                    $"Trân trọng, <br>" +
+                    $"Homnayangi Website. ";
+                isChecked = true;
+
+                SendMail(mailSubject, mailBody, cus.Email);
+                return isChecked;
+            }
+            return isChecked;
+        }
+
+        public async Task ChangeForgotPassword(Guid userId, string newPass)
+        {
+            Customer customer = await _customerRepository.GetFirstOrDefaultAsync(x => x.CustomerId == userId);
+
+            string encryptNewPass = EncryptPassword(newPass);
+
+            customer.Password = encryptNewPass;
+            customer.UpdatedDate = DateTime.Now;
+
+            await _customerRepository.UpdateAsync(customer);
         }
 
         public string EncryptPassword(string plainText)
