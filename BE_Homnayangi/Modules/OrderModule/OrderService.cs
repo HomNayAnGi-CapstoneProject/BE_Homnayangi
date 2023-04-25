@@ -85,7 +85,7 @@ namespace BE_Homnayangi.Modules.OrderModule
 
         public async Task<ICollection<OrderResponse>> GetOrderResponse(DateTime? fromDate, DateTime? toDate, int status = -1)
         {
-            if(fromDate.HasValue && !toDate.HasValue)
+            if (fromDate.HasValue && !toDate.HasValue)
                 throw new Exception("To date is required");
             if (!fromDate.HasValue && toDate.HasValue)
                 throw new Exception("From date is required");
@@ -168,7 +168,7 @@ namespace BE_Homnayangi.Modules.OrderModule
                 };
                 res.Add(orderResponse);
             }
-            return res.OrderByDescending(r=>r.OrderDate).ToList();
+            return res.OrderByDescending(r => r.OrderDate).ToList();
         }
 
         public Task<ICollection<Order>> GetOrdersBy(
@@ -429,26 +429,26 @@ namespace BE_Homnayangi.Modules.OrderModule
 
             await _hubContext.Clients.All.SendAsync($"{customer.CustomerId}_OrderStatusChanged", JsonConvert.SerializeObject(noti));
             #endregion
-            
+
 
             #region sending mail
             if (customer.Email != null)
             {
                 // gui mail thong tin order
                 var mailSubject = $"Xác nhận đơn đặt hàng của Quý Khách đã được duyệt thành công";
-                var mailBody = $"Kính gửi Quý Khách hàng,\n" +
-                    $"\n" +
-                    $"Chúng tôi xin trân trọng thông báo rằng đơn đặt hàng của Quý Khách đã được duyệt thành công. Chúng tôi xin cảm ơn Quý Khách đã tin tưởng và lựa chọn sản phẩm/dịch vụ của chúng tôi\n" +
-                    $"\n" +
-                    $"Thông tin chi tiết của đơn đặt hàng của Quý Khách đã được xác nhận và sẽ được chúng tôi tiến hành xử lý trong thời gian sớm nhất.\n" +
-                    $"Nếu Quý Khách cần hỗ trợ hoặc có bất kỳ yêu cầu nào khác, xin vui lòng liên hệ với chúng tôi qua thông tin liên lạc được cung cấp ở dưới đây.\n" +
-                    $"\n" +
-                    $"Email: homnayangii.info@gmail.com\n" +
+                var mailBody = $"Kính gửi Quý Khách hàng,<br>" +
+                    $"<br>" +
+                    $"Chúng tôi xin trân trọng thông báo rằng đơn đặt hàng của Quý Khách đã được duyệt thành công. Chúng tôi xin cảm ơn Quý Khách đã tin tưởng và lựa chọn sản phẩm/dịch vụ của chúng tôi<br>" +
+                    $"<br>" +
+                    $"Thông tin chi tiết của đơn đặt hàng của Quý Khách đã được xác nhận và sẽ được chúng tôi tiến hành xử lý trong thời gian sớm nhất.<br>" +
+                    $"Nếu Quý Khách cần hỗ trợ hoặc có bất kỳ yêu cầu nào khác, xin vui lòng liên hệ với chúng tôi qua thông tin liên lạc được cung cấp ở dưới đây.<br>" +
+                    $"<br>" +
+                    $"Email: homnayangii.info@gmail.com<br>" +
                     $"Hotline: 0123456789" +
-                    $"\n" +
-                    $"Trân trọng cảm ơn và mong được phục vụ Quý Khách!\n" +
-                    $"\n" +
-                    $"Trân Trọng, \n" +
+                    $"<br>" +
+                    $"Trân trọng cảm ơn và mong được phục vụ Quý Khách!<br>" +
+                    $"<br>" +
+                    $"Trân Trọng, <br>" +
                     $"Homnayangi"
                     ;
 
@@ -493,7 +493,20 @@ namespace BE_Homnayangi.Modules.OrderModule
                 {
                     // gui mail thong bao don hang bi tu choi
                     var mailSubject = $"[Từ chối đơn hàng] Thông tin đơn hàng #{order.OrderId}";
-                    var mailBody = $"Đơn hàng #{order.OrderId} đã bị từ chối.";
+                    var mailBody = "Kính gửi Quý Khách hàng,<br>" +
+                    $"<br>" +
+                    $"Chúng tôi rất tiếc khi phải thông báo rằng đơn đặt hàng của Quý Khách đã bị từ chối.<br>" +
+                    $"<br>" +
+                    $"Nếu Quý Khách cần hỗ trợ hoặc có bất kỳ thắc mắc nào, xin vui lòng liên hệ với chúng tôi qua thông tin liên lạc được cung cấp ở dưới đây.<br>" +
+                    $"<br>" +
+                    $"Email: homnayangii.info@gmail.com<br>" +
+                    $"Hotline: 0123456789" +
+                    $"<br>" +
+                    $"Trân trọng cảm ơn và mong được phục vụ Quý Khách!<br>" +
+                    $"<br>" +
+                    $"Trân Trọng, <br>" +
+                    $"Homnayangi"
+                    ; ;
 
                     SendMail(mailSubject, mailBody, customer.Email);
                 }
@@ -560,7 +573,20 @@ namespace BE_Homnayangi.Modules.OrderModule
                 {
                     // gui mail thong bao don hang bi huy
                     var mailSubject = $"[Hủy đơn hàng] Thông tin đơn hàng #{order.OrderId}";
-                    var mailBody = $"Bạn đã hủy đơn hàng #{order.OrderId}.";
+                    var mailBody = "Kính gửi Quý Khách hàng,<br>" +
+                    $"<br>" +
+                    $"Chúng tôi xin xác nhận rằng Quý Khách đã hủy đơn đặt hàng của mình.<br>" +
+                    $"<br>" +
+                    $"Nếu Quý Khách cần hỗ trợ hoặc có bất kỳ thắc mắc nào, xin vui lòng liên hệ với chúng tôi qua thông tin liên lạc được cung cấp ở dưới đây.<br>" +
+                    $"<br>" +
+                    $"Email: homnayangii.info@gmail.com<br>" +
+                    $"Hotline: 0123456789" +
+                    $"<br>" +
+                    $"Trân trọng cảm ơn và mong được phục vụ Quý Khách!<br>" +
+                    $"<br>" +
+                    $"Trân Trọng, <br>" +
+                    $"Homnayangi"
+                    ; ;
 
                     SendMail(mailSubject, mailBody, customer.Email);
                 }
