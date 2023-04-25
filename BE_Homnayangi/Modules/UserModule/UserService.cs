@@ -937,10 +937,15 @@ namespace BE_Homnayangi.Modules.UserModule
 
         public async Task Register(RegisterDTO register)
         {
-            var cus = GetCustomerByUsername(register.Username);
             var admin = _admin;
-            var user = GetUserByUsername(register.Username);
-            if (cus != null || admin.Username == register.Username || user != null)
+            var customers = await _customerRepository.GetAll();
+            var users = await _userRepository.GetAll();
+
+            // Check data existed or not
+            CheckDuplicatedWithCustomerData(register, customers);
+            CheckDuplicatedWithUserData(register, users);
+
+            if (admin.Username == register.Username)
                 throw new Exception(ErrorMessage.UserError.USERNAME_EXISTED);
 
             register.Password = EncryptPassword(register.Password);
@@ -950,6 +955,47 @@ namespace BE_Homnayangi.Modules.UserModule
             customer.CreatedDate = DateTime.Now;
             await _customerRepository.AddAsync(customer);
         }
+
+        private void CheckDuplicatedWithCustomerData(RegisterDTO register, ICollection<Customer> customers)
+        {
+            try
+            {
+                foreach (var item in customers)
+                {
+                    if (item.Username.Equals(register.Username))
+                        throw new Exception(ErrorMessage.CustomerError.USERNAME_EXISTED);
+                    if (item.Email.Equals(register.Email))
+                        throw new Exception(ErrorMessage.CustomerError.EMAIL_EXISTED);
+                    if (item.Phonenumber.Equals(register.Phonenumber))
+                        throw new Exception(ErrorMessage.CustomerError.PHONE_EXISTED);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        private void CheckDuplicatedWithUserData(RegisterDTO register, ICollection<User> users)
+        {
+            try
+            {
+                foreach (var item in users)
+                {
+                    if (item.Username.Equals(register.Username))
+                        throw new Exception(ErrorMessage.CustomerError.USERNAME_EXISTED);
+                    if (item.Email.Equals(register.Email))
+                        throw new Exception(ErrorMessage.CustomerError.EMAIL_EXISTED);
+                    if (item.Phonenumber.Equals(register.Phonenumber))
+                        throw new Exception(ErrorMessage.CustomerError.PHONE_EXISTED);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         public async Task<bool> ForgotPassword(EmailRequest emailRequest)
         {
             var cus = GetCustomerByEmail(emailRequest.Email);
