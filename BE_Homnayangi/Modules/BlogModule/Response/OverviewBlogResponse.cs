@@ -1,4 +1,5 @@
 ﻿using BE_Homnayangi.Modules.RecipeDetailModule.RecipeDetailsDTO;
+using Library.Models;
 using System;
 using System.Collections.Generic;
 
@@ -20,6 +21,7 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
         public decimal CookedPrice { get; set; }
         public List<RecipeDetailResponse> RecipeDetails { get; set; }
         public bool IsEvent { get; set; }
-        public DateTime? EventExpiredDate{ get; set; }
+        public DateTime? EventExpiredDate { get; set; }
+
     }
 }

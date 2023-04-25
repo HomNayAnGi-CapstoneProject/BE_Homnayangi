@@ -329,7 +329,7 @@ namespace BE_Homnayangi.Controllers
         }
 
         [HttpGet("suggest-blog/{Age}/{IsMale}/{IsLoseWeight}")]
-        public async Task<ActionResult<ICollection<OverviewBlogResponse>>> GetSuggestBlogs([FromRoute] SuggestBlogByCaloRequest request)
+        public async Task<ActionResult<SuggestBlogResponse>> GetSuggestBlogs([FromRoute] SuggestBlogByCaloRequest request)
         {
             try
             {

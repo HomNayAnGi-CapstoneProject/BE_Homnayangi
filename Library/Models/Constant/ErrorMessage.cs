@@ -107,12 +107,7 @@ namespace Library.Models.Constant
         }
         #endregion
 
-        #region Season Reference error message
-        public static class SeasonRefError
-        {
-            public readonly static string SEASON_REF_NOT_FOUND = "This season reference can not be found";
-        }
-        #endregion
+
 
         #region Manager error message
         public static class ManagerError
