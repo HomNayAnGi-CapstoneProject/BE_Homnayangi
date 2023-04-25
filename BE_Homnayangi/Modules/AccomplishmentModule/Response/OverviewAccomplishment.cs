@@ -13,6 +13,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule.Response
         public int Reaction { get; set; }
         public int Status { get; set; }
         public Guid BlogId { get; set; }
+        public string BlogTitle { get; set; }
         public Guid? ConfirmBy { get; set; }
         public string? VerifierFullName { get; set; }
         public string Content { get; set; }

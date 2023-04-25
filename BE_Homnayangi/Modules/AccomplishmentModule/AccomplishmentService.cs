@@ -155,12 +155,12 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                 ICollection<Accomplishment> tmpAccoms = null;
                 if (statusAccom == -1) // Get all Accoms
                 {
-                    tmpAccoms = await _accomplishmentRepository.GetAll(includeProperties: "Author,ConfirmByNavigation");
+                    tmpAccoms = await _accomplishmentRepository.GetAll(includeProperties: "Author,ConfirmByNavigation,Blog");
                 }
                 else // get accoms by status
                 {
                     tmpAccoms = await _accomplishmentRepository.GetAccomplishmentsBy(a => a.Status == statusAccom,
-                                                                includeProperties: "Author,ConfirmByNavigation");
+                                                                includeProperties: "Author,ConfirmByNavigation,Blog");
                 }
                 var reactions = await _accomplishmentReactionRepository.GetAccomplishmentReactionsBy(r => r.Status);
                 foreach (var a in tmpAccoms)
@@ -177,6 +177,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                         Status = a.Status.Value,
                         Reaction = reactions.Where(r => r.AccomplishmentId == a.AccomplishmentId).Count(),
                         BlogId = a.BlogId.Value,
+                        BlogTitle = a.Blog.Title,
                         ConfirmBy = a.ConfirmBy,
                         VerifierFullName = a.ConfirmByNavigation == null
                                         ? null
