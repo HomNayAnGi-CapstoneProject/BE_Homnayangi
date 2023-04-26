@@ -1,6 +1,5 @@
 ﻿using BE_Homnayangi.Modules.AccomplishmentModule.Interface;
 using BE_Homnayangi.Modules.AdminModules.CaloReferenceModule.Interface;
-using BE_Homnayangi.Modules.AdminModules.SeasonReferenceModule.Interface;
 using BE_Homnayangi.Modules.BlogModule.Interface;
 using BE_Homnayangi.Modules.BlogModule.Request;
 using BE_Homnayangi.Modules.BlogModule.Response;
@@ -51,7 +50,6 @@ namespace BE_Homnayangi.Modules.BlogModule
         private readonly IBlogReactionRepository _blogReactionRepository;
         private readonly IAccomplishmentRepository _accomplishmentRepository;
         private readonly ICaloReferenceRepository _caloReferenceRepository;
-        private readonly ISeasonReferenceRepository _seasonReferenceRepository;
         private readonly INotificationRepository _notificationRepository;
         private readonly IHubContext<SignalRServer> _hubContext;
 
@@ -59,7 +57,7 @@ namespace BE_Homnayangi.Modules.BlogModule
             ISubCateRepository subCateRepository, IRecipeDetailRepository recipeDetailRepository,
             IUserRepository userRepository, IBlogReferenceRepository blogReferenceRepository, ICommentRepository commentRepository,
             IBlogReactionRepository blogReactionRepository, IAccomplishmentRepository accomplishmentRepository,
-            ICaloReferenceRepository caloReferenceRepository, ISeasonReferenceRepository seasonReferenceRepository,
+            ICaloReferenceRepository caloReferenceRepository,
             INotificationRepository notificationRepository,
             IHubContext<SignalRServer> hubContext)
         {
@@ -73,7 +71,6 @@ namespace BE_Homnayangi.Modules.BlogModule
             _blogReactionRepository = blogReactionRepository;
             _accomplishmentRepository = accomplishmentRepository;
             _caloReferenceRepository = caloReferenceRepository;
-            _seasonReferenceRepository = seasonReferenceRepository;
             _notificationRepository = notificationRepository;
             _hubContext = hubContext;
         }
@@ -455,7 +452,7 @@ namespace BE_Homnayangi.Modules.BlogModule
             }
         }
 
-        public async Task<ICollection<OverviewBlogResponse>> GetSuggestBlogByCalo(SuggestBlogByCaloRequest request)
+        public async Task<SuggestBlogResponse> GetSuggestBlogByCalo(SuggestBlogByCaloRequest request)
         {
             try
             {
@@ -499,14 +496,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                 });
                 //divide suggest calo to 1 of 3 brunch
                 suggestCalo.Calo = suggestCalo.Calo / 3;
-                //check season reference
-                var checkSeasonRef = _seasonReferenceRepository.GetFirstOrDefaultAsync(x => x.Status == true).Result;
-                if (checkSeasonRef != null)
-                {
-                    var listSeasonRef = listBlogSubCate.Where(x => x.SubCate.Name.Equals(checkSeasonRef.Name)).Select(x => x.BlogId).ToList();
-                    listSoupBlog = listSoupBlog.Join(listSeasonRef, x => x.BlogId, y => y, (x, y) => x).ToList();
-                    listNormalBlog = listNormalBlog.Join(listSeasonRef, x => x.BlogId, y => y, (x, y) => x).ToList();
-                }
+
                 //take 3 blog match the suggest calo
                 do
                 {
@@ -537,6 +527,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                                         TotalKcal = (int)firstBlog.Recipe.TotalKcal,
                                         IsEvent = firstBlog.IsEvent.HasValue ? firstBlog.IsEvent.Value : false,
                                         EventExpiredDate = firstBlog.IsEvent.Value ? firstBlog.EventExpiredDate.Value : null,
+
                                     });
 
                                     result.Add(new OverviewBlogResponse
@@ -555,6 +546,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                                         RecipeDetails = ConvertToRecipeDetailResponse(secondBlog.BlogId, listRecipeDetails.ToList()),
                                         IsEvent = secondBlog.IsEvent.HasValue ? secondBlog.IsEvent.Value : false,
                                         EventExpiredDate = secondBlog.IsEvent.Value ? secondBlog.EventExpiredDate.Value : null,
+
                                     });
 
                                     result.Add(new OverviewBlogResponse
@@ -572,6 +564,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                                         RecipeDetails = ConvertToRecipeDetailResponse(soupBlog.BlogId, listRecipeDetails.ToList()),
                                         IsEvent = soupBlog.IsEvent.HasValue ? soupBlog.IsEvent.Value : false,
                                         EventExpiredDate = soupBlog.IsEvent.Value ? soupBlog.EventExpiredDate.Value : null,
+
                                     });
 
                                 }
@@ -633,8 +626,12 @@ namespace BE_Homnayangi.Modules.BlogModule
                         }
                     }
                 } while (result.Count() < 3);
-
-                return result;
+                SuggestBlogResponse suggestBlogResponse = new SuggestBlogResponse
+                {
+                    Calo = suggestCalo.Calo,
+                    SuggestBlogs = result
+                };
+                return suggestBlogResponse;
             }
             catch (Exception ex)
             {
@@ -951,7 +948,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                         Description = $"Bài blog - {request.Blog.BlogId} đang được chờ duyệt",
                         CreatedDate = DateTime.Now,
                         Status = false,
-                        ReceiverId = _userRepository.GetUsersBy(u=>u.Role == 1).Result.FirstOrDefault().UserId
+                        ReceiverId = _userRepository.GetUsersBy(u => u.Role == 1).Result.FirstOrDefault().UserId
                     };
                     await _notificationRepository.AddAsync(noti);
 

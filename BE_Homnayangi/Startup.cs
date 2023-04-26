@@ -6,8 +6,7 @@ using BE_Homnayangi.Modules.AdminModules.BadgeConditionModule;
 using BE_Homnayangi.Modules.AdminModules.BadgeConditionModule.Interface;
 using BE_Homnayangi.Modules.AdminModules.CaloReferenceModule;
 using BE_Homnayangi.Modules.AdminModules.CaloReferenceModule.Interface;
-using BE_Homnayangi.Modules.AdminModules.SeasonReferenceModule;
-using BE_Homnayangi.Modules.AdminModules.SeasonReferenceModule.Interface;
+
 using BE_Homnayangi.Modules.AutoMapper;
 using BE_Homnayangi.Modules.BadgeModule;
 using BE_Homnayangi.Modules.BadgeModule.Interface;
@@ -302,10 +301,6 @@ namespace BE_Homnayangi
             //Calo reference Module
             services.AddScoped<ICaloReferenceRepository, CaloReferenceRepository>();
             services.AddScoped<ICaloReferenceService, CaloReferenceService>();
-
-            //Season reference Module
-            services.AddScoped<ISeasonReferenceRepository, SeasonReferenceRepository>();
-            services.AddScoped<ISeasonReferenceService, SeasonReferenceService>();
 
             //Order Module
             services.AddScoped<IOrderRepository, OrderRepository>();
