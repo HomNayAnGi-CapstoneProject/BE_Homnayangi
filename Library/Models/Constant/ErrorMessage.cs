@@ -67,8 +67,9 @@ namespace Library.Models.Constant
         {
             public readonly static string NOT_OWNER = "You are not the owner";
             public readonly static string CUSTOMER_NOT_FOUND = "This customer can not be found";
-            public readonly static string USERNAME_EXISTED = "This username has existed with another customer";
-            public readonly static string EMAIL_EXISTED = "This email has existed with another customer";
+            public readonly static string USERNAME_EXISTED = "Tên đăng nhập này đã được sử dụng";
+            public readonly static string EMAIL_EXISTED = "Email này đã được sử dụng";
+            public readonly static string PHONE_EXISTED = "Số điện thoại này đã được sử dụng";
             public readonly static string CUSTOMER_NOT_ALLOWED_TO_CREATE_BLOG = "Staff and Manager role are allowed to create a new blog";
             public readonly static string CUSTOMER_NOT_ALLOWED_TO_DELETE_BLOG = "Staff and Manager role are allowed to delete a blog";
             public readonly static string CUSTOMER_NOT_ALLOWED_TO_DELETE_RECIPE = "Staff and Manager role are allowed to delete a recipe";
