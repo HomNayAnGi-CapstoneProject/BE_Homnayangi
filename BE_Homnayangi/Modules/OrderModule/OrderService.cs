@@ -838,7 +838,8 @@ namespace BE_Homnayangi.Modules.OrderModule
 
         public async Task<ICollection<Order>> GetAll()
         {
-            return await _OrderRepository.GetAll();
+            var res = await _OrderRepository.GetAll();
+            return res.OrderByDescending(o=>o.OrderDate).ToList();
         }
 
         public async Task<ICollection<OrderResponse>> GetOrderByCustomer(DateTime? fromDate, DateTime? toDate, Guid customerId, int status = -1)
