@@ -435,7 +435,7 @@ namespace BE_Homnayangi.Modules.OrderModule
             if (customer.Email != null)
             {
                 // gui mail thong tin order
-                var mailSubject = $"Xác nhận đơn đặt hàng của Quý Khách đã được duyệt thành công";
+                var mailSubject = $"[Xác nhận đơn hàng] Xác nhận đơn đặt hàng của Quý Khách đã được duyệt thành công";
                 var mailBody = $"Kính gửi Quý Khách hàng,<br>" +
                     $"<br>" +
                     $"Chúng tôi xin trân trọng thông báo rằng đơn đặt hàng của Quý Khách đã được duyệt thành công. Chúng tôi xin cảm ơn Quý Khách đã tin tưởng và lựa chọn sản phẩm/dịch vụ của chúng tôi<br>" +
@@ -652,8 +652,35 @@ namespace BE_Homnayangi.Modules.OrderModule
                 if (order.OrderStatus != (int)Status.OrderStatus.SHIPPING)
                     throw new Exception(ErrorMessage.OrderError.ORDER_CANNOT_CHANGE_STATUS);
 
+
                 order.OrderStatus = (int)Status.OrderStatus.DELIVERED;
                 await _OrderRepository.UpdateAsync(order);
+
+                var customer = await _customerRepository.GetByIdAsync(order.CustomerId.Value);
+
+                #region sending mail
+                if (customer.Email != null)
+                {
+                    // gui mail thong tin order
+                    var mailSubject = $"Xác nhận đơn đặt hàng của Quý Khách đã được giao thành công";
+                    var mailBody = $"Kính gửi Quý Khách hàng,<br>" +
+                        $"<br>" +
+                        $"Chúng tôi xin trân trọng thông báo rằng đơn đặt hàng của Quý Khách đã được giao thành công. Chúng tôi xin cảm ơn Quý Khách đã tin tưởng và lựa chọn sản phẩm/dịch vụ của chúng tôi<br>" +
+                        $"<br>" +
+                        $"Nếu Quý Khách cần hỗ trợ hoặc có bất kỳ yêu cầu nào khác, xin vui lòng liên hệ với chúng tôi qua thông tin liên lạc được cung cấp ở dưới đây.<br>" +
+                        $"<br>" +
+                        $"Email: homnayangii.info@gmail.com<br>" +
+                        $"Hotline: 0123456789" +
+                        $"<br>" +
+                        $"Trân trọng cảm ơn và mong được phục vụ Quý Khách!<br>" +
+                        $"<br>" +
+                        $"Trân Trọng, <br>" +
+                        $"Homnayangi"
+                        ;
+
+                    SendMail(mailSubject, mailBody, customer.Email);
+                }
+                #endregion
             }
             catch (Exception ex)
             {
@@ -680,6 +707,32 @@ namespace BE_Homnayangi.Modules.OrderModule
 
                 order.OrderStatus = (int)Status.OrderStatus.DELIVERED_FAIL;
                 await _OrderRepository.UpdateAsync(order);
+
+                var customer = await _customerRepository.GetByIdAsync(order.CustomerId.Value);
+
+                #region sending mail
+                if (customer.Email != null)
+                {
+                    // gui mail thong tin order
+                    var mailSubject = $"Đơn đặt hàng của Quý Khách đã giao không thành công";
+                    var mailBody = $"Kính gửi Quý Khách hàng,<br>" +
+                        $"<br>" +
+                        $"Chúng tôi xin thông báo rằng đơn đặt hàng của Quý Khách đã không thể gai thành công.<br>" +
+                        $"<br>" +
+                        $"Nếu Quý Khách cần hỗ trợ hoặc có bất kỳ yêu cầu nào khác, xin vui lòng liên hệ với chúng tôi qua thông tin liên lạc được cung cấp ở dưới đây.<br>" +
+                        $"<br>" +
+                        $"Email: homnayangii.info@gmail.com<br>" +
+                        $"Hotline: 0123456789" +
+                        $"<br>" +
+                        $"Trân trọng cảm ơn và mong được phục vụ Quý Khách!<br>" +
+                        $"<br>" +
+                        $"Trân Trọng, <br>" +
+                        $"Homnayangi"
+                        ;
+
+                    SendMail(mailSubject, mailBody, customer.Email);
+                }
+                #endregion
             }
             catch (Exception ex)
             {
