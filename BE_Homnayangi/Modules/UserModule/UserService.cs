@@ -962,11 +962,11 @@ namespace BE_Homnayangi.Modules.UserModule
             {
                 foreach (var item in customers)
                 {
-                    if (item.Username.Equals(register.Username))
+                    if (item.Username != null && item.Username.Equals(register.Username))
                         throw new Exception(ErrorMessage.CustomerError.USERNAME_EXISTED);
                     if (item.Email.Equals(register.Email))
                         throw new Exception(ErrorMessage.CustomerError.EMAIL_EXISTED);
-                    if (item.Phonenumber.Equals(register.Phonenumber))
+                    if (item.Phonenumber != null && item.Phonenumber.Equals(register.Phonenumber))
                         throw new Exception(ErrorMessage.CustomerError.PHONE_EXISTED);
                 }
             }
@@ -982,11 +982,11 @@ namespace BE_Homnayangi.Modules.UserModule
             {
                 foreach (var item in users)
                 {
-                    if (item.Username.Equals(register.Username))
+                    if (item.Username != null && item.Username.Equals(register.Username))
                         throw new Exception(ErrorMessage.CustomerError.USERNAME_EXISTED);
                     if (item.Email.Equals(register.Email))
                         throw new Exception(ErrorMessage.CustomerError.EMAIL_EXISTED);
-                    if (item.Phonenumber.Equals(register.Phonenumber))
+                    if (item.Username != null && item.Phonenumber.Equals(register.Phonenumber))
                         throw new Exception(ErrorMessage.CustomerError.PHONE_EXISTED);
                 }
             }
