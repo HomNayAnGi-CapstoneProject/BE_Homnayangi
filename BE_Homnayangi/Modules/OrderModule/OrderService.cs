@@ -469,7 +469,6 @@ namespace BE_Homnayangi.Modules.OrderModule
 
             var customer = await _customerRepository.GetByIdAsync(order.CustomerId.Value);
 
-
             order.OrderStatus = order.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL
                 ? (int)Status.OrderStatus.NEED_REFUND
                 : (int)Status.OrderStatus.DENIED;
@@ -548,10 +547,9 @@ namespace BE_Homnayangi.Modules.OrderModule
 
             var customer = await _customerRepository.GetByIdAsync(order.CustomerId.Value);
 
-            if (order.OrderStatus == (int)Status.OrderStatus.PAYING)
-                order.OrderStatus = (int)Status.OrderStatus.CANCEL;
-            if (order.OrderStatus == (int)Status.OrderStatus.PENDING)
-                order.OrderStatus = (int)Status.OrderStatus.NEED_REFUND;
+            order.OrderStatus = order.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL
+                ? (int)Status.OrderStatus.NEED_REFUND
+                : (int)Status.OrderStatus.CANCEL;
 
             var transactionScope = _OrderRepository.Transaction();
             using (transactionScope)
