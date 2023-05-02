@@ -16,6 +16,8 @@ namespace BE_Homnayangi.Modules.BadgeModule.Interface
 
         public Task UpdateBadge(Badge badgeUpdate);
 
+        public Task DeleteBadge(Guid id);
+
         public Task<ICollection<Badge>> GetAll();
 
         public Task<ICollection<Badge>> GetBadgesBy(

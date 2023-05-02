@@ -1,4 +1,5 @@
-﻿using BE_Homnayangi.Modules.AdminModules.CronJobTimeConfigModule.Interface;
+﻿using BE_Homnayangi.Modules.AdminModules.BadgeConditionModule.Interface;
+using BE_Homnayangi.Modules.AdminModules.CronJobTimeConfigModule.Interface;
 using BE_Homnayangi.Modules.BadgeModule.DTO.Request;
 using BE_Homnayangi.Modules.BadgeModule.Interface;
 using BE_Homnayangi.Modules.BadgeModule.Response;
@@ -20,11 +21,13 @@ namespace BE_Homnayangi.Modules.BadgeModule
     public class BadgeService : IBadgeService
     {
         private readonly IBadgeRepository _badgeRepository;
+        private readonly IBadgeConditionRepository _badgeConditionRepository;
         private readonly ICronJobTimeConfigRepository _cronJobTimeConfigRepository;
 
-        public BadgeService(IBadgeRepository badgeRepository, ICronJobTimeConfigRepository cronJobTimeConfigRepository)
+        public BadgeService(IBadgeRepository badgeRepository, IBadgeConditionRepository badgeConditionRepository, ICronJobTimeConfigRepository cronJobTimeConfigRepository)
         {
             _badgeRepository = badgeRepository;
+            _badgeConditionRepository = badgeConditionRepository;
             _cronJobTimeConfigRepository = cronJobTimeConfigRepository;
         }
 
@@ -230,6 +233,31 @@ namespace BE_Homnayangi.Modules.BadgeModule
                 throw;
             }
 
+        }
+
+        public async Task DeleteBadge(Guid id)
+        {
+            try
+            {
+                var badge = await _badgeRepository.GetFirstOrDefaultAsync(b => b.BadgeId == id
+                                                                                && b.Status.Value == (int)Status.BadgeStatus.ACTIVE);
+                if (badge == null)
+                    throw new Exception(ErrorMessage.BadgeError.BADGE_NOT_FOUND);
+                var badgeCondition = await _badgeConditionRepository.GetFirstOrDefaultAsync(bc => bc.BadgeId == id
+                                                                                                && bc.Status.Value);
+                if (badgeCondition != null)
+                {
+                    badgeCondition.Status = false;
+                    await _badgeConditionRepository.UpdateAsync(badgeCondition);
+                }
+                badge.Status = (int)Status.BadgeStatus.DELETED;
+                await _badgeRepository.UpdateAsync(badge);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at DeleteBadge: " + ex.Message);
+                throw new Exception(ex.Message);
+            }
         }
     }
 }
