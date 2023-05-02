@@ -6,13 +6,17 @@ using BE_Homnayangi.Modules.CustomerVoucherModule.Interface;
 using BE_Homnayangi.Modules.CustomerVoucherModule.Request;
 using BE_Homnayangi.Modules.CustomerVoucherModule.Response;
 using BE_Homnayangi.Modules.CustomerVoucherModule.Validation;
+using BE_Homnayangi.Modules.OrderModule.Interface;
 using BE_Homnayangi.Modules.VoucherModule.Interface;
 using BE_Homnayangi.Ultils.Quartz;
 using GSF;
+using GSF.Collections;
 using Hangfire;
 using Library.Models;
 using Library.Models.Constant;
 using Library.Models.Enum;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Quartz;
 using Quartz.Impl.Triggers;
 using System;
@@ -30,15 +34,17 @@ namespace BE_Homnayangi.Modules.VoucherModule
         private readonly IMapper _mapper;
         private readonly ICustomerRepository _customerRepository;
         private readonly IVoucherRepository _voucherRepository;
+        private readonly IOrderRepository _orderRepository;
 
         public CustomerVoucherService(ICustomerVoucherRepository customerVoucherRepository, ICronJobTimeConfigRepository cronJobTimeConfigRepository, IMapper mapper,
-            ICustomerRepository customerRepository, IVoucherRepository voucherRepository)
+            ICustomerRepository customerRepository, IVoucherRepository voucherRepository, IOrderRepository orderRepository)
         {
             _customerVoucherRepository = customerVoucherRepository;
             _cronJobTimeConfigRepository = cronJobTimeConfigRepository;
             _mapper = mapper;
             _customerRepository = customerRepository;
             _voucherRepository = voucherRepository;
+            _orderRepository = orderRepository;
         }
 
         public Task<ICollection<CustomerVoucher>> GetCustomerVouchersBy(
@@ -122,20 +128,23 @@ namespace BE_Homnayangi.Modules.VoucherModule
 
         public async Task<ICollection<CustomerVoucherResponse>> GetAllCustomerVouchersByCusId(Guid cusid)
         {
+            List<CustomerVoucherResponse> tmpResult = null;
             List<CustomerVoucherResponse> result = null;
             try
             {
-                var list = await _customerVoucherRepository.GetCustomerVouchersBy(x => x.CustomerId == cusid, includeProperties: "Customer,Voucher");
+                var list = await _customerVoucherRepository.GetCustomerVouchersBy(x => x.CustomerId == cusid
+                                                                                        && x.Voucher.ValidTo > DateTime.Now, // còn hsd
+                                                                            includeProperties: "Customer,Voucher");
                 if (list != null && list.Count > 0)
                 {
-                    result = list.Select(x => new CustomerVoucherResponse()
+                    tmpResult = list.Select(x => new CustomerVoucherResponse()
                     {
                         VoucherId = x.VoucherId,
                         VoucherName = x.Voucher.Name,
                         CustomerVoucherId = x.CustomerVoucherId,
-                        CustomerName = x.Customer.Displayname != null 
-                                        ? x.Customer.Displayname 
-                                        : x.Customer.Firstname + " " + x.Customer.Lastname,
+                        CustomerName = x.Customer.Displayname != null
+                                         ? x.Customer.Displayname
+                                         : x.Customer.Firstname + " " + x.Customer.Lastname,
                         Discount = x.Voucher.Discount.Value,
                         MinimumOrderPrice = x.Voucher.MinimumOrderPrice.Value,
                         MaximumOrderPrice = x.Voucher.MaximumOrderPrice.Value,
@@ -144,6 +153,19 @@ namespace BE_Homnayangi.Modules.VoucherModule
                         Status = x.Voucher.Status.Value,
                         CreatedDate = x.CreatedDate.Value
                     }).OrderByDescending(x => x.CreatedDate).ToList();
+
+                    result = tmpResult;
+                    foreach (var customerVoucher in tmpResult.DistinctBy(x => x.VoucherId).ToList())
+                    {
+                        var orders = await _orderRepository.GetOrdersBy(o => o.VoucherId != null && o.VoucherId == customerVoucher.VoucherId
+                                                                            && o.OrderStatus == (int)Status.OrderStatus.PENDING);
+                        // xoá n item nếu nó đang xài trong orders
+                        for (int i = 0; i < orders.Count; i++)
+                        {
+                            result.RemoveAt(result.IndexOf(customerVoucher));
+                            Console.WriteLine("Removed 1 customer voucher!");
+                        }
+                    }
                 }
             }
             catch (Exception ex)
