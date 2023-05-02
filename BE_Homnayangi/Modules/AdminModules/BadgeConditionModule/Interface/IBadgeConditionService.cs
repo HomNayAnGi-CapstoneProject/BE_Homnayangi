@@ -11,6 +11,7 @@ namespace BE_Homnayangi.Modules.AdminModules.BadgeConditionModule.Interface
     {
         #region Get
         public Task<ICollection<BadgeCondition>> GetBadgeConditions();
+        public Task<ICollection<BadgeCondition>> GetBadgeConditionsByCustomer();
         public Task<BadgeCondition> GetBadgeCondition(Guid? id);
         #endregion
 

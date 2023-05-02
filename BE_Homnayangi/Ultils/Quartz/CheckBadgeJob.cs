@@ -6,6 +6,7 @@ using BE_Homnayangi.Modules.CustomerModule.Interface;
 using BE_Homnayangi.Modules.CustomerVoucherModule.Interface;
 using BE_Homnayangi.Modules.OrderModule.Interface;
 using Library.Models;
+using Library.Models.Enum;
 using Quartz;
 using System;
 using System.Collections.Generic;
@@ -69,13 +70,25 @@ namespace BE_Homnayangi.Ultils.Quartz
 
                 Console.WriteLine(customer.Displayname);
                 var badgeConditions = await _badgeConditionRepository.GetAll();
+
                 /*         badgeConditions = badgeConditions.Where(x => x.Accomplishments <= accomplishmentsCount && x.Orders <= ordersCount ).ToList();*/
                 foreach (BadgeCondition badgeCondition in badgeConditions)
                 {
-                    var accomplishments = customer.Accomplishments.Where(x => x.CreatedDate >= DateTime.Now.AddMonths(-2));
-                    var orders = customer.Orders.Where(x => x.OrderDate >= DateTime.Now.AddMonths(-2));
+                    if (badgeCondition.Status == Convert.ToBoolean((int)Status.BadgeCondition.ACTIVE))
+                    {
+                        var accomplishments = customer.Accomplishments.Where(x => x.CreatedDate >= DateTime.Now.AddMonths(-2));
+                        var orders = customer.Orders.Where(x => x.OrderDate >= DateTime.Now.AddMonths(-2));
 
-                    if (badgeCondition.Accomplishments > accomplishments.Count() || badgeCondition.Orders > orders.Count())
+                        if (badgeCondition.Accomplishments > accomplishments.Count() || badgeCondition.Orders > orders.Count())
+                        {
+                            var tmp = await _customerBadgeRepository.GetFirstOrDefaultAsync(x => x.CustomerId == customer.CustomerId && x.BadgeId == badgeCondition.BadgeId);
+                            if (tmp != null)
+                            {
+                                await _customerBadgeRepository.RemoveAsync(tmp);
+                            }
+                        }
+                    }
+                    else if (badgeCondition.Status == Convert.ToBoolean((int)Status.BadgeCondition.DEACTIVE))
                     {
                         var tmp = await _customerBadgeRepository.GetFirstOrDefaultAsync(x => x.CustomerId == customer.CustomerId && x.BadgeId == badgeCondition.BadgeId);
                         if (tmp != null)

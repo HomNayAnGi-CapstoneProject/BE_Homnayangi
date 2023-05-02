@@ -61,7 +61,7 @@ namespace BE_Homnayangi.Ultils.Quartz
             {
 
                 Console.WriteLine(customer.Displayname);
-                var badgeConditions = await _badgeConditionRepository.GetAll();
+                var badgeConditions = _badgeConditionRepository.GetAll(includeProperties: "Badge").Result.Where(x => x.Status == Convert.ToBoolean((int)Status.BadgeCondition.ACTIVE) && x.Badge.Status == (int)Status.BadgeStatus.ACTIVE);
                 /*         badgeConditions = badgeConditions.Where(x => x.Accomplishments <= accomplishmentsCount && x.Orders <= ordersCount ).ToList();*/
                 foreach (BadgeCondition badgeCondition in badgeConditions)
                 {
