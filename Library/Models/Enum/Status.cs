@@ -52,7 +52,11 @@ namespace Library.Models.Enum
         {
             DEACTIVE = 0,
         }
-
+        public enum BadgeCondition
+        {
+            DEACTIVE = 0,
+            ACTIVE = 1
+        }
     }
 }
 
