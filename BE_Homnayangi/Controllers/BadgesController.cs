@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BE_Homnayangi.Modules.BadgeModule;
 using BE_Homnayangi.Modules.BadgeModule.DTO.Request;
 using BE_Homnayangi.Modules.BadgeModule.Interface;
 using BE_Homnayangi.Modules.BadgeModule.Response;
@@ -131,15 +132,22 @@ namespace BE_Homnayangi.Controllers
         [Authorize(Roles = "Staff,Manager")]
         public async Task<IActionResult> DeleteBadge([FromRoute] Guid id)
         {
-            var badge = await _badgeService.GetBadgeByID(id);
-            if (badge == null)
+            try
             {
-                return NotFound();
+                await _badgeService.DeleteBadge(id);
+                return new JsonResult(new
+                {
+                    status = "success"
+                });
             }
-            badge.Status = (int)Status.BadgeStatus.DELETED;
-            await _badgeService.UpdateBadge(badge);
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
+            }
         }
 
         [HttpGet("dropdown")]

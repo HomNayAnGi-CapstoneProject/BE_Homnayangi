@@ -10,6 +10,7 @@ using System.Linq;
 using BE_Homnayangi.Modules.AdminModules.BadgeConditionModule.Request;
 using FluentValidation.Results;
 using PayPal.Api;
+using Library.Models.Enum;
 
 namespace BE_Homnayangi.Modules.AdminModules.BadgeConditionModule
 {
@@ -39,7 +40,20 @@ namespace BE_Homnayangi.Modules.AdminModules.BadgeConditionModule
                 throw new Exception(ex.Message);
             }
         }
-
+        public async Task<ICollection<BadgeCondition>> GetBadgeConditionsByCustomer()
+        {
+            try
+            {
+                var badgeConditions = await _badgeConditionRepository.GetAll(includeProperties: "Badge");
+                badgeConditions = badgeConditions.Where(x => x.Status == Convert.ToBoolean((int)Status.BadgeCondition.ACTIVE)).OrderBy(x => x.Accomplishments).ThenBy(x => x.Orders).ToList();
+                badgeConditions = badgeConditions.OrderBy(x => x.Orders).ToList();
+                return badgeConditions.ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
         public async Task<BadgeCondition> GetBadgeCondition(Guid? id)
         {
             try
@@ -188,7 +202,7 @@ namespace BE_Homnayangi.Modules.AdminModules.BadgeConditionModule
                     throw new Exception(ErrorMessage.CommonError.ID_IS_NULL);
                 }
 
-                var badgeConditionDelete = await _badgeConditionRepository.GetFirstOrDefaultAsync(x => x.BadgeConditionId.Equals(id) && x.Status == true);
+                var badgeConditionDelete = await _badgeConditionRepository.GetFirstOrDefaultAsync(x => x.BadgeId.Equals(id) && x.Status.Value);
                 badgeConditionDelete.Status = false;
 
                 if (badgeConditionDelete == null)

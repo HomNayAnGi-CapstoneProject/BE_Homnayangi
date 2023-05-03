@@ -52,7 +52,7 @@ namespace BE_Homnayangi.Controllers
                 var currentUserId = _userService.GetCurrentUser(Request.Headers["Authorization"]).Id;
                 var currentUser = await _userService.GetCustomer(currentUserId);
                 var currentUserBadgeIds = currentUser.CustomerBadges.Select(cb => cb.BadgeId).ToList();
-                var badgeConditions = _badgeConditionService.GetBadgeConditions().Result.ToList();
+                var badgeConditions = _badgeConditionService.GetBadgeConditionsByCustomer().Result.ToList();
                 var badgeConditionList = badgeConditions
         .Where(bc => !currentUserBadgeIds.Contains(bc.BadgeId))
         .ToList();

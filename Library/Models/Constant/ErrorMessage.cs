@@ -89,6 +89,7 @@ namespace Library.Models.Constant
         #region Badge error message
         public static class BadgeError
         {
+            public readonly static string BADGE_NOT_FOUND = "This badge is not found";
             public readonly static string BADGE_NAME_EXISTED = "This badge name has existed in system";
         }
         #endregion

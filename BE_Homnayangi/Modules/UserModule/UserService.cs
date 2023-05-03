@@ -986,7 +986,7 @@ namespace BE_Homnayangi.Modules.UserModule
                         throw new Exception(ErrorMessage.CustomerError.USERNAME_EXISTED);
                     if (item.Email.Equals(register.Email))
                         throw new Exception(ErrorMessage.CustomerError.EMAIL_EXISTED);
-                    if (item.Username != null && item.Phonenumber.Equals(register.Phonenumber))
+                    if (item.Phonenumber != null && item.Phonenumber.Equals(register.Phonenumber))
                         throw new Exception(ErrorMessage.CustomerError.PHONE_EXISTED);
                 }
             }
