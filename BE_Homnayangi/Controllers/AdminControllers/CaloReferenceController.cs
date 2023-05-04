@@ -103,12 +103,12 @@ namespace BE_Homnayangi.Controllers.AdminControllers
         {
             try
             {
-                if (_userService.GetCurrentUser(Request.Headers["Authorization"]) == null)
+                var result = await _caloRefService.CreateNewCaloRef(reqCaloRef);
+                return new JsonResult(new
                 {
-                    throw new Exception(ErrorMessage.AdminError.ADMIN_ONLY);
-                }
-
-                return Ok(await _caloRefService.CreateNewCaloRef(reqCaloRef));
+                    status = "success",
+                    result = result
+                });
             }
             catch (Exception ex)
             {
