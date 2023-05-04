@@ -409,6 +409,8 @@ namespace BE_Homnayangi.Modules.OrderModule
                 throw new Exception(ErrorMessage.OrderError.ORDER_CANNOT_CHANGE_STATUS);
 
             order.OrderStatus = (int)Status.OrderStatus.ACCEPTED;
+            if (!order.ShippedDate.HasValue)
+                order.ShippedDate = DateTime.Now.AddMinutes(30);
 
             await _OrderRepository.UpdateAsync(order);
 
@@ -441,6 +443,7 @@ namespace BE_Homnayangi.Modules.OrderModule
                     $"Chúng tôi xin trân trọng thông báo rằng đơn đặt hàng của Quý Khách đã được duyệt thành công. Chúng tôi xin cảm ơn Quý Khách đã tin tưởng và lựa chọn sản phẩm/dịch vụ của chúng tôi<br>" +
                     $"<br>" +
                     $"Thông tin chi tiết của đơn đặt hàng của Quý Khách đã được xác nhận và sẽ được chúng tôi tiến hành xử lý trong thời gian sớm nhất.<br>" +
+                    $"Thời gian giao hàng dự kiến: {order.ShippedDate?.ToLocalTime()}.<br>" +
                     $"Nếu Quý Khách cần hỗ trợ hoặc có bất kỳ yêu cầu nào khác, xin vui lòng liên hệ với chúng tôi qua thông tin liên lạc được cung cấp ở dưới đây.<br>" +
                     $"<br>" +
                     $"Email: homnayangii.info@gmail.com<br>" +
