@@ -46,7 +46,7 @@ namespace BE_Homnayangi.Controllers
         }
 
         [Authorize(Roles = "Staff,Manager")]
-        [HttpGet("active-vouchers")]
+        [HttpGet("drop-down")]
         public async Task<ActionResult> GetAllAvailableVouchers()
         {
             try
