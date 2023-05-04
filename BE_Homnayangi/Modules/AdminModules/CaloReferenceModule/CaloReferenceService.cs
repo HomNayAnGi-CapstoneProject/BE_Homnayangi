@@ -1,4 +1,5 @@
-﻿using BE_Homnayangi.Modules.AdminModules.CaloReferenceModule.Interface;
+﻿using Antlr.Runtime.Tree;
+using BE_Homnayangi.Modules.AdminModules.CaloReferenceModule.Interface;
 using BE_Homnayangi.Modules.AdminModules.CaloReferenceModule.Request;
 using FluentValidation.Results;
 using Library.Models;
@@ -72,11 +73,14 @@ namespace BE_Homnayangi.Modules.AdminModules.CaloReferenceModule
         {
             try
             {
-                ValidationResult validationResult = new CreateNewCaloRefRequestValidator().Validate(newCaloRefRequest);
-                if (!validationResult.IsValid)
+                if (!CheckValidaCalo(newCaloRefRequest.FromAge, newCaloRefRequest.ToAge, newCaloRefRequest.Calo)
+                    || newCaloRefRequest.FromAge >= newCaloRefRequest.ToAge)
                 {
                     throw new Exception(ErrorMessage.CommonError.INVALID_REQUEST);
                 }
+
+                if (await CheckRangeExisted(newCaloRefRequest.FromAge, newCaloRefRequest.ToAge, newCaloRefRequest.IsMale))
+                    throw new Exception(ErrorMessage.CaloRefError.CALO_REF_IS_EXISTED);
 
                 var newCaloRef = new CaloReference();
                 newCaloRef.CaloReferenceId = Guid.NewGuid();
@@ -95,15 +99,53 @@ namespace BE_Homnayangi.Modules.AdminModules.CaloReferenceModule
             }
         }
 
+        private bool CheckValidaCalo(int fromAge, int toAge, int calo)
+        {
+            return fromAge < toAge && calo > 0;
+        }
+
+        private async Task<bool> CheckRangeExisted(int min, int max, bool isMale)
+        {
+            try
+            {
+                var existedItems = await _caloReferenceRepository.GetAll();
+                var item = existedItems.Where(c => ((c.FromAge.Value <= min && min <= c.ToAge.Value)
+                                                || (c.FromAge.Value <= max && max <= c.ToAge.Value))
+                                                && isMale == c.IsMale.Value);
+                return item.Count() > 0;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        private void CheckCaloBeforeUpdate(Guid id, int min, int max, int calo, bool isMale, ICollection<CaloReference> list)
+        {
+            try
+            {
+                if (!(min < max && calo > 0))
+                    throw new Exception(ErrorMessage.CommonError.INVALID_REQUEST);
+                var item = list.Where(c => c.CaloReferenceId != id
+                                            && ((c.FromAge.Value <= min && min <= c.ToAge.Value)
+                                                || (c.FromAge.Value <= max && max <= c.ToAge.Value))
+                                                    && isMale == c.IsMale.Value);
+                if (item.Count() > 0)
+                    throw new Exception(ErrorMessage.CaloRefError.CALO_REF_IS_EXISTED);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         public async Task UpdateCaloReference(UpdateCaloRefRequest updateCaloRefRequest)
         {
             try
             {
-                ValidationResult validationResult = new UpdateCaloRefRequestValidator().Validate(updateCaloRefRequest);
-                if (!validationResult.IsValid)
-                {
-                    throw new Exception(ErrorMessage.CommonError.INVALID_REQUEST);
-                }
+                var items = await _caloReferenceRepository.GetAll();
+                CheckCaloBeforeUpdate(updateCaloRefRequest.CaloRefId, updateCaloRefRequest.FromAge.Value,
+                    updateCaloRefRequest.ToAge.Value, updateCaloRefRequest.Calo.Value, updateCaloRefRequest.IsMale.Value, items);
 
                 var caloRefUpdate = _caloReferenceRepository.GetFirstOrDefaultAsync(x => x.CaloReferenceId == updateCaloRefRequest.CaloRefId).Result;
 
@@ -112,10 +154,10 @@ namespace BE_Homnayangi.Modules.AdminModules.CaloReferenceModule
                     throw new Exception(ErrorMessage.CaloRefError.CALO_REF_NOT_FOUND);
                 }
 
-                caloRefUpdate.FromAge = updateCaloRefRequest.FromAge == null ? caloRefUpdate.FromAge : (int)updateCaloRefRequest.FromAge;
-                caloRefUpdate.ToAge = updateCaloRefRequest.ToAge == null ? caloRefUpdate.ToAge : (int)updateCaloRefRequest.ToAge;
-                caloRefUpdate.Calo = updateCaloRefRequest.Calo == null ? caloRefUpdate.Calo : (int)updateCaloRefRequest.Calo;
-                caloRefUpdate.IsMale = updateCaloRefRequest.IsMale == null ? caloRefUpdate.IsMale : (bool)updateCaloRefRequest.IsMale;
+                caloRefUpdate.FromAge = (int)updateCaloRefRequest.FromAge;
+                caloRefUpdate.ToAge = (int)updateCaloRefRequest.ToAge;
+                caloRefUpdate.Calo = (int)updateCaloRefRequest.Calo;
+                caloRefUpdate.IsMale = (bool)updateCaloRefRequest.IsMale;
 
                 await _caloReferenceRepository.UpdateAsync(caloRefUpdate);
             }

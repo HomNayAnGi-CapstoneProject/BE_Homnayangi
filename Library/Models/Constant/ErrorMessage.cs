@@ -8,7 +8,7 @@ namespace Library.Models.Constant
         {
             public readonly static string ID_IS_NULL = "ID request is null";
             public readonly static string LIST_IS_NULL = "List have no data";
-            public readonly static string INVALID_REQUEST = "Request data is invalid";
+            public readonly static string INVALID_REQUEST = "Dữ liệu không hợp lệ";
             public readonly static string NOT_LOGIN = "Customer did not login";
             public readonly static string ROLE_NOT_SUPPORTED = "This role is not valid for this action";
         }
@@ -82,7 +82,8 @@ namespace Library.Models.Constant
         #region Calo Reference error message
         public static class CaloRefError
         {
-            public readonly static string CALO_REF_NOT_FOUND = "This calo reference can not be found";
+            public readonly static string CALO_REF_NOT_FOUND = "Xin lỗi, không thể tìm thấy khung tuổi gợi ý này";
+            public readonly static string CALO_REF_IS_EXISTED = "Xin lỗi, khung tuổi gợi ý này đã tồn tại";
         }
         #endregion
 

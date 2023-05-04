@@ -3,6 +3,7 @@ using BE_Homnayangi.Modules.AdminModules.CaloReferenceModule.Request;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using Library.Models;
 using Library.Models.Constant;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -72,17 +73,16 @@ namespace BE_Homnayangi.Controllers.AdminControllers
         // PUT: api/Categories/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PutCaloRef([FromBody] UpdateCaloRefRequest updateCaloRefRequest)
         {
             try
             {
-                if (_userService.GetCurrentUser(Request.Headers["Authorization"]) == null)
-                {
-                    throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
-                }
-
                 await _caloRefService.UpdateCaloReference(updateCaloRefRequest);
-                return Ok("Update success");
+                return new JsonResult(new
+                {
+                    status = "success"
+                });
             }
             catch (Exception ex)
             {
@@ -97,16 +97,17 @@ namespace BE_Homnayangi.Controllers.AdminControllers
         // POST: api/Categories
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<CaloReference>> PostCaloRef([FromBody] CreateNewCaloRefRequest reqCaloRef)
         {
             try
             {
-                if (_userService.GetCurrentUser(Request.Headers["Authorization"]) == null)
+                var result = await _caloRefService.CreateNewCaloRef(reqCaloRef);
+                return new JsonResult(new
                 {
-                    throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
-                }
-
-                return Ok(await _caloRefService.CreateNewCaloRef(reqCaloRef));
+                    status = "success",
+                    result = result
+                });
             }
             catch (Exception ex)
             {
@@ -120,17 +121,17 @@ namespace BE_Homnayangi.Controllers.AdminControllers
 
         // DELETE: api/Categories/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCaloRef([FromRoute] Guid? id)
         {
             try
             {
-                if (_userService.GetCurrentUser(Request.Headers["Authorization"]) == null)
-                {
-                    throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
-                }
 
                 await _caloRefService.DeleteCaloReference(id);
-                return Ok("Delete success");
+                return new JsonResult(new
+                {
+                    status = "success"
+                });
             }
             catch (Exception ex)
             {

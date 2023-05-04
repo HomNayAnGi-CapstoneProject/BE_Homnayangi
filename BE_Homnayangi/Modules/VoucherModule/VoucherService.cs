@@ -71,7 +71,7 @@ namespace BE_Homnayangi.Modules.VoucherModule
         {
             try
             {
-                var vouchers = await _voucherRepository.GetVouchersBy(v => v.Status == 1);
+                var vouchers = await _voucherRepository.GetVouchersBy(v => v.Status == 1 && v.ValidTo > DateTime.Now);
                 return vouchers.Select(v => new OverviewVoucher()
                 {
                     VoucherId = v.VoucherId,
