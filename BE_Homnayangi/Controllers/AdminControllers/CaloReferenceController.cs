@@ -73,17 +73,16 @@ namespace BE_Homnayangi.Controllers.AdminControllers
         // PUT: api/Categories/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PutCaloRef([FromBody] UpdateCaloRefRequest updateCaloRefRequest)
         {
             try
             {
-                if (_userService.GetCurrentUser(Request.Headers["Authorization"]) == null)
-                {
-                    throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
-                }
-
                 await _caloRefService.UpdateCaloReference(updateCaloRefRequest);
-                return Ok("Update success");
+                return new JsonResult(new
+                {
+                    status = "success"
+                });
             }
             catch (Exception ex)
             {
@@ -122,17 +121,17 @@ namespace BE_Homnayangi.Controllers.AdminControllers
 
         // DELETE: api/Categories/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCaloRef([FromRoute] Guid? id)
         {
             try
             {
-                if (_userService.GetCurrentUser(Request.Headers["Authorization"]) == null)
-                {
-                    throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
-                }
 
                 await _caloRefService.DeleteCaloReference(id);
-                return Ok("Delete success");
+                return new JsonResult(new
+                {
+                    status = "success"
+                });
             }
             catch (Exception ex)
             {
