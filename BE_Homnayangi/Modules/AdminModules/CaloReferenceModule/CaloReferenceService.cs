@@ -72,13 +72,13 @@ namespace BE_Homnayangi.Modules.AdminModules.CaloReferenceModule
         {
             try
             {
-                ValidationResult validationResult = new CreateNewCaloRefRequestValidator().Validate(newCaloRefRequest);
-                if (!validationResult.IsValid || newCaloRefRequest.FromAge >= newCaloRefRequest.ToAge)
+                if (!CheckValidaCalo(newCaloRefRequest.FromAge, newCaloRefRequest.ToAge, newCaloRefRequest.Calo) 
+                    || newCaloRefRequest.FromAge >= newCaloRefRequest.ToAge)
                 {
                     throw new Exception(ErrorMessage.CommonError.INVALID_REQUEST);
                 }
 
-                if (await CheckRangeExisted(newCaloRefRequest.FromAge, newCaloRefRequest.ToAge))
+                if (await CheckRangeExisted(newCaloRefRequest.FromAge, newCaloRefRequest.ToAge, newCaloRefRequest.IsMale))
                     throw new Exception(ErrorMessage.CaloRefError.CALO_REF_IS_EXISTED);
 
                 var newCaloRef = new CaloReference();
@@ -98,17 +98,19 @@ namespace BE_Homnayangi.Modules.AdminModules.CaloReferenceModule
             }
         }
 
-        private async Task<bool> CheckRangeExisted(int min, int max)
+        private bool CheckValidaCalo(int fromAge, int toAge, int calo)
+        {
+            return fromAge < toAge && calo > 0;
+        }
+
+        private async Task<bool> CheckRangeExisted(int min, int max, bool isMale)
         {
             try
             {
                 var existedItems = await _caloReferenceRepository.GetAll();
-                var item = existedItems.Where(c => Enumerable.Range(c.FromAge.Value, c.ToAge.Value).Contains(min)
-                                                || Enumerable.Range(c.FromAge.Value, c.ToAge.Value).Contains(max));
-                if (item.Count() > 0)
-                {
-                    Console.WriteLine("Co ton tai roi");
-                }
+                var item = existedItems.Where(c => (Enumerable.Range(c.FromAge.Value, c.ToAge.Value).Contains(min)
+                                                || Enumerable.Range(c.FromAge.Value, c.ToAge.Value).Contains(max))
+                                                && isMale == c.IsMale.Value);
                 return item.Count() > 0;
             }
             catch (Exception ex)
