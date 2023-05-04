@@ -333,7 +333,24 @@ namespace BE_Homnayangi.Controllers
         {
             try
             {
-                return Ok(await _blogService.GetSuggestBlogByCalo(request));
+                var result = await _blogService.GetSuggestBlogByCalo(request);
+                if(result.SuggestBlogs.Count == 0)
+                {
+                    return new JsonResult(new
+                    {
+                        status = "failed",
+                        msg = ErrorMessage.CommonError.NOT_ENOUGH_DATA
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        status = "success",
+                        result = result
+                    });
+                }
+                
             }
             catch (Exception ex)
             {

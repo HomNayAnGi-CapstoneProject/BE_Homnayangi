@@ -501,8 +501,10 @@ namespace BE_Homnayangi.Modules.BlogModule
                 suggestCalo.Calo = suggestCalo.Calo / 3;
 
                 //take 3 blog match the suggest calo
+                int count = 0;
                 do
                 {
+                    ++count;
                     var firstBlog = listNormalBlog.ElementAt(rnd.Next(0, listNormalBlog.Count() - 1));
                     var secondBlog = listNormalBlog.ElementAt(rnd.Next(0, listNormalBlog.Count() - 1));
                     var soupBlog = listSoupBlog.ElementAt(rnd.Next(0, listSoupBlog.Count() - 1));
@@ -628,7 +630,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                             }
                         }
                     }
-                } while (result.Count() < 3);
+                } while (result.Count() < 3 && count < 150);
                 SuggestBlogResponse suggestBlogResponse = new SuggestBlogResponse
                 {
                     Calo = suggestCalo.Calo,

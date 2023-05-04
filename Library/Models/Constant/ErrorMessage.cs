@@ -11,6 +11,7 @@ namespace Library.Models.Constant
             public readonly static string INVALID_REQUEST = "Dữ liệu không hợp lệ";
             public readonly static string NOT_LOGIN = "Customer did not login";
             public readonly static string ROLE_NOT_SUPPORTED = "This role is not valid for this action";
+            public readonly static string NOT_ENOUGH_DATA = "Xin lỗi chúng tôi chưa có đủ dữ liệu cho thông tin này";
         }
         #endregion
 
