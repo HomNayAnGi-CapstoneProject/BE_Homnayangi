@@ -98,7 +98,7 @@ namespace BE_Homnayangi.Controllers.AdminControllers
         // POST: api/Categories
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        [Authorize(Roles = "Staff")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<CaloReference>> PostCaloRef([FromBody] CreateNewCaloRefRequest reqCaloRef)
         {
             try
