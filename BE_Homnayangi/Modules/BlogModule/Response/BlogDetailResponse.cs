@@ -61,5 +61,6 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
         public int? Kcal { get; set; }
         public decimal? Price { get; set; }
         public string Image { get; set; }
+        public string UnitName { get; set; }
     }
 }
