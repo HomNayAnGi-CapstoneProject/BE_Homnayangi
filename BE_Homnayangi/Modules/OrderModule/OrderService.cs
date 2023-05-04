@@ -168,6 +168,8 @@ namespace BE_Homnayangi.Modules.OrderModule
                 };
                 res.Add(orderResponse);
             }
+            if (status == 2)
+                return res.Where(r => r.ShippedDate.HasValue && r.ShippedDate.Value.Date == DateTime.Today.Date).OrderByDescending(r => r.OrderDate).ToList();
             return res.OrderByDescending(r => r.OrderDate).ToList();
         }
 
