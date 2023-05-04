@@ -34,6 +34,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static Library.Models.Enum.ReferenceType;
 using static Library.Models.Enum.Status;
+using BE_Homnayangi.Modules.UnitModule.Interface;
 
 namespace BE_Homnayangi.Modules.BlogModule
 {
@@ -50,6 +51,7 @@ namespace BE_Homnayangi.Modules.BlogModule
         private readonly IBlogReactionRepository _blogReactionRepository;
         private readonly IAccomplishmentRepository _accomplishmentRepository;
         private readonly ICaloReferenceRepository _caloReferenceRepository;
+        private readonly IUnitRepository _unitRepository;
         private readonly INotificationRepository _notificationRepository;
         private readonly IHubContext<SignalRServer> _hubContext;
 
@@ -57,7 +59,7 @@ namespace BE_Homnayangi.Modules.BlogModule
             ISubCateRepository subCateRepository, IRecipeDetailRepository recipeDetailRepository,
             IUserRepository userRepository, IBlogReferenceRepository blogReferenceRepository, ICommentRepository commentRepository,
             IBlogReactionRepository blogReactionRepository, IAccomplishmentRepository accomplishmentRepository,
-            ICaloReferenceRepository caloReferenceRepository,
+            ICaloReferenceRepository caloReferenceRepository, IUnitRepository unitRepository,
             INotificationRepository notificationRepository,
             IHubContext<SignalRServer> hubContext)
         {
@@ -71,6 +73,7 @@ namespace BE_Homnayangi.Modules.BlogModule
             _blogReactionRepository = blogReactionRepository;
             _accomplishmentRepository = accomplishmentRepository;
             _caloReferenceRepository = caloReferenceRepository;
+            _unitRepository = unitRepository;
             _notificationRepository = notificationRepository;
             _hubContext = hubContext;
         }
@@ -1430,6 +1433,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                 }).ToList();
 
                 // List RecipeDetails & List Ingredients
+                var units = await _unitRepository.GetAll();
                 result.RecipeDetails = _recipeDetailRepository.GetRecipeDetailsBy(x => x.RecipeId == result.RecipeId, includeProperties: "Ingredient").Result
                     .Select(x => new RecipeDetailResponse
                     {
@@ -1438,7 +1442,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                         Description = x.Description,
                         Quantity = x.Quantity,
                         Kcal = x.Ingredient.Kcal,
-                        Price = x.Ingredient.Price
+                        Price = x.Ingredient.Price,
+                        UnitName = units.Where(u => u.UnitId == x.Ingredient.UnitId).FirstOrDefault().Name
                     }).ToList();
             }
             catch (Exception ex)
