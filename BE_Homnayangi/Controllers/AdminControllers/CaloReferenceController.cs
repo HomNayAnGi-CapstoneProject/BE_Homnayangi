@@ -3,6 +3,7 @@ using BE_Homnayangi.Modules.AdminModules.CaloReferenceModule.Request;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using Library.Models;
 using Library.Models.Constant;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -97,13 +98,14 @@ namespace BE_Homnayangi.Controllers.AdminControllers
         // POST: api/Categories
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Roles = "Staff")]
         public async Task<ActionResult<CaloReference>> PostCaloRef([FromBody] CreateNewCaloRefRequest reqCaloRef)
         {
             try
             {
                 if (_userService.GetCurrentUser(Request.Headers["Authorization"]) == null)
                 {
-                    throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
+                    throw new Exception(ErrorMessage.AdminError.ADMIN_ONLY);
                 }
 
                 return Ok(await _caloRefService.CreateNewCaloRef(reqCaloRef));

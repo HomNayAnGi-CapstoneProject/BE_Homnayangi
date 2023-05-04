@@ -98,6 +98,7 @@ namespace BE_Homnayangi.Modules.BadgeModule
                     badge.Description = newBadge.Description;
                     badge.ImageUrl = newBadge.ImageUrl;
                     badge.VoucherId = newBadge.VoucherId;
+                    badge.Status = newBadge.Status;
                     await _badgeRepository.UpdateAsync(badge);
                 }
                 else

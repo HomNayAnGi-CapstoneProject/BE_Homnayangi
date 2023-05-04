@@ -73,10 +73,13 @@ namespace BE_Homnayangi.Modules.AdminModules.CaloReferenceModule
             try
             {
                 ValidationResult validationResult = new CreateNewCaloRefRequestValidator().Validate(newCaloRefRequest);
-                if (!validationResult.IsValid)
+                if (!validationResult.IsValid || newCaloRefRequest.FromAge >= newCaloRefRequest.ToAge)
                 {
                     throw new Exception(ErrorMessage.CommonError.INVALID_REQUEST);
                 }
+
+                if (await CheckRangeExisted(newCaloRefRequest.FromAge, newCaloRefRequest.ToAge))
+                    throw new Exception(ErrorMessage.CaloRefError.CALO_REF_IS_EXISTED);
 
                 var newCaloRef = new CaloReference();
                 newCaloRef.CaloReferenceId = Guid.NewGuid();
@@ -88,6 +91,25 @@ namespace BE_Homnayangi.Modules.AdminModules.CaloReferenceModule
                 await _caloReferenceRepository.AddAsync(newCaloRef);
 
                 return newCaloRef.CaloReferenceId;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        private async Task<bool> CheckRangeExisted(int min, int max)
+        {
+            try
+            {
+                var existedItems = await _caloReferenceRepository.GetAll();
+                var item = existedItems.Where(c => Enumerable.Range(c.FromAge.Value, c.ToAge.Value).Contains(min)
+                                                || Enumerable.Range(c.FromAge.Value, c.ToAge.Value).Contains(max));
+                if (item.Count() > 0)
+                {
+                    Console.WriteLine("Co ton tai roi");
+                }
+                return item.Count() > 0;
             }
             catch (Exception ex)
             {
