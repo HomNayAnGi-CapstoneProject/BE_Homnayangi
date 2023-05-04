@@ -142,7 +142,7 @@ namespace BE_Homnayangi
                     .ForJob(jobKey)
                     .WithIdentity("CancelOrderJob-trigger")
                     //This Cron interval can be described as "run every minute" (when second is zero)
-                    .WithCronSchedule(Configuration.GetSection("JobTime:CronSchedule").Value ?? "0/5 * * * * ?")
+                    .WithCronSchedule("0/5 * * * * ?")
                 );
             });
             services.AddQuartz(q =>
