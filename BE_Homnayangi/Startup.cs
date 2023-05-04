@@ -156,7 +156,7 @@ namespace BE_Homnayangi
                     .ForJob(jobKey)
                     .WithIdentity("CheckVoucherJob-trigger")
                     //This Cron interval can be described as "run every minute" (when second is zero)
-                    .WithCronSchedule("0/5 * * * * ?")
+                    .WithCronSchedule(Configuration.GetSection("JobTime:CronSchedule").Value ?? "0/5 * * * * ?")
                 );
             });
             services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
