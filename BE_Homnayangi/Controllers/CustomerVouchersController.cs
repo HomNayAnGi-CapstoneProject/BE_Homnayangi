@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BE_Homnayangi.Modules.CustomerVoucherModule.Interface;
 using BE_Homnayangi.Modules.CustomerVoucherModule.Request;
+using BE_Homnayangi.Modules.OrderModule.Interface;
 using Library.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,17 +17,19 @@ namespace BE_Homnayangi.Controllers
     public class CustomerVouchersController : ControllerBase
     {
         private readonly IMapper _mapper;
+        private readonly IOrderService _orderService;
         private readonly ICustomerVoucherService _customerVoucherService;
 
-        public CustomerVouchersController(IMapper mapper, ICustomerVoucherService customerVoucherService)
+        public CustomerVouchersController(IMapper mapper, IOrderService orderService, ICustomerVoucherService customerVoucherService)
         {
             _mapper = mapper;
+            _orderService = orderService;
             _customerVoucherService = customerVoucherService;
         }
 
         // GET: api/v1/CustomerVouchers
         [HttpGet("customer/{cusId}/vouchers")]
-        [Authorize(Roles = "Staff,Manager,Customer")]
+        [Authorize(Roles = "Customer")]
         public async Task<ActionResult> GetAllCustomerVouchersByCusId([FromRoute] Guid cusId)
         {
             var result = await _customerVoucherService.GetAllCustomerVouchersByCusId(cusId);

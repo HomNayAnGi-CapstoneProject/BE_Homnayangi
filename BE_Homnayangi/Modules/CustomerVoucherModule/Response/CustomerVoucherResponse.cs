@@ -6,6 +6,7 @@ namespace BE_Homnayangi.Modules.CustomerVoucherModule.Response
     public class CustomerVoucherResponse
     {
         public Guid VoucherId { get; set; }
+        public Guid CustomerId { get; set; }
         public string VoucherName { get; set; }
         public Guid CustomerVoucherId { get; set; }
         public string CustomerName { get; set; }
