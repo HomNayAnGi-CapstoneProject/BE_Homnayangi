@@ -82,7 +82,7 @@ namespace Library.Models.Constant
         #region Calo Reference error message
         public static class CaloRefError
         {
-            public readonly static string CALO_REF_NOT_FOUND = "This calo reference can not be found";
+            public readonly static string CALO_REF_NOT_FOUND = "Xin lỗi, không thể tìm thấy khung tuổi gợi ý này";
             public readonly static string CALO_REF_IS_EXISTED = "Xin lỗi, khung tuổi gợi ý này đã tồn tại";
         }
         #endregion
