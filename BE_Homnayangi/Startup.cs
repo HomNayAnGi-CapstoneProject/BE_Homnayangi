@@ -145,6 +145,20 @@ namespace BE_Homnayangi
                     .WithCronSchedule(Configuration.GetSection("JobTime:CronSchedule").Value ?? "0/5 * * * * ?")
                 );
             });
+            services.AddQuartz(q =>
+            {
+                q.UseMicrosoftDependencyInjectionScopedJobFactory();
+                // Just use the name of your job that you created in the Jobs folder.
+                var jobKey = new JobKey("CheckVoucherJob");
+                q.AddJob<CheckVoucherJob>(opts => opts.WithIdentity(jobKey));
+
+                q.AddTrigger(opts => opts
+                    .ForJob(jobKey)
+                    .WithIdentity("CheckVoucherJob-trigger")
+                    //This Cron interval can be described as "run every minute" (when second is zero)
+                    .WithCronSchedule(Configuration.GetSection("JobTime:CronSchedule").Value ?? "0/5 * * * * ?")
+                );
+            });
             services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
             services.AddMvcCore().ConfigureApiBehaviorOptions(options =>
             {
