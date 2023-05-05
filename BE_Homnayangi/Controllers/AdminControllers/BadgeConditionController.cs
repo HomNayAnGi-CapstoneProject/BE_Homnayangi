@@ -47,18 +47,19 @@ namespace BE_Homnayangi.Controllers.AdminControllers
                 });
             }
         }
-        /*   [Authorize(Roles = "Customer")]*/
+       
+        [Authorize(Roles = "Customer")]
         [HttpGet("customers")]
 
         public async Task<ActionResult<IEnumerable<BadgeCondition>>> GetBadgeConditionsByCustomers()
         {
             try
             {
-                /*    if (_userService.GetCurrentUser(Request.Headers["Authorization"]) == null)
-                    {
-                        throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
-                    }
-    */
+                if (_userService.GetCurrentUser(Request.Headers["Authorization"]) == null)
+                {
+                    throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
+                }
+    
                 return Ok(await _badgeConditionService.GetBadgeConditionsByCustomer());
             }
             catch (Exception ex)
