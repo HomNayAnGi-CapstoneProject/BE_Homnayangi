@@ -43,7 +43,7 @@ namespace BE_Homnayangi.Ultils.Quartz
                     var orders = customer.Orders;
                     foreach (Order order in orders)
                     {
-                        if (order.IsCooked == true && order.OrderStatus == (int)Status.OrderStatus.PENDING && DateTime.Now.Date >= order.OrderDate)
+                        if (order.IsCooked == true && order.OrderStatus == (int)Status.OrderStatus.PENDING && DateTime.Now.AddHours(2) >= order.ShippedDate)
                         {
                             order.OrderStatus = (int)Status.OrderStatus.DENIED;
                             await _orderRepository.UpdateAsync(order);

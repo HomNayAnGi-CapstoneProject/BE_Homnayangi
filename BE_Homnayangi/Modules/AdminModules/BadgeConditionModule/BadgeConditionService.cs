@@ -202,8 +202,9 @@ namespace BE_Homnayangi.Modules.AdminModules.BadgeConditionModule
                     throw new Exception(ErrorMessage.CommonError.ID_IS_NULL);
                 }
 
-                var badgeConditionDelete = await _badgeConditionRepository.GetFirstOrDefaultAsync(x => x.BadgeId.Equals(id) && x.Status.Value);
+                var badgeConditionDelete = await _badgeConditionRepository.GetFirstOrDefaultAsync(x => x.BadgeConditionId.Equals(id) && x.Status.Value);
                 badgeConditionDelete.Status = false;
+
 
                 if (badgeConditionDelete == null)
                 {

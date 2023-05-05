@@ -4,6 +4,7 @@ using BE_Homnayangi.Modules.AdminModules.CaloReferenceModule.Request;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using Library.Models;
 using Library.Models.Constant;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -46,6 +47,31 @@ namespace BE_Homnayangi.Controllers.AdminControllers
                 });
             }
         }
+       
+        [Authorize(Roles = "Customer")]
+        [HttpGet("customers")]
+
+        public async Task<ActionResult<IEnumerable<BadgeCondition>>> GetBadgeConditionsByCustomers()
+        {
+            try
+            {
+                if (_userService.GetCurrentUser(Request.Headers["Authorization"]) == null)
+                {
+                    throw new Exception(ErrorMessage.UserError.USER_NOT_LOGIN);
+                }
+    
+                return Ok(await _badgeConditionService.GetBadgeConditionsByCustomer());
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    status = "failed",
+                    msg = ex.Message
+                });
+            }
+        }
+
 
         // GET: api/Categories/5
         [HttpGet("{id}")]
