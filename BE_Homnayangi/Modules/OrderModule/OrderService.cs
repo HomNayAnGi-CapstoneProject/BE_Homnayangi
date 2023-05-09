@@ -32,6 +32,11 @@ using BE_Homnayangi.Modules.NotificationModule.Interface;
 using static Library.Models.Enum.PaymentMethodEnum;
 using static Library.Models.Enum.Status;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using GoogleMapsApi;
+using GoogleMapsApi.Entities.Directions.Request;
+using GoogleMapsApi.Entities.Directions.Response;
+using GoogleMapsApi.Entities.Geocoding.Request;
+using GoogleMapsApi.Entities.Common;
 
 namespace BE_Homnayangi.Modules.OrderModule
 {
@@ -171,7 +176,7 @@ namespace BE_Homnayangi.Modules.OrderModule
 
             if (status == 2)
                 return res.Where(r => (r.ShippedDate.HasValue && r.ShippedDate.Value.Date == DateTime.Today.Date)
-                    || (r.ShippedDate==null && r.OrderDate.Value.Date == DateTime.Today.Date))
+                    || (r.ShippedDate == null && r.OrderDate.Value.Date == DateTime.Today.Date))
                     .OrderByDescending(r => r.OrderDate).ToList();
 
             return res.OrderByDescending(r => r.OrderDate).ToList();
@@ -899,7 +904,7 @@ namespace BE_Homnayangi.Modules.OrderModule
         public async Task<ICollection<Order>> GetAll()
         {
             var res = await _OrderRepository.GetAll();
-            return res.OrderByDescending(o=>o.OrderDate).ToList();
+            return res.OrderByDescending(o => o.OrderDate).ToList();
         }
 
         public async Task<ICollection<OrderResponse>> GetOrderByCustomer(DateTime? fromDate, DateTime? toDate, Guid customerId, int status = -1)
@@ -989,6 +994,31 @@ namespace BE_Homnayangi.Modules.OrderModule
             }
             return res.OrderByDescending(r => r.OrderDate).ToList();
         }
+        public async Task<double> CalculateDistance(double lat2, double lon2)
+        {
+            DirectionsRequest distanceRequest = new DirectionsRequest();
 
+            distanceRequest.ApiKey = "AIzaSyBJJz1ycJY1VGfflXOfMQERyEcI_inBcnQ";
+
+            Location location1 = new Location(10.841611269790572, 106.809507568837);
+            Location location2 = new Location(lat2, lon2);
+            distanceRequest.Origin = location1.ToString();
+            distanceRequest.Destination = location2.ToString();
+
+
+
+            var distanceResponse = await GoogleMaps.Directions.QueryAsync(distanceRequest);
+
+            if (distanceResponse.Status == DirectionsStatusCodes.OK && distanceResponse.Routes.Any())
+            {
+
+                // The distance is returned in meters, so we convert it to kilometers
+                var distanceInMeters = distanceResponse.Routes.First().Legs.Sum(l => l.Distance.Value);
+                var distanceInKilometers = (double)distanceInMeters / 1000;
+                return distanceInKilometers;
+            }
+
+            throw new Exception($"Failed to calculate distance");
+        }
     }
 }
