@@ -48,7 +48,8 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                 // Check accomplishment existed or not
                 var tmpAccom = await _accomplishmentRepository.GetFirstOrDefaultAsync(a =>
                                                                 a.AuthorId == authorId
-                                                                && a.BlogId == request.BlogId);
+                                                                && a.BlogId == request.BlogId
+                                                                && a.Status.Value != (int)Status.AccomplishmentStatus.DEACTIVE);
                 if (tmpAccom != null)
                     throw new Exception(ErrorMessage.AccomplishmentError.ACCOMPLISHMENT_EXISTED);
 

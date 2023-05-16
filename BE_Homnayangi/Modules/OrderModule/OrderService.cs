@@ -990,5 +990,37 @@ namespace BE_Homnayangi.Modules.OrderModule
             return res.OrderByDescending(r => r.OrderDate).ToList();
         }
 
+        public async Task<FinancialReport> CreateFinancialReport(int month, int year)
+        {
+            if (month < 1 || month > 12) throw new Exception("Invalid month");
+            if (year < 2023 || year > DateTime.Now.Year) throw new Exception("Invalid year");
+
+            var startDate = new DateTime(year, month, 1);
+            var endDate = new DateTime(year, month, DateTime.DaysInMonth(year, month));
+
+            var orders = await _OrderRepository.GetOrdersBy(o => o.OrderStatus == (int)Status.OrderStatus.DELIVERED && o.OrderDate.HasValue && o.OrderDate.Value >= startDate && o.OrderDate <= endDate);
+            decimal revenue = 0;
+            decimal gains = 0;
+            decimal expenses = 0;
+            decimal losses = 0;
+            var netIncome = revenue + gains - expenses - losses;
+
+            orders.ToList().ForEach(o =>
+            {
+                revenue += o.TotalPrice.Value;
+            });
+
+            FinancialReport financialReport = new FinancialReport
+            {
+                StartDate = startDate,
+                EndDate = endDate,
+                Revenue = revenue,
+                Gains = gains,
+                Expenses = expenses,
+                Losses = losses,
+                NetIncome = netIncome
+            };
+            return financialReport;
+        }
     }
 }
