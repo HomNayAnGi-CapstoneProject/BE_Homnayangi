@@ -5,15 +5,18 @@ using System.Collections.Generic;
 
 namespace Library.Models
 {
-    public partial class Unit
+    public partial class CookingMethod
     {
-        public Guid UnitId { get; set; }
+        public CookingMethod()
+        {
+            Blogs = new HashSet<Blog>();
+        }
+
+        public Guid CookingMethodId { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
         public DateTime? CreatedDate { get; set; }
-        public Guid? TypeId { get; set; }
         public bool? Status { get; set; }
 
-        public virtual Type Type { get; set; }
+        public virtual ICollection<Blog> Blogs { get; set; }
     }
 }

@@ -6,7 +6,6 @@ using BE_Homnayangi.Modules.OrderDetailModule.Interface;
 using BE_Homnayangi.Modules.OrderModule.Interface;
 using BE_Homnayangi.Modules.OrderModule.Response;
 using BE_Homnayangi.Modules.RecipeModule;
-using BE_Homnayangi.Modules.RecipeModule.Interface;
 using BE_Homnayangi.Modules.TransactionModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.VoucherModule.Interface;
@@ -32,6 +31,7 @@ using BE_Homnayangi.Modules.NotificationModule.Interface;
 using static Library.Models.Enum.PaymentMethodEnum;
 using static Library.Models.Enum.Status;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using BE_Homnayangi.Modules.PackageModule.Interface;
 
 namespace BE_Homnayangi.Modules.OrderModule
 {
@@ -43,7 +43,7 @@ namespace BE_Homnayangi.Modules.OrderModule
         private readonly IUserRepository _userRepository;
         private readonly ITransactionRepository _transactionRepository;
         private readonly IIngredientRepository _ingredientRepository;
-        private readonly IRecipeRepository _recipeRepository;
+        private readonly IPackageRepository _recipeRepository;
         private readonly IVoucherRepository _voucherRepository;
         private readonly INotificationRepository _notificationRepository;
         private readonly IHubContext<SignalRServer> _hubContext;
@@ -58,7 +58,7 @@ namespace BE_Homnayangi.Modules.OrderModule
             IUserRepository userRepository,
             ITransactionRepository transactionRepository,
             IIngredientRepository ingredientRepository,
-            IRecipeRepository recipeRepository,
+            IPackageRepository recipeRepository,
             IVoucherRepository voucherRepository,
             INotificationRepository notificationRepository,
             IHubContext<SignalRServer> hubContext,

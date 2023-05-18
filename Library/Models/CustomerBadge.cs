@@ -9,6 +9,7 @@ namespace Library.Models
     {
         public Guid CustomerId { get; set; }
         public Guid BadgeId { get; set; }
+        public bool? Status { get; set; }
         public DateTime? CreatedDate { get; set; }
 
         public virtual Badge Badge { get; set; }

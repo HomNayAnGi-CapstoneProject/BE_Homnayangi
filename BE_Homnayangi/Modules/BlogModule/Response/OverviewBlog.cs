@@ -13,7 +13,7 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
         public int? View { get; set; }
         public int? Reaction { get; set; }
         public DateTime CreatedDate { get; set; }
-        public decimal? CookedPrice { get; set; }
+        public decimal? PackagePrice { get; set; }
         public int? TotalKcal { get; set; }
 
         public string? AuthorName { get; set; }

@@ -3,12 +3,12 @@ using BE_Homnayangi.Modules.CommentModule.Response;
 using BE_Homnayangi.Modules.CustomerVoucherModule.Request;
 using BE_Homnayangi.Modules.CustomerVoucherModule.Validation;
 using BE_Homnayangi.Modules.DTO.IngredientDTO;
-using BE_Homnayangi.Modules.DTO.RecipeDetailsDTO;
-using BE_Homnayangi.Modules.DTO.RecipeDTO;
 using BE_Homnayangi.Modules.IngredientModule.IngredientDTO;
 using BE_Homnayangi.Modules.IngredientModule.Request;
 using BE_Homnayangi.Modules.OrderModule.Request;
 using BE_Homnayangi.Modules.OrderModule.Response;
+using BE_Homnayangi.Modules.PackageDetailModule.Response;
+using BE_Homnayangi.Modules.PackageModule.Response;
 using BE_Homnayangi.Modules.RewardModule.DTO.Request;
 using BE_Homnayangi.Modules.TypeModule.DTO;
 using BE_Homnayangi.Modules.UserModule.Request;
@@ -31,10 +31,10 @@ namespace BE_Homnayangi.Modules.AutoMapper
             //CreateMap<CreateCategoryRequest, Category>().ReverseMap();
 
             // Recipe
-            CreateMap<Recipe, RecipeResponse>().ReverseMap();
+            CreateMap<Recipe, PackageResponse>().ReverseMap();
 
             // RecipeDetail
-            CreateMap<RecipeDetail, RecipeDetailsResponse>().ReverseMap();
+            CreateMap<RecipeDetail, PackageDetailsResponse>().ReverseMap();
 
             // Ingredient
             CreateMap<Ingredient, IngredientResponse>().ReverseMap();

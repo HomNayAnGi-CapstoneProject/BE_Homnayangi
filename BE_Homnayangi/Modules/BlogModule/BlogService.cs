@@ -8,8 +8,6 @@ using BE_Homnayangi.Modules.BlogReferenceModule.Interface;
 using BE_Homnayangi.Modules.BlogSubCateModule.Interface;
 using BE_Homnayangi.Modules.CommentModule.Interface;
 using BE_Homnayangi.Modules.NotificationModule.Interface;
-using BE_Homnayangi.Modules.RecipeDetailModule.Interface;
-using BE_Homnayangi.Modules.RecipeModule.Interface;
 using BE_Homnayangi.Modules.SubCateModule.Interface;
 using BE_Homnayangi.Modules.SubCateModule.Response;
 using BE_Homnayangi.Modules.UserModule.Interface;
@@ -35,6 +33,8 @@ using System.Threading.Tasks;
 using static Library.Models.Enum.ReferenceType;
 using static Library.Models.Enum.Status;
 using BE_Homnayangi.Modules.UnitModule.Interface;
+using BE_Homnayangi.Modules.PackageModule.Interface;
+using BE_Homnayangi.Modules.PackageDetailModule.Interface;
 
 namespace BE_Homnayangi.Modules.BlogModule
 {
@@ -42,9 +42,9 @@ namespace BE_Homnayangi.Modules.BlogModule
     {
         #region Define repository + Constructor
         private readonly IBlogRepository _blogRepository;
-        private readonly IRecipeRepository _recipeRepository;
+        private readonly IPackageRepository _packageRepository;
         private readonly IBlogSubCateRepository _blogSubCateRepository;
-        private readonly IRecipeDetailRepository _recipeDetailRepository;
+        private readonly IPackageDetailRepository _packageDetailRepository;
         private readonly IUserRepository _userRepository;
         private readonly IBlogReferenceRepository _blogReferenceRepository;
         private readonly ICommentRepository _commentRepository;
@@ -55,8 +55,8 @@ namespace BE_Homnayangi.Modules.BlogModule
         private readonly INotificationRepository _notificationRepository;
         private readonly IHubContext<SignalRServer> _hubContext;
 
-        public BlogService(IBlogRepository blogRepository, IRecipeRepository recipeRepository, IBlogSubCateRepository blogSubCateRepository,
-            ISubCateRepository subCateRepository, IRecipeDetailRepository recipeDetailRepository,
+        public BlogService(IBlogRepository blogRepository, IPackageRepository packageRepository, IBlogSubCateRepository blogSubCateRepository,
+            ISubCateRepository subCateRepository, IPackageDetailRepository packageDetailRepository,
             IUserRepository userRepository, IBlogReferenceRepository blogReferenceRepository, ICommentRepository commentRepository,
             IBlogReactionRepository blogReactionRepository, IAccomplishmentRepository accomplishmentRepository,
             ICaloReferenceRepository caloReferenceRepository, IUnitRepository unitRepository,
@@ -64,9 +64,9 @@ namespace BE_Homnayangi.Modules.BlogModule
             IHubContext<SignalRServer> hubContext)
         {
             _blogRepository = blogRepository;
-            _recipeRepository = recipeRepository;
+            _packageRepository = packageRepository;
             _blogSubCateRepository = blogSubCateRepository;
-            _recipeDetailRepository = recipeDetailRepository;
+            _packageDetailRepository = packageDetailRepository;
             _userRepository = userRepository;
             _blogReferenceRepository = blogReferenceRepository;
             _commentRepository = commentRepository;
@@ -120,7 +120,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                             View = blog.View,
                             Reaction = blog.Reaction,
                             Status = blog.BlogStatus,
-                            TotalKcal = blog.Recipe?.TotalKcal,
+                            TotalKcal = blog.TotalKcal,
                             IsEvent = blog.IsEvent.HasValue ? blog.IsEvent.Value : false,
                             EventExpiredDate = blog.IsEvent.HasValue ? blog.EventExpiredDate : null
                         }).OrderByDescending(b => b.CreatedDate).ToList();

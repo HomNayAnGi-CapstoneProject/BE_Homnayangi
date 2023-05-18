@@ -36,10 +36,7 @@ using BE_Homnayangi.Modules.OrderModule;
 using BE_Homnayangi.Modules.OrderModule.Interface;
 using BE_Homnayangi.Modules.PriceNoteModule;
 using BE_Homnayangi.Modules.PriceNoteModule.Interface;
-using BE_Homnayangi.Modules.RecipeDetailModule;
-using BE_Homnayangi.Modules.RecipeDetailModule.Interface;
 using BE_Homnayangi.Modules.RecipeModule;
-using BE_Homnayangi.Modules.RecipeModule.Interface;
 using BE_Homnayangi.Modules.SubCateModule;
 using BE_Homnayangi.Modules.SubCateModule.Interface;
 using BE_Homnayangi.Modules.TransactionModule;
@@ -83,6 +80,9 @@ using BE_Homnayangi.Modules.AdminModules.CronJobTimeConfigModule;
 using BE_Homnayangi.Ultils.EmailServices;
 using BE_Homnayangi.Modules.NotificationModule;
 using BE_Homnayangi.Modules.NotificationModule.Interface;
+using BE_Homnayangi.Modules.PackageModule.Interface;
+using BE_Homnayangi.Modules.PackageDetailModule.Interface;
+using BE_Homnayangi.Modules.PackageDetailModule;
 
 namespace BE_Homnayangi
 {
@@ -253,14 +253,14 @@ namespace BE_Homnayangi
             services.AddScoped<IBlogService, BlogService>();
 
             // Recipe Module
-            services.AddScoped<IRecipeRepository, RecipeRepository>();
-            services.AddScoped<IRecipeService, RecipeService>();
+            services.AddScoped<IPackageRepository, PackageRepository>();
+            services.AddScoped<IPackageService, PackageService>();
 
             services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
             //Recipe Detail Module
-            services.AddScoped<IRecipeDetailRepository, RecipeDetailRepository>();
-            services.AddScoped<IRecipeDetailService, RecipeDetailService>();
+            services.AddScoped<IPackageDetailRepository, PackageDetailRepository>();
+            services.AddScoped<IPackageDetailService, PackageDetailService>();
 
             //Ingredient Module
             services.AddScoped<IIngredientRepository, IngredientRepository>();

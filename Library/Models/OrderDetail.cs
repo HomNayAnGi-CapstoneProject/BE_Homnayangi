@@ -9,11 +9,11 @@ namespace Library.Models
     {
         public Guid OrderDetailId { get; set; }
         public Guid OrderId { get; set; }
-        public Guid IngredientId { get; set; }
         public int? Quantity { get; set; }
-        public Guid? RecipeId { get; set; }
+        public Guid? PackageId { get; set; }
         public decimal? Price { get; set; }
 
         public virtual Order Order { get; set; }
+        public virtual Package Package { get; set; }
     }
 }

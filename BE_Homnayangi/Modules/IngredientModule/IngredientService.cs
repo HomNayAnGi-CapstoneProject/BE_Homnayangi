@@ -93,7 +93,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
             try
             {
                 ICollection<Ingredient> ingredients = null;
-                ingredients = await _ingredientRepository.GetIngredientsBy(i => i.Status.Value, includeProperties: "Type,Unit");
+                ingredients = await _ingredientRepository.GetIngredientsBy(i => i.Status.Value, includeProperties: "Type");
                 if (typeId != null)
                 {
                     ingredients = ingredients.Where(i => i.TypeId.Value == typeId).ToList();
@@ -108,11 +108,10 @@ namespace BE_Homnayangi.Modules.IngredientModule
                 var result = ingredients.Select(i => new IngredientResponse()
                 {
                     IngredientId = i.IngredientId,
-                    UnitId = i.UnitId,
                     Name = i.Name,
                     Description = i.Description,
                     Quantity = i.Quantity,
-                    UnitName = i.Unit.Name,
+                    UnitName = i.Type.UnitName,
                     Picture = i.Picture,
                     CreatedDate = i.CreatedDate,
                     UpdatedDate = i.UpdatedDate,
@@ -189,13 +188,12 @@ namespace BE_Homnayangi.Modules.IngredientModule
             bool isUpdated = false;
             try
             {
-                Ingredient current = await _ingredientRepository.GetFirstOrDefaultAsync(x => newIg.IngredientId == x.IngredientId, includeProperties: "Unit");
+                Ingredient current = await _ingredientRepository.GetFirstOrDefaultAsync(x => newIg.IngredientId == x.IngredientId, includeProperties: "Type");
                 if (current != null)
                 {
                     current.Name = newIg.Name;
                     current.Description = newIg.Description;
                     current.Quantity = newIg.Quantity;
-                    current.UnitId = newIg.UnitId;
                     current.Picture = newIg.Picture;
                     current.ListImage = StringUtils.CompressContents(newIg.ListImage);
                     current.Kcal = newIg.Kcal;
@@ -322,11 +320,10 @@ namespace BE_Homnayangi.Modules.IngredientModule
                 return new IngredientResponse()
                 {
                     IngredientId = ingredient.IngredientId,
-                    UnitId = ingredient.UnitId,
                     Name = ingredient.Name,
                     Description = ingredient.Description,
                     Quantity = ingredient.Quantity,
-                    UnitName = ingredient.Unit?.Name,
+                    UnitName = ingredient.Type.UnitName,
                     Picture = ingredient.Picture,
                     ListImage = ingredient.ListImage != null ? StringUtils.ExtractContents(ingredient.ListImage) : null,
                     CreatedDate = ingredient.CreatedDate,
@@ -385,11 +382,10 @@ namespace BE_Homnayangi.Modules.IngredientModule
                 return ingredients.Select(i => new IngredientResponse()
                 {
                     IngredientId = i.IngredientId,
-                    UnitId = i.UnitId,
                     Name = i.Name,
                     Description = i.Description,
                     Quantity = i.Quantity,
-                    UnitName = i.Unit.Name,
+                    UnitName = i.Type.UnitName,
                     Picture = i.Picture,
                     CreatedDate = i.CreatedDate,
                     UpdatedDate = i.UpdatedDate,
