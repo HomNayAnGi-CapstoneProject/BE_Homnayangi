@@ -11,7 +11,7 @@ using Repository.Repository;
 
 namespace BE_Homnayangi.Modules.RecipeModule
 {
-    public class PackageRepository : Repository<Recipe>, IPackageRepository
+    public class PackageRepository : Repository<Package>, IPackageRepository
 	{
         private readonly HomnayangiContext _db;
 
@@ -20,10 +20,10 @@ namespace BE_Homnayangi.Modules.RecipeModule
             _db = db;
 		}
 
-        public async Task<ICollection<Recipe>> GetRecipesBy(Expression<Func<Recipe, bool>> filter = null, Func<IQueryable<Recipe>, ICollection<Recipe>> options = null, string includeProperties = null)
+        public async Task<ICollection<Package>> GetPackagesBy(Expression<Func<Package, bool>> filter = null, Func<IQueryable<Package>, ICollection<Package>> options = null, string includeProperties = null)
 
         {
-            IQueryable<Recipe> query = DbSet;
+            IQueryable<Package> query = DbSet;
 
             if (filter != null)
             {

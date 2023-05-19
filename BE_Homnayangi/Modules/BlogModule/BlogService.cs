@@ -32,7 +32,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static Library.Models.Enum.ReferenceType;
 using static Library.Models.Enum.Status;
-using BE_Homnayangi.Modules.UnitModule.Interface;
 using BE_Homnayangi.Modules.PackageModule.Interface;
 using BE_Homnayangi.Modules.PackageDetailModule.Interface;
 
@@ -51,7 +50,6 @@ namespace BE_Homnayangi.Modules.BlogModule
         private readonly IBlogReactionRepository _blogReactionRepository;
         private readonly IAccomplishmentRepository _accomplishmentRepository;
         private readonly ICaloReferenceRepository _caloReferenceRepository;
-        private readonly IUnitRepository _unitRepository;
         private readonly INotificationRepository _notificationRepository;
         private readonly IHubContext<SignalRServer> _hubContext;
 
@@ -59,7 +57,7 @@ namespace BE_Homnayangi.Modules.BlogModule
             ISubCateRepository subCateRepository, IPackageDetailRepository packageDetailRepository,
             IUserRepository userRepository, IBlogReferenceRepository blogReferenceRepository, ICommentRepository commentRepository,
             IBlogReactionRepository blogReactionRepository, IAccomplishmentRepository accomplishmentRepository,
-            ICaloReferenceRepository caloReferenceRepository, IUnitRepository unitRepository,
+            ICaloReferenceRepository caloReferenceRepository,
             INotificationRepository notificationRepository,
             IHubContext<SignalRServer> hubContext)
         {
@@ -73,7 +71,6 @@ namespace BE_Homnayangi.Modules.BlogModule
             _blogReactionRepository = blogReactionRepository;
             _accomplishmentRepository = accomplishmentRepository;
             _caloReferenceRepository = caloReferenceRepository;
-            _unitRepository = unitRepository;
             _notificationRepository = notificationRepository;
             _hubContext = hubContext;
         }
@@ -130,11 +127,11 @@ namespace BE_Homnayangi.Modules.BlogModule
                     ICollection<Blog> blogs = new List<Blog>();
 
                     if (isEvent == null)    // get all
-                        blogs = await _blogRepository.GetBlogsBy(b => b.BlogStatus != (int)Status.BlogStatus.PENDING, includeProperties: "Recipe,Author");
+                        blogs = await _blogRepository.GetBlogsBy(b => b.BlogStatus != (int)Status.BlogStatus.PENDING, includeProperties: "Author");
                     else if (isEvent.Value) // only event
-                        blogs = await _blogRepository.GetBlogsBy(b => b.BlogStatus != (int)Status.BlogStatus.PENDING && b.IsEvent != null && b.IsEvent.Value, includeProperties: "Recipe,Author");
+                        blogs = await _blogRepository.GetBlogsBy(b => b.BlogStatus != (int)Status.BlogStatus.PENDING && b.IsEvent != null && b.IsEvent.Value, includeProperties: "Author");
                     else                    // only blog
-                        blogs = await _blogRepository.GetBlogsBy(b => b.BlogStatus != (int)Status.BlogStatus.PENDING && !(b.IsEvent != null && b.IsEvent.Value), includeProperties: "Recipe,Author");
+                        blogs = await _blogRepository.GetBlogsBy(b => b.BlogStatus != (int)Status.BlogStatus.PENDING && !(b.IsEvent != null && b.IsEvent.Value), includeProperties: "Author");
 
                     if (blogs != null && blogs.Count > 0)
                     {
@@ -149,7 +146,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                                 View = blog.View,
                                 Reaction = blog.Reaction,
                                 Status = blog.BlogStatus,
-                                TotalKcal = blog.Recipe?.TotalKcal,
+                                TotalKcal = blog.TotalKcal,
                                 IsEvent = blog.IsEvent.HasValue ? blog.IsEvent.Value : false,
                                 EventExpiredDate = blog.IsEvent.HasValue ? blog.EventExpiredDate : null
                             }).OrderByDescending(b => b.CreatedDate).ToList();
@@ -161,11 +158,11 @@ namespace BE_Homnayangi.Modules.BlogModule
                     ICollection<Blog> blogs = new List<Blog>();
 
                     if (isEvent == null)    // get all
-                        blogs = await _blogRepository.GetBlogsBy(includeProperties: "Recipe,Author");
+                        blogs = await _blogRepository.GetBlogsBy(includeProperties: "Author");
                     else if (isEvent.Value) // only event
-                        blogs = await _blogRepository.GetBlogsBy(b => b.IsEvent != null && b.IsEvent.Value, includeProperties: "Recipe,Author");
+                        blogs = await _blogRepository.GetBlogsBy(b => b.IsEvent != null && b.IsEvent.Value, includeProperties: "Author");
                     else                    // only blog
-                        blogs = await _blogRepository.GetBlogsBy(b => !(b.IsEvent != null && b.IsEvent.Value), includeProperties: "Recipe,Author");
+                        blogs = await _blogRepository.GetBlogsBy(b => !(b.IsEvent != null && b.IsEvent.Value), includeProperties: "Author");
 
 
                     if (blogs != null && blogs.Count > 0)
@@ -181,7 +178,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                                 View = blog.View,
                                 Reaction = blog.Reaction,
                                 Status = blog.BlogStatus,
-                                TotalKcal = blog.Recipe?.TotalKcal,
+                                TotalKcal = blog.TotalKcal,
                                 IsEvent = blog.IsEvent.HasValue ? blog.IsEvent.Value : false,
                                 EventExpiredDate = blog.IsEvent.HasValue ? blog.EventExpiredDate : null
                             }).OrderByDescending(b => b.CreatedDate).ToList();
@@ -212,7 +209,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                 {
                     b,
                     ListSubCateName = y.Value
-                }).Join(await _recipeRepository.GetNItemRandom(x => x.PackagePrice >= ((decimal)Price.PriceEnum.MIN)
+                }).Join(await _packageRepository.GetNItemRandom(x => x.PackagePrice >= ((decimal)Price.PriceEnum.MIN)
                 && x.PackagePrice <= ((decimal)Price.PriceEnum.MAX), numberItem: (int)NumberItem.NumberItemRandomEnum.CHEAP_PRICE),
                     x => x.b.RecipeId, y => y.RecipeId, (x, y) => new
                     {
