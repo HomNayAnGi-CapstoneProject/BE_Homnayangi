@@ -5,8 +5,6 @@ using BE_Homnayangi.Modules.IngredientModule.Interface;
 using BE_Homnayangi.Modules.OrderDetailModule.Interface;
 using BE_Homnayangi.Modules.OrderModule.Interface;
 using BE_Homnayangi.Modules.OrderModule.Response;
-using BE_Homnayangi.Modules.RecipeModule;
-using BE_Homnayangi.Modules.TransactionModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.VoucherModule.Interface;
 using BE_Homnayangi.Ultils.EmailServices;
@@ -41,7 +39,6 @@ namespace BE_Homnayangi.Modules.OrderModule
         private readonly IOrderDetailRepository _orderDetailRepository;
         private readonly ICustomerRepository _customerRepository;
         private readonly IUserRepository _userRepository;
-        private readonly ITransactionRepository _transactionRepository;
         private readonly IIngredientRepository _ingredientRepository;
         private readonly IPackageRepository _recipeRepository;
         private readonly IVoucherRepository _voucherRepository;
@@ -56,7 +53,6 @@ namespace BE_Homnayangi.Modules.OrderModule
             IOrderDetailRepository orderDetailRepository,
             ICustomerRepository customerRepository,
             IUserRepository userRepository,
-            ITransactionRepository transactionRepository,
             IIngredientRepository ingredientRepository,
             IPackageRepository recipeRepository,
             IVoucherRepository voucherRepository,
@@ -71,7 +67,6 @@ namespace BE_Homnayangi.Modules.OrderModule
             _orderDetailRepository = orderDetailRepository;
             _customerRepository = customerRepository;
             _userRepository = userRepository;
-            _transactionRepository = transactionRepository;
             _ingredientRepository = ingredientRepository;
             _recipeRepository = recipeRepository;
             _configuration = configuration;
@@ -242,18 +237,6 @@ namespace BE_Homnayangi.Modules.OrderModule
                 }
                 #endregion
 
-
-                #region create transaction
-                var transaction = new Library.Models.Transaction()
-                {
-                    TransactionId = newOrder.OrderId,
-                    TotalAmount = newOrder.TotalPrice.Value,
-                    CreatedDate = DateTime.Now,
-                    TransactionStatus = (int)Status.TransactionStatus.PENDING,
-                    CustomerId = newOrder.CustomerId
-                };
-                #endregion
-
                 var transactionScope = _OrderRepository.Transaction();
                 using (transactionScope)
                 {
@@ -273,7 +256,7 @@ namespace BE_Homnayangi.Modules.OrderModule
                             {
                                 case (int)PaymentMethodEnum.PaymentMethods.PAYPAL:
                                     newOrder.OrderStatus = (int)Status.OrderStatus.PAYING;
-                                    await _transactionRepository.AddAsync(transaction);
+                                    newOrder.TransactionStatus = (int)Status.TransactionStatus.PENDING;
                                     redirectUrl = await PaymentWithPaypal(newOrder.OrderId);
                                     break;
                                 case (int)PaymentMethodEnum.PaymentMethods.COD:
@@ -369,31 +352,17 @@ namespace BE_Homnayangi.Modules.OrderModule
             var transactionScope = _OrderRepository.Transaction();
             using (transactionScope)
             {
-                await _OrderRepository.UpdateAsync(order);
 
                 if (order.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL)
                 {
-                    var transaction = await _transactionRepository.GetByIdAsync(orderId);
-                    if (transaction == null)
-                        throw new Exception(ErrorMessage.TransactionError.TRANSACTION_NOT_FOUND);
-                    transaction.TransactionStatus = (int)Status.TransactionStatus.SUCCESS;
-                    await _transactionRepository.UpdateAsync(transaction);
+                    order.TransactionStatus = (int)Status.TransactionStatus.SUCCESS;
                 }
                 else
                 {
-                    #region create transaction
-                    var transaction = new Library.Models.Transaction()
-                    {
-                        TransactionId = order.OrderId,
-                        TotalAmount = order.TotalPrice.Value,
-                        CreatedDate = DateTime.Now,
-                        TransactionStatus = (int)Status.TransactionStatus.PENDING,
-                        CustomerId = order.CustomerId
-                    };
-                    #endregion
-                    await _transactionRepository.AddAsync(transaction);
+                    order.TransactionStatus = (int)Status.TransactionStatus.PENDING;
                 }
 
+                await _OrderRepository.UpdateAsync(order);
                 transactionScope.Commit();
             }
             #endregion

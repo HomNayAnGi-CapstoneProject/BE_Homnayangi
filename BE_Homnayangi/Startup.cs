@@ -39,12 +39,8 @@ using BE_Homnayangi.Modules.PriceNoteModule.Interface;
 using BE_Homnayangi.Modules.RecipeModule;
 using BE_Homnayangi.Modules.SubCateModule;
 using BE_Homnayangi.Modules.SubCateModule.Interface;
-using BE_Homnayangi.Modules.TransactionModule;
-using BE_Homnayangi.Modules.TransactionModule.Interface;
 using BE_Homnayangi.Modules.TypeModule;
 using BE_Homnayangi.Modules.TypeModule.Interface;
-using BE_Homnayangi.Modules.UnitModule;
-using BE_Homnayangi.Modules.UnitModule.Interface;
 using BE_Homnayangi.Modules.UserModule;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.Utils;
@@ -302,10 +298,6 @@ namespace BE_Homnayangi
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<ICommentService, CommentService>();
 
-            //Unit Module
-            services.AddScoped<IUnitRepository, UnitRepository>();
-            services.AddScoped<IUnitService, UnitService>();
-
             //Blog reference Module
             services.AddScoped<IBlogReferenceRepository, BlogReferenceRepository>();
 
@@ -322,9 +314,6 @@ namespace BE_Homnayangi
             services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
             services.AddScoped<IOrderDetailService, OrderDetailService>();
 
-            //Transaction Module
-            services.AddScoped<ITransactionRepository, TransactionRepository>();
-            services.AddScoped<ITransactionService, TransactionService>();
             //Badge Condition Module
             services.AddScoped<IBadgeConditionRepository, BadgeConditionRepository>();
             services.AddScoped<IBadgeConditionService, BadgeConditionService>();

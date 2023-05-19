@@ -74,7 +74,6 @@
     <None Remove="Modules\Utils\" />
     <None Remove="Modules\TransactionModule\" />
     <None Remove="Modules\OrderDetailModule\Interface\" />
-    <None Remove="Modules\TransactionModule\Interface\" />
     <None Remove="Modules\OrderModule\Request\" />
     <None Remove="Modules\OrderModule\Response\" />
     <None Remove="PayPal" />
@@ -83,8 +82,6 @@
     <Folder Include="Modules\IngredientModule\Interface\" />
     <Folder Include="Modules\IngredientModule\IngredientDTO\" />
     <Folder Include="Modules\AutoMapper\" />
-    <Folder Include="Modules\TransactionModule\" />
-    <Folder Include="Modules\TransactionModule\Interface\" />
     <Folder Include="Modules\OrderModule\Request\" />
     <Folder Include="Modules\OrderModule\Response\" />
   </ItemGroup>
