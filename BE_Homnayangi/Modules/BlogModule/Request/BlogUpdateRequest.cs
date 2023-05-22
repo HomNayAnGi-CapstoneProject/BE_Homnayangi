@@ -8,13 +8,13 @@ namespace BE_Homnayangi.Modules.BlogModule.Request
     public class BlogUpdateRequest
     {
         public Blog Blog { get; set; }
-        public IDictionary<Package, PackageDetail> Packages { get; set; }
+        public IDictionary<Package, List<PackageDetail>> Packages { get; set; }
         public List<BlogSubCate> BlogSubCates { get; set; }
         public List<BlogReferenceRequest> BlogReferences { get; set; }
 
         public BlogUpdateRequest()
         {
-            Packages = new Dictionary<Package, PackageDetail>();
+            Packages = new Dictionary<Package, List<PackageDetail>>();
             BlogSubCates = new List<BlogSubCate>();
         }
         public class BlogReferenceRequest

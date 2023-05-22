@@ -17,129 +17,52 @@ namespace BE_Homnayangi.Modules.RecipeModule
         private readonly IPackageDetailRepository _packageDetailRepository;
         private readonly IBlogRepository _blogRepository;
 
-        public PackageService(IPackageRepository recipeRepository, IPackageDetailRepository recipeDetailRepository,
+        public PackageService(IPackageRepository packageRepository, IPackageDetailRepository packageDetailRepository,
             IBlogRepository blogRepository)
         {
-            _recipeRepository = recipeRepository;
-            _recipeDetailRepository = recipeDetailRepository;
+            _packageRepository = packageRepository;
+            _packageDetailRepository = packageDetailRepository;
             _blogRepository = blogRepository;
         }
 
-        public async Task<ICollection<Recipe>> GetAll()
+        public async Task<ICollection<Package>> GetAll()
         {
-            return await _recipeRepository.GetAll();
+            return await _packageRepository.GetAll();
         }
 
-        public Task<ICollection<Recipe>> GetRecipesBy(
-                Expression<Func<Recipe,
+        public Task<ICollection<Package>> GetPackagesBy(
+                Expression<Func<Package,
                 bool>> filter = null,
-                Func<IQueryable<Recipe>,
-                ICollection<Recipe>> options = null,
+                Func<IQueryable<Package>,
+                ICollection<Package>> options = null,
                 string includeProperties = null)
         {
-            return _recipeRepository.GetRecipesBy(filter);
+            return _packageRepository.GetPackagesBy(filter);
         }
 
-        public Task<ICollection<Recipe>> GetRandomRecipesBy(
-                Expression<Func<Recipe, bool>> filter = null,
-                Func<IQueryable<Recipe>, ICollection<Recipe>> options = null,
+        public Task<ICollection<Package>> GetRandomPackagesBy(
+                Expression<Func<Package, bool>> filter = null,
+                Func<IQueryable<Package>, ICollection<Package>> options = null,
                 string includeProperties = null,
                 int numberItem = 0)
         {
-            return _recipeRepository.GetNItemRandom(filter, numberItem: numberItem);
+            return _packageRepository.GetNItemRandom(filter, numberItem: numberItem);
         }
 
-        public async Task AddNewRecipe(Recipe newRecipe)
+        public async Task AddNewPackage(Package newPackage)
         {
-            newRecipe.RecipeId = Guid.NewGuid();
-            await _recipeRepository.AddAsync(newRecipe);
+            newPackage.PackageId = Guid.NewGuid();
+            await _packageRepository.AddAsync(newPackage);
         }
 
-        public async Task UpdateRecipe(Recipe recipeUpdate)
+        public async Task UpdatePackage(Package packageUpdate)
         {
-            await _recipeRepository.UpdateAsync(recipeUpdate);
+            await _packageRepository.UpdateAsync(packageUpdate);
         }
 
-        public Recipe GetRecipeByID(Guid? id)
+        public Package GetPackageByID(Guid? id)
         {
-            return _recipeRepository.GetFirstOrDefaultAsync(x => x.RecipeId.Equals(id)).Result;
+            return _packageRepository.GetFirstOrDefaultAsync(x => x.PackageId.Equals(id)).Result;
         }
-
-        #region DELETE - RESTORE RECIPE
-        // OFF: recipe, recipeDetails
-        public async Task DeleteRecipe(Guid id)
-        {
-            try
-            {
-                #region update Recipe status into 0 > throw Error if not existed
-                Recipe removedRecipe = await _recipeRepository.GetFirstOrDefaultAsync(recipe => recipe.RecipeId == id && recipe.Status == 1);
-                if (removedRecipe == null)
-                    throw new Exception(ErrorMessage.RecipeError.RECIPE_NOT_FOUND);
-
-                removedRecipe.Status = 0;
-                #endregion
-
-                #region update Blog status into 0 > throw Error if not existed
-                Blog removedBlog = await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId.Equals(id) && x.BlogStatus == 1);
-                if (removedBlog == null)
-                    throw new Exception(ErrorMessage.BlogError.BLOG_NOT_FOUND);
-
-                removedBlog.BlogStatus = 0;
-                await _recipeRepository.UpdateAsync(removedRecipe);
-                await _blogRepository.UpdateAsync(removedBlog);
-                #endregion
-
-                #region update RecipeDetails status into 0
-                ICollection<RecipeDetail> recipeDetails = await _recipeDetailRepository.GetRecipeDetailsBy(item => item.RecipeId == id && item.Status == 1);
-                if (recipeDetails != null)
-                {
-                    foreach (var item in recipeDetails.ToList())
-                    {
-                        item.Status = 0;
-                    }
-                    await _recipeDetailRepository.UpdateRangeAsync(recipeDetails);
-                }
-                #endregion
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error at DeleteRecipe: " + ex.Message);
-                throw new Exception(ex.Message);
-            }
-        }
-
-        // ON: recipe, recipeDetails
-        public async Task RestoreRecipe(Guid id)
-        {
-            try
-            {
-                #region update Recipe status into 1
-                Recipe restoredRecipe = await _recipeRepository.GetFirstOrDefaultAsync(recipe => recipe.RecipeId == id && recipe.Status == 0);
-                if (restoredRecipe == null)
-                    throw new Exception(ErrorMessage.RecipeError.RECIPE_NOT_FOUND);
-
-                restoredRecipe.Status = 1;
-                await _recipeRepository.UpdateAsync(restoredRecipe);
-                #endregion
-
-                #region update RecipeDetails status into 1
-                ICollection<RecipeDetail> recipeDetails = await _recipeDetailRepository.GetRecipeDetailsBy(item => item.RecipeId == id && item.Status == 0);
-                if (recipeDetails != null)
-                {
-                    foreach (var item in recipeDetails.ToList())
-                    {
-                        item.Status = 1;
-                    }
-                    await _recipeDetailRepository.UpdateRangeAsync(recipeDetails);
-                }
-                #endregion
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error at DeleteRecipe: " + ex.Message);
-                throw new Exception(ex.Message);
-            }
-        }
-        #endregion
     }
 }

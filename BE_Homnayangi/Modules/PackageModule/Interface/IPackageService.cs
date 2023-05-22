@@ -26,9 +26,5 @@ namespace BE_Homnayangi.Modules.PackageModule.Interface
             int numberItem = 0);
 
         public Package GetPackageByID(Guid? id);
-
-        public Task DeletePackage(Guid id);
-
-        public Task RestorePackage(Guid id);
     }
 }

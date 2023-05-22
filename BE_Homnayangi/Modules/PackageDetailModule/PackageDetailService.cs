@@ -10,18 +10,18 @@ namespace BE_Homnayangi.Modules.PackageDetailModule
 {
     public class PackageDetailService : IPackageDetailService
     {
-        private readonly IPackageDetailRepository _recipeDetailRepository;
+        private readonly IPackageDetailRepository _packageDetailRepository;
 
-        public PackageDetailService(IPackageDetailRepository recipeDetailRepository)
+        public PackageDetailService(IPackageDetailRepository packageDetailRepository)
         {
-            _recipeDetailRepository = recipeDetailRepository;
+            _packageDetailRepository = packageDetailRepository;
         }
 
-        public Task<ICollection<RecipeDetail>> GetRecipeDetailsBy(Expression<Func<RecipeDetail, bool>> filter = null,
-            Func<IQueryable<RecipeDetail>, ICollection<RecipeDetail>> options = null,
+        public Task<ICollection<PackageDetail>> GetPackageDetailsBy(Expression<Func<PackageDetail, bool>> filter = null,
+            Func<IQueryable<PackageDetail>, ICollection<PackageDetail>> options = null,
             string includeProperties = null)
         {
-            return _recipeDetailRepository.GetRecipeDetailsBy(filter, options, includeProperties);
+            return _packageDetailRepository.GetPackageDetailsBy(filter, options, includeProperties);
         }
     }
 }

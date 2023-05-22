@@ -1,4 +1,6 @@
 ﻿using BE_Homnayangi.Modules.CategoryModule.Interface;
+using BE_Homnayangi.Modules.CookingMethodModule.Interface;
+using BE_Homnayangi.Modules.RegionModule.Interface;
 using Library.DataAccess;
 using Library.Models;
 using Microsoft.EntityFrameworkCore;
@@ -7,25 +9,26 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace BE_Homnayangi.Modules.CategoryModule
 {
-    public class CategoryRepository : Repository<Category>, ICategoryRepository
+    public class RegionRepository : Repository<Region>, IRegionRepository
     {
         private readonly HomnayangiContext _db;
 
-        public CategoryRepository(HomnayangiContext db) : base(db)
+        public RegionRepository(HomnayangiContext db) : base(db)
         {
             _db = db;
         }
-        public async Task<ICollection<Category>> GetCategoriesBy(
-            Expression<Func<Category, bool>> filter = null,
-            Func<IQueryable<Category>, ICollection<Category>> options = null,
+        public async Task<ICollection<Region>> GetRegionsBy(
+            Expression<Func<Region, bool>> filter = null,
+            Func<IQueryable<Region>, ICollection<Region>> options = null,
             string includeProperties = null
         )
         {
-            IQueryable<Category> query = DbSet;
+            IQueryable<Region> query = DbSet;
 
             if (filter != null)
             {

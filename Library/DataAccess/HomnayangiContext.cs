@@ -720,6 +720,10 @@ namespace Library.DataAccess
                     .HasColumnType("money")
                     .HasColumnName("packagePrice");
 
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("createdDate");
+
                 entity.Property(e => e.Size).HasColumnName("size");
 
                 entity.Property(e => e.Status).HasColumnName("status");

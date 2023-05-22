@@ -42,7 +42,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentReactionModule
             {
                 var item = await _accomplishmentReactionRepository.GetFirstOrDefaultAsync(x => x.AccomplishmentId == accomplishmentId
                                                                                          && x.CustomerId == customerId
-                                                                                         && x.Status);
+                                                                                         && x.Status == true);
                 return item != null;
             }
             catch (Exception ex)

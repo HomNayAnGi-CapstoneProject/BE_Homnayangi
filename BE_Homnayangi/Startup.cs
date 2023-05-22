@@ -79,6 +79,9 @@ using BE_Homnayangi.Modules.NotificationModule.Interface;
 using BE_Homnayangi.Modules.PackageModule.Interface;
 using BE_Homnayangi.Modules.PackageDetailModule.Interface;
 using BE_Homnayangi.Modules.PackageDetailModule;
+using BE_Homnayangi.Modules.RegionModule.Interface;
+using BE_Homnayangi.Modules.CookingMethodModule;
+using BE_Homnayangi.Modules.CookingMethodModule.Interface;
 
 namespace BE_Homnayangi
 {
@@ -248,15 +251,7 @@ namespace BE_Homnayangi
             services.AddScoped<IBlogRepository, BlogRepository>();
             services.AddScoped<IBlogService, BlogService>();
 
-            // Recipe Module
-            services.AddScoped<IPackageRepository, PackageRepository>();
-            services.AddScoped<IPackageService, PackageService>();
-
             services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
-
-            //Recipe Detail Module
-            services.AddScoped<IPackageDetailRepository, PackageDetailRepository>();
-            services.AddScoped<IPackageDetailService, PackageDetailService>();
 
             //Ingredient Module
             services.AddScoped<IIngredientRepository, IngredientRepository>();
@@ -344,6 +339,21 @@ namespace BE_Homnayangi
             services.AddScoped<INotificationRepository, NotificationRepository>();
             services.AddScoped<INotificationService, NotificationService>();
 
+            //Package Module
+            services.AddScoped<IPackageRepository, PackageRepository>();
+            services.AddScoped<IPackageService, PackageService>();
+
+            //PackageDetail Module
+            services.AddScoped<IPackageDetailRepository, PackageDetailRepository>();
+            services.AddScoped<IPackageDetailService, PackageDetailService>();
+
+            // Region Module
+            services.AddScoped<IRegionRepository, RegionRepository>();
+            services.AddScoped<IRegionService, RegionService>();
+
+            // Cooking Method Module
+            services.AddScoped<ICookingMethodRepository, CookingMethodRepository>();
+            services.AddScoped<ICookingMethodService, CookingMethodService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

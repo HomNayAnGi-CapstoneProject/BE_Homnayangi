@@ -31,10 +31,10 @@ namespace BE_Homnayangi.Modules.AutoMapper
             //CreateMap<CreateCategoryRequest, Category>().ReverseMap();
 
             // Recipe
-            CreateMap<Recipe, PackageResponse>().ReverseMap();
+            CreateMap<Package, PackageResponse>().ReverseMap();
 
             // RecipeDetail
-            CreateMap<RecipeDetail, PackageDetailsResponse>().ReverseMap();
+            CreateMap<PackageDetail, PackageDetailsResponse>().ReverseMap();
 
             // Ingredient
             CreateMap<Ingredient, IngredientResponse>().ReverseMap();

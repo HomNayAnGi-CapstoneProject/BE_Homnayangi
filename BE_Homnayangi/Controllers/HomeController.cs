@@ -53,12 +53,12 @@ namespace BE_Homnayangi.Controllers
         }
 
         [HttpGet("blogs/live-searching")]
-        public async Task<ActionResult<IEnumerable<SearchBlogsResponse>>> GetBlogAndRecipeByName([FromQuery(Name = "title")] string title)
+        public async Task<ActionResult<IEnumerable<SearchBlogsResponse>>> GetBlogAndPackageByName([FromQuery(Name = "title")] string title)
         {
             if (title != "" && title != null && title is string)
             {
                 title = Regex.Replace(title, @"\s+", " ");
-                var result = await _blogService.GetBlogAndRecipeByName(title);
+                var result = await _blogService.GetBlogAndPackageByName(title);
                 if (result.Any())
                 {
                     return new JsonResult(new

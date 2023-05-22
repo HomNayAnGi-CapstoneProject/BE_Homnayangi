@@ -272,7 +272,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
         public async Task<ICollection<SearchIngredientsResponse>> GetIngredientByName(String name)
         {
 
-            var Ingredients = await _ingredientRepository.GetIngredientsBy(x => x.Status == true, includeProperties: "Unit");
+            var Ingredients = await _ingredientRepository.GetIngredientsBy(x => x.Status == true, includeProperties: "Type");
 
             return Ingredients.Where(x => ConvertToUnSign(x.Name).Contains(name, StringComparison.CurrentCultureIgnoreCase) || x.Name.Contains(name, StringComparison.CurrentCultureIgnoreCase)).ToList().Select(ToSearchResponse).ToList();
         }
@@ -285,7 +285,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
                 {
                     IngredientId = ingredient.IngredientId,
                     Name = ingredient.Name,
-                    UnitName = ingredient.Unit.Name,
+                    UnitName = ingredient.Type.UnitName,
                     Price = ingredient.Price.Value,
                     Kcal = ingredient.Kcal.Value
                 };
@@ -354,7 +354,6 @@ namespace BE_Homnayangi.Modules.IngredientModule
                     Name = ingredientRequest.Name,
                     Description = ingredientRequest.Description,
                     Quantity = ingredientRequest.Quantity,
-                    UnitId = ingredientRequest.UnitId,
                     Picture = ingredientRequest.Picture,
                     ListImage = StringUtils.CompressContents(ingredientRequest.ListImage),
                     CreatedDate = ingredientRequest.CreatedDate,
