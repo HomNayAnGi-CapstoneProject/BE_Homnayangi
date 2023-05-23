@@ -9,5 +9,6 @@ namespace BE_Homnayangi.Modules.TypeModule.Response
     {
         public Guid TypeId { get; set; }
         public string TypeName { get; set; }
+        public string UnitName { get; set; }
     }
 }

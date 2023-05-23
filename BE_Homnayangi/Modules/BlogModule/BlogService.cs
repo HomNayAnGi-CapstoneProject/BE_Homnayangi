@@ -429,8 +429,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     throw new Exception(ErrorMessage.CaloRefError.CALO_REF_NOT_FOUND);
                 }
                 //get all blog
-                var listBlog = _blogRepository.GetBlogsBy(x => x.BlogStatus == ((int)BlogStatus.ACTIVE)).Result
-                    .Where(x => x.MaxSize == 2).ToList();
+                var listBlog = await _blogRepository.GetBlogsBy(x => x.MaxSize == 2 && x.BlogStatus == ((int)BlogStatus.ACTIVE));
                 if (listBlog.Count() == 0)
                 {
                     throw new Exception(ErrorMessage.CommonError.LIST_IS_NULL);
