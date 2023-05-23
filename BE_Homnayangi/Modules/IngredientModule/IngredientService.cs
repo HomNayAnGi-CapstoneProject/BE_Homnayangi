@@ -33,7 +33,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
 
         public async Task<ICollection<IngredientResponse>> GetAll(string? searchString)
         {
-            var ingredients = await _ingredientRepository.GetIngredientsBy(includeProperties: "Type,Unit");
+            var ingredients = await _ingredientRepository.GetIngredientsBy(includeProperties: "Type");
             if(!string.IsNullOrEmpty(searchString))
                 ingredients = ingredients.Where(x => ConvertToUnSign(x.Name).Contains(ConvertToUnSign(searchString), StringComparison.CurrentCultureIgnoreCase)
                                                                     || x.Name.Contains(searchString, StringComparison.CurrentCultureIgnoreCase)).ToList();
@@ -58,7 +58,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
             try
             {
                 var ingredient = _ingredientRepository.GetFirstOrDefaultAsync(x => x.IngredientId == ingredientID.Value && x.Status.Value,
-                    includeProperties: "Type,Unit").Result;
+                    includeProperties: "Type").Result;
                 return ToResponse(ingredient);
             }
             catch (Exception ex)
@@ -72,7 +72,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
         {
             try
             {
-                var ingredients = await _ingredientRepository.GetIngredientsBy(x => x.Status.Value, includeProperties: "Type,Unit");
+                var ingredients = await _ingredientRepository.GetIngredientsBy(x => x.Status.Value, includeProperties: "Type");
                 return ingredients.Select(ToResponse).ToList();
             }
             catch (Exception ex)
@@ -152,7 +152,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
         {
             try
             {
-                var ingredients = await _ingredientRepository.GetIngredientsBy(x => x.Status.Value && x.TypeId == typeId, includeProperties: "Type,Unit");
+                var ingredients = await _ingredientRepository.GetIngredientsBy(x => x.Status.Value && x.TypeId == typeId, includeProperties: "Type");
                 return ingredients.Select(ToResponse).ToList();
             }
             catch (Exception ex)
@@ -376,7 +376,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
             try
             {
                 var ingredients = await _ingredientRepository.GetNItemRandom(i => i.Status.Value && i.TypeId == typeId && i.IngredientId != currentIngredientId,
-                                                                            includeProperties: "Type,Unit", numberItem: 10);
+                                                                            includeProperties: "Type", numberItem: 10);
 
                 return ingredients.Select(i => new IngredientResponse()
                 {

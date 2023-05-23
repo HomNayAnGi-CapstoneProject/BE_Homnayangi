@@ -46,7 +46,6 @@ namespace Library.DataAccess
         public virtual DbSet<SeasonReference> SeasonReferences { get; set; }
         public virtual DbSet<SubCategory> SubCategories { get; set; }
         public virtual DbSet<Type> Types { get; set; }
-        public virtual DbSet<Unit> Units { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Voucher> Vouchers { get; set; }
 
@@ -864,34 +863,6 @@ namespace Library.DataAccess
                 entity.Property(e => e.UnitName)
                     .HasMaxLength(50)
                     .HasColumnName("unitName");
-            });
-
-            modelBuilder.Entity<Unit>(entity =>
-            {
-                entity.ToTable("Unit");
-
-                entity.Property(e => e.UnitId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("unitId");
-
-                entity.Property(e => e.CreatedDate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("createdDate");
-
-                entity.Property(e => e.Description).HasColumnName("description");
-
-                entity.Property(e => e.Name)
-                    .HasMaxLength(50)
-                    .HasColumnName("name");
-
-                entity.Property(e => e.Status).HasColumnName("status");
-
-                entity.Property(e => e.TypeId).HasColumnName("typeId");
-
-                entity.HasOne(d => d.Type)
-                    .WithMany(p => p.Units)
-                    .HasForeignKey(d => d.TypeId)
-                    .HasConstraintName("FK_Unit_Type");
             });
 
             modelBuilder.Entity<User>(entity =>
