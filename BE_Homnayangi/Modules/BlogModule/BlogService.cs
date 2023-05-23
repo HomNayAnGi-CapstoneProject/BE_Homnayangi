@@ -262,16 +262,17 @@ namespace BE_Homnayangi.Modules.BlogModule
             return blogResponse;
         }
 
-        public async Task<ICollection<OverviewBlogResponse>> GetBlogsBySubCateForHomePage(Guid? subCateId, int numberOfItems = 0)
+        public async Task<ICollection<OverviewBlogResponse>> GetBlogsBySubCateForHomePage(Guid? Id, bool isRegion, int numberOfItems = 0)
         {
             try
             {
-                var listBlogSubCate = await _blogSubCateRepository.GetBlogSubCatesBy(x => x.SubCateId.Equals(subCateId), includeProperties: "SubCate");
-                var listBlogs = await _blogRepository.GetBlogsBy(x => x.BlogStatus == 1);
+                var listBlogSubCate = await _blogSubCateRepository.GetAll(includeProperties: "SubCate");
+                var listBlogs = isRegion == false ? await _blogRepository.GetBlogsBy(x => x.CookingMethodId == Id && x.BlogStatus == 1)
+                    : await _blogRepository.GetBlogsBy(x => x.RegionId == Id && x.BlogStatus == 1);
 
                 listBlogs = numberOfItems > 0
-                    ? listBlogs.Join(listBlogSubCate, x => x.BlogId, y => y.BlogId, (x, y) => x).OrderByDescending(x => x.CreatedDate).Take(numberOfItems).ToList()
-                    : listBlogs.Join(listBlogSubCate, x => x.BlogId, y => y.BlogId, (x, y) => x).OrderByDescending(x => x.CreatedDate).ToList();
+                    ? listBlogs.OrderByDescending(x => x.CreatedDate).Take(numberOfItems).ToList()
+                    : listBlogs.OrderByDescending(x => x.CreatedDate).ToList();
 
                 var listSubCateName = GetListSubCateName(listBlogs, listBlogSubCate);
                 

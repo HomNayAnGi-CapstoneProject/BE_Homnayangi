@@ -22,7 +22,7 @@ namespace BE_Homnayangi.Modules.BlogModule.Interface
         public Task<ICollection<OverviewBlog>> GetBlogsByUser(string role, bool? isPending, bool? isEvent);
         public Task<ICollection<OverviewBlogResponse>> GetBlogsSortByPackagePriceAsc();
         public Task<ICollection<SearchBlogsResponse>> GetBlogAndPackageByName(String name);
-        public Task<ICollection<OverviewBlogResponse>> GetBlogsBySubCateForHomePage(Guid? tagId, int numberOfItems = 0);
+        public Task<ICollection<OverviewBlogResponse>> GetBlogsBySubCateForHomePage(Guid? id, bool isRegion, int numberOfItems = 0);
         public Task<PagedResponse<PagedList<BlogsByCatesResponse>>> GetBlogsBySubCates(BlogsBySubCatesRequest request);
         public Task<SuggestBlogResponse> GetSuggestBlogByCalo(SuggestBlogByCaloRequest request);
         public Task<ICollection<BlogsByCatesResponse>> GetBlogsByIngredientId(Guid ingredientId);

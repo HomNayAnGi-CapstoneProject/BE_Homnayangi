@@ -22,7 +22,7 @@ namespace BE_Homnayangi.Controllers
         }
 
         [HttpGet("subCategory/{subCateId}/blogs")]
-        public async Task<ActionResult<IEnumerable<OverviewBlogResponse>>> GetBlogsBySubCate([FromRoute] Guid? subCateId)
+        public async Task<ActionResult<IEnumerable<OverviewBlogResponse>>> GetBlogsBySubCate([FromRoute] Guid? subCateId, [FromRoute] bool isRegion)
         {
             if (subCateId == null)
             {
@@ -32,7 +32,7 @@ namespace BE_Homnayangi.Controllers
                 });
             }
 
-            var blogs = await _blogService.GetBlogsBySubCateForHomePage(subCateId, numberOfItems: (int)NumberItem.NumberItemShowEnum.EATING_STYLE);
+            var blogs = await _blogService.GetBlogsBySubCateForHomePage(subCateId, isRegion, numberOfItems: (int)NumberItem.NumberItemShowEnum.EATING_STYLE);
 
             return new JsonResult(new
             {
