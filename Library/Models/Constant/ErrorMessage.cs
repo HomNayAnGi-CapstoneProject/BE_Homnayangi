@@ -6,11 +6,11 @@ namespace Library.Models.Constant
         #region Common error message
         public static class CommonError
         {
-            public readonly static string ID_IS_NULL = "ID request is null";
-            public readonly static string LIST_IS_NULL = "List have no data";
+            public readonly static string ID_IS_NULL = "Ban cần truyền ID";
+            public readonly static string LIST_IS_NULL = "Không có dữ liệu";
             public readonly static string INVALID_REQUEST = "Dữ liệu không hợp lệ";
-            public readonly static string NOT_LOGIN = "Customer did not login";
-            public readonly static string ROLE_NOT_SUPPORTED = "This role is not valid for this action";
+            public readonly static string NOT_LOGIN = "Không thể tìm thấy tài khoản này";
+            public readonly static string ROLE_NOT_SUPPORTED = "Tài khoản bạn không thể thực hiện thao tác này";
             public readonly static string NOT_ENOUGH_DATA = "Xin lỗi chúng tôi chưa có đủ dữ liệu cho thông tin này";
         }
         #endregion
