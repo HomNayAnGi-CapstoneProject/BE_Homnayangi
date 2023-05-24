@@ -25,7 +25,6 @@ namespace Library.Models
         public int? PaymentMethod { get; set; }
         public decimal? ShippingCost { get; set; }
         public string PaypalUrl { get; set; }
-        public decimal? ShippingCost { get; set; }
 
         public virtual Customer Customer { get; set; }
         public virtual Voucher Voucher { get; set; }
