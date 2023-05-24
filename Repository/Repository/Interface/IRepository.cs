@@ -30,6 +30,13 @@ namespace Repository.Repository.Interface
             int numberItem = 0
         );
 
+        Task<ICollection<T>> GetNItemRandom(
+            Expression<Func<T, bool>> filter = null,
+            Func<IQueryable<T>, ICollection<T>> options = null,
+            string includeProperties = null,
+            int numberItem = 0
+        );
+
         Task<T> GetFirstOrDefaultAsync(
             Expression<Func<T, bool>> filter = null,
             string includeProperties = null

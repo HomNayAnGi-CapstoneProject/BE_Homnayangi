@@ -38,6 +38,10 @@ namespace BE_Homnayangi.Modules.CategoryModule
         {
             return _categoryRepository.GetNItemRandom(filter, numberItem: numberItem);
         }
+        public async Task AddNewCategory(Category newCategory)
+        {
+            return _categoryRepository.GetNItemRandom(filter, numberItem: numberItem);
+        }
         public async Task<Guid> AddNewCategory(CreateCategoryRequest categoryRequest)
         {
             var newCategory = new Category();

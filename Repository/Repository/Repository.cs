@@ -99,22 +99,16 @@ namespace Repository.Repository
             if (options != null)
             {
                 draftResult = options(query).ToList();
-            }
-            else
+            } else
             {
                 draftResult = await query.ToListAsync();
             }
 
-            if (draftResult.Count() < numberItem)
-            {
-                return draftResult;
-            }
-
             var endResult = new List<T>();
-            if (numberItem != 0 && numberItem <= draftResult.Count())
+            if (numberItem != 0)
             {
                 var randNumber = new Random();
-                for (int i = 0; i < numberItem; i++)
+                for(int i=0; i<numberItem; i++)
                 {
                     var indexNumber = randNumber.Next(0, draftResult.Count());
                     endResult.Add(draftResult.ElementAt(indexNumber));
