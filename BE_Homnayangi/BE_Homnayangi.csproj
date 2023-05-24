@@ -8,16 +8,12 @@
 
   <ItemGroup>
     <Compile Remove="Modules\BadgeModule\DTO\Response\**" />
-    <Compile Remove="Modules\RecipeModule\Response\**" />
     <Compile Remove="Modules\RewardModule\**" />
     <Content Remove="Modules\BadgeModule\DTO\Response\**" />
-    <Content Remove="Modules\RecipeModule\Response\**" />
     <Content Remove="Modules\RewardModule\**" />
     <EmbeddedResource Remove="Modules\BadgeModule\DTO\Response\**" />
-    <EmbeddedResource Remove="Modules\RecipeModule\Response\**" />
     <EmbeddedResource Remove="Modules\RewardModule\**" />
     <None Remove="Modules\BadgeModule\DTO\Response\**" />
-    <None Remove="Modules\RecipeModule\Response\**" />
     <None Remove="Modules\RewardModule\**" />
   </ItemGroup>
 
@@ -61,14 +57,14 @@
   <ItemGroup>
     <None Remove="Microsoft.EntityFrameworkCore.Sqlite" />
     <None Remove="Modules\RecipeModule\" />
-    <None Remove="Modules\RecipeModule\Interface\" />
+    <None Remove="Modules\PackageModule\Interface\" />
     <None Remove="Modules\RecipeDetailModule\" />
-    <None Remove="Modules\RecipeDetailModule\Interface\" />
+    <None Remove="Modules\PackageDetailModule\Interface\" />
     <None Remove="Modules\IngredientModule\" />
     <None Remove="Modules\IngredientModule\Interface\" />
     <None Remove="Modules\IngredientModule\IngredientDTO\" />
-    <None Remove="Modules\RecipeDetailModule\RecipeDetailsDTO\" />
-    <None Remove="Modules\RecipeModule\RecipeDTO\" />
+    <None Remove="Modules\PackageDetailModule\RecipeDetailsDTO\" />
+    <None Remove="Modules\PackageModule\RecipeDTO\" />
     <None Remove="Modules\AutoMapper\" />
     <None Remove="Modules\BadgeModule\" />
     <None Remove="Modules\BadgeModule\Interface\" />
@@ -78,19 +74,14 @@
     <None Remove="Modules\Utils\" />
     <None Remove="Modules\TransactionModule\" />
     <None Remove="Modules\OrderDetailModule\Interface\" />
-    <None Remove="Modules\TransactionModule\Interface\" />
     <None Remove="Modules\OrderModule\Request\" />
     <None Remove="Modules\OrderModule\Response\" />
     <None Remove="PayPal" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Modules\RecipeModule\Interface\" />
-    <Folder Include="Modules\RecipeDetailModule\Interface\" />
     <Folder Include="Modules\IngredientModule\Interface\" />
     <Folder Include="Modules\IngredientModule\IngredientDTO\" />
     <Folder Include="Modules\AutoMapper\" />
-    <Folder Include="Modules\TransactionModule\" />
-    <Folder Include="Modules\TransactionModule\Interface\" />
     <Folder Include="Modules\OrderModule\Request\" />
     <Folder Include="Modules\OrderModule\Response\" />
   </ItemGroup>

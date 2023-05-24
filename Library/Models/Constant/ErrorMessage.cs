@@ -47,10 +47,10 @@ namespace Library.Models.Constant
         }
         #endregion
 
-        #region Recipe error message
-        public static class RecipeError
+        #region Package error message
+        public static class PackageError
         {
-            public readonly static string RECIPE_NOT_FOUND = "Recipe is not found";
+            public readonly static string PACKAGE_NOT_FOUND = "Package is not found";
         }
         #endregion
 

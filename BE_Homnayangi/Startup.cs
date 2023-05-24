@@ -36,18 +36,11 @@ using BE_Homnayangi.Modules.OrderModule;
 using BE_Homnayangi.Modules.OrderModule.Interface;
 using BE_Homnayangi.Modules.PriceNoteModule;
 using BE_Homnayangi.Modules.PriceNoteModule.Interface;
-using BE_Homnayangi.Modules.RecipeDetailModule;
-using BE_Homnayangi.Modules.RecipeDetailModule.Interface;
 using BE_Homnayangi.Modules.RecipeModule;
-using BE_Homnayangi.Modules.RecipeModule.Interface;
 using BE_Homnayangi.Modules.SubCateModule;
 using BE_Homnayangi.Modules.SubCateModule.Interface;
-using BE_Homnayangi.Modules.TransactionModule;
-using BE_Homnayangi.Modules.TransactionModule.Interface;
 using BE_Homnayangi.Modules.TypeModule;
 using BE_Homnayangi.Modules.TypeModule.Interface;
-using BE_Homnayangi.Modules.UnitModule;
-using BE_Homnayangi.Modules.UnitModule.Interface;
 using BE_Homnayangi.Modules.UserModule;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.Utils;
@@ -83,6 +76,12 @@ using BE_Homnayangi.Modules.AdminModules.CronJobTimeConfigModule;
 using BE_Homnayangi.Ultils.EmailServices;
 using BE_Homnayangi.Modules.NotificationModule;
 using BE_Homnayangi.Modules.NotificationModule.Interface;
+using BE_Homnayangi.Modules.PackageModule.Interface;
+using BE_Homnayangi.Modules.PackageDetailModule.Interface;
+using BE_Homnayangi.Modules.PackageDetailModule;
+using BE_Homnayangi.Modules.RegionModule.Interface;
+using BE_Homnayangi.Modules.CookingMethodModule;
+using BE_Homnayangi.Modules.CookingMethodModule.Interface;
 
 namespace BE_Homnayangi
 {
@@ -252,15 +251,7 @@ namespace BE_Homnayangi
             services.AddScoped<IBlogRepository, BlogRepository>();
             services.AddScoped<IBlogService, BlogService>();
 
-            // Recipe Module
-            services.AddScoped<IRecipeRepository, RecipeRepository>();
-            services.AddScoped<IRecipeService, RecipeService>();
-
             services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
-
-            //Recipe Detail Module
-            services.AddScoped<IRecipeDetailRepository, RecipeDetailRepository>();
-            services.AddScoped<IRecipeDetailService, RecipeDetailService>();
 
             //Ingredient Module
             services.AddScoped<IIngredientRepository, IngredientRepository>();
@@ -302,10 +293,6 @@ namespace BE_Homnayangi
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<ICommentService, CommentService>();
 
-            //Unit Module
-            services.AddScoped<IUnitRepository, UnitRepository>();
-            services.AddScoped<IUnitService, UnitService>();
-
             //Blog reference Module
             services.AddScoped<IBlogReferenceRepository, BlogReferenceRepository>();
 
@@ -322,9 +309,6 @@ namespace BE_Homnayangi
             services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
             services.AddScoped<IOrderDetailService, OrderDetailService>();
 
-            //Transaction Module
-            services.AddScoped<ITransactionRepository, TransactionRepository>();
-            services.AddScoped<ITransactionService, TransactionService>();
             //Badge Condition Module
             services.AddScoped<IBadgeConditionRepository, BadgeConditionRepository>();
             services.AddScoped<IBadgeConditionService, BadgeConditionService>();
@@ -355,6 +339,21 @@ namespace BE_Homnayangi
             services.AddScoped<INotificationRepository, NotificationRepository>();
             services.AddScoped<INotificationService, NotificationService>();
 
+            //Package Module
+            services.AddScoped<IPackageRepository, PackageRepository>();
+            services.AddScoped<IPackageService, PackageService>();
+
+            //PackageDetail Module
+            services.AddScoped<IPackageDetailRepository, PackageDetailRepository>();
+            services.AddScoped<IPackageDetailService, PackageDetailService>();
+
+            // Region Module
+            services.AddScoped<IRegionRepository, RegionRepository>();
+            services.AddScoped<IRegionService, RegionService>();
+
+            // Cooking Method Module
+            services.AddScoped<ICookingMethodRepository, CookingMethodRepository>();
+            services.AddScoped<ICookingMethodService, CookingMethodService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

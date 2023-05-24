@@ -8,7 +8,6 @@ namespace BE_Homnayangi.Modules.DTO.IngredientDTO
     public class IngredientResponse
     {
         public Guid IngredientId { get; set; }
-        public Guid? UnitId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public int? Quantity { get; set; }
