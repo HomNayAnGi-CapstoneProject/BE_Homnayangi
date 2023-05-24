@@ -624,6 +624,10 @@ namespace Library.DataAccess
                     .HasColumnType("money")
                     .HasColumnName("totalPrice");
 
+                entity.Property(e => e.ShippingCost)
+                    .HasColumnType("money")
+                    .HasColumnName("shippingCost");
+
                 entity.Property(e => e.VoucherId).HasColumnName("voucherId");
 
                 entity.HasOne(d => d.Customer)

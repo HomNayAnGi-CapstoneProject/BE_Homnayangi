@@ -998,27 +998,48 @@ namespace BE_Homnayangi.Modules.OrderModule
             var startDate = new DateTime(year, month, 1);
             var endDate = new DateTime(year, month, DateTime.DaysInMonth(year, month));
 
-            var orders = await _OrderRepository.GetOrdersBy(o => o.OrderStatus == (int)Status.OrderStatus.DELIVERED && o.OrderDate.HasValue && o.OrderDate.Value >= startDate && o.OrderDate <= endDate);
-            decimal revenue = 0;
-            decimal gains = 0;
-            decimal expenses = 0;
-            decimal losses = 0;
-            var netIncome = revenue + gains - expenses - losses;
+            var orders = await _OrderRepository.GetOrdersBy(o => o.OrderStatus == (int)Status.OrderStatus.DELETED
+                && o.OrderDate.HasValue && o.OrderDate.Value >= startDate && o.OrderDate <= endDate, includeProperties: "OrderDetails") ;
+            var deliveredOrders = orders.Where(o => o.OrderStatus == (int)Status.OrderStatus.DELIVERED);
+            var deniedOrders = orders.Where(o => o.OrderStatus == (int)Status.OrderStatus.DENIED);
+            var cancelOrders = orders.Where(o => o.OrderStatus == (int)Status.OrderStatus.CANCEL);
 
-            orders.ToList().ForEach(o =>
-            {
-                revenue += o.TotalPrice.Value;
-            });
+            decimal revenue = orders.Select(o => o.TotalPrice.GetValueOrDefault()).Sum();
+            //decimal gains = 0;
+            //decimal expenses = 0;
+            //decimal losses = 0;
+            //decimal netIncome = revenue + gains - expenses - losses;
+            decimal totalShipCost = orders.Select(o => o.ShippingCost.GetValueOrDefault()).Sum();
+
+            int totalOrder = orders.Count;
+            int totalPaypalOrder = orders.Where(o=>o.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL).Count();
+            int deliveredOrderCount = deliveredOrders.Count();
+            int deliveredPaypalOrderCount = deliveredOrders.Where(o => o.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL).Count();
+            int deniedOrderCount = deniedOrders.Count();
+            int deniedPaypalOrderCount = deniedOrders.Where(o => o.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL).Count();
+            int canceledOrderCount = cancelOrders.Count();
+            int canceledPaypalOrderCount = cancelOrders.Where(o => o.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL).Count();
+
+            //deliveredOrders.Select(o => o.OrderDetails.)
 
             FinancialReport financialReport = new FinancialReport
             {
                 StartDate = startDate,
                 EndDate = endDate,
                 Revenue = revenue,
-                Gains = gains,
-                Expenses = expenses,
-                Losses = losses,
-                NetIncome = netIncome
+                //Gains = gains,
+                //Expenses = expenses,
+                //Losses = losses,
+                //NetIncome = netIncome,
+                TotalShipCost = totalShipCost,
+                TotalOrder = totalOrder,
+                TotalPaypalOrder = totalPaypalOrder,
+                DeliverdOrderCount = deliveredOrderCount,
+                DeliverdPaypalOrderCount = deliveredPaypalOrderCount,
+                DeniedOrderCount = deniedOrderCount,
+                DeniedPaypalOrderCount = deniedPaypalOrderCount,
+                CanceledOrderCount = canceledOrderCount,
+                CanceledPaypalOrderCount = canceledPaypalOrderCount
             };
             return financialReport;
         }

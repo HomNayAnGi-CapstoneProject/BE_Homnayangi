@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace BE_Homnayangi.Modules.OrderModule.Response
 {
     public class FinancialReport
@@ -6,17 +8,15 @@ namespace BE_Homnayangi.Modules.OrderModule.Response
         public DateTime StartDate;
         public DateTime EndDate;
         public decimal Revenue;
-        public decimal Expenses;
-        public decimal Gains;
-        public decimal Losses;
-        public decimal NetIncome;
+        //public decimal Expenses;
+        //public decimal Gains;
+        //public decimal Losses;
+        //public decimal NetIncome;
         public decimal TotalShipCost;
 
 
         public int TotalOrder;
         public int TotalPaypalOrder;
-        public int AcceptedOrderCount;
-        public int AcceptedPaypalOrderCount;
         public int DeliverdOrderCount;
         public int DeliverdPaypalOrderCount;
         public int DeniedOrderCount;
@@ -24,7 +24,7 @@ namespace BE_Homnayangi.Modules.OrderModule.Response
         public int CanceledOrderCount;
         public int CanceledPaypalOrderCount;
 
-        public TrendingPackage TrendingPackage;
+        public List<TrendingPackage> TrendingPackage;
     }
 
     public class TrendingPackage
