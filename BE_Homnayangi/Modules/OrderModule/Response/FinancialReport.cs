@@ -14,7 +14,6 @@ namespace BE_Homnayangi.Modules.OrderModule.Response
         //public decimal NetIncome;
         public decimal TotalShipCost;
 
-
         public int TotalOrder;
         public int TotalPaypalOrder;
         public int DeliverdOrderCount;
@@ -24,7 +23,7 @@ namespace BE_Homnayangi.Modules.OrderModule.Response
         public int CanceledOrderCount;
         public int CanceledPaypalOrderCount;
 
-        public List<TrendingPackage> TrendingPackage;
+        public List<TrendingPackage> TrendingPackages;
     }
 
     public class TrendingPackage

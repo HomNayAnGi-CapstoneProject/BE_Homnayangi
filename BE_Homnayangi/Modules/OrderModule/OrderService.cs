@@ -948,7 +948,11 @@ namespace BE_Homnayangi.Modules.OrderModule
             int canceledOrderCount = cancelOrders.Count();
             int canceledPaypalOrderCount = cancelOrders.Where(o => o.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL).Count();
 
-            //deliveredOrders.Select(o => o.OrderDetails.)
+            var orderDetails = await _orderDetailRepository.GetOrderDetailsBy(od => orders.Select(o => o.OrderId).Contains(od.OrderId));
+            var trendingGroup = from orderDetail in orderDetails
+                                  group orderDetail by orderDetail.PackageId
+                                  into g select new TrendingPackage {PackageId = g.Key.GetValueOrDefault(), Count = g.Select(s=>s.Quantity.GetValueOrDefault()).Sum()};
+
 
             FinancialReport financialReport = new FinancialReport
             {
@@ -967,7 +971,8 @@ namespace BE_Homnayangi.Modules.OrderModule
                 DeniedOrderCount = deniedOrderCount,
                 DeniedPaypalOrderCount = deniedPaypalOrderCount,
                 CanceledOrderCount = canceledOrderCount,
-                CanceledPaypalOrderCount = canceledPaypalOrderCount
+                CanceledPaypalOrderCount = canceledPaypalOrderCount,
+                TrendingPackages = trendingGroup.OrderByDescending(t => t.Count).Take(10).ToList()
             };
             return financialReport;
         }
