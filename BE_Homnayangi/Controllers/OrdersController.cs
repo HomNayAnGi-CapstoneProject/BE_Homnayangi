@@ -253,13 +253,16 @@ namespace BE_Homnayangi.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet("shipping-cost-distance")]
+        [HttpGet("shipping-cost")]
         public async Task<IActionResult> CalculateShippingCost(double lat1, double lon1)
         {
             try
             {
-                double distance = await _orderService.CalculateDistance(lat1, lon1);
-                return Ok(distance);
+                decimal shippingCost = await _orderService.CalculateShippingCost(lat1, lon1);
+                return Ok(new
+                {
+                    shippingCost = shippingCost,
+                });
             }
             catch (Exception ex)
             {

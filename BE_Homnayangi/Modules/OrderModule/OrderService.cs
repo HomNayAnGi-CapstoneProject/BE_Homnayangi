@@ -31,6 +31,7 @@ using static Library.Models.Enum.Status;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using System.Net.Http;
 using BE_Homnayangi.Modules.PackageModule.Interface;
+using GoogleMapsApi.Entities.Common;
 
 namespace BE_Homnayangi.Modules.OrderModule
 {
@@ -108,7 +109,7 @@ namespace BE_Homnayangi.Modules.OrderModule
             var res = new List<OrderResponse>();
             foreach (var order in orders)
             {
-                
+
                 var packageOrderDetails = order.OrderDetails.Where(detail => detail.PackageId != null)
                     .Join(packages, x => x.PackageId, y => y.PackageId, (x, y) =>
                     {
@@ -921,7 +922,7 @@ namespace BE_Homnayangi.Modules.OrderModule
             }
             return res.OrderByDescending(r => r.OrderDate).ToList();
         }
-        public async Task<double> CalculateDistance(double lat2, double lon2)
+        public async Task<decimal> CalculateShippingCost(double lat2, double lon2)
         {
             Location location1 = new Location(10.841611269790572, 106.809507568837);
             Location location2 = new Location(lat2, lon2);
@@ -941,8 +942,22 @@ namespace BE_Homnayangi.Modules.OrderModule
 
             // Lấy khoảng cách từ kết quả
             var distance = goongResponse?.Routes?.FirstOrDefault()?.Legs?.FirstOrDefault().Distance.Value;
-            var distanceInKilometers = distance / 1000;
-            return distanceInKilometers ?? 0;
+            double distanceInKilometers = (double)distance / 1000;
+
+            const double baseRate = 5000; // Phí cơ bản cho 2km đầu tiên
+            const double additionalRate = 200; // Mốc tăng thêm phí sau mỗi 2km
+
+            // Tính số mốc tăng thêm
+            int additionalSteps = (int)Math.Ceiling((distanceInKilometers / 2) - 1);
+            if (additionalSteps < 0)
+            {
+                additionalSteps = 0;
+            }
+
+            // Tính phí vận chuyển
+            var shippingCost = baseRate * distanceInKilometers + (additionalRate * additionalSteps);
+
+            return (decimal)shippingCost;
             /*  DirectionsRequest distanceRequest = new DirectionsRequest();
 
               distanceRequest.ApiKey = "AIzaSyBABc-SHz6bgZkLkH2higaSTpPUaSdWQyY";
@@ -967,6 +982,5 @@ namespace BE_Homnayangi.Modules.OrderModule
 
             throw new Exception($"Failed to calculate distance");
         }
-
     }
 }
