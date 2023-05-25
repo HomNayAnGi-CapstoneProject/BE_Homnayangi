@@ -9,6 +9,7 @@ namespace BE_Homnayangi.Modules.TypeModule.DTO
     {
         public string Name { get; set; }
         public string Description { get; set; }
+        public string UnitName { get; set; }
         public bool? Status { get; set; }
 
     }
