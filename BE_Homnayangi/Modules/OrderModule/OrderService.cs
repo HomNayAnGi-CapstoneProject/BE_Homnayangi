@@ -926,7 +926,7 @@ namespace BE_Homnayangi.Modules.OrderModule
             var startDate = new DateTime(year, month, 1);
             var endDate = new DateTime(year, month, DateTime.DaysInMonth(year, month));
 
-            var orders = await _OrderRepository.GetOrdersBy(o => o.OrderStatus == (int)Status.OrderStatus.DELETED
+            var orders = await _OrderRepository.GetOrdersBy(o => o.OrderStatus != (int)Status.OrderStatus.DELETED
                 && o.OrderDate.HasValue && o.OrderDate.Value >= startDate && o.OrderDate <= endDate, includeProperties: "OrderDetails") ;
             var deliveredOrders = orders.Where(o => o.OrderStatus == (int)Status.OrderStatus.DELIVERED);
             var deniedOrders = orders.Where(o => o.OrderStatus == (int)Status.OrderStatus.DENIED);
@@ -949,9 +949,10 @@ namespace BE_Homnayangi.Modules.OrderModule
             int canceledPaypalOrderCount = cancelOrders.Where(o => o.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL).Count();
 
             var orderDetails = await _orderDetailRepository.GetOrderDetailsBy(od => orders.Select(o => o.OrderId).Contains(od.OrderId));
+            var packages = await _packageRepository.GetAll();
             var trendingGroup = from orderDetail in orderDetails
                                   group orderDetail by orderDetail.PackageId
-                                  into g select new TrendingPackage {PackageId = g.Key.GetValueOrDefault(), Count = g.Select(s=>s.Quantity.GetValueOrDefault()).Sum()};
+                                  into g select new TrendingPackage {PackageId = g.Key.GetValueOrDefault(), PackageTitle = packages.Where(p => p.PackageId == g.Key).First()?.Title, Count = g.Select(s => s.Quantity.GetValueOrDefault()).Sum()};
 
 
             FinancialReport financialReport = new FinancialReport

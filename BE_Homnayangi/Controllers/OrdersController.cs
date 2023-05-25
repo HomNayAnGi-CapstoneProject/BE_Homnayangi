@@ -253,5 +253,19 @@ namespace BE_Homnayangi.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("report")]
+        public async Task<ActionResult> GetReport([FromQuery] int month, [FromQuery] int year)
+        {
+            try
+            {
+                var res = await _orderService.CreateFinancialReport(month, year);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
