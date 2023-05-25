@@ -37,6 +37,7 @@ using GoogleMapsApi.Entities.Directions.Request;
 using GoogleMapsApi.Entities.Directions.Response;
 using GoogleMapsApi.Entities.Geocoding.Request;
 using GoogleMapsApi.Entities.Common;
+using System.Net.Http;
 
 namespace BE_Homnayangi.Modules.OrderModule
 {
@@ -56,6 +57,7 @@ namespace BE_Homnayangi.Modules.OrderModule
         IConfiguration _configuration;
         private readonly IMapper _mapper;
         private readonly IEmailSender _emailSender;
+        private readonly HttpClient _httpClient;
 
         public OrderService(IOrderRepository OrderRepository,
             IOrderDetailRepository orderDetailRepository,
@@ -70,7 +72,8 @@ namespace BE_Homnayangi.Modules.OrderModule
             ICustomerVoucherService customerVoucherService,
             IMapper mapper,
             IConfiguration configuration,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            HttpClient httpClient)
         {
             _OrderRepository = OrderRepository;
             _orderDetailRepository = orderDetailRepository;
@@ -86,6 +89,7 @@ namespace BE_Homnayangi.Modules.OrderModule
             _mapper = mapper;
             _emailSender = emailSender;
             _customerVoucherService = customerVoucherService;
+            _httpClient = httpClient;
         }
 
         public async Task<ICollection<OrderResponse>> GetOrderResponse(DateTime? fromDate, DateTime? toDate, int status = -1)
@@ -996,29 +1000,50 @@ namespace BE_Homnayangi.Modules.OrderModule
         }
         public async Task<double> CalculateDistance(double lat2, double lon2)
         {
-            DirectionsRequest distanceRequest = new DirectionsRequest();
-
-            distanceRequest.ApiKey = "AIzaSyBJJz1ycJY1VGfflXOfMQERyEcI_inBcnQ";
-
             Location location1 = new Location(10.841611269790572, 106.809507568837);
             Location location2 = new Location(lat2, lon2);
-            distanceRequest.Origin = location1.ToString();
-            distanceRequest.Destination = location2.ToString();
+            string origin = location1.ToString();
+            string destination = location2.ToString();
+            string vehicle = "bike";
+            string apiKey = "YJmpmPyakHgWJyrxBqI8RUccgGT2szN7TERBVm9B";
+            var apiUrl = $"https://rsapi.goong.io/Direction?origin={origin}&destination={destination}&vehicle={vehicle}&api_key={apiKey}";
+
+            var response = await _httpClient.GetAsync(apiUrl);
+            response.EnsureSuccessStatusCode();
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            // Xử lý kết quả JSON trả về
+            var goongResponse = JsonConvert.DeserializeObject<GoongDistanceResponse>(responseContent);
+
+            // Lấy khoảng cách từ kết quả
+            var distance = goongResponse?.Routes?.FirstOrDefault()?.Legs?.FirstOrDefault().Distance.Value;
+            var distanceInKilometers = distance / 1000;
+            return distanceInKilometers ?? 0;
+            /*  DirectionsRequest distanceRequest = new DirectionsRequest();
+
+              distanceRequest.ApiKey = "AIzaSyBABc-SHz6bgZkLkH2higaSTpPUaSdWQyY";
+
+              Location location1 = new Location(10.841611269790572, 106.809507568837);
+              Location location2 = new Location(lat2, lon2);
+              distanceRequest.Origin = location1.ToString();
+              distanceRequest.Destination = location2.ToString();
 
 
 
-            var distanceResponse = await GoogleMaps.Directions.QueryAsync(distanceRequest);
+              var distanceResponse = await GoogleMaps.Directions.QueryAsync(distanceRequest);
 
-            if (distanceResponse.Status == DirectionsStatusCodes.OK && distanceResponse.Routes.Any())
-            {
+              if (distanceResponse.Status == DirectionsStatusCodes.OK && distanceResponse.Routes.Any())
+              {
 
-                // The distance is returned in meters, so we convert it to kilometers
-                var distanceInMeters = distanceResponse.Routes.First().Legs.Sum(l => l.Distance.Value);
-                var distanceInKilometers = (double)distanceInMeters / 1000;
-                return distanceInKilometers;
-            }
+                  // The distance is returned in meters, so we convert it to kilometers
+                  var distanceInMeters = distanceResponse.Routes.First().Legs.Sum(l => l.Distance.Value);
+                  var distanceInKilometers = (double)distanceInMeters / 1000;
+                  return distanceInKilometers;
+              }*/
 
             throw new Exception($"Failed to calculate distance");
         }
+
     }
 }

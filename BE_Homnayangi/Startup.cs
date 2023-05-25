@@ -243,7 +243,7 @@ namespace BE_Homnayangi
             services.AddSingleton<ICustomAuthorization, CustomAuthorization>();
 
             services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
-
+            services.AddHttpClient<OrderService>();
             // Category Module
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ICategoryService, CategoryService>();

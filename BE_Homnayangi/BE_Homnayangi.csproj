@@ -93,6 +93,5 @@
     <Folder Include="Modules\TransactionModule\" />
     <Folder Include="Modules\TransactionModule\Interface\" />
     <Folder Include="Modules\OrderModule\Request\" />
-    <Folder Include="Modules\OrderModule\Response\" />
   </ItemGroup>
 </Project>
