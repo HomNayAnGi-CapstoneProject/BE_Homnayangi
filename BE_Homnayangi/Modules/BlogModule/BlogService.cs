@@ -741,23 +741,47 @@ namespace BE_Homnayangi.Modules.BlogModule
                 {
                     var packageAddMapFirst = new Package();
                     var packageAddMapSecond = new Package();
-                    packageAddMapFirst.PackageId = item.Key.PackageId;
-                    packageAddMapFirst.Title = item.Key.Title;
-                    packageAddMapFirst.ImageUrl = item.Key.ImageUrl;
-                    packageAddMapFirst.Size = item.Key.Size;
-                    packageAddMapFirst.BlogId = item.Key.BlogId;
+                    var packageDetailList = new List<PackageDetail>();
+                    packageAddMapFirst.PackageId = item.Item1.PackageId;
+                    packageAddMapFirst.Title = item.Item1.Title;
+                    packageAddMapFirst.ImageUrl = item.Item1.ImageUrl;
+                    packageAddMapFirst.Size = item.Item1.Size;
+                    packageAddMapFirst.BlogId = blog.BlogId;
+                    packageAddMapFirst.Status = blog.BlogStatus;
 
-                    packageAddMapSecond = packageAddMapFirst;
+                    packageAddMapSecond.PackageId = Guid.NewGuid();
+                    packageAddMapSecond.Title = item.Item1.Title;
+                    packageAddMapSecond.ImageUrl = item.Item1.ImageUrl;
+                    packageAddMapSecond.Size = item.Item1.Size;
+                    packageAddMapSecond.BlogId = blog.BlogId;
+                    packageAddMapSecond.Status = blog.BlogStatus;
 
-                    packageAddMapFirst.PackagePrice = item.Key.PackagePrice;
+                    packageAddMapFirst.PackagePrice = item.Item1.PackagePrice;
                     packageAddMapFirst.IsCooked = false;
 
-                    packageAddMapSecond.PackagePrice = item.Key.CookedPrice;
+                    packageAddMapSecond.PackagePrice = item.Item1.CookedPrice;
                     packageAddMapSecond.IsCooked = true;
 
                     packages.Add(packageAddMapFirst);
                     packages.Add(packageAddMapSecond);
-                    packageDetails.AddRange(item.Value);
+                    foreach (var subItem in item.Item2)
+                    {
+                        packageDetailList.Add(new PackageDetail
+                        {
+                            PackageId = packageAddMapFirst.PackageId,
+                            IngredientId = subItem.IngredientId,
+                            Description = subItem.Description,
+                            Quantity = subItem.Quantity
+                        });
+                        packageDetailList.Add(new PackageDetail
+                        {
+                            PackageId = packageAddMapSecond.PackageId,
+                            IngredientId = subItem.IngredientId,
+                            Description = subItem.Description,
+                            Quantity = subItem.Quantity
+                        });
+                    }
+                    packageDetails.AddRange(packageDetailList);
                 }
 
                 var dbAllPackageDetails = await _packageDetailRepository
@@ -785,7 +809,14 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 var addedPackage = packages.Except(dbPackages).ToList();
 
-                if (addedPackage.Count() > 0) await _packageRepository.AddRangeAsync(addedPackage);
+                if (addedPackage.Count() > 0)
+                {
+                    foreach(var item in addedPackage)
+                    {
+                        item.CreatedDate = DateTime.Now;
+                    }
+                    await _packageRepository.AddRangeAsync(addedPackage);
+                };
 
                 var addedPackageDetail = packageDetails.Except(dbPackageDetails).ToList();
 
@@ -812,8 +843,14 @@ namespace BE_Homnayangi.Modules.BlogModule
                 {
                     if (!joinSubCate.Contains(b))
                     {
-                        b.CreatedDate = DateTime.Now;
-                        await _blogSubCateRepository.AddAsync(b);
+                        var newBlogSubCate = new BlogSubCate
+                        {
+                            BlogId = (Guid)b.BlogId,
+                            SubCateId = (Guid)b.SubCateId,
+                            CreatedDate = DateTime.Now,
+                            Status = true
+                        };
+                        await _blogSubCateRepository.AddAsync(newBlogSubCate);
                     }
                 }
                 // check if leftover then remove
@@ -841,15 +878,17 @@ namespace BE_Homnayangi.Modules.BlogModule
                 #endregion
 
                 // update blog
-                request.Blog.UpdatedDate = DateTime.Now;
-                request.Blog.AuthorId = currentUserId;
-                request.Blog.CreatedDate = blog.CreatedDate;
-                request.Blog.Reaction = blog.Reaction;
-                request.Blog.View = blog.View;
-                request.Blog.MinutesToCook = request.Blog.MinutesToCook == null ? blog.MinutesToCook : request.Blog.MinutesToCook;
-                request.Blog.IsEvent = request.Blog.IsEvent == null ? false : request.Blog.IsEvent;
-                request.Blog.EventExpiredDate = request.Blog.IsEvent.Value ? request.Blog.EventExpiredDate : null;
-                await _blogRepository.UpdateAsync(request.Blog);
+                blog.UpdatedDate = DateTime.Now;
+                blog.Title = request.Blog.Title;
+                blog.ImageUrl = request.Blog.ImageUrl;
+                blog.BlogStatus = request.Blog.BlogStatus;
+                blog.VideoUrl = request.Blog.VideoUrl;
+                blog.MinutesToCook = request.Blog.MinutesToCook;
+                blog.IsEvent = request.Blog.IsEvent;
+                blog.EventExpiredDate = request.Blog.EventExpiredDate;
+                blog.CookingMethodId = request.Blog.CookingMethodId;
+                blog.RegionId = request.Blog.RegionId;
+                await _blogRepository.UpdateAsync(blog);
                 #endregion
 
                 if (request.Blog.BlogStatus == (int)Status.BlogStatus.PENDING)
