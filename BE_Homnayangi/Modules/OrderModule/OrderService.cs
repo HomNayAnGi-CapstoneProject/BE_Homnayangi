@@ -141,7 +141,7 @@ namespace BE_Homnayangi.Modules.OrderModule
                     OrderStatus = order.OrderStatus,
                     CustomerId = order.CustomerId,
                     IsCooked = order.IsCooked,
-                    VoucherId = order.VoucherId,
+                    VoucherId = order.CustomerVoucherId,
                     PaymentMethod = order.PaymentMethod,
                     PaypalUrl = order.PaypalUrl,
                     OrderDetailRecipes = packageOrderDetails,
@@ -191,8 +191,8 @@ namespace BE_Homnayangi.Modules.OrderModule
                 if (newOrder.TotalPrice < 10000)
                     throw new Exception(ErrorMessage.OrderError.ORDER_TOTAL_PRICE_NOT_VALID);
 
-                var voucher = newOrder.VoucherId.HasValue
-                    ? await _voucherRepository.GetByIdAsync(newOrder.VoucherId.Value)
+                var voucher = newOrder.CustomerVoucherId.HasValue
+                    ? await _voucherRepository.GetByIdAsync(newOrder.CustomerVoucherId.Value)
                     : null;
                 if (voucher != null)
                 {
@@ -374,8 +374,8 @@ namespace BE_Homnayangi.Modules.OrderModule
 
             await _OrderRepository.UpdateAsync(order);
 
-            if (order.VoucherId.HasValue)
-                await _customerVoucherService.DeleteCustomerVoucher(order.VoucherId.Value, customer.CustomerId);
+            if (order.CustomerVoucherId.HasValue)
+                await _customerVoucherService.DeleteCustomerVoucher(order.CustomerVoucherId.Value, customer.CustomerId);
 
             #region Create notification
             var id = Guid.NewGuid();
@@ -908,7 +908,7 @@ namespace BE_Homnayangi.Modules.OrderModule
                     OrderStatus = order.OrderStatus,
                     CustomerId = order.CustomerId,
                     IsCooked = order.IsCooked,
-                    VoucherId = order.VoucherId,
+                    VoucherId = order.CustomerVoucherId,
                     PaymentMethod = order.PaymentMethod,
                     PaypalUrl = order.PaypalUrl,
                     OrderDetailRecipes = packageOrderDetails

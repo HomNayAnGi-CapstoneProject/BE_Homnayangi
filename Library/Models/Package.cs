@@ -18,7 +18,7 @@ namespace Library.Models
         public string ImageUrl { get; set; }
         public decimal? PackagePrice { get; set; }
         public bool? IsCooked { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
         public int? Size { get; set; }
         public Guid? BlogId { get; set; }
         public int? Status { get; set; }
