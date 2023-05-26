@@ -35,6 +35,7 @@ using static Library.Models.Enum.Status;
 using BE_Homnayangi.Modules.PackageModule.Interface;
 using BE_Homnayangi.Modules.PackageDetailModule.Interface;
 using GSF;
+using BE_Homnayangi.Modules.IngredientModule.Interface;
 
 namespace BE_Homnayangi.Modules.BlogModule
 {
@@ -52,13 +53,14 @@ namespace BE_Homnayangi.Modules.BlogModule
         private readonly IAccomplishmentRepository _accomplishmentRepository;
         private readonly ICaloReferenceRepository _caloReferenceRepository;
         private readonly INotificationRepository _notificationRepository;
+        private readonly IIngredientRepository _ingredientRepository;
         private readonly IHubContext<SignalRServer> _hubContext;
 
         public BlogService(IBlogRepository blogRepository, IPackageRepository packageRepository, IBlogSubCateRepository blogSubCateRepository,
             ISubCateRepository subCateRepository, IPackageDetailRepository packageDetailRepository,
             IUserRepository userRepository, IBlogReferenceRepository blogReferenceRepository, ICommentRepository commentRepository,
             IBlogReactionRepository blogReactionRepository, IAccomplishmentRepository accomplishmentRepository,
-            ICaloReferenceRepository caloReferenceRepository,
+            ICaloReferenceRepository caloReferenceRepository, IIngredientRepository ingredientRepository,
             INotificationRepository notificationRepository,
             IHubContext<SignalRServer> hubContext)
         {
@@ -67,6 +69,7 @@ namespace BE_Homnayangi.Modules.BlogModule
             _blogSubCateRepository = blogSubCateRepository;
             _packageDetailRepository = packageDetailRepository;
             _userRepository = userRepository;
+            _ingredientRepository = ingredientRepository;
             _blogReferenceRepository = blogReferenceRepository;
             _commentRepository = commentRepository;
             _blogReactionRepository = blogReactionRepository;
@@ -790,12 +793,13 @@ namespace BE_Homnayangi.Modules.BlogModule
                     .GetAll(options: (l) => l.AsNoTracking().ToList());
 
                 var dbPackages = await _packageRepository.GetPackagesBy(x => x.BlogId == blog.BlogId, options: (l) => l.AsNoTracking().ToList());
+                var dbPackagesId = dbPackages.Select(x => x.PackageId).ToList();
                 var dbPackageDetails = dbPackages.Join(dbAllPackageDetails, x => x.PackageId, y => y.PackageId, (x, y) => y).ToList();
 
                 var updatedPackage = new List<Package>();
                 foreach (var item in packages)
                 {
-                    if (dbPackages.Contains(item))
+                    if (dbPackagesId.Contains(item.PackageId))
                     {
                         var changedPackage = dbPackages.First(x => x.PackageId == item.PackageId);
                         changedPackage.Title = item.Title;
@@ -827,9 +831,9 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 // check if exist then update, else add
                 var updatedPackageDetail = new List<PackageDetail>();
-                foreach(var item in packageDetails)
+                foreach (var item in packageDetails)
                 {
-                    if(dbPackageDetails.Contains(item))
+                    if (dbPackageDetails.Contains(item))
                     {
                         var changedPackageDetail = dbPackageDetails.Find(x => x.PackageId == item.PackageId && x.IngredientId == item.IngredientId);
                         changedPackageDetail.Quantity = item.Quantity;
@@ -847,7 +851,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                 var addedPackageDetail = packageDetails.Except(dbPackageDetails).ToList();
 
                 if (addedPackageDetail.Count() > 0) _packageDetailRepository.AddRange(addedPackageDetail);
-                
+
                 #endregion
 
                 #region update blog and subcates
@@ -1287,6 +1291,11 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 //List Packages
                 var listPackages = await _packageRepository.GetPackagesBy(x => x.BlogId == result.BlogId);
+                var test = listPackages.GroupBy(x => x.Size).Select(xx => new
+                {
+                    Size = xx.Key,
+                    packageResponse = xx.Select(xx => xx.PackageId)
+                });
                 var allPackageDetail = await _packageDetailRepository.GetPackageDetailsBy(x => x.Package.BlogId == result.BlogId, includeProperties: "Ingredient");
                 for (int i = 0; i < listPackages.Count(); i = i + 2)
                 {
@@ -1309,7 +1318,6 @@ namespace BE_Homnayangi.Modules.BlogModule
                         Price = x.Ingredient.Price,
                         Image = x.Ingredient.Picture
                     }).ToList();
-                    result.Packages.Add(packageResponse, listPackageDetailResponse);
                 }
 
                 result.RelatedBlogs = await GetRelatedBlogs(result.BlogId);
@@ -1389,29 +1397,47 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 //List Packages
                 var listPackages = await _packageRepository.GetPackagesBy(x => x.BlogId == result.BlogId);
+                var groupPackage = listPackages.GroupBy(x => x.Size).Select(xx => new
+                {
+                    Size = xx.Key,
+                    packageResponse = xx.Select(xx => new { xx.PackageId, xx.IsCooked, xx.PackagePrice, xx.ImageUrl, xx.Title })
+                });
                 var allPackageDetail = await _packageDetailRepository.GetPackageDetailsBy(x => x.Package.BlogId == result.BlogId, includeProperties: "Ingredient");
-                for (int i = 0; i < listPackages.Count(); i = i + 2)
+                var ingredients = await _ingredientRepository.GetAll(includeProperties: "Type");
+                foreach (var item in groupPackage)
                 {
                     var packageResponse = new PackagesResponse
                     {
-                        PackageId = listPackages.ElementAt(i).PackageId,
-                        CookedPrice = listPackages.ElementAt(i + 1).PackagePrice,
-                        PackagePrice = listPackages.ElementAt(i).PackagePrice,
-                        PackageImageURL = listPackages.ElementAt(i).ImageUrl,
-                        PackageTitle = listPackages.ElementAt(i).Title,
-                        Size = (int)listPackages.ElementAt(i).Size
+                        PackageId = item.packageResponse.First(x => x.IsCooked == false).PackageId,
+                        CookedId = item.packageResponse.First(x => x.IsCooked == true).PackageId,
+                        PackagePrice = item.packageResponse.First(x => x.IsCooked == false).PackagePrice,
+                        CookedPrice = item.packageResponse.First(x => x.IsCooked == true).PackagePrice,
+                        PackageImageURL = item.packageResponse.First(x => x.IsCooked == false).ImageUrl,
+                        PackageTitle = item.packageResponse.First(x => x.IsCooked == false).Title,
+                        Size = (int)item.Size
                     };
-                    var listPackageDetailResponse = allPackageDetail.Where(x => x.PackageId == listPackages.ElementAt(i).PackageId).Select(x => new PackageDetailResponse
-                    {
-                        Description = x.Description,
-                        IngredientId = x.IngredientId,
-                        IngredientName = x.Ingredient.Name,
-                        Quantity = x.Quantity,
-                        Kcal = x.Ingredient.Kcal,
-                        Price = x.Ingredient.Price,
-                        Image = x.Ingredient.Picture
-                    }).ToList();
-                    result.Packages.Add(packageResponse, listPackageDetailResponse);
+                    var listPackageDetailResponse = allPackageDetail.Where(x => x.PackageId == item.packageResponse.First(x => x.IsCooked == false).PackageId)
+                        .Select(x => new
+                        {
+                            Description = x.Description,
+                            IngredientId = x.IngredientId,
+                            IngredientName = x.Ingredient.Name,
+                            Quantity = x.Quantity,
+                            Kcal = x.Ingredient.Kcal,
+                            Price = x.Ingredient.Price,
+                            Image = x.Ingredient.Picture
+                        }).ToList().Join(ingredients, x => x.IngredientId, y => y.IngredientId, (x, y) => new PackageDetailResponse
+                        {
+                            Description = x.Description,
+                            IngredientId = x.IngredientId,
+                            IngredientName = x.IngredientName,
+                            Quantity = x.Quantity,
+                            Kcal = x.Kcal,
+                            Price = x.Price,
+                            Image = x.Image,
+                            UnitName = y.Type.UnitName
+                        }).ToList();
+                    result.Packages.Add(new Tuple<PackagesResponse, List<PackageDetailResponse>>(packageResponse, listPackageDetailResponse));
                 }
             }
             catch (Exception ex)
