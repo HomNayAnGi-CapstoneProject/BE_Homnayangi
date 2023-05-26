@@ -15,6 +15,9 @@ namespace Repository.Repository.Interface
         void Add(T entity);
 
         Task AddRangeAsync(IEnumerable<T> entities);
+        void AddRange(IEnumerable<T> entities);
+        void UpdateRange(IEnumerable<T> entities);
+        void RemoveRange(IEnumerable<T> entities);
 
         Task<ICollection<T>> GetAll(
                 Func<IQueryable<T>,

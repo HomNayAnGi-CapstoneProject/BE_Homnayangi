@@ -42,6 +42,7 @@ namespace BE_Homnayangi.Modules.BlogModule.Request
         public class PackageUpdateRequest
         {
             public Guid PackageId { get; set; }
+            public Guid CookedId { get; set; }
             public string Title { get; set; }
             public string ImageUrl { get; set; }
             public decimal? PackagePrice { get; set; }

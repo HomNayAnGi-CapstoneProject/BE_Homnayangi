@@ -748,13 +748,15 @@ namespace BE_Homnayangi.Modules.BlogModule
                     packageAddMapFirst.Size = item.Item1.Size;
                     packageAddMapFirst.BlogId = blog.BlogId;
                     packageAddMapFirst.Status = blog.BlogStatus;
+                    packageAddMapFirst.CreatedDate = DateTime.Now;
 
-                    packageAddMapSecond.PackageId = Guid.NewGuid();
+                    packageAddMapSecond.PackageId = item.Item1.CookedId;
                     packageAddMapSecond.Title = item.Item1.Title;
                     packageAddMapSecond.ImageUrl = item.Item1.ImageUrl;
                     packageAddMapSecond.Size = item.Item1.Size;
                     packageAddMapSecond.BlogId = blog.BlogId;
                     packageAddMapSecond.Status = blog.BlogStatus;
+                    packageAddMapSecond.CreatedDate = DateTime.Now;
 
                     packageAddMapFirst.PackagePrice = item.Item1.PackagePrice;
                     packageAddMapFirst.IsCooked = false;
@@ -790,42 +792,62 @@ namespace BE_Homnayangi.Modules.BlogModule
                 var dbPackages = await _packageRepository.GetPackagesBy(x => x.BlogId == blog.BlogId, options: (l) => l.AsNoTracking().ToList());
                 var dbPackageDetails = dbPackages.Join(dbAllPackageDetails, x => x.PackageId, y => y.PackageId, (x, y) => y).ToList();
 
-                // check if exist then update, else add
-                var updatedPackageDetail = packageDetails.Join(dbPackageDetails, x => new { x.PackageId, x.IngredientId }, y => new { y.PackageId, y.IngredientId },
-                    (x, y) => x);
+                var updatedPackage = new List<Package>();
+                foreach (var item in packages)
+                {
+                    if (dbPackages.Contains(item))
+                    {
+                        var changedPackage = dbPackages.First(x => x.PackageId == item.PackageId);
+                        changedPackage.Title = item.Title;
+                        changedPackage.ImageUrl = item.ImageUrl;
+                        changedPackage.Size = item.Size;
+                        changedPackage.PackagePrice = item.PackagePrice;
+                        changedPackage.IsCooked = item.IsCooked;
+                        updatedPackage.Add(changedPackage);
+                    }
+                }
+                if (updatedPackage.Count() > 0) _packageRepository.UpdateRange(updatedPackage);
 
-                if (updatedPackageDetail.Count() > 0) await _packageDetailRepository.UpdateRangeAsync(updatedPackageDetail);
+                var addedPackage = packages.Select(xx => xx.PackageId).Where(x => !dbPackages.Select(y => y.PackageId).Contains(x)).ToList();
+
+                if (addedPackage.Count() > 0)
+                {
+                    var addedPackageToDb = packages.Where(x => addedPackage.Contains(x.PackageId)).ToList();
+                    _packageRepository.AddRange(addedPackageToDb);
+                }
+
+                // check if leftover then remove
+                var deletedPackage = dbPackages.Select(x => x.PackageId).Where(x => !packages.Select(y => y.PackageId).Contains(x)).ToList();
+
+                if (deletedPackage.Count() > 0)
+                {
+                    var deletedPackageFromDb = packages.Where(x => deletedPackage.Contains(x.PackageId)).ToList();
+                    _packageRepository.RemoveRange(deletedPackageFromDb);
+                }
+
+                // check if exist then update, else add
+                var updatedPackageDetail = new List<PackageDetail>();
+                foreach(var item in packageDetails)
+                {
+                    if(dbPackageDetails.Contains(item))
+                    {
+                        var changedPackageDetail = dbPackageDetails.Find(x => x.PackageId == item.PackageId && x.IngredientId == item.IngredientId);
+                        changedPackageDetail.Quantity = item.Quantity;
+                        changedPackageDetail.Description = item.Description;
+                        updatedPackageDetail.Add(changedPackageDetail);
+                    }
+                }
+                if (updatedPackageDetail.Count() > 0) _packageDetailRepository.UpdateRange(updatedPackageDetail);
                 // check if leftover then remove
 
                 var deletedPackageDetail = dbPackageDetails.Except(packageDetails).ToList();
 
-                if (deletedPackageDetail.Count() > 0) await _packageDetailRepository.RemoveRangeAsync(deletedPackageDetail);
-
-                // check if exist then update, else add
-                var updatedPackages = packages.Join(dbPackages, x => x.PackageId, y => y.PackageId,
-                    (x, y) => x);
-
-                if (updatedPackages.Count() > 0) await _packageRepository.UpdateRangeAsync(updatedPackages);
-
-                var addedPackage = packages.Except(dbPackages).ToList();
-
-                if (addedPackage.Count() > 0)
-                {
-                    foreach(var item in addedPackage)
-                    {
-                        item.CreatedDate = DateTime.Now;
-                    }
-                    await _packageRepository.AddRangeAsync(addedPackage);
-                };
+                if (deletedPackageDetail.Count() > 0) _packageDetailRepository.RemoveRange(deletedPackageDetail);
 
                 var addedPackageDetail = packageDetails.Except(dbPackageDetails).ToList();
 
-                if (addedPackageDetail.Count() > 0) await _packageDetailRepository.AddRangeAsync(addedPackageDetail);
-                // check if leftover then remove
-                var deletedPackage = dbPackages.Except(packages).ToList();
-
-                if (deletedPackage.Count() > 0) await _packageRepository.RemoveRangeAsync(deletedPackage);
-
+                if (addedPackageDetail.Count() > 0) _packageDetailRepository.AddRange(addedPackageDetail);
+                
                 #endregion
 
                 #region update blog and subcates
