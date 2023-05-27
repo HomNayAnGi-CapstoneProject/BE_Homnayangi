@@ -208,8 +208,6 @@ namespace Library.DataAccess
                     .HasColumnType("datetime")
                     .HasColumnName("createdDate");
 
-                entity.Property(e => e.TotalKcal).HasColumnName("totalKcal");
-
                 entity.Property(e => e.EventExpiredDate)
                     .HasColumnType("datetime")
                     .HasColumnName("eventExpiredDate");
@@ -229,6 +227,8 @@ namespace Library.DataAccess
                 entity.Property(e => e.RegionId).HasColumnName("regionId");
 
                 entity.Property(e => e.Title).HasColumnName("title");
+
+                entity.Property(e => e.TotalKcal).HasColumnName("totalKcal");
 
                 entity.Property(e => e.UpdatedDate)
                     .HasColumnType("datetime")
@@ -630,6 +630,8 @@ namespace Library.DataAccess
 
                 entity.Property(e => e.CustomerId).HasColumnName("customerId");
 
+                entity.Property(e => e.CustomerVoucherId).HasColumnName("customerVoucherId");
+
                 entity.Property(e => e.IsCooked).HasColumnName("isCooked");
 
                 entity.Property(e => e.OrderDate)
@@ -658,17 +660,15 @@ namespace Library.DataAccess
 
                 entity.Property(e => e.TransactionStatus).HasColumnName("transactionStatus");
 
-                entity.Property(e => e.VoucherId).HasColumnName("voucherId");
-
                 entity.HasOne(d => d.Customer)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.CustomerId)
                     .HasConstraintName("FK_Order_Customer");
 
-                entity.HasOne(d => d.Voucher)
+                entity.HasOne(d => d.CustomerVoucher)
                     .WithMany(p => p.Orders)
-                    .HasForeignKey(d => d.VoucherId)
-                    .HasConstraintName("FK_Order_Voucher");
+                    .HasForeignKey(d => d.CustomerVoucherId)
+                    .HasConstraintName("FK_Order_CustomerVoucher");
             });
 
             modelBuilder.Entity<OrderDetail>(entity =>
@@ -711,6 +711,10 @@ namespace Library.DataAccess
 
                 entity.Property(e => e.BlogId).HasColumnName("blogId");
 
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("createdDate");
+
                 entity.Property(e => e.ImageUrl).HasColumnName("imageURL");
 
                 entity.Property(e => e.IsCooked).HasColumnName("isCooked");
@@ -718,10 +722,6 @@ namespace Library.DataAccess
                 entity.Property(e => e.PackagePrice)
                     .HasColumnType("money")
                     .HasColumnName("packagePrice");
-
-                entity.Property(e => e.CreatedDate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("createdDate");
 
                 entity.Property(e => e.Size).HasColumnName("size");
 

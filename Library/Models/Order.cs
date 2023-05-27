@@ -21,13 +21,13 @@ namespace Library.Models
         public Guid? CustomerId { get; set; }
         public bool? IsCooked { get; set; }
         public int? TransactionStatus { get; set; }
-        public Guid? VoucherId { get; set; }
+        public Guid? CustomerVoucherId { get; set; }
         public int? PaymentMethod { get; set; }
         public decimal? ShippingCost { get; set; }
         public string PaypalUrl { get; set; }
 
         public virtual Customer Customer { get; set; }
-        public virtual Voucher Voucher { get; set; }
+        public virtual CustomerVoucher CustomerVoucher { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }

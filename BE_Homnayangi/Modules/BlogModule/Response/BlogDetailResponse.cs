@@ -8,7 +8,7 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
     {
         public BlogDetailResponse()
         {
-            Packages = new Dictionary<PackagesResponse, List<PackageDetailResponse>>();
+            Packages = new List<Tuple<PackagesResponse, List<PackageDetailResponse>>>();
         }
         public Guid BlogId { get; set; }
         public string Title { get; set; }
@@ -36,7 +36,7 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
         public int? MinSize { get; set; }
 
         //List Packages
-        public IDictionary<PackagesResponse, List<PackageDetailResponse>> Packages { get; set; }
+        public List<Tuple<PackagesResponse, List<PackageDetailResponse>>> Packages { get; set; }
 
 
         // List SubCates
@@ -50,11 +50,12 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
 
     public class PackagesResponse
     {
-        public bool? IsCooked { get; set; }
+        public decimal? CookedPrice { get; set; }
         public decimal? PackagePrice { get; set; }
 
         // Package information
         public Guid PackageId { get; set; }
+        public Guid CookedId { get; set; }
         public string PackageTitle { get; set; }
         public string PackageImageURL { get; set; }
         public int Size { get; set; }
