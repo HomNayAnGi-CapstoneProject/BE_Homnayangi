@@ -265,7 +265,7 @@ namespace BE_Homnayangi.Controllers
             }
         }
 
-        [HttpGet("report/month")]
+        [HttpGet("report/monthly")]
         public async Task<ActionResult> GetMonthReport([FromQuery] int month, [FromQuery] int year)
         {
             try
@@ -318,8 +318,6 @@ namespace BE_Homnayangi.Controllers
                     //var fileBytes = Encoding.UTF8.GetBytes(mem.ToArray());
                     return File(mem.ToArray(), "text/csv", "Report.csv");
                 }
-
-            
         }
     }
 }

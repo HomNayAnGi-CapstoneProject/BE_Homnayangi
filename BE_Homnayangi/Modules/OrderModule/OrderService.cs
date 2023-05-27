@@ -979,7 +979,7 @@ namespace BE_Homnayangi.Modules.OrderModule
             return financialReport;
         }
 
-        public async Task<FinancialReport> CreateMonthlyFinancialReport(DateTime startDate, DateTime endDate)
+        public async Task<FinancialReport> CreateFinancialReport(DateTime startDate, DateTime endDate)
         {
             if (!Utils.DateTimeUtils.CheckValidFromAndToDate(startDate, endDate))
                 throw new Exception("Invalid start and end date");
