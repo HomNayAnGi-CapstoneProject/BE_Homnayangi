@@ -30,6 +30,7 @@ using static Library.Models.Enum.PaymentMethodEnum;
 using static Library.Models.Enum.Status;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using BE_Homnayangi.Modules.PackageModule.Interface;
+using System.Drawing;
 
 namespace BE_Homnayangi.Modules.OrderModule
 {
@@ -918,7 +919,7 @@ namespace BE_Homnayangi.Modules.OrderModule
             return res.OrderByDescending(r => r.OrderDate).ToList();
         }
 
-        public async Task<FinancialReport> CreateFinancialReport(int month, int year)
+        public async Task<FinancialReport> CreateMonthlyFinancialReport(int month, int year)
         {
             if (month < 1 || month > 12) throw new Exception("Invalid month");
             if (year < 2023 || year > DateTime.Now.Year) throw new Exception("Invalid year");
@@ -953,6 +954,64 @@ namespace BE_Homnayangi.Modules.OrderModule
             var trendingGroup = from orderDetail in orderDetails
                                   group orderDetail by orderDetail.PackageId
                                   into g select new TrendingPackage {PackageId = g.Key.GetValueOrDefault(), PackageTitle = packages.Where(p => p.PackageId == g.Key).First()?.Title, Count = g.Select(s => s.Quantity.GetValueOrDefault()).Sum()};
+
+
+            FinancialReport financialReport = new FinancialReport
+            {
+                StartDate = startDate,
+                EndDate = endDate,
+                Revenue = revenue,
+                //Gains = gains,
+                //Expenses = expenses,
+                //Losses = losses,
+                //NetIncome = netIncome,
+                TotalShipCost = totalShipCost,
+                TotalOrder = totalOrder,
+                TotalPaypalOrder = totalPaypalOrder,
+                DeliverdOrderCount = deliveredOrderCount,
+                DeliverdPaypalOrderCount = deliveredPaypalOrderCount,
+                DeniedOrderCount = deniedOrderCount,
+                DeniedPaypalOrderCount = deniedPaypalOrderCount,
+                CanceledOrderCount = canceledOrderCount,
+                CanceledPaypalOrderCount = canceledPaypalOrderCount,
+                TrendingPackages = trendingGroup.OrderByDescending(t => t.Count).Take(10).ToList()
+            };
+            return financialReport;
+        }
+
+        public async Task<FinancialReport> CreateMonthlyFinancialReport(DateTime startDate, DateTime endDate)
+        {
+            if (!Utils.DateTimeUtils.CheckValidFromAndToDate(startDate, endDate))
+                throw new Exception("Invalid start and end date");
+
+            var orders = await _OrderRepository.GetOrdersBy(o => o.OrderStatus != (int)Status.OrderStatus.DELETED
+                && o.OrderDate.HasValue && o.OrderDate.Value >= startDate && o.OrderDate <= endDate, includeProperties: "OrderDetails");
+            var deliveredOrders = orders.Where(o => o.OrderStatus == (int)Status.OrderStatus.DELIVERED);
+            var deniedOrders = orders.Where(o => o.OrderStatus == (int)Status.OrderStatus.DENIED);
+            var cancelOrders = orders.Where(o => o.OrderStatus == (int)Status.OrderStatus.CANCEL);
+
+            decimal revenue = orders.Select(o => o.TotalPrice.GetValueOrDefault()).Sum();
+            //decimal gains = 0;
+            //decimal expenses = 0;
+            //decimal losses = 0;
+            //decimal netIncome = revenue + gains - expenses - losses;
+            decimal totalShipCost = orders.Select(o => o.ShippingCost.GetValueOrDefault()).Sum();
+
+            int totalOrder = orders.Count;
+            int totalPaypalOrder = orders.Where(o => o.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL).Count();
+            int deliveredOrderCount = deliveredOrders.Count();
+            int deliveredPaypalOrderCount = deliveredOrders.Where(o => o.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL).Count();
+            int deniedOrderCount = deniedOrders.Count();
+            int deniedPaypalOrderCount = deniedOrders.Where(o => o.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL).Count();
+            int canceledOrderCount = cancelOrders.Count();
+            int canceledPaypalOrderCount = cancelOrders.Where(o => o.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL).Count();
+
+            var orderDetails = await _orderDetailRepository.GetOrderDetailsBy(od => orders.Select(o => o.OrderId).Contains(od.OrderId));
+            var packages = await _packageRepository.GetAll();
+            var trendingGroup = from orderDetail in orderDetails
+                                group orderDetail by orderDetail.PackageId
+                                  into g
+                                select new TrendingPackage { PackageId = g.Key.GetValueOrDefault(), PackageTitle = packages.Where(p => p.PackageId == g.Key).First()?.Title, Count = g.Select(s => s.Quantity.GetValueOrDefault()).Sum() };
 
 
             FinancialReport financialReport = new FinancialReport

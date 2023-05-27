@@ -28,9 +28,9 @@ namespace BE_Homnayangi.Modules.OrderModule.Response
 
     public class TrendingPackage
     {
-        public Guid PackageId;
-        public string PackageTitle;
-        public int Count;
+        public Guid PackageId { get; set; }
+        public string PackageTitle { get; set; }
+        public int Count { get; set; }
     }
 }
 

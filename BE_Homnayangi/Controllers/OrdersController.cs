@@ -1,6 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using BE_Homnayangi.Modules.NotificationModule.Interface;
@@ -15,6 +21,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
+using static Google.Apis.Requests.BatchRequest;
+using CsvHelper;
+using CsvHelper.Configuration;
+using System.Globalization;
+using BE_Homnayangi.Modules.OrderModule.Response;
 
 namespace BE_Homnayangi.Controllers
 {
@@ -254,18 +265,61 @@ namespace BE_Homnayangi.Controllers
             }
         }
 
-        [HttpGet("report")]
-        public async Task<ActionResult> GetReport([FromQuery] int month, [FromQuery] int year)
+        [HttpGet("report/month")]
+        public async Task<ActionResult> GetMonthReport([FromQuery] int month, [FromQuery] int year)
         {
             try
             {
-                var res = await _orderService.CreateFinancialReport(month, year);
+                var res = await _orderService.CreateMonthlyFinancialReport(month, year);
                 return Ok(res);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpGet("report")]
+        public async Task<ActionResult> GetReport([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+        {
+            try
+            {
+                var res = await _orderService.CreateFinancialReport(startDate, endDate);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("report/export")]
+        public async Task<ActionResult> ExportReport([FromQuery] int month, [FromQuery] int year)
+        {
+            var res = await _orderService.CreateMonthlyFinancialReport(month, year);
+            var csv = res.TrendingPackages;
+
+            //var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
+            //    {
+            //    NewLine = Environment.NewLine,
+            //    Encoding = Encoding.UTF8
+            //    };
+
+                using (var mem = new MemoryStream())
+                using (var writer = new StreamWriter(mem))
+                using (var csvWriter = new CsvWriter(writer, new CsvConfiguration(CultureInfo.InvariantCulture)))
+                {
+                    csvWriter.WriteHeader<TrendingPackage>();
+                    csvWriter.WriteRecords(csv);
+
+                    writer.Flush();
+                    var result = Encoding.UTF8.GetString(mem.ToArray());
+                    Console.WriteLine(result);
+                    //var fileBytes = Encoding.UTF8.GetBytes(mem.ToArray());
+                    return File(mem.ToArray(), "text/csv", "Report.csv");
+                }
+
+            
         }
     }
 }

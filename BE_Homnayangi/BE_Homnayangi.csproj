@@ -15,6 +15,7 @@
     <EmbeddedResource Remove="Modules\RewardModule\**" />
     <None Remove="Modules\BadgeModule\DTO\Response\**" />
     <None Remove="Modules\RewardModule\**" />
+    <None Remove="CsvHelper" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,6 +48,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.17" />
     <PackageReference Include="UnidecodeSharpFork" Version="1.0.0" />
     <PackageReference Include="PayPal" Version="1.9.1" />
+    <PackageReference Include="CsvHelper" Version="30.0.1" />
   </ItemGroup>
 
   <ItemGroup>
