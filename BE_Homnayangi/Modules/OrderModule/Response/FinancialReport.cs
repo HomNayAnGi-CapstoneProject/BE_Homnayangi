@@ -5,25 +5,16 @@ namespace BE_Homnayangi.Modules.OrderModule.Response
 {
     public class FinancialReport
     {
-        public DateTime StartDate;
-        public DateTime EndDate;
-        public decimal Revenue;
-        //public decimal Expenses;
-        //public decimal Gains;
-        //public decimal Losses;
-        //public decimal NetIncome;
-        public decimal TotalShipCost;
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public decimal Revenue { get; set; }
+        public decimal ShipCost { get; set; }
 
-        public int TotalOrder;
-        public int TotalPaypalOrder;
-        public int DeliverdOrderCount;
-        public int DeliverdPaypalOrderCount;
-        public int DeniedOrderCount;
-        public int DeniedPaypalOrderCount;
-        public int CanceledOrderCount;
-        public int CanceledPaypalOrderCount;
-
-        public List<TrendingPackage> TrendingPackages;
+        public int TotalOrders { get; set; }
+        public int TotalPackages { get; set; }
+        public int DeliveredOrders { get; set; }
+        public int DeniedOrders { get; set; }
+        public int CanceledOrders { get; set; }
     }
 
     public class TrendingPackage
@@ -32,5 +23,6 @@ namespace BE_Homnayangi.Modules.OrderModule.Response
         public string PackageTitle { get; set; }
         public int Count { get; set; }
     }
+
 }
 

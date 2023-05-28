@@ -919,35 +919,66 @@ namespace BE_Homnayangi.Modules.OrderModule
             return res.OrderByDescending(r => r.OrderDate).ToList();
         }
 
-        public async Task<FinancialReport> CreateMonthlyFinancialReport(int month, int year)
+        public async Task<FinancialReport> GetYearlyFinancialReport(int year)
         {
-            if (month < 1 || month > 12) throw new Exception("Invalid month");
-            if (year < 2023 || year > DateTime.Now.Year) throw new Exception("Invalid year");
+            if (year < 2000 || year > DateTime.Now.Year)
+                throw new Exception("Invalid year");
 
-            var startDate = new DateTime(year, month, 1);
-            var endDate = new DateTime(year, month, DateTime.DaysInMonth(year, month));
+            var startDate = new DateTime(year, 1, 1);
+            var endDate = new DateTime(year, 12, 31).AddDays(1).Date.AddSeconds(-1);
 
             var orders = await _OrderRepository.GetOrdersBy(o => o.OrderStatus != (int)Status.OrderStatus.DELETED
-                && o.OrderDate.HasValue && o.OrderDate.Value >= startDate && o.OrderDate <= endDate, includeProperties: "OrderDetails") ;
+                && o.OrderDate.HasValue && o.OrderDate.Value >= startDate && o.OrderDate <= endDate, includeProperties: "OrderDetails");
             var deliveredOrders = orders.Where(o => o.OrderStatus == (int)Status.OrderStatus.DELIVERED);
             var deniedOrders = orders.Where(o => o.OrderStatus == (int)Status.OrderStatus.DENIED);
             var cancelOrders = orders.Where(o => o.OrderStatus == (int)Status.OrderStatus.CANCEL);
 
             decimal revenue = orders.Select(o => o.TotalPrice.GetValueOrDefault()).Sum();
-            //decimal gains = 0;
-            //decimal expenses = 0;
-            //decimal losses = 0;
-            //decimal netIncome = revenue + gains - expenses - losses;
+
+            decimal totalShipCost = orders.Select(o => o.ShippingCost.GetValueOrDefault()).Sum();
+            int totalOrder = orders.Count;
+            int totalPackages = orders.Select(o => o.OrderDetails.Select(od => od.Quantity.GetValueOrDefault()).Sum()).Sum();
+            int deliveredOrderCount = deliveredOrders.Count();
+            int deniedOrderCount = deniedOrders.Count();
+            int canceledOrderCount = cancelOrders.Count();
+
+            FinancialReport financialReport = new FinancialReport
+            {
+                StartDate = startDate,
+                EndDate = endDate,
+                Revenue = revenue,
+                ShipCost = totalShipCost,
+                TotalOrders = totalOrder,
+                TotalPackages = totalPackages,
+                DeliveredOrders = deliveredOrderCount,
+                DeniedOrders = deniedOrderCount,
+                CanceledOrders = canceledOrderCount
+            };
+            return financialReport;
+        }
+
+        public async Task<FinancialReport> GetMonthlyFinancialReport(int month, int year)
+        {
+            if (month < 1 || month > 12) throw new Exception("Invalid month");
+            if (year < 2023 || year > DateTime.Now.Year) throw new Exception("Invalid year");
+
+            var startDate = new DateTime(year, month, 1);
+            var endDate = new DateTime(year, month, DateTime.DaysInMonth(year, month)).AddDays(1).Date.AddSeconds(-1);
+
+            var orders = await _OrderRepository.GetOrdersBy(o => o.OrderStatus != (int)Status.OrderStatus.DELETED
+                && o.OrderDate.HasValue && o.OrderDate.Value >= startDate && o.OrderDate <= endDate, includeProperties: "OrderDetails");
+            var deliveredOrders = orders.Where(o => o.OrderStatus == (int)Status.OrderStatus.DELIVERED);
+            var deniedOrders = orders.Where(o => o.OrderStatus == (int)Status.OrderStatus.DENIED);
+            var cancelOrders = orders.Where(o => o.OrderStatus == (int)Status.OrderStatus.CANCEL);
+
+            decimal revenue = orders.Select(o => o.TotalPrice.GetValueOrDefault()).Sum();
             decimal totalShipCost = orders.Select(o => o.ShippingCost.GetValueOrDefault()).Sum();
 
             int totalOrder = orders.Count;
-            int totalPaypalOrder = orders.Where(o=>o.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL).Count();
+            int totalPackages = orders.Select(o => o.OrderDetails.Select(od => od.Quantity.GetValueOrDefault()).Sum()).Sum();
             int deliveredOrderCount = deliveredOrders.Count();
-            int deliveredPaypalOrderCount = deliveredOrders.Where(o => o.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL).Count();
             int deniedOrderCount = deniedOrders.Count();
-            int deniedPaypalOrderCount = deniedOrders.Where(o => o.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL).Count();
             int canceledOrderCount = cancelOrders.Count();
-            int canceledPaypalOrderCount = cancelOrders.Where(o => o.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL).Count();
 
             var orderDetails = await _orderDetailRepository.GetOrderDetailsBy(od => orders.Select(o => o.OrderId).Contains(od.OrderId));
             var packages = await _packageRepository.GetAll();
@@ -961,25 +992,54 @@ namespace BE_Homnayangi.Modules.OrderModule
                 StartDate = startDate,
                 EndDate = endDate,
                 Revenue = revenue,
-                //Gains = gains,
-                //Expenses = expenses,
-                //Losses = losses,
-                //NetIncome = netIncome,
-                TotalShipCost = totalShipCost,
-                TotalOrder = totalOrder,
-                TotalPaypalOrder = totalPaypalOrder,
-                DeliverdOrderCount = deliveredOrderCount,
-                DeliverdPaypalOrderCount = deliveredPaypalOrderCount,
-                DeniedOrderCount = deniedOrderCount,
-                DeniedPaypalOrderCount = deniedPaypalOrderCount,
-                CanceledOrderCount = canceledOrderCount,
-                CanceledPaypalOrderCount = canceledPaypalOrderCount,
-                TrendingPackages = trendingGroup.OrderByDescending(t => t.Count).Take(10).ToList()
+                ShipCost = totalShipCost,
+                TotalOrders = totalOrder,
+                TotalPackages = totalPackages,
+                DeliveredOrders = deliveredOrderCount,
+                DeniedOrders = deniedOrderCount,
+                CanceledOrders = canceledOrderCount
             };
             return financialReport;
         }
 
-        public async Task<FinancialReport> CreateFinancialReport(DateTime startDate, DateTime endDate)
+        public async Task<FinancialReport> GetDailyFinancialReport(int day, int month, int year)
+        {
+            if (month < 1 || month > 12) throw new Exception("Invalid month");
+            if (year < 2023 || year > DateTime.Now.Year) throw new Exception("Invalid year");
+
+            var date = new DateTime(year, month, day);
+
+            var orders = await _OrderRepository.GetOrdersBy(o => o.OrderStatus != (int)Status.OrderStatus.DELETED
+                && o.OrderDate.HasValue && o.OrderDate.Value.Date == date.Date, includeProperties: "OrderDetails");
+            var deliveredOrders = orders.Where(o => o.OrderStatus == (int)Status.OrderStatus.DELIVERED);
+            var deniedOrders = orders.Where(o => o.OrderStatus == (int)Status.OrderStatus.DENIED);
+            var cancelOrders = orders.Where(o => o.OrderStatus == (int)Status.OrderStatus.CANCEL);
+
+            decimal revenue = orders.Select(o => o.TotalPrice.GetValueOrDefault()).Sum();
+            decimal totalShipCost = orders.Select(o => o.ShippingCost.GetValueOrDefault()).Sum();
+
+            int totalOrder = orders.Count;
+            int totalPackages = orders.Select(o => o.OrderDetails.Select(od => od.Quantity.GetValueOrDefault()).Sum()).Sum();
+            int deliveredOrderCount = deliveredOrders.Count();
+            int deniedOrderCount = deniedOrders.Count();
+            int canceledOrderCount = cancelOrders.Count();
+
+            FinancialReport financialReport = new FinancialReport
+            {
+                StartDate = date,
+                EndDate = date.AddDays(1).Date.AddSeconds(-1),
+                Revenue = revenue,
+                ShipCost = totalShipCost,
+                TotalOrders = totalOrder,
+                TotalPackages = totalPackages,
+                DeliveredOrders = deliveredOrderCount,
+                DeniedOrders = deniedOrderCount,
+                CanceledOrders = canceledOrderCount
+            };
+            return financialReport;
+        }
+
+        public async Task<FinancialReport> GetFinancialReport(DateTime startDate, DateTime endDate)
         {
             if (!Utils.DateTimeUtils.CheckValidFromAndToDate(startDate, endDate))
                 throw new Exception("Invalid start and end date");
@@ -991,50 +1051,73 @@ namespace BE_Homnayangi.Modules.OrderModule
             var cancelOrders = orders.Where(o => o.OrderStatus == (int)Status.OrderStatus.CANCEL);
 
             decimal revenue = orders.Select(o => o.TotalPrice.GetValueOrDefault()).Sum();
-            //decimal gains = 0;
-            //decimal expenses = 0;
-            //decimal losses = 0;
-            //decimal netIncome = revenue + gains - expenses - losses;
+            int totalPackages = orders.Select(o => o.OrderDetails.Select(od => od.Quantity.GetValueOrDefault()).Sum()).Sum();
             decimal totalShipCost = orders.Select(o => o.ShippingCost.GetValueOrDefault()).Sum();
 
             int totalOrder = orders.Count;
-            int totalPaypalOrder = orders.Where(o => o.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL).Count();
             int deliveredOrderCount = deliveredOrders.Count();
-            int deliveredPaypalOrderCount = deliveredOrders.Where(o => o.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL).Count();
             int deniedOrderCount = deniedOrders.Count();
-            int deniedPaypalOrderCount = deniedOrders.Where(o => o.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL).Count();
             int canceledOrderCount = cancelOrders.Count();
-            int canceledPaypalOrderCount = cancelOrders.Where(o => o.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL).Count();
-
-            var orderDetails = await _orderDetailRepository.GetOrderDetailsBy(od => orders.Select(o => o.OrderId).Contains(od.OrderId));
-            var packages = await _packageRepository.GetAll();
-            var trendingGroup = from orderDetail in orderDetails
-                                group orderDetail by orderDetail.PackageId
-                                  into g
-                                select new TrendingPackage { PackageId = g.Key.GetValueOrDefault(), PackageTitle = packages.Where(p => p.PackageId == g.Key).First()?.Title, Count = g.Select(s => s.Quantity.GetValueOrDefault()).Sum() };
-
 
             FinancialReport financialReport = new FinancialReport
             {
                 StartDate = startDate,
                 EndDate = endDate,
                 Revenue = revenue,
-                //Gains = gains,
-                //Expenses = expenses,
-                //Losses = losses,
-                //NetIncome = netIncome,
-                TotalShipCost = totalShipCost,
-                TotalOrder = totalOrder,
-                TotalPaypalOrder = totalPaypalOrder,
-                DeliverdOrderCount = deliveredOrderCount,
-                DeliverdPaypalOrderCount = deliveredPaypalOrderCount,
-                DeniedOrderCount = deniedOrderCount,
-                DeniedPaypalOrderCount = deniedPaypalOrderCount,
-                CanceledOrderCount = canceledOrderCount,
-                CanceledPaypalOrderCount = canceledPaypalOrderCount,
-                TrendingPackages = trendingGroup.OrderByDescending(t => t.Count).Take(10).ToList()
+                ShipCost = totalShipCost,
+                TotalOrders = totalOrder,
+                TotalPackages = totalPackages,
+                DeliveredOrders = deliveredOrderCount,
+                DeniedOrders = deniedOrderCount,
+                CanceledOrders = canceledOrderCount
             };
             return financialReport;
         }
+
+        public async Task<ICollection<TrendingPackage>> GetTrendingPackages(DateTime startDate, DateTime endDate)
+        {
+            if (!Utils.DateTimeUtils.CheckValidFromAndToDate(startDate, endDate))
+                throw new Exception("Invalid start and end date");
+
+            var orders = await _OrderRepository.GetOrdersBy(o => o.OrderStatus != (int)Status.OrderStatus.DELETED
+                && o.OrderDate.HasValue && o.OrderDate.Value >= startDate && o.OrderDate <= endDate, includeProperties: "OrderDetails");
+            var orderDetails = await _orderDetailRepository.GetOrderDetailsBy(od => orders.Select(o => o.OrderId).Contains(od.OrderId));
+            var packages = await _packageRepository.GetAll();
+            var trendingGroup = from orderDetail in orderDetails
+                                group orderDetail by orderDetail.PackageId
+                                  into g
+                                select new TrendingPackage { PackageId = g.Key.GetValueOrDefault(), PackageTitle = packages.Where(p => p.PackageId == g.Key).First()?.Title, Count = g.Select(s => s.Quantity.GetValueOrDefault()).Sum() };
+            return trendingGroup.OrderByDescending(t => t.Count).Take(10).ToList();
+        }
+
+        public async Task<ICollection<FinancialReport>> ExportYearlyFinancialReport(int year)
+        {
+            if (year < 2000 || year > DateTime.Now.Year)
+                throw new Exception("Invalid year");
+
+            var yearlyReport = new List<FinancialReport>();
+            for (int i=1; i <= 12; i++)
+            {
+                var record = await GetMonthlyFinancialReport(i, year);
+                yearlyReport.Add(record);
+            }
+            return yearlyReport;
+        }
+
+        public async Task<ICollection<FinancialReport>> ExportMonthlyFinancialReport(int month, int year)
+        {
+            if (month < 1 || month > 12) throw new Exception("Invalid month");
+            if (year < 2023 || year > DateTime.Now.Year) throw new Exception("Invalid year");
+
+            var monthlyReport = new List<FinancialReport>();
+            var endDate = new DateTime(year, month, DateTime.DaysInMonth(year, month));
+            for (int i = 1; i <= endDate.Day; i++)
+            {
+                var record = await GetDailyFinancialReport(i, month, year);
+                monthlyReport.Add(record);
+            }
+            return monthlyReport;
+        }
+
     }
 }

@@ -62,8 +62,13 @@ namespace BE_Homnayangi.Modules.OrderModule.Interface
         public List<string> GetLocalDistrict();
         public List<string> GetLocalWard(string district);
 
-        public Task<FinancialReport> CreateMonthlyFinancialReport(int month, int year);
-        public Task<FinancialReport> CreateFinancialReport(DateTime startDate, DateTime endDate);
+        public Task<FinancialReport> GetYearlyFinancialReport(int year);
+        public Task<ICollection<FinancialReport>> ExportYearlyFinancialReport(int year);
+        public Task<FinancialReport> GetMonthlyFinancialReport(int month, int year);
+        public Task<ICollection<FinancialReport>> ExportMonthlyFinancialReport(int month, int year);
+        public Task<FinancialReport> GetFinancialReport(DateTime startDate, DateTime endDate);
+
+        public Task<ICollection<TrendingPackage>> GetTrendingPackages(DateTime startDate, DateTime endDate);
 
     }
 }
