@@ -44,6 +44,7 @@ namespace BE_Homnayangi.Modules.OrderModule.Response
         public DateTime? ShippedDate { get; set; }
         public string ShippedAddress { get; set; }
         public decimal? TotalPrice { get; set; }
+        public decimal? ShippingCost { get; set; }
         public int? OrderStatus { get; set; }
         public Guid? CustomerId { get; set; }
         public bool? IsCooked { get; set; }
