@@ -293,6 +293,20 @@ namespace BE_Homnayangi.Controllers
             }
         }
 
+        [HttpGet("report/monthly/details")]
+        public async Task<ActionResult> GetMonthlyReportDetails([FromQuery] int month, [FromQuery] int year)
+        {
+            try
+            {
+                var res = await _orderService.ExportMonthlyFinancialReport(month, year);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("report/monthly/export")]
         public async Task<ActionResult> ExportMonthlyReport([FromQuery] int month, [FromQuery] int year)
         {
@@ -310,8 +324,6 @@ namespace BE_Homnayangi.Controllers
                 csvWriter.WriteRecords(csv);
 
                 writer.Flush();
-                var result = Encoding.UTF8.GetString(mem.ToArray());
-                Console.WriteLine(result);
                 return File(mem.ToArray(), "text/csv", "Monthly-Report.csv");
             }
         }
@@ -322,6 +334,20 @@ namespace BE_Homnayangi.Controllers
             try
             {
                 var res = await _orderService.GetYearlyFinancialReport(year);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("report/yearly/details")]
+        public async Task<ActionResult> GetYearlyReportDetails([FromQuery] int year)
+        {
+            try
+            {
+                var res = await _orderService.ExportYearlyFinancialReport(year);
                 return Ok(res);
             }
             catch (Exception ex)
@@ -347,8 +373,6 @@ namespace BE_Homnayangi.Controllers
                 csvWriter.WriteRecords(csv);
 
                 writer.Flush();
-                var result = Encoding.UTF8.GetString(mem.ToArray());
-                Console.WriteLine(result);
                 return File(mem.ToArray(), "text/csv", "Yearly-Report.csv");
             }
         }
