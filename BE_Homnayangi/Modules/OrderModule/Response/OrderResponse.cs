@@ -11,7 +11,7 @@ namespace BE_Homnayangi.Modules.OrderModule.Response
             public Guid IngredientId { get; set; }
             public int? Quantity { get; set; }
             public decimal? Price { get; set; }
-
+            public decimal? ShippingCost { get; set; }
             public string IngredientImage { get; set; }
             public string IngredientName { get; set; }
 
