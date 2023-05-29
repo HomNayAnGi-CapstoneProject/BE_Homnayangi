@@ -838,6 +838,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                         var changedPackageDetail = dbPackageDetails.Find(x => x.PackageId == item.PackageId && x.IngredientId == item.IngredientId);
                         changedPackageDetail.Quantity = item.Quantity;
                         changedPackageDetail.Description = item.Description;
+                        changedPackageDetail.Status = blog.BlogStatus;
                         updatedPackageDetail.Add(changedPackageDetail);
                     }
                 }
@@ -850,7 +851,14 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 var addedPackageDetail = packageDetails.Except(dbPackageDetails).ToList();
 
-                if (addedPackageDetail.Count() > 0) _packageDetailRepository.AddRange(addedPackageDetail);
+                if (addedPackageDetail.Count() > 0)
+                {
+                    foreach(var item in addedPackageDetail)
+                    {
+                        item.Status = blog.BlogStatus;
+                    }
+                    _packageDetailRepository.AddRange(addedPackageDetail);
+                }
 
                 #endregion
 
@@ -1174,7 +1182,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                 var packageDetails = new List<PackageDetail>();
                 foreach (var item in packages)
                 {
-                    packageDetails.AddRange(allPackageDetails.Where(x => x.PackageId == item.PackageId && x.Status == 1).ToList());
+                    packageDetails.AddRange(allPackageDetails.Where(x => x.PackageId == item.PackageId && x.Status == 2).ToList());
                 }
                 await _packageDetailRepository.RemoveRangeAsync(packageDetails);
                 await _packageRepository.RemoveRangeAsync(packages);
