@@ -34,6 +34,8 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
         public int? TotalKcal { get; set; }
         public int? MaxSize { get; set; }
         public int? MinSize { get; set; }
+        public string CookingMethod { get; set; }
+        public string Region { get; set; }
 
         //List Packages
         public List<Tuple<PackagesResponse, List<PackageDetailResponse>>> Packages { get; set; }

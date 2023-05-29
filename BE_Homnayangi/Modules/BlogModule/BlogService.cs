@@ -825,7 +825,7 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 if (deletedPackage.Count() > 0)
                 {
-                    var deletedPackageFromDb = packages.Where(x => deletedPackage.Contains(x.PackageId)).ToList();
+                    var deletedPackageFromDb = dbPackages.Where(x => deletedPackage.Contains(x.PackageId)).ToList();
                     _packageRepository.RemoveRange(deletedPackageFromDb);
                 }
 
@@ -1235,7 +1235,7 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 if (blog == null) throw new Exception(ErrorMessage.BlogError.BLOG_NOT_FOUND);
 
-                var blogReferences = _blogReferenceRepository.GetBlogReferencesBy(x => x.BlogId == blog.BlogId).Result.ToList();
+                var blogReferences = _blogReferenceRepository.GetBlogReferencesBy(x => x.BlogId == blog.BlogId, includeProperties: "CookingMethod,Region").Result.ToList();
 
                 result = new BlogDetailResponse()
                 {
@@ -1254,7 +1254,9 @@ namespace BE_Homnayangi.Modules.BlogModule
                     MinSize = blog.MinSize,
                     MinutesToCook = blog.MinutesToCook,
                     IsEvent = blog.IsEvent.HasValue ? blog.IsEvent.Value : false,
-                    EventExpiredDate = blog.IsEvent.HasValue ? blog.EventExpiredDate : null
+                    EventExpiredDate = blog.IsEvent.HasValue ? blog.EventExpiredDate : null,
+                    CookingMethod = blog.CookingMethod.Name,
+                    Region = blog.Region.RegionName
                 };
 
                 foreach (var item in blogReferences)
@@ -1340,7 +1342,7 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 if (blog == null) throw new Exception(ErrorMessage.BlogError.BLOG_NOT_FOUND);
 
-                var blogReferences = _blogReferenceRepository.GetBlogReferencesBy(x => x.BlogId == blog.BlogId).Result.ToList();
+                var blogReferences = _blogReferenceRepository.GetBlogReferencesBy(x => x.BlogId == blog.BlogId, includeProperties:"CookingMethod,Region").Result.ToList();
 
                 result = new BlogDetailResponse()
                 {
@@ -1359,7 +1361,9 @@ namespace BE_Homnayangi.Modules.BlogModule
                     MinSize = blog.MinSize,
                     MinutesToCook = blog.MinutesToCook,
                     IsEvent = blog.IsEvent.HasValue ? blog.IsEvent.Value : false,
-                    EventExpiredDate = blog.IsEvent.HasValue ? blog.EventExpiredDate : null
+                    EventExpiredDate = blog.IsEvent.HasValue ? blog.EventExpiredDate : null,
+                    CookingMethod = blog.CookingMethod.Name,
+                    Region = blog.Region.RegionName
                 };
 
                 foreach (var item in blogReferences)
