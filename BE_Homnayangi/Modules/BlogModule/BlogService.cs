@@ -36,6 +36,8 @@ using BE_Homnayangi.Modules.PackageModule.Interface;
 using BE_Homnayangi.Modules.PackageDetailModule.Interface;
 using GSF;
 using BE_Homnayangi.Modules.IngredientModule.Interface;
+using BE_Homnayangi.Modules.CookingMethodModule.Interface;
+using BE_Homnayangi.Modules.RegionModule.Interface;
 
 namespace BE_Homnayangi.Modules.BlogModule
 {
@@ -53,14 +55,16 @@ namespace BE_Homnayangi.Modules.BlogModule
         private readonly IAccomplishmentRepository _accomplishmentRepository;
         private readonly ICaloReferenceRepository _caloReferenceRepository;
         private readonly INotificationRepository _notificationRepository;
+        private readonly ICookingMethodRepository _cookingMethodRepository;
+        private readonly IRegionRepository _regionRepository;
         private readonly IIngredientRepository _ingredientRepository;
         private readonly IHubContext<SignalRServer> _hubContext;
 
         public BlogService(IBlogRepository blogRepository, IPackageRepository packageRepository, IBlogSubCateRepository blogSubCateRepository,
             ISubCateRepository subCateRepository, IPackageDetailRepository packageDetailRepository,
             IUserRepository userRepository, IBlogReferenceRepository blogReferenceRepository, ICommentRepository commentRepository,
-            IBlogReactionRepository blogReactionRepository, IAccomplishmentRepository accomplishmentRepository,
-            ICaloReferenceRepository caloReferenceRepository, IIngredientRepository ingredientRepository,
+            IBlogReactionRepository blogReactionRepository, IAccomplishmentRepository accomplishmentRepository, ICookingMethodRepository cookingMethodRepository,
+            ICaloReferenceRepository caloReferenceRepository, IIngredientRepository ingredientRepository, IRegionRepository regionRepository,
             INotificationRepository notificationRepository,
             IHubContext<SignalRServer> hubContext)
         {
@@ -72,6 +76,8 @@ namespace BE_Homnayangi.Modules.BlogModule
             _ingredientRepository = ingredientRepository;
             _blogReferenceRepository = blogReferenceRepository;
             _commentRepository = commentRepository;
+            _cookingMethodRepository = cookingMethodRepository;
+            _regionRepository = regionRepository;
             _blogReactionRepository = blogReactionRepository;
             _accomplishmentRepository = accomplishmentRepository;
             _caloReferenceRepository = caloReferenceRepository;
@@ -853,7 +859,7 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 if (addedPackageDetail.Count() > 0)
                 {
-                    foreach(var item in addedPackageDetail)
+                    foreach (var item in addedPackageDetail)
                     {
                         item.Status = blog.BlogStatus;
                     }
@@ -1243,7 +1249,7 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 if (blog == null) throw new Exception(ErrorMessage.BlogError.BLOG_NOT_FOUND);
 
-                var blogReferences = _blogReferenceRepository.GetBlogReferencesBy(x => x.BlogId == blog.BlogId, includeProperties: "CookingMethod,Region").Result.ToList();
+                var blogReferences = _blogReferenceRepository.GetBlogReferencesBy(x => x.BlogId == blog.BlogId).Result.ToList();
 
                 result = new BlogDetailResponse()
                 {
@@ -1263,8 +1269,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                     MinutesToCook = blog.MinutesToCook,
                     IsEvent = blog.IsEvent.HasValue ? blog.IsEvent.Value : false,
                     EventExpiredDate = blog.IsEvent.HasValue ? blog.EventExpiredDate : null,
-                    CookingMethod = blog.CookingMethod.Name,
-                    Region = blog.Region.RegionName
+                    CookingMethod = blog.CookingMethodId != null ? _cookingMethodRepository.GetCookingMethodsBy(x => x.CookingMethodId == blog.CookingMethodId).Result.First().Name : null,
+                    Region = blog.RegionId != null ? _regionRepository.GetRegionsBy(x => x.RegionId == blog.RegionId).Result.First().RegionName : null
                 };
 
                 foreach (var item in blogReferences)
@@ -1346,7 +1352,7 @@ namespace BE_Homnayangi.Modules.BlogModule
             BlogDetailResponse result = null;
             try
             {
-                var blog = await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId == blogId, includeProperties: "CookingMethod,Region");
+                var blog = await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId == blogId);
 
                 if (blog == null) throw new Exception(ErrorMessage.BlogError.BLOG_NOT_FOUND);
 
@@ -1370,8 +1376,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                     MinutesToCook = blog.MinutesToCook,
                     IsEvent = blog.IsEvent.HasValue ? blog.IsEvent.Value : false,
                     EventExpiredDate = blog.IsEvent.HasValue ? blog.EventExpiredDate : null,
-                    CookingMethod = blog.CookingMethod.Name,
-                    Region = blog.Region.RegionName
+                    CookingMethod = blog.CookingMethodId != null ? _cookingMethodRepository.GetCookingMethodsBy(x => x.CookingMethodId == blog.CookingMethodId).Result.First().Name : null,
+                    Region = blog.RegionId != null ? _regionRepository.GetRegionsBy(x => x.RegionId == blog.RegionId).Result.First().RegionName : null
                 };
 
                 foreach (var item in blogReferences)
