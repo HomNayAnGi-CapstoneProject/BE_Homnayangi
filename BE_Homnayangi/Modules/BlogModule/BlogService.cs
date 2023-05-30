@@ -879,7 +879,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     {
                         var newBlogSubCate = new BlogSubCate
                         {
-                            BlogId = (Guid)b.BlogId,
+                            BlogId = (Guid)blog.BlogId,
                             SubCateId = (Guid)b.SubCateId,
                             CreatedDate = DateTime.Now,
                             Status = true
@@ -1346,11 +1346,11 @@ namespace BE_Homnayangi.Modules.BlogModule
             BlogDetailResponse result = null;
             try
             {
-                var blog = await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId == blogId);
+                var blog = await _blogRepository.GetFirstOrDefaultAsync(x => x.BlogId == blogId, includeProperties: "CookingMethod,Region");
 
                 if (blog == null) throw new Exception(ErrorMessage.BlogError.BLOG_NOT_FOUND);
 
-                var blogReferences = _blogReferenceRepository.GetBlogReferencesBy(x => x.BlogId == blog.BlogId, includeProperties:"CookingMethod,Region").Result.ToList();
+                var blogReferences = _blogReferenceRepository.GetBlogReferencesBy(x => x.BlogId == blog.BlogId).Result.ToList();
 
                 result = new BlogDetailResponse()
                 {
