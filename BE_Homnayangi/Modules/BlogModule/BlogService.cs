@@ -1313,7 +1313,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     packageResponse = xx.Select(xx => xx.PackageId)
                 });
                 var allPackageDetail = await _packageDetailRepository.GetPackageDetailsBy(x => x.Package.BlogId == result.BlogId, includeProperties: "Ingredient");
-                for (int i = 0; i < listPackages.Count(); i = i + 2)
+                for (int i = 0; i < listPackages.Count; i = i + 2)
                 {
                     var packageResponse = new PackagesResponse
                     {
@@ -1415,7 +1415,7 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 //List Packages
                 var listPackages = await _packageRepository.GetPackagesBy(x => x.BlogId == result.BlogId);
-                var groupPackage = listPackages.GroupBy(x => x.Size).Select(xx => new
+                var groupPackage = listPackages.OrderBy(p => p.CreatedDate).GroupBy(x => x.Size).Select(xx => new
                 {
                     Size = xx.Key,
                     packageResponse = xx.Select(xx => new { xx.PackageId, xx.IsCooked, xx.PackagePrice, xx.ImageUrl, xx.Title })
