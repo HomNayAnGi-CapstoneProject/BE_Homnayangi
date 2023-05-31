@@ -1,4 +1,6 @@
-﻿using BE_Homnayangi.Modules.SubCateModule.Response;
+﻿using BE_Homnayangi.Modules.CookingMethodModule.Response;
+using BE_Homnayangi.Modules.RegionModule.Response;
+using BE_Homnayangi.Modules.SubCateModule.Response;
 using System;
 using System.Collections.Generic;
 
@@ -34,8 +36,8 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
         public int? TotalKcal { get; set; }
         public int? MaxSize { get; set; }
         public int? MinSize { get; set; }
-        public Guid CookingMethod { get; set; }
-        public Guid Region { get; set; }
+        public DropdownCookingMethod CookingMethod { get; set; }
+        public DropdownRegion Region { get; set; }
 
         //List Packages
         public List<Tuple<PackagesResponse, List<PackageDetailResponse>>> Packages { get; set; }

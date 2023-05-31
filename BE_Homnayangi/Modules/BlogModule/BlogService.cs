@@ -38,6 +38,8 @@ using GSF;
 using BE_Homnayangi.Modules.IngredientModule.Interface;
 using BE_Homnayangi.Modules.CookingMethodModule.Interface;
 using BE_Homnayangi.Modules.RegionModule.Interface;
+using BE_Homnayangi.Modules.CookingMethodModule.Response;
+using BE_Homnayangi.Modules.RegionModule.Response;
 
 namespace BE_Homnayangi.Modules.BlogModule
 {
@@ -1269,8 +1271,10 @@ namespace BE_Homnayangi.Modules.BlogModule
                     MinutesToCook = blog.MinutesToCook,
                     IsEvent = blog.IsEvent.HasValue ? blog.IsEvent.Value : false,
                     EventExpiredDate = blog.IsEvent.HasValue ? blog.EventExpiredDate : null,
-                    CookingMethod = blog.CookingMethodId.GetValueOrDefault(),
-                    Region = blog.RegionId.GetValueOrDefault()
+                    CookingMethod = blog.CookingMethodId != null ? _cookingMethodRepository.GetCookingMethodsBy(x => x.CookingMethodId == blog.CookingMethodId).Result.
+                     Select(x => new DropdownCookingMethod { CookingMethodId = x.CookingMethodId, CookingMethodName = x.Name }).First() : null,
+                    Region = blog.RegionId != null ? _regionRepository.GetRegionsBy(x => x.RegionId == blog.RegionId).Result.
+                     Select(x => new DropdownRegion { RegionId = x.RegionId, RegionName = x.RegionName }).First() : null
                 };
 
                 foreach (var item in blogReferences)
@@ -1376,8 +1380,10 @@ namespace BE_Homnayangi.Modules.BlogModule
                     MinutesToCook = blog.MinutesToCook,
                     IsEvent = blog.IsEvent.HasValue ? blog.IsEvent.Value : false,
                     EventExpiredDate = blog.IsEvent.HasValue ? blog.EventExpiredDate : null,
-                    CookingMethod = blog.CookingMethodId.GetValueOrDefault(),
-                    Region = blog.RegionId.GetValueOrDefault()
+                    CookingMethod = blog.CookingMethodId != null ? _cookingMethodRepository.GetCookingMethodsBy(x => x.CookingMethodId == blog.CookingMethodId).Result.
+                    Select(x => new DropdownCookingMethod { CookingMethodId = x.CookingMethodId, CookingMethodName = x.Name }).First() : null,
+                    Region = blog.RegionId != null ? _regionRepository.GetRegionsBy(x => x.RegionId == blog.RegionId).Result.
+                    Select(x => new DropdownRegion { RegionId = x.RegionId, RegionName = x.RegionName }).First() : null
                 };
 
                 foreach (var item in blogReferences)
