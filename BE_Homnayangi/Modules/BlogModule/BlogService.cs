@@ -1311,33 +1311,47 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 //List Packages
                 var listPackages = await _packageRepository.GetPackagesBy(x => x.BlogId == result.BlogId);
-                var test = listPackages.GroupBy(x => x.Size).Select(xx => new
+                var groupPackage = listPackages.OrderBy(p => p.CreatedDate).GroupBy(x => x.Size).Select(xx => new
                 {
                     Size = xx.Key,
-                    packageResponse = xx.Select(xx => xx.PackageId)
-                });
+                    packageResponse = xx.Select(xx => new { xx.PackageId, xx.IsCooked, xx.PackagePrice, xx.ImageUrl, xx.Title, xx.CreatedDate })
+                }).OrderBy(y => y.packageResponse.First().CreatedDate);
                 var allPackageDetail = await _packageDetailRepository.GetPackageDetailsBy(x => x.Package.BlogId == result.BlogId, includeProperties: "Ingredient");
-                for (int i = 0; i < listPackages.Count; i = i + 2)
+                var ingredients = await _ingredientRepository.GetAll(includeProperties: "Type");
+                foreach (var item in groupPackage)
                 {
                     var packageResponse = new PackagesResponse
                     {
-                        PackageId = listPackages.ElementAt(i).PackageId,
-                        CookedPrice = listPackages.ElementAt(i + 1).PackagePrice,
-                        PackagePrice = listPackages.ElementAt(i).PackagePrice,
-                        PackageImageURL = listPackages.ElementAt(i).ImageUrl,
-                        PackageTitle = listPackages.ElementAt(i).Title,
-                        Size = (int)listPackages.ElementAt(i).Size
+                        PackageId = item.packageResponse.First(x => x.IsCooked == false).PackageId,
+                        CookedId = item.packageResponse.First(x => x.IsCooked == true).PackageId,
+                        PackagePrice = item.packageResponse.First(x => x.IsCooked == false).PackagePrice,
+                        CookedPrice = item.packageResponse.First(x => x.IsCooked == true).PackagePrice,
+                        PackageImageURL = item.packageResponse.First(x => x.IsCooked == false).ImageUrl,
+                        PackageTitle = item.packageResponse.First(x => x.IsCooked == false).Title,
+                        Size = (int)item.Size
                     };
-                    var listPackageDetailResponse = allPackageDetail.Where(x => x.PackageId == listPackages.ElementAt(i).PackageId).Select(x => new PackageDetailResponse
-                    {
-                        Description = x.Description,
-                        IngredientId = x.IngredientId,
-                        IngredientName = x.Ingredient.Name,
-                        Quantity = x.Quantity,
-                        Kcal = x.Ingredient.Kcal,
-                        Price = x.Ingredient.Price,
-                        Image = x.Ingredient.Picture
-                    }).ToList();
+                    var listPackageDetailResponse = allPackageDetail.Where(x => x.PackageId == item.packageResponse.First(x => x.IsCooked == false).PackageId)
+                        .Select(x => new
+                        {
+                            Description = x.Description,
+                            IngredientId = x.IngredientId,
+                            IngredientName = x.Ingredient.Name,
+                            Quantity = x.Quantity,
+                            Kcal = x.Ingredient.Kcal,
+                            Price = x.Ingredient.Price,
+                            Image = x.Ingredient.Picture
+                        }).ToList().Join(ingredients, x => x.IngredientId, y => y.IngredientId, (x, y) => new PackageDetailResponse
+                        {
+                            Description = x.Description,
+                            IngredientId = x.IngredientId,
+                            IngredientName = x.IngredientName,
+                            Quantity = x.Quantity,
+                            Kcal = x.Kcal,
+                            Price = x.Price,
+                            Image = x.Image,
+                            UnitName = y.Type.UnitName
+                        }).ToList();
+                    result.Packages.Add(new Tuple<PackagesResponse, List<PackageDetailResponse>>(packageResponse, listPackageDetailResponse));
                 }
 
                 result.RelatedBlogs = await GetRelatedBlogs(result.BlogId);
