@@ -1269,8 +1269,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                     MinutesToCook = blog.MinutesToCook,
                     IsEvent = blog.IsEvent.HasValue ? blog.IsEvent.Value : false,
                     EventExpiredDate = blog.IsEvent.HasValue ? blog.EventExpiredDate : null,
-                    CookingMethod = blog.CookingMethodId != null ? _cookingMethodRepository.GetCookingMethodsBy(x => x.CookingMethodId == blog.CookingMethodId).Result.First().Name : null,
-                    Region = blog.RegionId != null ? _regionRepository.GetRegionsBy(x => x.RegionId == blog.RegionId).Result.First().RegionName : null
+                    CookingMethod = blog.CookingMethodId.GetValueOrDefault(),
+                    Region = blog.RegionId.GetValueOrDefault()
                 };
 
                 foreach (var item in blogReferences)
@@ -1313,7 +1313,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     packageResponse = xx.Select(xx => xx.PackageId)
                 });
                 var allPackageDetail = await _packageDetailRepository.GetPackageDetailsBy(x => x.Package.BlogId == result.BlogId, includeProperties: "Ingredient");
-                for (int i = 0; i < listPackages.Count(); i = i + 2)
+                for (int i = 0; i < listPackages.Count; i = i + 2)
                 {
                     var packageResponse = new PackagesResponse
                     {
@@ -1376,8 +1376,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                     MinutesToCook = blog.MinutesToCook,
                     IsEvent = blog.IsEvent.HasValue ? blog.IsEvent.Value : false,
                     EventExpiredDate = blog.IsEvent.HasValue ? blog.EventExpiredDate : null,
-                    CookingMethod = blog.CookingMethodId != null ? _cookingMethodRepository.GetCookingMethodsBy(x => x.CookingMethodId == blog.CookingMethodId).Result.First().Name : null,
-                    Region = blog.RegionId != null ? _regionRepository.GetRegionsBy(x => x.RegionId == blog.RegionId).Result.First().RegionName : null
+                    CookingMethod = blog.CookingMethodId.GetValueOrDefault(),
+                    Region = blog.RegionId.GetValueOrDefault()
                 };
 
                 foreach (var item in blogReferences)
@@ -1415,7 +1415,7 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 //List Packages
                 var listPackages = await _packageRepository.GetPackagesBy(x => x.BlogId == result.BlogId);
-                var groupPackage = listPackages.GroupBy(x => x.Size).Select(xx => new
+                var groupPackage = listPackages.OrderBy(p => p.CreatedDate).GroupBy(x => x.Size).Select(xx => new
                 {
                     Size = xx.Key,
                     packageResponse = xx.Select(xx => new { xx.PackageId, xx.IsCooked, xx.PackagePrice, xx.ImageUrl, xx.Title })
