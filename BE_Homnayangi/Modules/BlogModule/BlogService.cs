@@ -1424,8 +1424,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                 var groupPackage = listPackages.OrderBy(p => p.CreatedDate).GroupBy(x => x.Size).Select(xx => new
                 {
                     Size = xx.Key,
-                    packageResponse = xx.Select(xx => new { xx.PackageId, xx.IsCooked, xx.PackagePrice, xx.ImageUrl, xx.Title })
-                });
+                    packageResponse = xx.Select(xx => new { xx.PackageId, xx.IsCooked, xx.PackagePrice, xx.ImageUrl, xx.Title, xx.CreatedDate })
+                }).OrderBy(y => y.packageResponse.Select( yy => yy.CreatedDate));
                 var allPackageDetail = await _packageDetailRepository.GetPackageDetailsBy(x => x.Package.BlogId == result.BlogId, includeProperties: "Ingredient");
                 var ingredients = await _ingredientRepository.GetAll(includeProperties: "Type");
                 foreach (var item in groupPackage)
