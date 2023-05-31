@@ -1425,7 +1425,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                 {
                     Size = xx.Key,
                     packageResponse = xx.Select(xx => new { xx.PackageId, xx.IsCooked, xx.PackagePrice, xx.ImageUrl, xx.Title, xx.CreatedDate })
-                }).OrderBy(y => y.packageResponse.Select( yy => yy.CreatedDate));
+                }).OrderBy(y => y.packageResponse.First().CreatedDate);
                 var allPackageDetail = await _packageDetailRepository.GetPackageDetailsBy(x => x.Package.BlogId == result.BlogId, includeProperties: "Ingredient");
                 var ingredients = await _ingredientRepository.GetAll(includeProperties: "Type");
                 foreach (var item in groupPackage)
