@@ -1269,8 +1269,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                     MinutesToCook = blog.MinutesToCook,
                     IsEvent = blog.IsEvent.HasValue ? blog.IsEvent.Value : false,
                     EventExpiredDate = blog.IsEvent.HasValue ? blog.EventExpiredDate : null,
-                    CookingMethod = blog.CookingMethodId != null ? _cookingMethodRepository.GetCookingMethodsBy(x => x.CookingMethodId == blog.CookingMethodId).Result.First().Name : null,
-                    Region = blog.RegionId != null ? _regionRepository.GetRegionsBy(x => x.RegionId == blog.RegionId).Result.First().RegionName : null
+                    CookingMethod = blog.CookingMethodId.GetValueOrDefault(),
+                    Region = blog.RegionId.GetValueOrDefault()
                 };
 
                 foreach (var item in blogReferences)
@@ -1376,8 +1376,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                     MinutesToCook = blog.MinutesToCook,
                     IsEvent = blog.IsEvent.HasValue ? blog.IsEvent.Value : false,
                     EventExpiredDate = blog.IsEvent.HasValue ? blog.EventExpiredDate : null,
-                    CookingMethod = blog.CookingMethodId != null ? _cookingMethodRepository.GetCookingMethodsBy(x => x.CookingMethodId == blog.CookingMethodId).Result.First().Name : null,
-                    Region = blog.RegionId != null ? _regionRepository.GetRegionsBy(x => x.RegionId == blog.RegionId).Result.First().RegionName : null
+                    CookingMethod = blog.CookingMethodId.GetValueOrDefault(),
+                    Region = blog.RegionId.GetValueOrDefault()
                 };
 
                 foreach (var item in blogReferences)
