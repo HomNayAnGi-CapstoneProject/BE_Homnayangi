@@ -1,4 +1,6 @@
-﻿using BE_Homnayangi.Modules.SubCateModule.Response;
+﻿using BE_Homnayangi.Modules.CookingMethodModule.Response;
+using BE_Homnayangi.Modules.RegionModule.Response;
+using BE_Homnayangi.Modules.SubCateModule.Response;
 using System;
 using System.Collections.Generic;
 
@@ -8,7 +10,7 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
     {
         public BlogDetailResponse()
         {
-            Packages = new Dictionary<PackagesResponse, List<PackageDetailResponse>>();
+            Packages = new List<Tuple<PackagesResponse, List<PackageDetailResponse>>>();
         }
         public Guid BlogId { get; set; }
         public string Title { get; set; }
@@ -34,9 +36,11 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
         public int? TotalKcal { get; set; }
         public int? MaxSize { get; set; }
         public int? MinSize { get; set; }
+        public DropdownCookingMethod CookingMethod { get; set; }
+        public DropdownRegion Region { get; set; }
 
         //List Packages
-        public IDictionary<PackagesResponse, List<PackageDetailResponse>> Packages { get; set; }
+        public List<Tuple<PackagesResponse, List<PackageDetailResponse>>> Packages { get; set; }
 
 
         // List SubCates
@@ -55,6 +59,7 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
 
         // Package information
         public Guid PackageId { get; set; }
+        public Guid CookedId { get; set; }
         public string PackageTitle { get; set; }
         public string PackageImageURL { get; set; }
         public int Size { get; set; }

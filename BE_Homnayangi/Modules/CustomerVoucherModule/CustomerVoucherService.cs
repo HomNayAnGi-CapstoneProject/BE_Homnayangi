@@ -158,7 +158,7 @@ namespace BE_Homnayangi.Modules.VoucherModule
                     result = tmpResult;
                     foreach (var customerVoucher in tmpResult.DistinctBy(x => x.VoucherId).ToList())
                     {
-                        var orders = await _orderRepository.GetOrdersBy(o => o.VoucherId != null && o.VoucherId == customerVoucher.VoucherId
+                        var orders = await _orderRepository.GetOrdersBy(o => o.CustomerVoucherId != null && o.CustomerVoucherId == customerVoucher.VoucherId
                                                                             && o.CustomerId == customerVoucher.CustomerId
                                                                             && o.OrderStatus == (int)Status.OrderStatus.PENDING);
                         // xoá n item nếu nó đang xài trong orders
