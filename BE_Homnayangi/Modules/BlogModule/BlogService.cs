@@ -36,6 +36,10 @@ using BE_Homnayangi.Modules.PackageModule.Interface;
 using BE_Homnayangi.Modules.PackageDetailModule.Interface;
 using GSF;
 using BE_Homnayangi.Modules.IngredientModule.Interface;
+using BE_Homnayangi.Modules.CookingMethodModule.Interface;
+using BE_Homnayangi.Modules.RegionModule.Interface;
+using BE_Homnayangi.Modules.CookingMethodModule.Response;
+using BE_Homnayangi.Modules.RegionModule.Response;
 
 namespace BE_Homnayangi.Modules.BlogModule
 {
@@ -53,14 +57,16 @@ namespace BE_Homnayangi.Modules.BlogModule
         private readonly IAccomplishmentRepository _accomplishmentRepository;
         private readonly ICaloReferenceRepository _caloReferenceRepository;
         private readonly INotificationRepository _notificationRepository;
+        private readonly ICookingMethodRepository _cookingMethodRepository;
+        private readonly IRegionRepository _regionRepository;
         private readonly IIngredientRepository _ingredientRepository;
         private readonly IHubContext<SignalRServer> _hubContext;
 
         public BlogService(IBlogRepository blogRepository, IPackageRepository packageRepository, IBlogSubCateRepository blogSubCateRepository,
             ISubCateRepository subCateRepository, IPackageDetailRepository packageDetailRepository,
             IUserRepository userRepository, IBlogReferenceRepository blogReferenceRepository, ICommentRepository commentRepository,
-            IBlogReactionRepository blogReactionRepository, IAccomplishmentRepository accomplishmentRepository,
-            ICaloReferenceRepository caloReferenceRepository, IIngredientRepository ingredientRepository,
+            IBlogReactionRepository blogReactionRepository, IAccomplishmentRepository accomplishmentRepository, ICookingMethodRepository cookingMethodRepository,
+            ICaloReferenceRepository caloReferenceRepository, IIngredientRepository ingredientRepository, IRegionRepository regionRepository,
             INotificationRepository notificationRepository,
             IHubContext<SignalRServer> hubContext)
         {
@@ -72,6 +78,8 @@ namespace BE_Homnayangi.Modules.BlogModule
             _ingredientRepository = ingredientRepository;
             _blogReferenceRepository = blogReferenceRepository;
             _commentRepository = commentRepository;
+            _cookingMethodRepository = cookingMethodRepository;
+            _regionRepository = regionRepository;
             _blogReactionRepository = blogReactionRepository;
             _accomplishmentRepository = accomplishmentRepository;
             _caloReferenceRepository = caloReferenceRepository;
@@ -821,11 +829,17 @@ namespace BE_Homnayangi.Modules.BlogModule
                 }
 
                 // check if leftover then remove
+
+                var deletedPackageDetail = dbPackageDetails.Except(packageDetails).ToList();
+
+                if (deletedPackageDetail.Count() > 0) _packageDetailRepository.RemoveRange(deletedPackageDetail);
+
+                // check if leftover then remove
                 var deletedPackage = dbPackages.Select(x => x.PackageId).Where(x => !packages.Select(y => y.PackageId).Contains(x)).ToList();
 
                 if (deletedPackage.Count() > 0)
                 {
-                    var deletedPackageFromDb = packages.Where(x => deletedPackage.Contains(x.PackageId)).ToList();
+                    var deletedPackageFromDb = dbPackages.Where(x => deletedPackage.Contains(x.PackageId)).ToList();
                     _packageRepository.RemoveRange(deletedPackageFromDb);
                 }
 
@@ -838,19 +852,22 @@ namespace BE_Homnayangi.Modules.BlogModule
                         var changedPackageDetail = dbPackageDetails.Find(x => x.PackageId == item.PackageId && x.IngredientId == item.IngredientId);
                         changedPackageDetail.Quantity = item.Quantity;
                         changedPackageDetail.Description = item.Description;
+                        changedPackageDetail.Status = blog.BlogStatus;
                         updatedPackageDetail.Add(changedPackageDetail);
                     }
                 }
                 if (updatedPackageDetail.Count() > 0) _packageDetailRepository.UpdateRange(updatedPackageDetail);
-                // check if leftover then remove
-
-                var deletedPackageDetail = dbPackageDetails.Except(packageDetails).ToList();
-
-                if (deletedPackageDetail.Count() > 0) _packageDetailRepository.RemoveRange(deletedPackageDetail);
 
                 var addedPackageDetail = packageDetails.Except(dbPackageDetails).ToList();
 
-                if (addedPackageDetail.Count() > 0) _packageDetailRepository.AddRange(addedPackageDetail);
+                if (addedPackageDetail.Count() > 0)
+                {
+                    foreach (var item in addedPackageDetail)
+                    {
+                        item.Status = blog.BlogStatus;
+                    }
+                    _packageDetailRepository.AddRange(addedPackageDetail);
+                }
 
                 #endregion
 
@@ -871,7 +888,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     {
                         var newBlogSubCate = new BlogSubCate
                         {
-                            BlogId = (Guid)b.BlogId,
+                            BlogId = (Guid)blog.BlogId,
                             SubCateId = (Guid)b.SubCateId,
                             CreatedDate = DateTime.Now,
                             Status = true
@@ -1174,7 +1191,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                 var packageDetails = new List<PackageDetail>();
                 foreach (var item in packages)
                 {
-                    packageDetails.AddRange(allPackageDetails.Where(x => x.PackageId == item.PackageId && x.Status == 1).ToList());
+                    packageDetails.AddRange(allPackageDetails.Where(x => x.PackageId == item.PackageId && x.Status == 2).ToList());
                 }
                 await _packageDetailRepository.RemoveRangeAsync(packageDetails);
                 await _packageRepository.RemoveRangeAsync(packages);
@@ -1254,7 +1271,11 @@ namespace BE_Homnayangi.Modules.BlogModule
                     MinSize = blog.MinSize,
                     MinutesToCook = blog.MinutesToCook,
                     IsEvent = blog.IsEvent.HasValue ? blog.IsEvent.Value : false,
-                    EventExpiredDate = blog.IsEvent.HasValue ? blog.EventExpiredDate : null
+                    EventExpiredDate = blog.IsEvent.HasValue ? blog.EventExpiredDate : null,
+                    CookingMethod = blog.CookingMethodId != null ? _cookingMethodRepository.GetCookingMethodsBy(x => x.CookingMethodId == blog.CookingMethodId).Result.
+                     Select(x => new DropdownCookingMethod { CookingMethodId = x.CookingMethodId, CookingMethodName = x.Name }).First() : null,
+                    Region = blog.RegionId != null ? _regionRepository.GetRegionsBy(x => x.RegionId == blog.RegionId).Result.
+                     Select(x => new DropdownRegion { RegionId = x.RegionId, RegionName = x.RegionName }).First() : null
                 };
 
                 foreach (var item in blogReferences)
@@ -1291,33 +1312,47 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 //List Packages
                 var listPackages = await _packageRepository.GetPackagesBy(x => x.BlogId == result.BlogId);
-                var test = listPackages.GroupBy(x => x.Size).Select(xx => new
+                var groupPackage = listPackages.OrderBy(p => p.CreatedDate).GroupBy(x => x.Size).Select(xx => new
                 {
                     Size = xx.Key,
-                    packageResponse = xx.Select(xx => xx.PackageId)
-                });
+                    packageResponse = xx.Select(xx => new { xx.PackageId, xx.IsCooked, xx.PackagePrice, xx.ImageUrl, xx.Title, xx.CreatedDate })
+                }).OrderBy(y => y.packageResponse.First().CreatedDate);
                 var allPackageDetail = await _packageDetailRepository.GetPackageDetailsBy(x => x.Package.BlogId == result.BlogId, includeProperties: "Ingredient");
-                for (int i = 0; i < listPackages.Count(); i = i + 2)
+                var ingredients = await _ingredientRepository.GetAll(includeProperties: "Type");
+                foreach (var item in groupPackage)
                 {
                     var packageResponse = new PackagesResponse
                     {
-                        PackageId = listPackages.ElementAt(i).PackageId,
-                        CookedPrice = listPackages.ElementAt(i + 1).PackagePrice,
-                        PackagePrice = listPackages.ElementAt(i).PackagePrice,
-                        PackageImageURL = listPackages.ElementAt(i).ImageUrl,
-                        PackageTitle = listPackages.ElementAt(i).Title,
-                        Size = (int)listPackages.ElementAt(i).Size
+                        PackageId = item.packageResponse.First(x => x.IsCooked == false).PackageId,
+                        CookedId = item.packageResponse.First(x => x.IsCooked == true).PackageId,
+                        PackagePrice = item.packageResponse.First(x => x.IsCooked == false).PackagePrice,
+                        CookedPrice = item.packageResponse.First(x => x.IsCooked == true).PackagePrice,
+                        PackageImageURL = item.packageResponse.First(x => x.IsCooked == false).ImageUrl,
+                        PackageTitle = item.packageResponse.First(x => x.IsCooked == false).Title,
+                        Size = (int)item.Size
                     };
-                    var listPackageDetailResponse = allPackageDetail.Where(x => x.PackageId == listPackages.ElementAt(i).PackageId).Select(x => new PackageDetailResponse
-                    {
-                        Description = x.Description,
-                        IngredientId = x.IngredientId,
-                        IngredientName = x.Ingredient.Name,
-                        Quantity = x.Quantity,
-                        Kcal = x.Ingredient.Kcal,
-                        Price = x.Ingredient.Price,
-                        Image = x.Ingredient.Picture
-                    }).ToList();
+                    var listPackageDetailResponse = allPackageDetail.Where(x => x.PackageId == item.packageResponse.First(x => x.IsCooked == false).PackageId)
+                        .Select(x => new
+                        {
+                            Description = x.Description,
+                            IngredientId = x.IngredientId,
+                            IngredientName = x.Ingredient.Name,
+                            Quantity = x.Quantity,
+                            Kcal = x.Ingredient.Kcal,
+                            Price = x.Ingredient.Price,
+                            Image = x.Ingredient.Picture
+                        }).ToList().Join(ingredients, x => x.IngredientId, y => y.IngredientId, (x, y) => new PackageDetailResponse
+                        {
+                            Description = x.Description,
+                            IngredientId = x.IngredientId,
+                            IngredientName = x.IngredientName,
+                            Quantity = x.Quantity,
+                            Kcal = x.Kcal,
+                            Price = x.Price,
+                            Image = x.Image,
+                            UnitName = y.Type.UnitName
+                        }).ToList();
+                    result.Packages.Add(new Tuple<PackagesResponse, List<PackageDetailResponse>>(packageResponse, listPackageDetailResponse));
                 }
 
                 result.RelatedBlogs = await GetRelatedBlogs(result.BlogId);
@@ -1359,7 +1394,11 @@ namespace BE_Homnayangi.Modules.BlogModule
                     MinSize = blog.MinSize,
                     MinutesToCook = blog.MinutesToCook,
                     IsEvent = blog.IsEvent.HasValue ? blog.IsEvent.Value : false,
-                    EventExpiredDate = blog.IsEvent.HasValue ? blog.EventExpiredDate : null
+                    EventExpiredDate = blog.IsEvent.HasValue ? blog.EventExpiredDate : null,
+                    CookingMethod = blog.CookingMethodId != null ? _cookingMethodRepository.GetCookingMethodsBy(x => x.CookingMethodId == blog.CookingMethodId).Result.
+                    Select(x => new DropdownCookingMethod { CookingMethodId = x.CookingMethodId, CookingMethodName = x.Name }).First() : null,
+                    Region = blog.RegionId != null ? _regionRepository.GetRegionsBy(x => x.RegionId == blog.RegionId).Result.
+                    Select(x => new DropdownRegion { RegionId = x.RegionId, RegionName = x.RegionName }).First() : null
                 };
 
                 foreach (var item in blogReferences)
@@ -1397,11 +1436,11 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 //List Packages
                 var listPackages = await _packageRepository.GetPackagesBy(x => x.BlogId == result.BlogId);
-                var groupPackage = listPackages.GroupBy(x => x.Size).Select(xx => new
+                var groupPackage = listPackages.OrderBy(p => p.CreatedDate).GroupBy(x => x.Size).Select(xx => new
                 {
                     Size = xx.Key,
-                    packageResponse = xx.Select(xx => new { xx.PackageId, xx.IsCooked, xx.PackagePrice, xx.ImageUrl, xx.Title })
-                });
+                    packageResponse = xx.Select(xx => new { xx.PackageId, xx.IsCooked, xx.PackagePrice, xx.ImageUrl, xx.Title, xx.CreatedDate })
+                }).OrderBy(y => y.packageResponse.First().CreatedDate);
                 var allPackageDetail = await _packageDetailRepository.GetPackageDetailsBy(x => x.Package.BlogId == result.BlogId, includeProperties: "Ingredient");
                 var ingredients = await _ingredientRepository.GetAll(includeProperties: "Type");
                 foreach (var item in groupPackage)
