@@ -924,6 +924,11 @@ namespace BE_Homnayangi.Modules.OrderModule
         }
         public async Task<decimal> CalculateShippingCost(double lat2, double lon2)
         {
+            bool isWithinHoChiMinhCity = IsWithinHoChiMinhCity(lat2, lon2);
+            if (!isWithinHoChiMinhCity)
+            {
+                throw new Exception($"Is not in Ho Chi Minh City");
+            }
             Location location1 = new Location(10.841611269790572, 106.809507568837);
             Location location2 = new Location(lat2, lon2);
             string origin = location1.ToString();
@@ -981,6 +986,20 @@ namespace BE_Homnayangi.Modules.OrderModule
               }*/
 
             throw new Exception($"Failed to calculate distance");
+        }
+        private bool IsWithinHoChiMinhCity(double latitude, double longitude)
+        {
+            // Tọa độ giới hạn vùng Hồ Chí Minh
+            const double minLatitude = 10.361;
+            const double maxLatitude = 11.196;
+            const double minLongitude = 106.289;
+            const double maxLongitude = 107.145;
+
+            // Kiểm tra xem tọa độ có nằm trong vùng Hồ Chí Minh không
+            bool isWithinHoChiMinh = latitude >= minLatitude && latitude <= maxLatitude
+                                    && longitude >= minLongitude && longitude <= maxLongitude;
+
+            return isWithinHoChiMinh;
         }
     }
 }
