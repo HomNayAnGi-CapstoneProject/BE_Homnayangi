@@ -829,6 +829,12 @@ namespace BE_Homnayangi.Modules.BlogModule
                 }
 
                 // check if leftover then remove
+
+                var deletedPackageDetail = dbPackageDetails.Except(packageDetails).ToList();
+
+                if (deletedPackageDetail.Count() > 0) _packageDetailRepository.RemoveRange(deletedPackageDetail);
+
+                // check if leftover then remove
                 var deletedPackage = dbPackages.Select(x => x.PackageId).Where(x => !packages.Select(y => y.PackageId).Contains(x)).ToList();
 
                 if (deletedPackage.Count() > 0)
@@ -851,11 +857,6 @@ namespace BE_Homnayangi.Modules.BlogModule
                     }
                 }
                 if (updatedPackageDetail.Count() > 0) _packageDetailRepository.UpdateRange(updatedPackageDetail);
-                // check if leftover then remove
-
-                var deletedPackageDetail = dbPackageDetails.Except(packageDetails).ToList();
-
-                if (deletedPackageDetail.Count() > 0) _packageDetailRepository.RemoveRange(deletedPackageDetail);
 
                 var addedPackageDetail = packageDetails.Except(dbPackageDetails).ToList();
 
