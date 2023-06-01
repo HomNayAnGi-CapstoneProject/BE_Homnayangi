@@ -37,6 +37,9 @@ namespace BE_Homnayangi.Modules.BlogModule.Request
             public DateTime? EventExpiredDate { get; set; }
             public Guid? CookingMethodId { get; set; }
             public Guid? RegionId { get; set; }
+            public int MinSize { get; set; }
+            public int MaxSize { get; set; }
+            public int TotalKcal { get; set; }
         }
 
         public class PackageUpdateRequest

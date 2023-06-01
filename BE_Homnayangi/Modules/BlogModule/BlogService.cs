@@ -931,6 +931,9 @@ namespace BE_Homnayangi.Modules.BlogModule
                 blog.EventExpiredDate = request.Blog.EventExpiredDate;
                 blog.CookingMethodId = request.Blog.CookingMethodId;
                 blog.RegionId = request.Blog.RegionId;
+                blog.MinSize = request.Blog.MinSize;
+                blog.MaxSize = request.Blog.MaxSize;
+                blog.TotalKcal = request.Blog.TotalKcal;
                 await _blogRepository.UpdateAsync(blog);
                 #endregion
 
