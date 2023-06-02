@@ -61,7 +61,7 @@ namespace BE_Homnayangi.Modules.BlogModule.Response
         public Guid PackageId { get; set; }
         public Guid CookedId { get; set; }
         public string Title { get; set; }
-        public string ImageURL { get; set; }
+        public string ImageUrl { get; set; }
         public int Size { get; set; }
     }
 
