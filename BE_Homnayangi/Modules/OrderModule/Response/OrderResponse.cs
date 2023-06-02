@@ -44,6 +44,8 @@ namespace BE_Homnayangi.Modules.OrderModule.Response
         public string ShippedAddress { get; set; }
         public decimal? TotalPrice { get; set; }
         public int? OrderStatus { get; set; }
+        public decimal? PackagePrice { get; set; }
+        public decimal? ShippingCost { get; set; }
         public Guid? CustomerId { get; set; }
         public bool? IsCooked { get; set; }
         public Guid? VoucherId { get; set; }

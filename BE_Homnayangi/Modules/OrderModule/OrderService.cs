@@ -887,8 +887,8 @@ namespace BE_Homnayangi.Modules.OrderModule
                         {
                             OrderId = order.OrderId,
                             PackageId = y.PackageId,
-                            PackageImage = y.ImageUrl ?? "",
-                            PackageName = y.Title ?? "",
+                            PackageImage = y.ImageUrl ?? " ",
+                            PackageName = y.Title ?? " ",
                             PackageQuantity = x.Quantity.Value,
                             PackagePrice = y.PackagePrice,
                             PackageDetails = y.PackageDetails.Join(ingredients, x => x.IngredientId, y => y.IngredientId, (x, y) =>
@@ -912,6 +912,8 @@ namespace BE_Homnayangi.Modules.OrderModule
                     OrderDate = order.OrderDate,
                     ShippedDate = order.ShippedDate,
                     ShippedAddress = order.ShippedAddress,
+                    PackagePrice = order.TotalPrice,
+                    ShippingCost = order.ShippingCost,
                     TotalPrice = order.TotalPrice + order.ShippingCost,
                     OrderStatus = order.OrderStatus,
                     CustomerId = order.CustomerId,
