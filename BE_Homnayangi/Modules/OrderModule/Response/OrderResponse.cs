@@ -30,6 +30,7 @@ namespace BE_Homnayangi.Modules.OrderModule.Response
             public string PackageName { get; set; }
             public int PackageQuantity { get; set; }
             public decimal? PackagePrice { get; set; }
+            public decimal? ShippingCost { get; set; }
 
             public ICollection<IngredientResponse> PackageDetails { get; set; }
         }
