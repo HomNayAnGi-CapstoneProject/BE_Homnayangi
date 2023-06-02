@@ -1331,8 +1331,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                         CookedId = item.packageResponse.First(x => x.IsCooked == true).PackageId,
                         PackagePrice = item.packageResponse.First(x => x.IsCooked == false).PackagePrice,
                         CookedPrice = item.packageResponse.First(x => x.IsCooked == true).PackagePrice,
-                        PackageImageURL = item.packageResponse.First(x => x.IsCooked == false).ImageUrl,
-                        PackageTitle = item.packageResponse.First(x => x.IsCooked == false).Title,
+                        ImageUrl = item.packageResponse.First(x => x.IsCooked == false).ImageUrl,
+                        Title = item.packageResponse.First(x => x.IsCooked == false).Title,
                         Size = (int)item.Size
                     };
                     var listPackageDetailResponse = allPackageDetail.Where(x => x.PackageId == item.packageResponse.First(x => x.IsCooked == false).PackageId)
@@ -1455,8 +1455,8 @@ namespace BE_Homnayangi.Modules.BlogModule
                         CookedId = item.packageResponse.First(x => x.IsCooked == true).PackageId,
                         PackagePrice = item.packageResponse.First(x => x.IsCooked == false).PackagePrice,
                         CookedPrice = item.packageResponse.First(x => x.IsCooked == true).PackagePrice,
-                        PackageImageURL = item.packageResponse.First(x => x.IsCooked == false).ImageUrl,
-                        PackageTitle = item.packageResponse.First(x => x.IsCooked == false).Title,
+                        ImageUrl = item.packageResponse.First(x => x.IsCooked == false).ImageUrl,
+                        Title = item.packageResponse.First(x => x.IsCooked == false).Title,
                         Size = (int)item.Size
                     };
                     var listPackageDetailResponse = allPackageDetail.Where(x => x.PackageId == item.packageResponse.First(x => x.IsCooked == false).PackageId)
