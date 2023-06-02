@@ -744,7 +744,23 @@ namespace BE_Homnayangi.Modules.BlogModule
                 if (blog == null)
                     throw new Exception(ErrorMessage.BlogError.BLOG_NOT_FOUND);
                 #endregion
-
+                #region Update blog
+                // update blog
+                blog.UpdatedDate = DateTime.Now;
+                blog.Title = request.Blog.Title;
+                blog.ImageUrl = request.Blog.ImageUrl;
+                blog.BlogStatus = request.Blog.BlogStatus;
+                blog.VideoUrl = request.Blog.VideoUrl;
+                blog.MinutesToCook = request.Blog.MinutesToCook;
+                blog.IsEvent = request.Blog.IsEvent;
+                blog.EventExpiredDate = request.Blog.EventExpiredDate;
+                blog.CookingMethodId = request.Blog.CookingMethodId;
+                blog.RegionId = request.Blog.RegionId;
+                blog.MinSize = request.Blog.MinSize;
+                blog.MaxSize = request.Blog.MaxSize;
+                blog.TotalKcal = request.Blog.TotalKcal;
+                await _blogRepository.UpdateAsync(blog);
+                #endregion
                 #region update packages and package details
                 var packages = new List<Package>();
                 var packageDetails = new List<PackageDetail>();
@@ -814,6 +830,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                         changedPackage.ImageUrl = item.ImageUrl;
                         changedPackage.Size = item.Size;
                         changedPackage.PackagePrice = item.PackagePrice;
+                        changedPackage.Status = blog.BlogStatus;
                         changedPackage.IsCooked = item.IsCooked;
                         updatedPackage.Add(changedPackage);
                     }
@@ -871,7 +888,7 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 #endregion
 
-                #region update blog and subcates
+                #region update subcates
                 // get sub cates of blog 
                 var subCates = await _blogSubCateRepository
                     .GetBlogSubCatesBy(b => b.BlogId.Equals(request.Blog.BlogId),
@@ -919,19 +936,6 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 await _blogReferenceRepository.UpdateRangeAsync(listBlogRefUpdate);
                 #endregion
-
-                // update blog
-                blog.UpdatedDate = DateTime.Now;
-                blog.Title = request.Blog.Title;
-                blog.ImageUrl = request.Blog.ImageUrl;
-                blog.BlogStatus = request.Blog.BlogStatus;
-                blog.VideoUrl = request.Blog.VideoUrl;
-                blog.MinutesToCook = request.Blog.MinutesToCook;
-                blog.IsEvent = request.Blog.IsEvent;
-                blog.EventExpiredDate = request.Blog.EventExpiredDate;
-                blog.CookingMethodId = request.Blog.CookingMethodId;
-                blog.RegionId = request.Blog.RegionId;
-                await _blogRepository.UpdateAsync(blog);
                 #endregion
 
                 if (request.Blog.BlogStatus == (int)Status.BlogStatus.PENDING)
@@ -1547,7 +1551,7 @@ namespace BE_Homnayangi.Modules.BlogModule
             bool isChecked = false;
             try
             {
-                var blog = await _blogRepository.GetFirstOrDefaultAsync(b => b.BlogId == blogId && b.BlogStatus == (int)Status.BlogStatus.PENDING, includeProperties: "Author,BlogReferences");
+                var blog = await _blogRepository.GetFirstOrDefaultAsync(b => b.BlogId == blogId && b.BlogStatus == (int)Status.BlogStatus.PENDING, includeProperties: "Author,BlogReferences,CookingMethod,Region,Packages");
                 var properties = blog.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
                 if (blog != null)
                 {
