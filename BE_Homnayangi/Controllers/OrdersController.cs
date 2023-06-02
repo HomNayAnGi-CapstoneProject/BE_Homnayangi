@@ -278,7 +278,8 @@ namespace BE_Homnayangi.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
-
+            }
+        }
         [HttpGet("report")]
         public async Task<ActionResult> GetReport([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
         {

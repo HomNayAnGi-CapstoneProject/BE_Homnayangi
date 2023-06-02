@@ -31,11 +31,10 @@ using static Library.Models.Enum.Status;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using System.Net.Http;
 using BE_Homnayangi.Modules.PackageModule.Interface;
-<<<<<<< HEAD
 using GoogleMapsApi.Entities.Common;
-=======
+
 using System.Drawing;
->>>>>>> feature/report
+
 
 namespace BE_Homnayangi.Modules.OrderModule
 {
@@ -1069,8 +1068,9 @@ namespace BE_Homnayangi.Modules.OrderModule
             var orderDetails = await _orderDetailRepository.GetOrderDetailsBy(od => orders.Select(o => o.OrderId).Contains(od.OrderId));
             var packages = await _packageRepository.GetAll();
             var trendingGroup = from orderDetail in orderDetails
-                                  group orderDetail by orderDetail.PackageId
-                                  into g select new TrendingPackage {PackageId = g.Key.GetValueOrDefault(), PackageTitle = packages.Where(p => p.PackageId == g.Key).First()?.Title, Count = g.Select(s => s.Quantity.GetValueOrDefault()).Sum()};
+                                group orderDetail by orderDetail.PackageId
+                                  into g
+                                select new TrendingPackage { PackageId = g.Key.GetValueOrDefault(), PackageTitle = packages.Where(p => p.PackageId == g.Key).First()?.Title, Count = g.Select(s => s.Quantity.GetValueOrDefault()).Sum() };
 
 
             FinancialReport financialReport = new FinancialReport
@@ -1182,7 +1182,7 @@ namespace BE_Homnayangi.Modules.OrderModule
                 throw new Exception("Invalid year");
 
             var yearlyReport = new List<FinancialReport>();
-            for (int i=1; i <= 12; i++)
+            for (int i = 1; i <= 12; i++)
             {
                 var record = await GetMonthlyFinancialReport(i, year);
                 yearlyReport.Add(record);
