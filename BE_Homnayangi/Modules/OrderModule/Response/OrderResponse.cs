@@ -11,7 +11,6 @@ namespace BE_Homnayangi.Modules.OrderModule.Response
             public Guid IngredientId { get; set; }
             public int? Quantity { get; set; }
             public decimal? Price { get; set; }
-            public decimal? ShippingCost { get; set; }
             public string IngredientImage { get; set; }
             public string IngredientName { get; set; }
 
@@ -30,7 +29,6 @@ namespace BE_Homnayangi.Modules.OrderModule.Response
             public string PackageName { get; set; }
             public int PackageQuantity { get; set; }
             public decimal? PackagePrice { get; set; }
-            public decimal? ShippingCost { get; set; }
 
             public ICollection<IngredientResponse> PackageDetails { get; set; }
         }
@@ -45,7 +43,6 @@ namespace BE_Homnayangi.Modules.OrderModule.Response
         public DateTime? ShippedDate { get; set; }
         public string ShippedAddress { get; set; }
         public decimal? TotalPrice { get; set; }
-        public decimal? ShippingCost { get; set; }
         public int? OrderStatus { get; set; }
         public Guid? CustomerId { get; set; }
         public bool? IsCooked { get; set; }

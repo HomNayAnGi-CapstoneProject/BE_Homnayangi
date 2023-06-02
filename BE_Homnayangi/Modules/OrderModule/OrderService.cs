@@ -912,7 +912,7 @@ namespace BE_Homnayangi.Modules.OrderModule
                     OrderDate = order.OrderDate,
                     ShippedDate = order.ShippedDate,
                     ShippedAddress = order.ShippedAddress,
-                    TotalPrice = order.TotalPrice,
+                    TotalPrice = order.TotalPrice + order.ShippingCost,
                     OrderStatus = order.OrderStatus,
                     CustomerId = order.CustomerId,
                     IsCooked = order.IsCooked,
