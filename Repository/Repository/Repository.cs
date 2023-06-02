@@ -119,6 +119,8 @@ namespace Repository.Repository
                     var indexNumber = randNumber.Next(0, draftResult.Count());
                     endResult.Add(draftResult.ElementAt(indexNumber));
                     draftResult.RemoveAt(indexNumber);
+
+                    if (draftResult.Count() == 0) i = numberItem;
                 }
             }
 
