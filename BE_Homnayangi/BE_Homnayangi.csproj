@@ -87,4 +87,5 @@
     <Folder Include="Modules\AutoMapper\" />
     <Folder Include="Modules\OrderModule\Request\" />
   </ItemGroup>
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1development_1json__JsonSchema="https://cdn.sdf.com/schemas/sdf-schema-1.0.json" /></VisualStudio></ProjectExtensions>
 </Project>

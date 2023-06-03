@@ -287,7 +287,27 @@ namespace BE_Homnayangi.Modules.BlogModule
 
                 var listSubCateName = GetListSubCateName(listBlogs, listBlogSubCate);
 
-                return null;
+                var result = listBlogs.Join(listSubCateName, x => x.BlogId, y => y.Key, (x,y) => new { 
+                    BlogId = x.BlogId,
+                    EventExpiredDate = x.EventExpiredDate,
+                    ImageUrl = x.ImageUrl,
+                    IsEvent = x.IsEvent,
+                    ListSubCateName = y.Value,
+                    Title = x.Title,
+                    TotalKcal = x.TotalKcal
+                }).Join(_blogReferenceRepository.GetBlogReferencesBy(x=> x.Type == (int)BlogReferenceType.DESCRIPTION).Result, x => x.BlogId, y => y.BlogId,
+                (x,y) => new OverviewBlogResponse{
+                    BlogId = x.BlogId,
+                    Description = y.Html,
+                    EventExpiredDate = x.EventExpiredDate,
+                    ImageUrl = x.ImageUrl,
+                    IsEvent = x.IsEvent,
+                    ListSubCateName = x.ListSubCateName,
+                    Title = x.Title,
+                    TotalKcal = x.TotalKcal
+                }).ToList();
+
+                return result;
             }
             catch (Exception ex)
             {
@@ -440,7 +460,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                     throw new Exception(ErrorMessage.CaloRefError.CALO_REF_NOT_FOUND);
                 }
                 //get all blog
-                var listBlog = await _blogRepository.GetBlogsBy(x => x.MaxSize == 2 && x.BlogStatus == ((int)BlogStatus.ACTIVE));
+                var listBlog = await _blogRepository.GetBlogsBy(x => x.BlogStatus == ((int)BlogStatus.ACTIVE), includeProperties: "CookingMethod");
                 if (listBlog.Count() == 0)
                 {
                     throw new Exception(ErrorMessage.CommonError.LIST_IS_NULL);
@@ -448,7 +468,7 @@ namespace BE_Homnayangi.Modules.BlogModule
                 //get list blogSubCate
                 var listBlogSubCate = _blogSubCateRepository.GetBlogSubCatesBy(x => x.Status != false, includeProperties: "SubCate").Result;
                 //get list blogId by blogSubCate of soup blog
-                var listSoupBlogIdSubCate = listBlogSubCate.Where(x => x.SubCate.Name.Equals("Món canh")).Select(x => x.BlogId).ToList();
+                var listSoupBlogIdSubCate = listBlog.Where(x => x.CookingMethod.Name.Equals("Canh")).Select(x => x.BlogId).ToList();
                 //get list soup blog
                 var listSoupBlog = listBlog.Join(listSoupBlogIdSubCate, x => x.BlogId, y => y, (x, y) => x).ToList();
                 //get list normal blog

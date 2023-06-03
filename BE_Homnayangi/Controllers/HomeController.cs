@@ -21,7 +21,7 @@ namespace BE_Homnayangi.Controllers
             _blogService = blogService;
         }
 
-        [HttpGet("subCategory/{subCateId}/blogs")]
+        [HttpGet("subCategory/{subCateId}/blogs/{isRegion}")]
         public async Task<ActionResult<IEnumerable<OverviewBlogResponse>>> GetBlogsBySubCate([FromRoute] Guid? subCateId, [FromRoute] bool isRegion)
         {
             if (subCateId == null)
