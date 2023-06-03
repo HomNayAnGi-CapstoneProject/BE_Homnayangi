@@ -788,12 +788,12 @@ namespace BE_Homnayangi.Modules.OrderModule
                 cancel_url = redirectUrl + $"&Cancel=true&IsCooked={order.IsCooked ?? false}",
                 return_url = redirectUrl + $"&Cancel=false&IsCooked={order.IsCooked ?? false}"
             };
-
+            decimal totalPrice = order.TotalPrice.GetValueOrDefault() + order.ShippingCost.GetValueOrDefault();
             var amount = new PayPal.Api.Amount()
             {
                 currency = "USD",
                 //ABOUT TRANSACTION NEED FIX
-                total = (order.TotalPrice.GetValueOrDefault() / Decimal.Parse(currencyRate)).ToString("#.##")
+                total = (totalPrice / Decimal.Parse(currencyRate)).ToString("#.##")
             };
 
             var transactionList = new List<PayPal.Api.Transaction>();
