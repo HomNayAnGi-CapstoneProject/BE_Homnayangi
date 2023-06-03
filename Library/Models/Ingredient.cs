@@ -9,13 +9,12 @@ namespace Library.Models
     {
         public Ingredient()
         {
-            RecipeDetails = new HashSet<RecipeDetail>();
+            PackageDetails = new HashSet<PackageDetail>();
         }
 
         public Guid IngredientId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public Guid? UnitId { get; set; }
         public int? Quantity { get; set; }
         public string Picture { get; set; }
         public int? Kcal { get; set; }
@@ -28,7 +27,6 @@ namespace Library.Models
         public string ListImagePosition { get; set; }
 
         public virtual Type Type { get; set; }
-        public virtual Unit Unit { get; set; }
-        public virtual ICollection<RecipeDetail> RecipeDetails { get; set; }
+        public virtual ICollection<PackageDetail> PackageDetails { get; set; }
     }
 }

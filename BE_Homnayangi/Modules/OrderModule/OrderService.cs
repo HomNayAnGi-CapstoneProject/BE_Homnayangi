@@ -5,9 +5,6 @@ using BE_Homnayangi.Modules.IngredientModule.Interface;
 using BE_Homnayangi.Modules.OrderDetailModule.Interface;
 using BE_Homnayangi.Modules.OrderModule.Interface;
 using BE_Homnayangi.Modules.OrderModule.Response;
-using BE_Homnayangi.Modules.RecipeModule;
-using BE_Homnayangi.Modules.RecipeModule.Interface;
-using BE_Homnayangi.Modules.TransactionModule.Interface;
 using BE_Homnayangi.Modules.UserModule.Interface;
 using BE_Homnayangi.Modules.VoucherModule.Interface;
 using BE_Homnayangi.Ultils.EmailServices;
@@ -32,6 +29,12 @@ using BE_Homnayangi.Modules.NotificationModule.Interface;
 using static Library.Models.Enum.PaymentMethodEnum;
 using static Library.Models.Enum.Status;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using System.Net.Http;
+using BE_Homnayangi.Modules.PackageModule.Interface;
+using GoogleMapsApi.Entities.Common;
+
+using System.Drawing;
+
 
 namespace BE_Homnayangi.Modules.OrderModule
 {
@@ -41,9 +44,8 @@ namespace BE_Homnayangi.Modules.OrderModule
         private readonly IOrderDetailRepository _orderDetailRepository;
         private readonly ICustomerRepository _customerRepository;
         private readonly IUserRepository _userRepository;
-        private readonly ITransactionRepository _transactionRepository;
         private readonly IIngredientRepository _ingredientRepository;
-        private readonly IRecipeRepository _recipeRepository;
+        private readonly IPackageRepository _packageRepository;
         private readonly IVoucherRepository _voucherRepository;
         private readonly INotificationRepository _notificationRepository;
         private readonly IHubContext<SignalRServer> _hubContext;
@@ -51,29 +53,29 @@ namespace BE_Homnayangi.Modules.OrderModule
         IConfiguration _configuration;
         private readonly IMapper _mapper;
         private readonly IEmailSender _emailSender;
+        private readonly HttpClient _httpClient;
 
         public OrderService(IOrderRepository OrderRepository,
             IOrderDetailRepository orderDetailRepository,
             ICustomerRepository customerRepository,
             IUserRepository userRepository,
-            ITransactionRepository transactionRepository,
             IIngredientRepository ingredientRepository,
-            IRecipeRepository recipeRepository,
+            IPackageRepository packageRepository,
             IVoucherRepository voucherRepository,
             INotificationRepository notificationRepository,
             IHubContext<SignalRServer> hubContext,
             ICustomerVoucherService customerVoucherService,
             IMapper mapper,
             IConfiguration configuration,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            HttpClient httpClient)
         {
             _OrderRepository = OrderRepository;
             _orderDetailRepository = orderDetailRepository;
             _customerRepository = customerRepository;
             _userRepository = userRepository;
-            _transactionRepository = transactionRepository;
             _ingredientRepository = ingredientRepository;
-            _recipeRepository = recipeRepository;
+            _packageRepository = packageRepository;
             _configuration = configuration;
             _voucherRepository = voucherRepository;
             _notificationRepository = notificationRepository;
@@ -81,6 +83,7 @@ namespace BE_Homnayangi.Modules.OrderModule
             _mapper = mapper;
             _emailSender = emailSender;
             _customerVoucherService = customerVoucherService;
+            _httpClient = httpClient;
         }
 
         public async Task<ICollection<OrderResponse>> GetOrderResponse(DateTime? fromDate, DateTime? toDate, int status = -1)
@@ -104,38 +107,24 @@ namespace BE_Homnayangi.Modules.OrderModule
             }
 
             var ingredients = await _ingredientRepository.GetAll();
-            var recipes = await _recipeRepository.GetRecipesBy(includeProperties: "RecipeDetails");
+            var packages = await _packageRepository.GetPackagesBy(includeProperties: "PackageDetails");
 
             var res = new List<OrderResponse>();
             foreach (var order in orders)
             {
-                var ingOrderDetails = order.OrderDetails.Where(detail => detail.RecipeId == null)
-                    .Join(ingredients, x => x.IngredientId, y => y.IngredientId, (x, y) =>
-                    {
-                        return new OrderResponse.IngredientResponse
-                        {
-                            IngredientId = x.IngredientId,
-                            Quantity = x.Quantity,
-                            Price = x.Price,
-                            IngredientImage = y.Picture,
-                            IngredientName = y.Name
-                        };
-                    })
-                    .ToList();
 
-                var recipeOrderDetails = order.OrderDetails.Where(detail => detail.RecipeId != null)
-                    .Join(recipes, x => x.RecipeId, y => y.RecipeId, (x, y) =>
+                var packageOrderDetails = order.OrderDetails.Where(detail => detail.PackageId != null)
+                    .Join(packages, x => x.PackageId, y => y.PackageId, (x, y) =>
                     {
                         return new OrderResponse.OrderDetailResponse
                         {
                             OrderId = order.OrderId,
-                            RecipeId = y.RecipeId,
-                            RecipeImage = y.ImageUrl ?? "",
-                            RecipeName = y.Title ?? "",
-                            RecipeQuantity = x.Quantity.Value,
+                            PackageId = y.PackageId,
+                            PackageImage = y.ImageUrl ?? "",
+                            PackageName = y.Title ?? "",
+                            PackageQuantity = x.Quantity.Value,
                             PackagePrice = y.PackagePrice,
-                            CookedPrice = y.CookedPrice,
-                            RecipeDetails = y.RecipeDetails.Join(ingredients, x => x.IngredientId, y => y.IngredientId, (x, y) =>
+                            PackageDetails = y.PackageDetails.Join(ingredients, x => x.IngredientId, y => y.IngredientId, (x, y) =>
                             {
                                 return new OrderResponse.IngredientResponse
                                 {
@@ -156,22 +145,23 @@ namespace BE_Homnayangi.Modules.OrderModule
                     OrderDate = order.OrderDate,
                     ShippedDate = order.ShippedDate,
                     ShippedAddress = order.ShippedAddress,
-                    TotalPrice = order.TotalPrice,
+                    PackagePrice = order.TotalPrice,
+                    ShippingCost = order.ShippingCost,
+                    TotalPrice = order.TotalPrice + order.ShippingCost,
                     OrderStatus = order.OrderStatus,
                     CustomerId = order.CustomerId,
                     IsCooked = order.IsCooked,
-                    VoucherId = order.VoucherId,
+                    VoucherId = order.CustomerVoucherId,
                     PaymentMethod = order.PaymentMethod,
                     PaypalUrl = order.PaypalUrl,
-                    OrderDetailRecipes = recipeOrderDetails,
-                    OrderDetailIngredients = ingOrderDetails
+                    OrderDetailRecipes = packageOrderDetails,
                 };
                 res.Add(orderResponse);
             }
 
             if (status == 2)
                 return res.Where(r => (r.ShippedDate.HasValue && r.ShippedDate.Value.Date == DateTime.Today.Date)
-                    || (r.ShippedDate==null && r.OrderDate.Value.Date == DateTime.Today.Date))
+                    || (r.ShippedDate == null && r.OrderDate.Value.Date == DateTime.Today.Date))
                     .OrderByDescending(r => r.OrderDate).ToList();
 
             return res.OrderByDescending(r => r.OrderDate).ToList();
@@ -211,8 +201,8 @@ namespace BE_Homnayangi.Modules.OrderModule
                 if (newOrder.TotalPrice < 10000)
                     throw new Exception(ErrorMessage.OrderError.ORDER_TOTAL_PRICE_NOT_VALID);
 
-                var voucher = newOrder.VoucherId.HasValue
-                    ? await _voucherRepository.GetByIdAsync(newOrder.VoucherId.Value)
+                var voucher = newOrder.CustomerVoucherId.HasValue
+                    ? await _voucherRepository.GetByIdAsync(newOrder.CustomerVoucherId.Value)
                     : null;
                 if (voucher != null)
                 {
@@ -242,18 +232,6 @@ namespace BE_Homnayangi.Modules.OrderModule
                 }
                 #endregion
 
-
-                #region create transaction
-                var transaction = new Library.Models.Transaction()
-                {
-                    TransactionId = newOrder.OrderId,
-                    TotalAmount = newOrder.TotalPrice.Value,
-                    CreatedDate = DateTime.Now,
-                    TransactionStatus = (int)Status.TransactionStatus.PENDING,
-                    CustomerId = newOrder.CustomerId
-                };
-                #endregion
-
                 var transactionScope = _OrderRepository.Transaction();
                 using (transactionScope)
                 {
@@ -273,7 +251,7 @@ namespace BE_Homnayangi.Modules.OrderModule
                             {
                                 case (int)PaymentMethodEnum.PaymentMethods.PAYPAL:
                                     newOrder.OrderStatus = (int)Status.OrderStatus.PAYING;
-                                    await _transactionRepository.AddAsync(transaction);
+                                    newOrder.TransactionStatus = (int)Status.TransactionStatus.PENDING;
                                     redirectUrl = await PaymentWithPaypal(newOrder.OrderId);
                                     break;
                                 case (int)PaymentMethodEnum.PaymentMethods.COD:
@@ -369,31 +347,17 @@ namespace BE_Homnayangi.Modules.OrderModule
             var transactionScope = _OrderRepository.Transaction();
             using (transactionScope)
             {
-                await _OrderRepository.UpdateAsync(order);
 
                 if (order.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL)
                 {
-                    var transaction = await _transactionRepository.GetByIdAsync(orderId);
-                    if (transaction == null)
-                        throw new Exception(ErrorMessage.TransactionError.TRANSACTION_NOT_FOUND);
-                    transaction.TransactionStatus = (int)Status.TransactionStatus.SUCCESS;
-                    await _transactionRepository.UpdateAsync(transaction);
+                    order.TransactionStatus = (int)Status.TransactionStatus.SUCCESS;
                 }
                 else
                 {
-                    #region create transaction
-                    var transaction = new Library.Models.Transaction()
-                    {
-                        TransactionId = order.OrderId,
-                        TotalAmount = order.TotalPrice.Value,
-                        CreatedDate = DateTime.Now,
-                        TransactionStatus = (int)Status.TransactionStatus.PENDING,
-                        CustomerId = order.CustomerId
-                    };
-                    #endregion
-                    await _transactionRepository.AddAsync(transaction);
+                    order.TransactionStatus = (int)Status.TransactionStatus.PENDING;
                 }
 
+                await _OrderRepository.UpdateAsync(order);
                 transactionScope.Commit();
             }
             #endregion
@@ -420,8 +384,8 @@ namespace BE_Homnayangi.Modules.OrderModule
 
             await _OrderRepository.UpdateAsync(order);
 
-            if (order.VoucherId.HasValue)
-                await _customerVoucherService.DeleteCustomerVoucher(order.VoucherId.Value, customer.CustomerId);
+            if (order.CustomerVoucherId.HasValue)
+                await _customerVoucherService.DeleteCustomerVoucher(order.CustomerVoucherId.Value, customer.CustomerId);
 
             #region Create notification
             var id = Guid.NewGuid();
@@ -489,11 +453,7 @@ namespace BE_Homnayangi.Modules.OrderModule
 
                 if (order.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL)
                 {
-                    var transaction = await _transactionRepository.GetByIdAsync(order.OrderId);
-                    if (transaction == null)
-                        throw new Exception(ErrorMessage.TransactionError.TRANSACTION_NOT_FOUND);
-                    transaction.TransactionStatus = (int)Status.TransactionStatus.FAIL;
-                    await _transactionRepository.UpdateAsync(transaction);
+                    order.TransactionStatus = (int)Status.TransactionStatus.FAIL;
                 }
 
                 #region sending mail
@@ -534,7 +494,6 @@ namespace BE_Homnayangi.Modules.OrderModule
             if (order.OrderStatus == (int)Status.OrderStatus.REFUND)
                 return;
 
-            var transaction = await _transactionRepository.GetByIdAsync(id);
             if (order.OrderStatus != (int)Status.OrderStatus.NEED_REFUND)
                 throw new Exception(ErrorMessage.OrderError.ORDER_CANNOT_CHANGE_STATUS);
 
@@ -567,12 +526,7 @@ namespace BE_Homnayangi.Modules.OrderModule
 
                 if (order.PaymentMethod == (int)PaymentMethodEnum.PaymentMethods.PAYPAL)
                 {
-                    var transaction = await _transactionRepository.GetByIdAsync(order.OrderId);
-                    if (transaction != null)
-                    {
-                        transaction.TransactionStatus = (int)Status.TransactionStatus.FAIL;
-                        await _transactionRepository.UpdateAsync(transaction);
-                    }
+                    order.TransactionStatus = (int)Status.TransactionStatus.FAIL;
                 }
 
                 #region sending mail
@@ -822,10 +776,7 @@ namespace BE_Homnayangi.Modules.OrderModule
         {
             var currencyRate = _configuration.GetValue<string>("Paypal:currencyRate");
 
-            var transaction = await _transactionRepository.GetByIdAsync(orderId);
             var order = await _OrderRepository.GetByIdAsync(orderId);
-            if (transaction == null)
-                throw new Exception(ErrorMessage.TransactionError.TRANSACTION_NOT_FOUND);
 
             var payer = new PayPal.Api.Payer()
             {
@@ -841,14 +792,16 @@ namespace BE_Homnayangi.Modules.OrderModule
             var amount = new PayPal.Api.Amount()
             {
                 currency = "USD",
-                total = (transaction.TotalAmount.GetValueOrDefault() / Decimal.Parse(currencyRate)).ToString("#.##")
+                //ABOUT TRANSACTION NEED FIX
+                total = (order.TotalPrice.GetValueOrDefault() / Decimal.Parse(currencyRate)).ToString("#.##")
             };
 
             var transactionList = new List<PayPal.Api.Transaction>();
 
             transactionList.Add(new PayPal.Api.Transaction()
             {
-                invoice_number = transaction.TransactionId.ToString(),
+                //ABOUT TRANSACTION NEED FIX
+                invoice_number = order.OrderId.ToString(),
                 amount = amount
             });
 
@@ -899,7 +852,7 @@ namespace BE_Homnayangi.Modules.OrderModule
         public async Task<ICollection<Order>> GetAll()
         {
             var res = await _OrderRepository.GetAll();
-            return res.OrderByDescending(o=>o.OrderDate).ToList();
+            return res.OrderByDescending(o => o.OrderDate).ToList();
         }
 
         public async Task<ICollection<OrderResponse>> GetOrderByCustomer(DateTime? fromDate, DateTime? toDate, Guid customerId, int status = -1)
@@ -923,38 +876,24 @@ namespace BE_Homnayangi.Modules.OrderModule
             }
 
             var ingredients = await _ingredientRepository.GetAll();
-            var recipes = await _recipeRepository.GetRecipesBy(includeProperties: "RecipeDetails");
+            var packages = await _packageRepository.GetPackagesBy(includeProperties: "PackageDetails");
 
             var res = new List<OrderResponse>();
             foreach (var order in orders)
             {
-                var ingOrderDetails = order.OrderDetails.Where(detail => detail.RecipeId == null)
-                    .Join(ingredients, x => x.IngredientId, y => y.IngredientId, (x, y) =>
-                    {
-                        return new OrderResponse.IngredientResponse
-                        {
-                            IngredientId = x.IngredientId,
-                            Quantity = x.Quantity,
-                            Price = x.Price,
-                            IngredientImage = y.Picture,
-                            IngredientName = y.Name
-                        };
-                    })
-                    .ToList();
 
-                var recipeOrderDetails = order.OrderDetails.Where(detail => detail.RecipeId != null)
-                    .Join(recipes, x => x.RecipeId, y => y.RecipeId, (x, y) =>
+                var packageOrderDetails = order.OrderDetails.Where(detail => detail.PackageId != null)
+                    .Join(packages, x => x.PackageId, y => y.PackageId, (x, y) =>
                     {
                         return new OrderResponse.OrderDetailResponse
                         {
                             OrderId = order.OrderId,
-                            RecipeId = y.RecipeId,
-                            RecipeImage = y.ImageUrl ?? "",
-                            RecipeName = y.Title ?? "",
-                            RecipeQuantity = x.Quantity.Value,
+                            PackageId = y.PackageId,
+                            PackageImage = y.ImageUrl ?? " ",
+                            PackageName = y.Title ?? " ",
+                            PackageQuantity = x.Quantity.Value,
                             PackagePrice = y.PackagePrice,
-                            CookedPrice = y.CookedPrice,
-                            RecipeDetails = y.RecipeDetails.Join(ingredients, x => x.IngredientId, y => y.IngredientId, (x, y) =>
+                            PackageDetails = y.PackageDetails.Join(ingredients, x => x.IngredientId, y => y.IngredientId, (x, y) =>
                             {
                                 return new OrderResponse.IngredientResponse
                                 {
@@ -975,19 +914,299 @@ namespace BE_Homnayangi.Modules.OrderModule
                     OrderDate = order.OrderDate,
                     ShippedDate = order.ShippedDate,
                     ShippedAddress = order.ShippedAddress,
-                    TotalPrice = order.TotalPrice,
+                    PackagePrice = order.TotalPrice,
+                    ShippingCost = order.ShippingCost,
+                    TotalPrice = order.TotalPrice + order.ShippingCost,
                     OrderStatus = order.OrderStatus,
                     CustomerId = order.CustomerId,
                     IsCooked = order.IsCooked,
-                    VoucherId = order.VoucherId,
+                    VoucherId = order.CustomerVoucherId,
                     PaymentMethod = order.PaymentMethod,
                     PaypalUrl = order.PaypalUrl,
-                    OrderDetailRecipes = recipeOrderDetails,
-                    OrderDetailIngredients = ingOrderDetails
+                    OrderDetailRecipes = packageOrderDetails
                 };
                 res.Add(orderResponse);
             }
             return res.OrderByDescending(r => r.OrderDate).ToList();
+        }
+        public async Task<decimal> CalculateShippingCost(double lat2, double lon2)
+        {
+            bool isWithinHoChiMinhCity = IsWithinHoChiMinhCity(lat2, lon2);
+            if (!isWithinHoChiMinhCity)
+            {
+                throw new Exception($"Is not in Ho Chi Minh City");
+            }
+            Location location1 = new Location(10.841611269790572, 106.809507568837);
+            Location location2 = new Location(lat2, lon2);
+            string origin = location1.ToString();
+            string destination = location2.ToString();
+            string vehicle = "bike";
+            string apiKey = "YJmpmPyakHgWJyrxBqI8RUccgGT2szN7TERBVm9B";
+            var apiUrl = $"https://rsapi.goong.io/Direction?origin={origin}&destination={destination}&vehicle={vehicle}&api_key={apiKey}";
+
+            var response = await _httpClient.GetAsync(apiUrl);
+            response.EnsureSuccessStatusCode();
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            // Xử lý kết quả JSON trả về
+            var goongResponse = JsonConvert.DeserializeObject<GoongDistanceResponse>(responseContent);
+
+            // Lấy khoảng cách từ kết quả
+            var distance = goongResponse?.Routes?.FirstOrDefault()?.Legs?.FirstOrDefault().Distance.Value;
+            double distanceInKilometers = (double)distance / 1000;
+
+            const double baseRate = 5000; // Phí cơ bản cho 2km đầu tiên
+            const double additionalRate = 200; // Mốc tăng thêm phí sau mỗi 2km
+
+            // Tính số mốc tăng thêm
+            int additionalSteps = (int)Math.Ceiling((distanceInKilometers / 2) - 1);
+            if (additionalSteps < 0)
+            {
+                additionalSteps = 0;
+            }
+
+            // Tính phí vận chuyển
+            var shippingCost = baseRate * distanceInKilometers + (additionalRate * additionalSteps);
+
+            return (decimal)shippingCost;
+            /*  DirectionsRequest distanceRequest = new DirectionsRequest();
+
+              distanceRequest.ApiKey = "AIzaSyBABc-SHz6bgZkLkH2higaSTpPUaSdWQyY";
+
+              Location location1 = new Location(10.841611269790572, 106.809507568837);
+              Location location2 = new Location(lat2, lon2);
+              distanceRequest.Origin = location1.ToString();
+              distanceRequest.Destination = location2.ToString();
+
+
+
+              var distanceResponse = await GoogleMaps.Directions.QueryAsync(distanceRequest);
+
+              if (distanceResponse.Status == DirectionsStatusCodes.OK && distanceResponse.Routes.Any())
+              {
+
+                  // The distance is returned in meters, so we convert it to kilometers
+                  var distanceInMeters = distanceResponse.Routes.First().Legs.Sum(l => l.Distance.Value);
+                  var distanceInKilometers = (double)distanceInMeters / 1000;
+                  return distanceInKilometers;
+              }*/
+
+            throw new Exception($"Failed to calculate distance");
+        }
+        private bool IsWithinHoChiMinhCity(double latitude, double longitude)
+        {
+            // Tọa độ giới hạn vùng Hồ Chí Minh
+            const double minLatitude = 10.361;
+            const double maxLatitude = 11.196;
+            const double minLongitude = 106.289;
+            const double maxLongitude = 107.145;
+
+            // Kiểm tra xem tọa độ có nằm trong vùng Hồ Chí Minh không
+            bool isWithinHoChiMinh = latitude >= minLatitude && latitude <= maxLatitude
+                                    && longitude >= minLongitude && longitude <= maxLongitude;
+
+            return isWithinHoChiMinh;
+        }
+        public async Task<FinancialReport> GetYearlyFinancialReport(int year)
+        {
+            if (year < 2000 || year > DateTime.Now.Year)
+                throw new Exception("Invalid year");
+
+            var startDate = new DateTime(year, 1, 1);
+            var endDate = new DateTime(year, 12, 31).AddDays(1).Date.AddSeconds(-1);
+
+            var orders = await _OrderRepository.GetOrdersBy(o => o.OrderStatus != (int)Status.OrderStatus.DELETED
+                && o.OrderDate.HasValue && o.OrderDate.Value >= startDate && o.OrderDate <= endDate, includeProperties: "OrderDetails");
+            var deliveredOrders = orders.Where(o => o.OrderStatus == (int)Status.OrderStatus.DELIVERED);
+            var deniedOrders = orders.Where(o => o.OrderStatus == (int)Status.OrderStatus.DENIED);
+            var cancelOrders = orders.Where(o => o.OrderStatus == (int)Status.OrderStatus.CANCEL);
+
+            decimal revenue = orders.Select(o => o.TotalPrice.GetValueOrDefault()).Sum();
+
+            decimal totalShipCost = orders.Select(o => o.ShippingCost.GetValueOrDefault()).Sum();
+            int totalOrder = orders.Count;
+            int totalPackages = orders.Select(o => o.OrderDetails.Select(od => od.Quantity.GetValueOrDefault()).Sum()).Sum();
+            int deliveredOrderCount = deliveredOrders.Count();
+            int deniedOrderCount = deniedOrders.Count();
+            int canceledOrderCount = cancelOrders.Count();
+
+            FinancialReport financialReport = new FinancialReport
+            {
+                StartDate = startDate,
+                EndDate = endDate,
+                Revenue = revenue,
+                ShipCost = totalShipCost,
+                TotalOrders = totalOrder,
+                TotalPackages = totalPackages,
+                DeliveredOrders = deliveredOrderCount,
+                DeniedOrders = deniedOrderCount,
+                CanceledOrders = canceledOrderCount
+            };
+            return financialReport;
+        }
+
+        public async Task<FinancialReport> GetMonthlyFinancialReport(int month, int year)
+        {
+            if (month < 1 || month > 12) throw new Exception("Invalid month");
+            if (year < 2023 || year > DateTime.Now.Year) throw new Exception("Invalid year");
+
+            var startDate = new DateTime(year, month, 1);
+            var endDate = new DateTime(year, month, DateTime.DaysInMonth(year, month)).AddDays(1).Date.AddSeconds(-1);
+
+            var orders = await _OrderRepository.GetOrdersBy(o => o.OrderStatus != (int)Status.OrderStatus.DELETED
+                && o.OrderDate.HasValue && o.OrderDate.Value >= startDate && o.OrderDate <= endDate, includeProperties: "OrderDetails");
+            var deliveredOrders = orders.Where(o => o.OrderStatus == (int)Status.OrderStatus.DELIVERED);
+            var deniedOrders = orders.Where(o => o.OrderStatus == (int)Status.OrderStatus.DENIED);
+            var cancelOrders = orders.Where(o => o.OrderStatus == (int)Status.OrderStatus.CANCEL);
+
+            decimal revenue = orders.Select(o => o.TotalPrice.GetValueOrDefault()).Sum();
+            decimal totalShipCost = orders.Select(o => o.ShippingCost.GetValueOrDefault()).Sum();
+
+            int totalOrder = orders.Count;
+            int totalPackages = orders.Select(o => o.OrderDetails.Select(od => od.Quantity.GetValueOrDefault()).Sum()).Sum();
+            int deliveredOrderCount = deliveredOrders.Count();
+            int deniedOrderCount = deniedOrders.Count();
+            int canceledOrderCount = cancelOrders.Count();
+
+            var orderDetails = await _orderDetailRepository.GetOrderDetailsBy(od => orders.Select(o => o.OrderId).Contains(od.OrderId));
+            var packages = await _packageRepository.GetAll();
+            var trendingGroup = from orderDetail in orderDetails
+                                group orderDetail by orderDetail.PackageId
+                                  into g
+                                select new TrendingPackage { PackageId = g.Key.GetValueOrDefault(), PackageTitle = packages.Where(p => p.PackageId == g.Key).First()?.Title, Count = g.Select(s => s.Quantity.GetValueOrDefault()).Sum() };
+
+
+            FinancialReport financialReport = new FinancialReport
+            {
+                StartDate = startDate,
+                EndDate = endDate,
+                Revenue = revenue,
+                ShipCost = totalShipCost,
+                TotalOrders = totalOrder,
+                TotalPackages = totalPackages,
+                DeliveredOrders = deliveredOrderCount,
+                DeniedOrders = deniedOrderCount,
+                CanceledOrders = canceledOrderCount
+            };
+            return financialReport;
+        }
+
+        public async Task<FinancialReport> GetDailyFinancialReport(int day, int month, int year)
+        {
+            if (month < 1 || month > 12) throw new Exception("Invalid month");
+            if (year < 2023 || year > DateTime.Now.Year) throw new Exception("Invalid year");
+
+            var date = new DateTime(year, month, day);
+
+            var orders = await _OrderRepository.GetOrdersBy(o => o.OrderStatus != (int)Status.OrderStatus.DELETED
+                && o.OrderDate.HasValue && o.OrderDate.Value.Date == date.Date, includeProperties: "OrderDetails");
+            var deliveredOrders = orders.Where(o => o.OrderStatus == (int)Status.OrderStatus.DELIVERED);
+            var deniedOrders = orders.Where(o => o.OrderStatus == (int)Status.OrderStatus.DENIED);
+            var cancelOrders = orders.Where(o => o.OrderStatus == (int)Status.OrderStatus.CANCEL);
+
+            decimal revenue = orders.Select(o => o.TotalPrice.GetValueOrDefault()).Sum();
+            decimal totalShipCost = orders.Select(o => o.ShippingCost.GetValueOrDefault()).Sum();
+
+            int totalOrder = orders.Count;
+            int totalPackages = orders.Select(o => o.OrderDetails.Select(od => od.Quantity.GetValueOrDefault()).Sum()).Sum();
+            int deliveredOrderCount = deliveredOrders.Count();
+            int deniedOrderCount = deniedOrders.Count();
+            int canceledOrderCount = cancelOrders.Count();
+
+            FinancialReport financialReport = new FinancialReport
+            {
+                StartDate = date,
+                EndDate = date.AddDays(1).Date.AddSeconds(-1),
+                Revenue = revenue,
+                ShipCost = totalShipCost,
+                TotalOrders = totalOrder,
+                TotalPackages = totalPackages,
+                DeliveredOrders = deliveredOrderCount,
+                DeniedOrders = deniedOrderCount,
+                CanceledOrders = canceledOrderCount
+            };
+            return financialReport;
+        }
+
+        public async Task<FinancialReport> GetFinancialReport(DateTime startDate, DateTime endDate)
+        {
+            if (!Utils.DateTimeUtils.CheckValidFromAndToDate(startDate, endDate))
+                throw new Exception("Invalid start and end date");
+
+            var orders = await _OrderRepository.GetOrdersBy(o => o.OrderStatus != (int)Status.OrderStatus.DELETED
+                && o.OrderDate.HasValue && o.OrderDate.Value >= startDate && o.OrderDate <= endDate, includeProperties: "OrderDetails");
+            var deliveredOrders = orders.Where(o => o.OrderStatus == (int)Status.OrderStatus.DELIVERED);
+            var deniedOrders = orders.Where(o => o.OrderStatus == (int)Status.OrderStatus.DENIED);
+            var cancelOrders = orders.Where(o => o.OrderStatus == (int)Status.OrderStatus.CANCEL);
+
+            decimal revenue = orders.Select(o => o.TotalPrice.GetValueOrDefault()).Sum();
+            int totalPackages = orders.Select(o => o.OrderDetails.Select(od => od.Quantity.GetValueOrDefault()).Sum()).Sum();
+            decimal totalShipCost = orders.Select(o => o.ShippingCost.GetValueOrDefault()).Sum();
+
+            int totalOrder = orders.Count;
+            int deliveredOrderCount = deliveredOrders.Count();
+            int deniedOrderCount = deniedOrders.Count();
+            int canceledOrderCount = cancelOrders.Count();
+
+            FinancialReport financialReport = new FinancialReport
+            {
+                StartDate = startDate,
+                EndDate = endDate,
+                Revenue = revenue,
+                ShipCost = totalShipCost,
+                TotalOrders = totalOrder,
+                TotalPackages = totalPackages,
+                DeliveredOrders = deliveredOrderCount,
+                DeniedOrders = deniedOrderCount,
+                CanceledOrders = canceledOrderCount
+            };
+            return financialReport;
+        }
+
+        public async Task<ICollection<TrendingPackage>> GetTrendingPackages(DateTime startDate, DateTime endDate)
+        {
+            if (!Utils.DateTimeUtils.CheckValidFromAndToDate(startDate, endDate))
+                throw new Exception("Invalid start and end date");
+
+            var orders = await _OrderRepository.GetOrdersBy(o => o.OrderStatus != (int)Status.OrderStatus.DELETED
+                && o.OrderDate.HasValue && o.OrderDate.Value >= startDate && o.OrderDate <= endDate, includeProperties: "OrderDetails");
+            var orderDetails = await _orderDetailRepository.GetOrderDetailsBy(od => orders.Select(o => o.OrderId).Contains(od.OrderId));
+            var packages = await _packageRepository.GetAll();
+            var trendingGroup = from orderDetail in orderDetails
+                                group orderDetail by orderDetail.PackageId
+                                  into g
+                                select new TrendingPackage { PackageId = g.Key.GetValueOrDefault(), PackageTitle = packages.Where(p => p.PackageId == g.Key).First()?.Title, Count = g.Select(s => s.Quantity.GetValueOrDefault()).Sum() };
+            return trendingGroup.OrderByDescending(t => t.Count).Take(10).ToList();
+        }
+
+        public async Task<ICollection<FinancialReport>> ExportYearlyFinancialReport(int year)
+        {
+            if (year < 2000 || year > DateTime.Now.Year)
+                throw new Exception("Invalid year");
+
+            var yearlyReport = new List<FinancialReport>();
+            for (int i = 1; i <= 12; i++)
+            {
+                var record = await GetMonthlyFinancialReport(i, year);
+                yearlyReport.Add(record);
+            }
+            return yearlyReport;
+        }
+
+        public async Task<ICollection<FinancialReport>> ExportMonthlyFinancialReport(int month, int year)
+        {
+            if (month < 1 || month > 12) throw new Exception("Invalid month");
+            if (year < 2023 || year > DateTime.Now.Year) throw new Exception("Invalid year");
+
+            var monthlyReport = new List<FinancialReport>();
+            var endDate = new DateTime(year, month, DateTime.DaysInMonth(year, month));
+            for (int i = 1; i <= endDate.Day; i++)
+            {
+                var record = await GetDailyFinancialReport(i, month, year);
+                monthlyReport.Add(record);
+            }
+            return monthlyReport;
         }
 
     }

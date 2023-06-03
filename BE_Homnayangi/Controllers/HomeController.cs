@@ -21,8 +21,8 @@ namespace BE_Homnayangi.Controllers
             _blogService = blogService;
         }
 
-        [HttpGet("subCategory/{subCateId}/blogs")]
-        public async Task<ActionResult<IEnumerable<OverviewBlogResponse>>> GetBlogsBySubCate([FromRoute] Guid? subCateId)
+        [HttpGet("subCategory/{subCateId}/blogs/{isRegion}")]
+        public async Task<ActionResult<IEnumerable<OverviewBlogResponse>>> GetBlogsBySubCate([FromRoute] Guid? subCateId, [FromRoute] bool isRegion)
         {
             if (subCateId == null)
             {
@@ -32,7 +32,7 @@ namespace BE_Homnayangi.Controllers
                 });
             }
 
-            var blogs = await _blogService.GetBlogsBySubCateForHomePage(subCateId, numberOfItems: (int)NumberItem.NumberItemShowEnum.EATING_STYLE);
+            var blogs = await _blogService.GetBlogsBySubCateForHomePage(subCateId, isRegion, numberOfItems: (int)NumberItem.NumberItemShowEnum.EATING_STYLE);
 
             return new JsonResult(new
             {
@@ -53,12 +53,12 @@ namespace BE_Homnayangi.Controllers
         }
 
         [HttpGet("blogs/live-searching")]
-        public async Task<ActionResult<IEnumerable<SearchBlogsResponse>>> GetBlogAndRecipeByName([FromQuery(Name = "title")] string title)
+        public async Task<ActionResult<IEnumerable<SearchBlogsResponse>>> GetBlogAndPackageByName([FromQuery(Name = "title")] string title)
         {
             if (title != "" && title != null && title is string)
             {
                 title = Regex.Replace(title, @"\s+", " ");
-                var result = await _blogService.GetBlogAndRecipeByName(title);
+                var result = await _blogService.GetBlogAndPackageByName(title);
                 if (result.Any())
                 {
                     return new JsonResult(new

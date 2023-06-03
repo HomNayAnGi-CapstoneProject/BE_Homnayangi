@@ -33,7 +33,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
 
         public async Task<ICollection<IngredientResponse>> GetAll(string? searchString)
         {
-            var ingredients = await _ingredientRepository.GetIngredientsBy(includeProperties: "Type,Unit");
+            var ingredients = await _ingredientRepository.GetIngredientsBy(includeProperties: "Type");
             if(!string.IsNullOrEmpty(searchString))
                 ingredients = ingredients.Where(x => ConvertToUnSign(x.Name).Contains(ConvertToUnSign(searchString), StringComparison.CurrentCultureIgnoreCase)
                                                                     || x.Name.Contains(searchString, StringComparison.CurrentCultureIgnoreCase)).ToList();
@@ -58,7 +58,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
             try
             {
                 var ingredient = _ingredientRepository.GetFirstOrDefaultAsync(x => x.IngredientId == ingredientID.Value && x.Status.Value,
-                    includeProperties: "Type,Unit").Result;
+                    includeProperties: "Type").Result;
                 return ToResponse(ingredient);
             }
             catch (Exception ex)
@@ -72,7 +72,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
         {
             try
             {
-                var ingredients = await _ingredientRepository.GetIngredientsBy(x => x.Status.Value, includeProperties: "Type,Unit");
+                var ingredients = await _ingredientRepository.GetIngredientsBy(x => x.Status.Value, includeProperties: "Type");
                 return ingredients.Select(ToResponse).ToList();
             }
             catch (Exception ex)
@@ -93,7 +93,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
             try
             {
                 ICollection<Ingredient> ingredients = null;
-                ingredients = await _ingredientRepository.GetIngredientsBy(i => i.Status.Value, includeProperties: "Type,Unit");
+                ingredients = await _ingredientRepository.GetIngredientsBy(i => i.Status.Value, includeProperties: "Type");
                 if (typeId != null)
                 {
                     ingredients = ingredients.Where(i => i.TypeId.Value == typeId).ToList();
@@ -108,11 +108,10 @@ namespace BE_Homnayangi.Modules.IngredientModule
                 var result = ingredients.Select(i => new IngredientResponse()
                 {
                     IngredientId = i.IngredientId,
-                    UnitId = i.UnitId,
                     Name = i.Name,
                     Description = i.Description,
                     Quantity = i.Quantity,
-                    UnitName = i.Unit.Name,
+                    UnitName = i.Type.UnitName,
                     Picture = i.Picture,
                     CreatedDate = i.CreatedDate,
                     UpdatedDate = i.UpdatedDate,
@@ -153,7 +152,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
         {
             try
             {
-                var ingredients = await _ingredientRepository.GetIngredientsBy(x => x.Status.Value && x.TypeId == typeId, includeProperties: "Type,Unit");
+                var ingredients = await _ingredientRepository.GetIngredientsBy(x => x.Status.Value && x.TypeId == typeId, includeProperties: "Type");
                 return ingredients.Select(ToResponse).ToList();
             }
             catch (Exception ex)
@@ -189,13 +188,12 @@ namespace BE_Homnayangi.Modules.IngredientModule
             bool isUpdated = false;
             try
             {
-                Ingredient current = await _ingredientRepository.GetFirstOrDefaultAsync(x => newIg.IngredientId == x.IngredientId, includeProperties: "Unit");
+                Ingredient current = await _ingredientRepository.GetFirstOrDefaultAsync(x => newIg.IngredientId == x.IngredientId, includeProperties: "Type");
                 if (current != null)
                 {
                     current.Name = newIg.Name;
                     current.Description = newIg.Description;
                     current.Quantity = newIg.Quantity;
-                    current.UnitId = newIg.UnitId;
                     current.Picture = newIg.Picture;
                     current.ListImage = StringUtils.CompressContents(newIg.ListImage);
                     current.Kcal = newIg.Kcal;
@@ -274,7 +272,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
         public async Task<ICollection<SearchIngredientsResponse>> GetIngredientByName(String name)
         {
 
-            var Ingredients = await _ingredientRepository.GetIngredientsBy(x => x.Status == true, includeProperties: "Unit");
+            var Ingredients = await _ingredientRepository.GetIngredientsBy(x => x.Status == true, includeProperties: "Type");
 
             return Ingredients.Where(x => ConvertToUnSign(x.Name).Contains(name, StringComparison.CurrentCultureIgnoreCase) || x.Name.Contains(name, StringComparison.CurrentCultureIgnoreCase)).ToList().Select(ToSearchResponse).ToList();
         }
@@ -287,7 +285,7 @@ namespace BE_Homnayangi.Modules.IngredientModule
                 {
                     IngredientId = ingredient.IngredientId,
                     Name = ingredient.Name,
-                    UnitName = ingredient.Unit.Name,
+                    UnitName = ingredient.Type.UnitName,
                     Price = ingredient.Price.Value,
                     Kcal = ingredient.Kcal.Value
                 };
@@ -322,11 +320,10 @@ namespace BE_Homnayangi.Modules.IngredientModule
                 return new IngredientResponse()
                 {
                     IngredientId = ingredient.IngredientId,
-                    UnitId = ingredient.UnitId,
                     Name = ingredient.Name,
                     Description = ingredient.Description,
                     Quantity = ingredient.Quantity,
-                    UnitName = ingredient.Unit?.Name,
+                    UnitName = ingredient.Type.UnitName,
                     Picture = ingredient.Picture,
                     ListImage = ingredient.ListImage != null ? StringUtils.ExtractContents(ingredient.ListImage) : null,
                     CreatedDate = ingredient.CreatedDate,
@@ -357,7 +354,6 @@ namespace BE_Homnayangi.Modules.IngredientModule
                     Name = ingredientRequest.Name,
                     Description = ingredientRequest.Description,
                     Quantity = ingredientRequest.Quantity,
-                    UnitId = ingredientRequest.UnitId,
                     Picture = ingredientRequest.Picture,
                     ListImage = StringUtils.CompressContents(ingredientRequest.ListImage),
                     CreatedDate = ingredientRequest.CreatedDate,
@@ -380,16 +376,15 @@ namespace BE_Homnayangi.Modules.IngredientModule
             try
             {
                 var ingredients = await _ingredientRepository.GetNItemRandom(i => i.Status.Value && i.TypeId == typeId && i.IngredientId != currentIngredientId,
-                                                                            includeProperties: "Type,Unit", numberItem: 10);
+                                                                            includeProperties: "Type", numberItem: 10);
 
                 return ingredients.Select(i => new IngredientResponse()
                 {
                     IngredientId = i.IngredientId,
-                    UnitId = i.UnitId,
                     Name = i.Name,
                     Description = i.Description,
                     Quantity = i.Quantity,
-                    UnitName = i.Unit.Name,
+                    UnitName = i.Type.UnitName,
                     Picture = i.Picture,
                     CreatedDate = i.CreatedDate,
                     UpdatedDate = i.UpdatedDate,

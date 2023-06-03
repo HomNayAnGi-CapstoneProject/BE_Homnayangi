@@ -1,6 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using BE_Homnayangi.Modules.NotificationModule.Interface;
@@ -15,6 +21,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
+using static Google.Apis.Requests.BatchRequest;
+using CsvHelper;
+using CsvHelper.Configuration;
+using System.Globalization;
+using BE_Homnayangi.Modules.OrderModule.Response;
 
 namespace BE_Homnayangi.Controllers
 {
@@ -251,6 +262,133 @@ namespace BE_Homnayangi.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("shipping-cost")]
+        public async Task<IActionResult> CalculateShippingCost(double lat1, double lon1)
+        {
+            try
+            {
+                decimal shippingCost = await _orderService.CalculateShippingCost(lat1, lon1);
+                return Ok(new
+                {
+                    shippingCost = shippingCost,
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("report")]
+        public async Task<ActionResult> GetReport([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+        {
+            try
+            {
+                var res = await _orderService.GetFinancialReport(startDate, endDate);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("report/monthly")]
+        public async Task<ActionResult> GetMonthlyReport([FromQuery] int month, [FromQuery] int year)
+        {
+            try
+            {
+                var res = await _orderService.GetMonthlyFinancialReport(month, year);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("report/monthly/details")]
+        public async Task<ActionResult> GetMonthlyReportDetails([FromQuery] int month, [FromQuery] int year)
+        {
+            try
+            {
+                var res = await _orderService.ExportMonthlyFinancialReport(month, year);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("report/monthly/export")]
+        public async Task<ActionResult> ExportMonthlyReport([FromQuery] int month, [FromQuery] int year)
+        {
+            var csv = await _orderService.ExportMonthlyFinancialReport(month, year);
+
+            var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                Encoding = Encoding.UTF8
+            };
+
+            using (var mem = new MemoryStream())
+            using (var writer = new StreamWriter(mem))
+            using (var csvWriter = new CsvWriter(writer, csvConfig))
+            {
+                csvWriter.WriteRecords(csv);
+
+                writer.Flush();
+                return File(mem.ToArray(), "text/csv", "Monthly-Report.csv");
+            }
+        }
+
+        [HttpGet("report/yearly")]
+        public async Task<ActionResult> GetYearlyReport([FromQuery] int year)
+        {
+            try
+            {
+                var res = await _orderService.GetYearlyFinancialReport(year);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("report/yearly/details")]
+        public async Task<ActionResult> GetYearlyReportDetails([FromQuery] int year)
+        {
+            try
+            {
+                var res = await _orderService.ExportYearlyFinancialReport(year);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("report/yearly/export")]
+        public async Task<ActionResult> ExportYearlyReport([FromQuery] int year)
+        {
+            var csv = await _orderService.ExportYearlyFinancialReport(year);
+
+            var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                Encoding = Encoding.UTF8
+            };
+
+            using (var mem = new MemoryStream())
+            using (var writer = new StreamWriter(mem))
+            using (var csvWriter = new CsvWriter(writer, csvConfig))
+            {
+                csvWriter.WriteRecords(csv);
+
+                writer.Flush();
+                return File(mem.ToArray(), "text/csv", "Yearly-Report.csv");
             }
         }
     }

@@ -11,7 +11,6 @@ namespace BE_Homnayangi.Modules.OrderModule.Response
             public Guid IngredientId { get; set; }
             public int? Quantity { get; set; }
             public decimal? Price { get; set; }
-
             public string IngredientImage { get; set; }
             public string IngredientName { get; set; }
 
@@ -20,19 +19,18 @@ namespace BE_Homnayangi.Modules.OrderModule.Response
         {
             public OrderDetailResponse()
             {
-                RecipeDetails = new HashSet<IngredientResponse>();
+                PackageDetails = new HashSet<IngredientResponse>();
             }
 
             public Guid OrderId { get; set; }
 
-            public Guid? RecipeId { get; set; }
-            public string RecipeImage { get; set; }
-            public string RecipeName { get; set; }
-            public int RecipeQuantity { get; set; }
+            public Guid? PackageId { get; set; }
+            public string PackageImage { get; set; }
+            public string PackageName { get; set; }
+            public int PackageQuantity { get; set; }
             public decimal? PackagePrice { get; set; }
-            public decimal? CookedPrice { get; set; }
 
-            public ICollection<IngredientResponse> RecipeDetails { get; set; }
+            public ICollection<IngredientResponse> PackageDetails { get; set; }
         }
 
         public OrderResponse()
@@ -46,6 +44,8 @@ namespace BE_Homnayangi.Modules.OrderModule.Response
         public string ShippedAddress { get; set; }
         public decimal? TotalPrice { get; set; }
         public int? OrderStatus { get; set; }
+        public decimal? PackagePrice { get; set; }
+        public decimal? ShippingCost { get; set; }
         public Guid? CustomerId { get; set; }
         public bool? IsCooked { get; set; }
         public Guid? VoucherId { get; set; }

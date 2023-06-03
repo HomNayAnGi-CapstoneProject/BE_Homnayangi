@@ -66,7 +66,8 @@ namespace BE_Homnayangi.Modules.TypeModule
             return _TypeRepository.GetTypesBy(t => t.Status.Value).Result.Select(x => new TypeDropdownResponse
             {
                 TypeId = x.TypeId,
-                TypeName = x.Name
+                TypeName = x.Name,
+                UnitName = x.UnitName
             }).ToList();
         }
 

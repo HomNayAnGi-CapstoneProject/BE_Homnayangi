@@ -14,7 +14,7 @@ namespace BE_Homnayangi.Modules.OrderModule.Request
         public Guid? VoucherId { get; set; }
         public bool? IsCooked { get; set; }
         public int? PaymentMethod { get; set; }
-
+        public decimal? ShippingCost { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }

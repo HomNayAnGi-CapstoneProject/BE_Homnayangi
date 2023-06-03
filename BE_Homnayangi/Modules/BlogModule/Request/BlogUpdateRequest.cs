@@ -7,16 +7,54 @@ namespace BE_Homnayangi.Modules.BlogModule.Request
 {
     public class BlogUpdateRequest
     {
-        public Blog Blog { get; set; }
-        public Recipe Recipe { get; set; }
-        public List<RecipeDetail> RecipeDetails { get; set; }
-        public List<BlogSubCate> BlogSubCates { get; set; }
+        public BlogRequest Blog { get; set; }
+        public List<Tuple<PackageUpdateRequest, List<PackageDetailReq>>> Packages { get; set; }
+        public List<BlogSubCateRq> BlogSubCates { get; set; }
         public List<BlogReferenceRequest> BlogReferences { get; set; }
 
+        public class PackageDetailReq
+        {
+            public Guid PackageId { get; set; }
+            public Guid IngredientId { get; set; }
+            public string Description { get; set; }
+            public int? Quantity { get; set; }
+        }
+
+        public class BlogSubCateRq {
+            public Guid? BlogId { get; set; }
+            public Guid? SubCateId { get; set; }
+        }
+
+        public class BlogRequest
+        {
+            public Guid? BlogId { get; set; }
+            public string Title { get; set; }
+            public string ImageUrl { get; set; }
+            public int? BlogStatus { get; set; }
+            public string VideoUrl { get; set; }
+            public int? MinutesToCook { get; set; }
+            public bool? IsEvent { get; set; }
+            public DateTime? EventExpiredDate { get; set; }
+            public Guid? CookingMethodId { get; set; }
+            public Guid? RegionId { get; set; }
+            public int MinSize { get; set; }
+            public int MaxSize { get; set; }
+            public int TotalKcal { get; set; }
+        }
+
+        public class PackageUpdateRequest
+        {
+            public Guid PackageId { get; set; }
+            public Guid CookedId { get; set; }
+            public string Title { get; set; }
+            public string ImageUrl { get; set; }
+            public decimal? PackagePrice { get; set; }
+            public decimal? CookedPrice { get; set; }
+            public int Size { get; set; }
+        }
         public BlogUpdateRequest()
         {
-            RecipeDetails = new List<RecipeDetail>();
-            BlogSubCates = new List<BlogSubCate>();
+            Packages = new List<Tuple<PackageUpdateRequest, List<PackageDetailReq>>>();
         }
         public class BlogReferenceRequest
         {

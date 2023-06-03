@@ -33,6 +33,12 @@ namespace Repository.Repository
             _db.SaveChanges();
         }
 
+        public void AddRange(IEnumerable<T> entities)
+        {
+            DbSet.AddRange(entities);
+            _db.SaveChanges();
+        }
+
         public async Task AddRangeAsync(IEnumerable<T> entities)
         {
             await DbSet.AddRangeAsync(entities);
@@ -99,26 +105,22 @@ namespace Repository.Repository
             if (options != null)
             {
                 draftResult = options(query).ToList();
-            }
-            else
+            } else
             {
                 draftResult = await query.ToListAsync();
             }
 
-            if (draftResult.Count() < numberItem)
-            {
-                return draftResult;
-            }
-
             var endResult = new List<T>();
-            if (numberItem != 0 && numberItem <= draftResult.Count())
+            if (numberItem != 0)
             {
                 var randNumber = new Random();
-                for (int i = 0; i < numberItem; i++)
+                for(int i=0; i<numberItem; i++)
                 {
                     var indexNumber = randNumber.Next(0, draftResult.Count());
                     endResult.Add(draftResult.ElementAt(indexNumber));
                     draftResult.RemoveAt(indexNumber);
+
+                    if (draftResult.Count() == 0) i = numberItem;
                 }
             }
 
@@ -157,6 +159,12 @@ namespace Repository.Repository
             await _db.SaveChangesAsync();
         }
 
+        public void RemoveRange(IEnumerable<T> entities)
+        {
+            DbSet.RemoveRange(entities);
+            _db.SaveChanges();
+        }
+
         public async Task RemoveRangeAsync(IEnumerable<T> entities)
         {
             DbSet.RemoveRange(entities);
@@ -167,6 +175,12 @@ namespace Repository.Repository
         {
             DbSet.Update(entity);
             await _db.SaveChangesAsync();
+        }
+
+        public void UpdateRange(IEnumerable<T> entities)
+        {
+            DbSet.UpdateRange(entities);
+            _db.SaveChanges();
         }
 
         public async Task UpdateRangeAsync(IEnumerable<T> entities)

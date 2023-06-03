@@ -15,6 +15,9 @@ namespace Repository.Repository.Interface
         void Add(T entity);
 
         Task AddRangeAsync(IEnumerable<T> entities);
+        void AddRange(IEnumerable<T> entities);
+        void UpdateRange(IEnumerable<T> entities);
+        void RemoveRange(IEnumerable<T> entities);
 
         Task<ICollection<T>> GetAll(
                 Func<IQueryable<T>,
@@ -29,6 +32,7 @@ namespace Repository.Repository.Interface
             string includeProperties = null,
             int numberItem = 0
         );
+
 
         Task<T> GetFirstOrDefaultAsync(
             Expression<Func<T, bool>> filter = null,

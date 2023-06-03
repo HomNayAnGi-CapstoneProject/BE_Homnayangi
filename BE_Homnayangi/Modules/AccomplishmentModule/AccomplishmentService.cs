@@ -48,7 +48,8 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                 // Check accomplishment existed or not
                 var tmpAccom = await _accomplishmentRepository.GetFirstOrDefaultAsync(a =>
                                                                 a.AuthorId == authorId
-                                                                && a.BlogId == request.BlogId);
+                                                                && a.BlogId == request.BlogId
+                                                                && a.Status.Value != (int)Status.AccomplishmentStatus.DEACTIVE);
                 if (tmpAccom != null)
                     throw new Exception(ErrorMessage.AccomplishmentError.ACCOMPLISHMENT_EXISTED);
 
@@ -162,7 +163,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                     tmpAccoms = await _accomplishmentRepository.GetAccomplishmentsBy(a => a.Status == statusAccom,
                                                                 includeProperties: "Author,ConfirmByNavigation,Blog");
                 }
-                var reactions = await _accomplishmentReactionRepository.GetAccomplishmentReactionsBy(r => r.Status);
+                var reactions = await _accomplishmentReactionRepository.GetAccomplishmentReactionsBy(r => (bool)r.Status);
                 foreach (var a in tmpAccoms)
                 {
                     OverviewAccomplishment tmp = new OverviewAccomplishment()
@@ -201,7 +202,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
             {
                 var tmpAccoms = await _accomplishmentRepository.GetAccomplishmentsBy(a => a.BlogId == blogId && a.Status == (int)Status.AccomplishmentStatus.ACTIVE,
                                                                 includeProperties: "Author,ConfirmByNavigation,Blog");
-                var reactions = await _accomplishmentReactionRepository.GetAccomplishmentReactionsBy(r => r.Status);
+                var reactions = await _accomplishmentReactionRepository.GetAccomplishmentReactionsBy(r => (bool)r.Status);
                 foreach (var a in tmpAccoms)
                 {
                     AccomplishmentResponse tmp = new AccomplishmentResponse()
@@ -239,7 +240,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                     includeProperties: "Author,ConfirmByNavigation");
                 if (tmpAccom == null)
                     throw new Exception(ErrorMessage.AccomplishmentError.ACCOMPLISHMENT_NOT_FOUND);
-                var reactions = await _accomplishmentReactionRepository.GetAccomplishmentReactionsBy(r => r.Status);
+                var reactions = await _accomplishmentReactionRepository.GetAccomplishmentReactionsBy(r => (bool)r.Status);
 
                 result = new DetailAccomplishment()
                 {
@@ -275,7 +276,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
             {
                 var accoms = await _accomplishmentRepository.GetAccomplishmentsBy(a => a.AuthorId == customerId,
                                                                     includeProperties: "Author,ConfirmByNavigation,Blog");
-                var reactions = await _accomplishmentReactionRepository.GetAccomplishmentReactionsBy(r => r.Status);
+                var reactions = await _accomplishmentReactionRepository.GetAccomplishmentReactionsBy(r => (bool)r.Status);
 
                 if (accoms.Count > 0)
                     foreach (var a in accoms)
@@ -352,7 +353,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                                                                                     && a.Status == (int)Status.AccomplishmentStatus.ACTIVE,
                                                                                             includeProperties: "Author,ConfirmByNavigation");
 
-                var accomReactions = await _accomplishmentReactionRepository.GetAccomplishmentReactionsBy(r => r.Status);
+                var accomReactions = await _accomplishmentReactionRepository.GetAccomplishmentReactionsBy(r => (bool)r.Status);
 
                 if (accoms.Count > 0)
                     result = accoms.Select(a => new OverviewAccomplishment()
@@ -365,7 +366,7 @@ namespace BE_Homnayangi.Modules.AccomplishmentModule
                         Avatar = a.Author.Avatar,
                         CreatedDate = a.CreatedDate.Value,
                         Status = a.Status.Value,
-                        Reaction = accomReactions.Where(r => r.AccomplishmentId == a.AccomplishmentId && r.Status).Count(),
+                        Reaction = accomReactions.Where(r => r.AccomplishmentId == a.AccomplishmentId && r.Status == true).Count(),
                         BlogId = a.BlogId.Value,
                         ConfirmBy = a.ConfirmBy,
                         VerifierFullName = a.ConfirmByNavigation == null
